@@ -1,0 +1,112 @@
+#!/bin/bash
+
+
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2014-5 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+
+function __bashlets_library_loader_list_all_methods()
+{
+	declare -F | sed 's/declare -f //' | grep -v "^$FUNCNAME$"
+}
+
+function bashlets_library_loader_list_methods()
+{
+    local bashlet="$(bashlet_to_file "$1")"
+
+    (
+        for method in $(
+            __bashlets_library_loader_list_all_methods)
+        do
+            unset "$method"
+        done
+
+        source "$bashlet"
+
+        list_methods
+    )
+}
+
+function bashlets_library_loader_import()
+{
+    local bashlet="$1"
+    local pool_dir="${2:-~/.bashlets}"
+
+    local bashlet_name="$(basename "$bashlet")"
+    local bashlet_path="$(dirname "$bashlet")"
+    local file_name="$pool_dir/$bashlet"
+    local method_prefix="bashlets_${bashlet_path}_${bashlet_name}"
+    local method_def
+
+    source "$file_name"
+
+    method_def="function ${bashlet_name}()
+    {
+        local method=\"\$1\" ; shift
+        local args=\"\$*\"
+
+        case \"\$method\" in
+    "
+
+    for method in $(
+        bashlets_library_loader_list_methods "$bashlet" |  \
+            sed "s/${method_prefix}_//"
+    )
+    do
+        method_def="$method_def
+            $method)
+                ${method_prefix}_\$method \$*
+                ;;
+        "
+    done
+
+    method_def="$method_def
+            *)
+                echo \"Method not found!\"
+                return 1
+                ;;
+        esac
+    }
+    "
+
+    eval "$method_def"
+}
+
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh
