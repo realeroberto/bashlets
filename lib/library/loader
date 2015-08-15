@@ -48,12 +48,12 @@ function bashlets_library_loader_list_methods()
         for method in $(
             __bashlets_library_loader_list_all_methods)
         do
-            unset "$method"
+            unset -f -- "$method"
         done
 
         source "$bashlet"
 
-        list_methods
+        __bashlets_library_loader_list_all_methods
     )
 }
 
