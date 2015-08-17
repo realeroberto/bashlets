@@ -1,0 +1,144 @@
+#!/bin/bash
+
+
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# bashlets -- A modular extensible toolbox for 
+#
+# Library bootstrapping and main entry point
+#
+# Copyright (c) 2014-5 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+
+poolDir=~/.bashlets/
+remoteRepo=https://raw.githubusercontent.com/bashlets/bashlets-library/lib/
+
+
+function list_methods()
+{
+	declare -F | sed 's/declare -f //' | grep -v "^$FUNCNAME$"
+}
+
+function bashlet_to_file()
+{
+    local bashlet="$1"
+    
+    echo "$poolDir/$bashlet"
+}
+
+function bashlet_to_url()
+{
+    local bashlet="$1"
+    
+    echo "$remoteRepo/$bashlet"
+}
+
+function list_methods_in_bashlet()
+{
+    local bashlet="$(bashlet_to_file "$1")"
+
+    (
+        for method in $(list_methods)
+        do
+            unset "$method"
+        done
+
+        source "$bashlet"
+
+        list_methods
+    )
+}
+
+function download_bashlet()
+{
+    local bashlet="$1"
+    local file_name="$(bashlet_to_file "$1")"
+    local url="$(bashlet_to_url "$1")"
+
+    mkdir "$(dirname "$file_name")" 2> /dev/null
+    curl -s "$url" > "$file_name"
+}
+
+function import_bashlet()
+{
+    local bashlet="$1"
+    local bashlet_name="$(basename "$bashlet")"
+    local bashlet_path="$(dirname "$bashlet")"
+    local file_name="$(bashlet_to_file "$1")"
+    local method_prefix="bashlets_${bashlet_path}_${bashlet_name}"
+    local method_def
+
+    [[ -f "$file_name" ]] || download_bashlet "$bashlet"
+
+    method_def="function ${bashlet_name}()
+    {
+        local method=\"\$1\" ; shift
+        local args=\"\$*\"
+
+        case \"\$method\" in
+    "
+
+    for method in $(
+        list_methods_in_bashlet "$bashlet" |  \
+        sed "s/${method_prefix}_//"
+    )
+    do
+        method_def="$method_def
+            $method)
+                ${method_prefix}_\$method \$*
+                ;;
+        "
+    done
+
+    method_def="$method_def
+            *)
+                echo \"Method not found!\"
+                return 1
+                ;;
+        esac
+    }
+    "
+
+    eval "$method_def"
+
+    eval "alias $bashlet_name=bashlets_${bashlet_path}_${bashlet_name}"
+}
+
+
+import_bashlet "$1"
+
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh
