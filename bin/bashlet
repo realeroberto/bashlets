@@ -37,8 +37,8 @@
 
 
 
-poolDir=~/.bashlets/
-remoteRepo=https://raw.githubusercontent.com/bashlets/bashlets-library/lib/
+poolDir=~/.bashlets
+remoteRepo=https://raw.githubusercontent.com/bashlets/bashlets-library/master/lib
 
 
 function list_methods()
@@ -97,6 +97,8 @@ function import_bashlet()
 
     [[ -f "$file_name" ]] || download_bashlet "$bashlet"
 
+    source "$file_name"
+
     method_def="function ${bashlet_name}()
     {
         local method=\"\$1\" ; shift
@@ -127,8 +129,6 @@ function import_bashlet()
     "
 
     eval "$method_def"
-
-    eval "alias $bashlet_name=bashlets_${bashlet_path}_${bashlet_name}"
 }
 
 
