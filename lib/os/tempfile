@@ -39,6 +39,12 @@ function bashlets_os_tempfile_create()
 	echo $(mktemp)
 }
 
+function bashlets_os_tempfile_destroy()
+{
+    local tempfile="$1"
+	rm -f "$tempfile"
+}
+
 
 # Local variables:
 # mode: shell-script

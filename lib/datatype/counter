@@ -41,6 +41,12 @@ function bashlets_datatype_counter_create()
     tempfile create
 }
 
+function bashlets_datatype_counter_destroy()
+{
+    local counter="$1"
+    tempfile destroy "$counter"
+}
+
 function bashlets_datatype_counter_set()
 {
     local counter="$1"
