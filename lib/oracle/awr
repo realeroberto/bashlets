@@ -65,10 +65,11 @@ function bashlets_oracle_awr_get_snap_id_begin_by_unixts()
 
 function bashlets_oracle_awr_get_snap_id_end_by_unixts()
 {
-    local dbid=$(database get_dbid)
-    local instance_number=$(database get_instance_number)
     local unixts_end="$1"
     local timezone="${2:-UTC}"
+
+    local dbid=$(database get_dbid)
+    local instance_number=$(database get_instance_number)
     local timestamp_end="$(datetime from_unixts "$unixts_end" "$timezone")"
 
     local query="
@@ -98,10 +99,10 @@ function bashlets_oracle_awr_report_by_interval_of_unixts()
 
     local snap_id_begin snap_id_end query
 
-    snap_id_begin=$(bashlets_oracle_awr_get_snap_id_begin_by_unixts 
+    snap_id_begin=$(bashlets_oracle_awr_get_snap_id_begin_by_unixts   \
         "$unixts_begin" "$timezone")
 
-    snap_id_end=$(bashlets_oracle_awr_get_snap_id_end_by_unixts
+    snap_id_end=$(bashlets_oracle_awr_get_snap_id_end_by_unixts       \
         "$unixts_end" "$timezone")
 
     [[ -z $snap_id_begin || -z $snap_id_end ]] && return
