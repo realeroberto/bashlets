@@ -54,7 +54,6 @@ function bashlets_oracle_sqlplus_execute()
         WHENEVER OSERROR EXIT
         $query;
         EXIT
-        EOF
     "
 
     echo "$cmd" | "$ORACLE_HOME/bin/sqlplus" -s /nolog
