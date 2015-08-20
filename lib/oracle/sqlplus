@@ -57,8 +57,6 @@ function bashlets_oracle_sqlplus_execute()
     "
 
     echo "$cmd" | "$ORACLE_HOME/bin/sqlplus" -s /nolog
-
-    return $?
 }
 
 # Local variables:
