@@ -82,7 +82,7 @@ function download_bashlet()
     local file_name="$(bashlet_to_file "$1")"
     local url="$(bashlet_to_url "$1")"
 
-    mkdir "$(dirname "$file_name")" 2> /dev/null
+    mkdir -p "$(dirname "$file_name")" 2> /dev/null
     curl -s "$url" > "$file_name"
 }
 
