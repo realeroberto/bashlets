@@ -37,22 +37,27 @@
 function bashlets_oracle_sqlplus_execute()
 {
     local query="$*"
+    local cmd
 
     [[ -z "$ORACLE_HOME" || -z "$ORACLE_SID" ]] && {
         echo "Oracle environment variables undefined!"
         return 1
     }
 
-	"$ORACLE_HOME/bin/sqlplus" -s <<-EOF
-		/ as sysdba
-		SET SERVEROUTPUT ON
-		SET VERIFY OFF
+    cmd="
+        CONNECT / AS SYSDBA
+        SET SERVEROUTPUT ON
+        SET VERIFY OFF
         SET HEADING OFF
-		WHENEVER SQLERROR EXIT SQL.SQLCODE
-		WHENEVER OSERROR EXIT
+        WHENEVER SQLERROR EXIT SQL.SQLCODE
+        WHENEVER OSERROR EXIT
         $query;
-		EXIT
-	EOF
+        EXIT
+        EOF
+    "
+
+    echo "$cmd" | "$ORACLE_HOME/bin/sqlplus" -s /nolog
+
     return $?
 }
 
