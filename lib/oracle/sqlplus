@@ -46,9 +46,10 @@ function bashlets_oracle_sqlplus_execute()
 
     cmd="
         CONNECT / AS SYSDBA
+        SET FEEDBACK OFF
+        SET HEADING OFF
         SET SERVEROUTPUT ON
         SET VERIFY OFF
-        SET HEADING OFF
         WHENEVER SQLERROR EXIT SQL.SQLCODE
         WHENEVER OSERROR EXIT
         $query;
