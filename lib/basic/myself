@@ -36,12 +36,45 @@
 
 function bashlets_basic_myself_get_name()
 {
+    [[ "$0" == "-bash" ]] && return
     basename "$0"
 }
 
-function bashlets_basic_myself_get_path()
+function bashlets_basic_myself_get_name_canonical()
 {
-    readlink -m "$0"
+    [[ "$0" == "-bash" ]] && return
+    basename "$(readlink -m -- "$0")"
+}
+
+function bashlets_basic_myself_get_path_canonical()
+{
+    [[ "$0" == "-bash" ]] && return
+    readlink -m -- "$0"
+}
+
+function bashlets_basic_myself_get_path_effective()
+{
+    # http://stackoverflow.com/questions/59895
+
+    local source="${BASH_SOURCE[0]}"
+
+    [[ "$0" == "-bash" ]] && return
+
+    # resolve $source until the file is no longer a symlink
+    while [[ -h $source ]]
+    do
+        dir="$(cd -P "$(dirname "$source")" && pwd)"
+        source="$(readlink "$source")"
+
+        # if $source was a relative symlink, we need to resolve it relative to
+        # the path where the symlink file was located
+        [[ $source != /* ]]  \
+            && source="$(bashlets os path_join "$dir" "$source")"
+    done
+
+    dir="$(cd -P "$(dirname "$source")" && pwd)"
+
+    echo "$dir"
 }
 
 
