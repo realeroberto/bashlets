@@ -36,14 +36,38 @@
 
 function bashlets_oracle_sqlplus_execute()
 {
-    local query="$*"
+    local query
+    local timezone
     local cmd
+    local funcname="$FUNCNAME"
+
+    function bashlets_oracle_sqlplus_execute_usage()
+    {
+        echo "Usage: $funcname [-z <timezone>]"
+    }
 
     [[ -z "$ORACLE_HOME" || -z "$ORACLE_SID" ]] && {
         echo "Oracle environment variables undefined!"
         return 1
     }
 
+    local OPTIND opt
+    while getopts ":z:" opt
+    do
+        case "$opt" in
+            z)
+                timezone="${OPTARG}"
+                ;;
+            *)
+                bashlets_oracle_sqlplus_execute_usage # && return 2
+                ;;
+        esac
+    done
+    shift $((OPTIND-1))
+
+    query="$*"
+
+    # prepare header
     cmd="
         CONNECT / AS SYSDBA
         SET FEEDBACK OFF
@@ -51,10 +75,16 @@ function bashlets_oracle_sqlplus_execute()
         SET SERVEROUTPUT ON
         SET VERIFY OFF
         WHENEVER SQLERROR EXIT SQL.SQLCODE
-        WHENEVER OSERROR EXIT
+        WHENEVER OSERROR EXIT"
+
+    # set timezone if required
+    [[ -n $timezone ]] && cmd="$cmd
+        ALTER SESSION SET TIME_ZONE='$timezone';"
+
+    # add actual query and finalise command
+    cmd="$cmd
         $query;
-        EXIT
-    "
+        EXIT"
 
     echo "$cmd" | "$ORACLE_HOME/bin/sqlplus" -s /nolog
 }
