@@ -204,7 +204,7 @@ function bashlets_revcontrol_svn_commit()
             --quiet --non-interactive --no-auth-cache   \
             --username "$username"                      \
             --password "$password"                      \
-            --message  "$@"
+            --message  "$@"                             \
             "$object"
     )
 }
