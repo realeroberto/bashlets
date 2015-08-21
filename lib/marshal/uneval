@@ -44,9 +44,8 @@ function bashlets_marshal_uneval_add_pair()
     local payload="$1"
     local key="$2"
     shift 2
-    local value="$*"
 
-    printf "$payload\nlocal $key=\"%q\"\n" "$value"
+    printf "$payload\nlocal $key=\"%q\"\n" "$@"
 }
 
 function bashlets_marshal_uneval_get_by_key()

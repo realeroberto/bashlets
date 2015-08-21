@@ -36,7 +36,6 @@
 
 function bashlets_oracle_sqlplus_execute()
 {
-    local query
     local timezone
     local cmd
     local funcname="$FUNCNAME"
@@ -65,8 +64,6 @@ function bashlets_oracle_sqlplus_execute()
     done
     shift $((OPTIND-1))
 
-    query="$*"
-
     # prepare header
     cmd="
         CONNECT / AS SYSDBA
@@ -83,7 +80,7 @@ function bashlets_oracle_sqlplus_execute()
 
     # add actual query and finalise command
     cmd="$cmd
-        $query;
+        $@;
         EXIT"
 
     echo "$cmd" | "$ORACLE_HOME/bin/sqlplus" -s /nolog

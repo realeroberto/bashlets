@@ -36,7 +36,7 @@
 
 function bashlets_datatype_string_chop()
 {
-    echo "$(echo "$*" | tr -d "\n")"
+    echo "$(echo "$@" | tr -d "\n")"
 }
 
 # Local variables:

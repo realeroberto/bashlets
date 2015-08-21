@@ -73,7 +73,6 @@ function bashlets_library_loader_import()
     method_def="function ${bashlet_name}()
     {
         local method=\"\$1\" ; shift
-        local args=\"\$*\"
 
         case \"\$method\" in
     "
@@ -85,7 +84,7 @@ function bashlets_library_loader_import()
     do
         method_def="$method_def
             $method)
-                ${method_prefix}_\$method \$*
+                ${method_prefix}_\$method \"\$@\"
                 ;;
         "
     done
