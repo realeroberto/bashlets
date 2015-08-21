@@ -129,11 +129,11 @@ function bashlets_revcontrol_svn_checkout()
     (
         cd "$wd" || return 1
 
-        command svn checkout                                      \
-            --dry-run --quiet --non-interactive --no-auth-cache   \
-            --revision "$rev"                                     \
-            --username "$username"                                \
-            --password "$password"                                \
+        command svn checkout                            \
+            --quiet --non-interactive --no-auth-cache   \
+            --revision "$rev"                           \
+            --username "$username"                      \
+            --password "$password"                      \
             "$object"
     )
 }
@@ -153,11 +153,11 @@ function bashlets_revcontrol_svn_update()
     (
         cd "$wd" || return 1
 
-        command svn update                                        \
-            --dry-run --quiet --non-interactive --no-auth-cache   \
-            --revision "$rev"                                     \
-            --username "$username"                                \
-            --password "$password"                                \
+        command svn update                              \
+            --quiet --non-interactive --no-auth-cache   \
+            --revision "$rev"                           \
+            --username "$username"                      \
+            --password "$password"                      \
             "$object"
     )
 }
@@ -177,10 +177,10 @@ function bashlets_revcontrol_svn_add()
     (
         cd "$wd" || return 1
 
-        command svn add                                           \
-            --dry-run --quiet --non-interactive --no-auth-cache   \
-            --username "$username"                                \
-            --password "$password"                                \
+        command svn add                                 \
+            --quiet --non-interactive --no-auth-cache   \
+            --username "$username"                      \
+            --password "$password"                      \
             "$object"
     )
 }
@@ -200,10 +200,10 @@ function bashlets_revcontrol_svn_commit()
     (
         cd "$wd" || return 1
 
-        command svn commit                                        \
-            --dry-run --quiet --non-interactive --no-auth-cache   \
-            --username "$username"                                \
-            --password "$password"                                \
+        command svn commit                              \
+            --quiet --non-interactive --no-auth-cache   \
+            --username "$username"                      \
+            --password "$password"                      \
             --message  "$@"
             "$object"
     )
