@@ -43,15 +43,19 @@ function bashlets_datatype_tsinterval_create()
         export TZ="$timezone"
 
         case "$string" in
+            previous-hour)
+                t_0=$(date -d"$(date -d'2 hours ago' +%H)" +%s)
+                t_0=$(date -d"$(date -d'1 hour ago' +%H)" +%s)
+                ;;
             yesterday)
                 t_0=$(date -d'yesterday 00:00:00' +%s)
                 t_1=$(date -d'today 00:00:00' +%s)
                 ;;
-            last-week)
+            previous-week)
                 t_0=$(date -d'monday-fortnight ago' +%s)
                 t_1=$(date -dlast-monday +%s)
                 ;;
-            last-week0)
+            previous-week0)
                 t_0=$(date -d'sunday-fortnight ago' +%s)
                 t_1=$(date -dlast-sunday +%s)
                 ;;
@@ -65,7 +69,7 @@ function bashlets_datatype_tsinterval_create()
                 ;;
         esac
 
-        echo $t_0 $t_1
+        echo $t_0 $t_0
     )
 }
 
