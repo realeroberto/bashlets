@@ -43,13 +43,21 @@ function bashlets_datatype_tsinterval_create()
         export TZ="$timezone"
 
         case "$string" in
-            from-epoch)
-                t_0=0
-                t_1=$(date +%s)
+            yesterday)
+                t_0=$(date -d'yesterday 00:00:00' +%s)
+                t_1=$(date -d'today 00:00:00' +%s)
                 ;;
             last-week)
                 t_0=$(date -d'monday-fortnight ago' +%s)
                 t_1=$(date -dlast-monday +%s)
+                ;;
+            last-week0)
+                t_0=$(date -d'sunday-fortnight ago' +%s)
+                t_1=$(date -dlast-sunday +%s)
+                ;;
+            from-epoch)
+                t_0=0
+                t_1=$(date +%s)
                 ;;
             *)
                 echo "Invalid interval specification $string!"
