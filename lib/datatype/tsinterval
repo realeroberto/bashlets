@@ -36,24 +36,29 @@
 function bashlets_datatype_tsinterval_create()
 {
     local string="$1"
+    local timezone="${2:-UTC}"
     local t_0 t_1
 
-    case "$string" in
-        from-epoch)
-            t_0=0
-            t_1=$(date +%s)
-            ;;
-        last-week)
-            t_0=$(date -d'monday-fortnight ago' +%s)
-            t_1=$(date -dlast-monday +%s)
-            ;;
-        *)
-            echo "Invalid interval specification $string!"
-            return 1
-            ;;
-    esac
+    (
+        export TZ="$timezone"
 
-    echo $t_0 $t_1
+        case "$string" in
+            from-epoch)
+                t_0=0
+                t_1=$(date +%s)
+                ;;
+            last-week)
+                t_0=$(date -d'monday-fortnight ago' +%s)
+                t_1=$(date -dlast-monday +%s)
+                ;;
+            *)
+                echo "Invalid interval specification $string!"
+                return 1
+                ;;
+        esac
+
+        echo $t_0 $t_1
+    )
 }
 
 
