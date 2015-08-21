@@ -35,25 +35,25 @@
 
 function bashlets_datatype_tsinterval_create()
 {
-	local string="$1"
+    local string="$1"
     local t_0 t_1
 
-	case "$string" in
-		from-epoch)
+    case "$string" in
+        from-epoch)
             t_0=0
             t_1=$(date +%s)
             ;;
-		last-week)
+        last-week)
             t_0=$(date -d'monday-fortnight ago' +%s)
             t_1=$(date -dlast-monday +%s)
             ;;
-		*)
+        *)
             echo "Invalid interval specification $string!"
             return 1
             ;;
-	esac
+    esac
 
-	echo $t_0 $t_1
+    echo $t_0 $t_1
 }
 
 
