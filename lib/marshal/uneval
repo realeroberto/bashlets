@@ -36,7 +36,8 @@
 
 function bashlets_marshal_uneval_create()
 {
-    :
+    # emit start-marker, to be removed in future releases
+    echo ':'
 }
 
 function bashlets_marshal_uneval_add_pair()
