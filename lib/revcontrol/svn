@@ -114,6 +114,28 @@ function bashlets_revcontrol_svn_set_password()
     bashlets_revcontrol_svn_set_param "$repo" password "$password"
 }
 
+function bashlets_revcontrol_svn_touch()
+{
+    local repo="$1"
+    local object="$2"
+    local rev="${3:-HEAD}"
+
+    local wd="$(bashlets_revcontrol_svn_get_wd "$repo")"
+    local username="$(bashlets_revcontrol_svn_get_username "$repo")"
+    local password="$(bashlets_revcontrol_svn_get_password "$repo")"
+
+    [[ -n $object && -d $wd ]] || return 1
+
+    (
+        cd "$wd" || return 1
+
+        local dirname="$(dirname "$object")"
+
+        test -n "$dirname" && test -d "$dirname" && mkdir -p "$dirname"
+        touch "$object"
+    )
+}
+
 function bashlets_revcontrol_svn_checkout()
 {
     local repo="$1"
