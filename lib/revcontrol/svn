@@ -133,6 +133,8 @@ function bashlets_revcontrol_svn_touch()
 
         test -n "$dirname" && test -d "$dirname" && mkdir -p "$dirname"
         touch "$object"
+
+        echo "$object"
     )
 }
 
