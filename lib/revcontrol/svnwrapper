@@ -38,17 +38,17 @@
 source bashlet marshal/uneval
 
 
-function bashlets_revcontrol_svn_connect()
+function bashlets_revcontrol_svnwrapper_connect()
 {
     uneval create
 }
 
-function bashlets_revcontrol_svn_disconnect()
+function bashlets_revcontrol_svnwrapper_disconnect()
 {
     :
 }
 
-function bashlets_revcontrol_svn_get_param()
+function bashlets_revcontrol_svnwrapper_get_param()
 {
     local repo="$1"
     local key="$2"
@@ -58,7 +58,7 @@ function bashlets_revcontrol_svn_get_param()
     echo "$(uneval get_by_key "$repo" "$key")"
 }
 
-function bashlets_revcontrol_svn_set_param()
+function bashlets_revcontrol_svnwrapper_set_param()
 {
     local repo="$1"
     local key="$2"
@@ -69,60 +69,60 @@ function bashlets_revcontrol_svn_set_param()
     uneval add_pair "$repo" "$key" "$value"
 }
 
-function bashlets_revcontrol_svn_get_wd()
+function bashlets_revcontrol_svnwrapper_get_wd()
 {
     local repo="$1"
 
-    bashlets_revcontrol_svn_get_param "$repo" wd
+    bashlets_revcontrol_svnwrapper_get_param "$repo" wd
 }
 
-function bashlets_revcontrol_svn_get_username()
+function bashlets_revcontrol_svnwrapper_get_username()
 {
     local repo="$1"
 
-    bashlets_revcontrol_svn_get_param "$repo" username
+    bashlets_revcontrol_svnwrapper_get_param "$repo" username
 }
 
-function bashlets_revcontrol_svn_get_password()
+function bashlets_revcontrol_svnwrapper_get_password()
 {
     local repo="$1"
 
-    bashlets_revcontrol_svn_get_param "$repo" password
+    bashlets_revcontrol_svnwrapper_get_param "$repo" password
 }
 
-function bashlets_revcontrol_svn_set_wd()
+function bashlets_revcontrol_svnwrapper_set_wd()
 {
     local repo="$1"
     local wd="$2"
 
-    bashlets_revcontrol_svn_set_param "$repo" wd "$wd"
+    bashlets_revcontrol_svnwrapper_set_param "$repo" wd "$wd"
 }
 
-function bashlets_revcontrol_svn_set_username()
+function bashlets_revcontrol_svnwrapper_set_username()
 {
     local repo="$1"
     local username="$2"
 
-    bashlets_revcontrol_svn_set_param "$repo" username "$username"
+    bashlets_revcontrol_svnwrapper_set_param "$repo" username "$username"
 }
 
-function bashlets_revcontrol_svn_set_password()
+function bashlets_revcontrol_svnwrapper_set_password()
 {
     local repo="$1"
     local password="$2"
 
-    bashlets_revcontrol_svn_set_param "$repo" password "$password"
+    bashlets_revcontrol_svnwrapper_set_param "$repo" password "$password"
 }
 
-function bashlets_revcontrol_svn_touch()
+function bashlets_revcontrol_svnwrapper_touch()
 {
     local repo="$1"
     local object="$2"
     local rev="${3:-HEAD}"
 
-    local wd="$(bashlets_revcontrol_svn_get_wd "$repo")"
-    local username="$(bashlets_revcontrol_svn_get_username "$repo")"
-    local password="$(bashlets_revcontrol_svn_get_password "$repo")"
+    local wd="$(bashlets_revcontrol_svnwrapper_get_wd "$repo")"
+    local username="$(bashlets_revcontrol_svnwrapper_get_username "$repo")"
+    local password="$(bashlets_revcontrol_svnwrapper_get_password "$repo")"
 
     [[ -n $object && -d $wd ]] || return 1
 
@@ -138,22 +138,22 @@ function bashlets_revcontrol_svn_touch()
     )
 }
 
-function bashlets_revcontrol_svn_checkout()
+function bashlets_revcontrol_svnwrapper_checkout()
 {
     local repo="$1"
     local object="$2"
     local rev="${3:-HEAD}"
 
-    local wd="$(bashlets_revcontrol_svn_get_wd "$repo")"
-    local username="$(bashlets_revcontrol_svn_get_username "$repo")"
-    local password="$(bashlets_revcontrol_svn_get_password "$repo")"
+    local wd="$(bashlets_revcontrol_svnwrapper_get_wd "$repo")"
+    local username="$(bashlets_revcontrol_svnwrapper_get_username "$repo")"
+    local password="$(bashlets_revcontrol_svnwrapper_get_password "$repo")"
 
     [[ -n $object && -d $wd ]] || return 1
 
     (
         cd "$wd" || return 1
 
-        command svn checkout                            \
+        svn checkout                                    \
             --quiet --non-interactive --no-auth-cache   \
             --revision "$rev"                           \
             --username "$username"                      \
@@ -162,22 +162,22 @@ function bashlets_revcontrol_svn_checkout()
     )
 }
 
-function bashlets_revcontrol_svn_update()
+function bashlets_revcontrol_svnwrapper_update()
 {
     local repo="$1"
     local object="$2"
     local rev="${3:-HEAD}"
 
-    local wd="$(bashlets_revcontrol_svn_get_wd "$repo")"
-    local username="$(bashlets_revcontrol_svn_get_username "$repo")"
-    local password="$(bashlets_revcontrol_svn_get_password "$repo")"
+    local wd="$(bashlets_revcontrol_svnwrapper_get_wd "$repo")"
+    local username="$(bashlets_revcontrol_svnwrapper_get_username "$repo")"
+    local password="$(bashlets_revcontrol_svnwrapper_get_password "$repo")"
 
     [[ -n $object && -d $wd ]] || return 1
 
     (
         cd "$wd" || return 1
 
-        command svn update                              \
+        svn update                                      \
             --quiet --non-interactive --no-auth-cache   \
             --revision "$rev"                           \
             --username "$username"                      \
@@ -187,21 +187,21 @@ function bashlets_revcontrol_svn_update()
 }
 
 
-function bashlets_revcontrol_svn_add()
+function bashlets_revcontrol_svnwrapper_add()
 {
     local repo="$1"
     local object="$2"
 
-    local wd="$(bashlets_revcontrol_svn_get_wd "$repo")"
-    local username="$(bashlets_revcontrol_svn_get_username "$repo")"
-    local password="$(bashlets_revcontrol_svn_get_password "$repo")"
+    local wd="$(bashlets_revcontrol_svnwrapper_get_wd "$repo")"
+    local username="$(bashlets_revcontrol_svnwrapper_get_username "$repo")"
+    local password="$(bashlets_revcontrol_svnwrapper_get_password "$repo")"
 
     [[ -n $object && -d $wd ]] || return 1
 
     (
         cd "$wd" || return 1
 
-        command svn add                                 \
+        svn add                                         \
             --quiet --non-interactive --no-auth-cache   \
             --parents                                   \
             --username "$username"                      \
@@ -210,22 +210,22 @@ function bashlets_revcontrol_svn_add()
     )
 }
 
-function bashlets_revcontrol_svn_commit()
+function bashlets_revcontrol_svnwrapper_commit()
 {
     local repo="$1"
     local object="$2"
     shift 2
 
-    local wd="$(bashlets_revcontrol_svn_get_wd "$repo")"
-    local username="$(bashlets_revcontrol_svn_get_username "$repo")"
-    local password="$(bashlets_revcontrol_svn_get_password "$repo")"
+    local wd="$(bashlets_revcontrol_svnwrapper_get_wd "$repo")"
+    local username="$(bashlets_revcontrol_svnwrapper_get_username "$repo")"
+    local password="$(bashlets_revcontrol_svnwrapper_get_password "$repo")"
 
     [[ -n $object && -d $wd ]] || return 1
 
     (
         cd "$wd" || return 1
 
-        command svn commit                              \
+        svn commit                                      \
             --quiet --non-interactive --no-auth-cache   \
             --username "$username"                      \
             --password "$password"                      \
