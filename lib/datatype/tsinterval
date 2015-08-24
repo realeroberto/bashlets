@@ -45,7 +45,7 @@ function bashlets_datatype_tsinterval_create()
         case "$string" in
             previous-hour)
                 t_0=$(date -d"$(date -d'2 hours ago' +%H)" +%s)
-                t_0=$(date -d"$(date -d'1 hour ago' +%H)" +%s)
+                t_1=$(date -d"$(date -d'1 hour ago' +%H)" +%s)
                 ;;
             yesterday)
                 t_0=$(date -d'yesterday 00:00:00' +%s)
@@ -69,8 +69,18 @@ function bashlets_datatype_tsinterval_create()
                 ;;
         esac
 
-        echo $t_0 $t_0
+        echo $t_0 $t_1
     )
+}
+
+function bashlets_datatype_tsinterval_get_t0()
+{
+    echo "$@" | cut -d' ' -f1
+}
+
+function bashlets_datatype_tsinterval_get_t1()
+{
+    echo "$@" | cut -d' ' -f2
 }
 
 
