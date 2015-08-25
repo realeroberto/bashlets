@@ -98,8 +98,8 @@ function bashlets_oracle_database_is_logical_standby()
 
 function bashlets_oracle_database_is_standby()
 {
-    bashlets_oracle_database_is_physical_standby
-    || bashlets_oracle_database_is_logical_standby
+    bashlets_oracle_database_is_physical_standby ||
+        bashlets_oracle_database_is_logical_standby
 }
 
 # Local variables:
