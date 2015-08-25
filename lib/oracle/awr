@@ -127,7 +127,7 @@ function bashlets_oracle_awr_report_by_interval_of_unixts()
             ) t
     "
 
-    sqlplus execute "$query"
+    sqlplus execute "$query" | expand  # convert tabs to spaces in output
 }
 
 
