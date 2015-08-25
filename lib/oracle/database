@@ -69,6 +69,39 @@ function bashlets_oracle_database_get_dbid()
 	echo $(sqlplus execute "$query" | tr -d "\n")
 }
 
+function bashlets_oracle_database_is_primary()
+{
+    local query role
+    
+    query="SELECT database_role FROM v\$database"
+	role="$(sqlplus execute "$query" | tr -d "\n")"
+    [[ "$role" == "PRIMARY" ]]
+}
+
+function bashlets_oracle_database_is_physical_standby()
+{
+    local query role
+    
+    query="SELECT database_role FROM v\$database"
+	role="$(sqlplus execute "$query" | tr -d "\n")"
+    [[ "$role" == "PHYSICAL STANDBY" ]]
+}
+
+function bashlets_oracle_database_is_logical_standby()
+{
+    local query role
+    
+    query="SELECT database_role FROM v\$database"
+	role="$(sqlplus execute "$query" | tr -d "\n")"
+    [[ "$role" == "LOGICAL STANDBY" ]]
+}
+
+function bashlets_oracle_database_is_standby()
+{
+    bashlets_oracle_database_is_physical_standby
+    || bashlets_oracle_database_is_logical_standby
+}
+
 # Local variables:
 # mode: shell-script
 # sh-basic-offset: 4
