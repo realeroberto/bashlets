@@ -101,6 +101,11 @@ function bashlets_oracle_awr_report_by_interval_of_unixts()
 
     local snap_id_begin snap_id_end query
 
+    database is_primary || {
+        echo "Database is non-primary!"
+        return 3
+    }
+
     snap_id_begin=$(bashlets_oracle_awr_get_snap_id_begin_by_unixts   \
         "$unixts_begin" "$timezone")
 
