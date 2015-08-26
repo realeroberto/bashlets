@@ -203,7 +203,7 @@ function bashlets_revcontrol_svnwrapper_add()
 
         svn add                                         \
             --quiet --non-interactive --no-auth-cache   \
-            --parents                                   \
+            --force --parents                           \
             --username "$username"                      \
             --password "$password"                      \
             "$object"
