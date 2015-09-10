@@ -34,20 +34,47 @@
 ################################################################################
 
 
+function bashlets_datatype_version_are_fully_sortable()
+{
+    </dev/null sort --version-sort >/dev/null 2>&1
+    test $? -eq 0
+}
+
+function bashlets_datatype_version_naive_sort()
+{
+    # naive Bash implementation
+    # cf. http://stackoverflow.com/questions/16989598/
+    test $# -gt 0 &&
+        echo "$@"                                                     \
+            | xargs -n 1                                              \
+            | awk -F. '{ printf("%d.%d.%d.%s\n", $1, $2, $3, $0) }'   \
+            | sort -t. -n -k1,3                                       \
+            | sed 's/^[0-9]\.[0-9]\.[0-9]\.\([0-9]*\)/\1/'
+}
+
+function bashlets_datatype_version_sort()
+{
+    if bashlets_datatype_version_are_fully_sortable
+    then
+        echo "$@" | xargs -n 1 | sort --version-sort
+    else
+        bashlets_datatype_version_naive_sort "$@"
+    fi
+}
+
 function bashlets_datatype_version_less_than()
 {
     local min
     # GNU sort is needed here
-    min="$(echo "$@" | xargs -n 1 | sort --version-sort | head -1)"
+    min="$(bashlets_datatype_version_sort "$@" | head -1)"
     [[ $min == $1 ]]
 }
-
 
 function bashlets_datatype_version_greater_than()
 {
     local max
     # GNU sort is needed here
-    max="$(echo "$@" | xargs -n 1 | sort --version-sort | tail -1)"
+    max="$(bashlets_datatype_version_sort "$@" | tail -1)"
     [[ $max == $1 ]]
 }
 
