@@ -34,6 +34,8 @@
 ################################################################################
 
 
+source bashlet datatype/version
+
 function bashlets_basic_shell_get_full_version()
 {
     echo $BASH_VERSION
@@ -42,6 +44,21 @@ function bashlets_basic_shell_get_full_version()
 function bashlets_basic_shell_get_short_version()
 {
     echo $BASH_VERSION | sed 's/^\([0-9.]\+\).*/\1/'
+}
+
+function bashlets_basic_shell_has_feature()
+{
+    local feature="$1"
+
+    case "$feature" in
+        "associative-arrays")
+            version greater_than "$(bashlets_basic_shell_get_short_version)" 4
+            ;;
+        *)
+            echo "Feature unknown!"
+            return 1
+            ;;
+    esac
 }
 
 
