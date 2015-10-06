@@ -40,6 +40,11 @@ function bashlets_os_path_join()
     echo "$*"
 }
 
+function bashlets_os_path_is_absolute()
+{
+    [[ "$1" == /* ]]
+}
+
 
 # Local variables:
 # mode: shell-script
