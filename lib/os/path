@@ -36,7 +36,7 @@
 
 function bashlets_os_path_join()
 {
-	local IFS=/
+    local IFS=/
     echo "$*"
 }
 
