@@ -112,8 +112,8 @@ function bashlets_library_loader_import()
     source "$file_name" || return 1
 
     # container names of plugins are prefixed by a colon (like plugin names)
-    [[ $bashlet =~ ^: ]]                                         \
-        && container_name=":$bashlet_name"                          \
+    [[ $bashlet =~ ^: ]]                                   \
+        && container_name=":$bashlet_name"                 \
         || container_name="$bashlet_name"
 
     container_def="function ${container_name}()
