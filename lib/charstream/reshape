@@ -47,6 +47,12 @@ function bashlets_charstream_reshape_transpose()
     bashlets_charstream_reshape_join_lines
 }
 
+function bashlets_charstream_reshape_to_string()
+{
+    bashlets_charstream_reshape_join_lines
+}
+
+
 # Local variables:
 # mode: shell-script
 # sh-basic-offset: 4
