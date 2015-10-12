@@ -107,16 +107,16 @@ function bashlets_library_loader_import()
     local bashlet_path="$(bashlet_to_path "$bashlet")"
     local file_name="$(bashlet_to_file "$bashlet")"
     local method_prefix="bashlets_${bashlet_path}_${bashlet_name}"
-    local method_name method_def
+    local container_name container_def
 
     source "$file_name" || return 1
 
-    # method names of plugins are prefixed by a colon (like plugin names)
+    # container names of plugins are prefixed by a colon (like plugin names)
     [[ $bashlet =~ ^: ]]                                         \
         && method_name=":$bashlet_name"                          \
         || method_name="$bashlet_name"
 
-    method_def="function ${method_name}()
+    container_def="function ${container_name}()
     {
         local method=\"\$1\" ; shift
 
@@ -128,14 +128,14 @@ function bashlets_library_loader_import()
             sed "s/${method_prefix}_//"
     )
     do
-        method_def="$method_def
+        container_def="$method_def
             $method)
                 ${method_prefix}_\$method \"\$@\"
                 ;;
         "
     done
 
-    method_def="$method_def
+    container_def="$container_def
             *)
                 echo \"Method not found!\"
                 return 1
@@ -144,7 +144,7 @@ function bashlets_library_loader_import()
     }
     "
 
-    eval "$method_def"
+    eval "$container_def"
 }
 
 
