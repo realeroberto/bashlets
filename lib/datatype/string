@@ -80,6 +80,48 @@ function bashlets_datatype_string_shuffle()
         | reshape transpose
 }
 
+
+#
+# if $* has length 2^n, return the central 2^(n-1) characters;
+# otherwise, return nothing
+#
+
+function bashlets_datatype_string_middle_2n()
+{
+    local str="$*"
+    local len=${#str}
+
+    local c2="$((len/2))"
+    local c4="$((len/4))"
+
+    echo "$str" | sed -n "s/^.\{$c4\}\(.\{$c2\}\).\{$c4\}$/\1/p"
+}
+
+
+#
+# left-pad a given string with PAD, so that its length is rounded up
+# to the next multiple of N
+#
+
+function bashlets_datatype_string_lalign_n()
+{
+    local n="$1"
+    local pad="$2"
+    shift 2
+    local str="$*"
+    local len=${#str}
+
+    local q="$((len/n))"
+    local r="$((len%n))"
+
+    [[ $r -eq 0 ]] || r=n
+
+    len="$((n*q+r))"
+
+    printf "%0${len}s" "$str" | tr " " "$pad"
+}
+
+
 # Local variables:
 # mode: shell-script
 # sh-basic-offset: 4
