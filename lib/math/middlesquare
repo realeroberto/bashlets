@@ -1,0 +1,108 @@
+#!/bin/bash
+
+
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# Bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2014-5 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+#
+# calculate a pseudo-random number with von Neumann's middle-square method
+#
+#   usage: bashlets middlesquare random [SEED]
+#
+# if SEED is not given, use the number of seconds from the Epoch instead.
+#
+
+# a little bit of history from Wikipedia:
+#
+# An early computer-based PRNG, suggested by John von Neumann in 1946,
+# is known as the middle-square method. It is very simple: take any
+# number, square it, remove the middle digits of the resulting number as
+# your "random number", then use that number as the seed for the next
+# iteration. For example, squaring the number "1111" yields "1234321",
+# which can be written as "01234321", an 8-digit number being the square
+# of a 4-digit number. This gives "2343" as the "random" number. Repeating
+# this procedure gives "4896" as the next result, and so on. Von Neumann
+# used 10 digit numbers, but the process was the same.
+# 
+# A problem with the "middle square" method is that all sequences
+# eventually repeat themselves, some very quickly, such as "0000". Von
+# Neumann was aware of this, but he found the approach sufficient for his
+# purposes, and was worried that mathematical "fixes" would simply hide
+# errors rather than remove them.
+# 
+# Von Neumann judged hardware random number generators unsuitable, for, if
+# they did not record the output generated, they could not later be tested
+# for errors. If they did record their output, they would exhaust the
+# limited computer memories available then, and so the computer's ability
+# to read and write numbers. If the numbers were written to cards, they
+# would take very much longer to write and read. On the ENIAC computer he
+# was using, the "middle square" method generated numbers at a rate some
+# hundred times faster than reading numbers in from punched cards.
+# 
+# The middle-square method has been supplanted by more elaborate
+# generators.
+#
+# (http://en.wikipedia.org/w/index.php?title=Pseudorandom_number_generator&oldid=392604163)
+
+
+source bashlet datatype/number
+source bashlet datatype/string
+
+
+function bashlets_math_middlesquare_random()
+{
+    local count="${1:-17}"  # count of iterations
+    local seed="$2"
+    local i
+
+    # get a valid input number or use number of seconds since the Epoch
+    number validate as_unsigned "$seed" || seed="$(date +%s)"
+
+    for i in "$(seq 1 "$count")"
+    do
+        seed="$((seed*seed))"
+        seed="$(string lalign_n 4 0 "$seed")"
+        seed="$(string middle_2n "$seed")"
+    done
+
+    # done
+    echo "$seed"
+}
+
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh
