@@ -34,9 +34,50 @@
 ################################################################################
 
 
+source bashlet charstream/reorder
+source bashlet charstream/reshape
+
 function bashlets_datatype_string_chop()
 {
     echo "$(echo "$@" | tr -d "\n")"
+}
+
+function bashlets_datatype_string_length()
+{
+    local str="$*"
+    echo ${#str}
+}
+
+function bashlets_datatype_string_upper()
+{
+    echo "$*" | tr [a-z] [A-Z]
+}
+
+function bashlets_datatype_string_lower()
+{
+    echo "$*" | tr [A-Z] [a-z]
+}
+
+function bashlets_datatype_string_to_charstream()
+{
+    local chr
+    echo -n "$*" | while read -r -n1 chr; do echo "$chr"; done
+}
+
+function bashlets_datatype_string_transpose()
+{
+    bashlets_datatype_string_to_charstream "$*"
+}
+
+function bashlets_datatype_string_shuffle()
+{
+    local str="$*"
+
+    [[ -n $str ]] || return
+
+    bashlets_datatype_string_to_charstream "$str"    \
+        | reorder shuffle                            \
+        | reshape transpose
 }
 
 # Local variables:
