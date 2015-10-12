@@ -128,7 +128,7 @@ function bashlets_library_loader_import()
             sed "s/${method_prefix}_//"
     )
     do
-        container_def="$method_def
+        container_def="$container_def
             $method)
                 ${method_prefix}_\$method \"\$@\"
                 ;;
