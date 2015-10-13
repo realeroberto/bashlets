@@ -58,6 +58,12 @@ function bashlets_datatype_string_lower()
     echo "$*" | tr [A-Z] [a-z]
 }
 
+function bashlets_datatype_string_rot13()
+{
+    # cf. http://rosettacode.org/wiki/Rot-13#Bourne_Shell
+    echo "$*" | tr a-zA-Z n-za-mN-ZA-M
+}
+
 function bashlets_datatype_string_to_charstream()
 {
     local chr
