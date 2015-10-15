@@ -107,12 +107,12 @@ function import_bashlet()
 
 [[ $# != 1 ]] && {
     echo "Usage: bashlet <bashlet>" >&2
-    exit 1
+    return 1
 }
 
 import_bashlet "$1" || {
     echo "Error!" >&2
-    exit 1
+    return 1
 }
 
 
