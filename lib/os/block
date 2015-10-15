@@ -1,0 +1,141 @@
+#!/bin/bash
+
+
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# Bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2014-5 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+source bashlet datatype/number
+source bashlet datatype/version
+source bashlet os/kernel
+source bashlet os/mounts
+
+
+function bashlets_os_block_get_signature()
+{
+    local target="$1"
+    local major="$(stat -c '%t' "$target")"  # major device type in HEX
+    local minor="$(stat -c '%T' "$target")"  # minor device type in HEX
+    local signature="$(printf "%d:%d" $major $minor)"  # convert to decimal
+
+    echo $signature
+}
+
+function bashlets_os_block_validate_device()
+{
+    local target="$1"
+
+    stat -c %F "$target" 2> /dev/null | grep 'block special file' > /dev/null
+}
+
+function bashlets_os_block_validate_signature()
+{
+    local signature="$1"
+    local major=${signature%:*}
+    local minor=${signature#*:}
+
+    number validate_as_byte "$major" && number validate_as_byte "$minor"
+}
+
+function __bashlets_os_block_canonicalise_pre_2_6_27()
+{
+    local target="$1"
+    local signature="$(bashlets_os_block_get_signature "$target")"
+    local sysfs="$(mounts get_mount_point_by_type sysfs)"
+
+    # TODO: add explanation
+
+    dirname "$(find "$sysfs/block" -name dev | xargs -r grep -l ^$signature$)"
+}
+
+function __bashlets_os_block_canonicalise_post_2_6_27()
+{
+    local target="$1"
+    local signature="$(bashlets_os_block_get_signature "$target")"
+    local sysfs="$(mounts get_mount_point_by_type sysfs)"
+
+    # TODO: add explanation
+
+    local device_name=$(
+        source "$sysfs/dev/block/$signature/uevent"
+        echo $DEVNAME
+    )
+
+    echo "$sysfs/class/block/$device_name"
+}
+
+function bashlets_os_block_canonicalise()
+{
+    local target="$1"
+
+    bashlets_os_block_validate_device "$target" || return 1  # not a block special file?
+
+    # the /sys/dev hierachy was only added to the kernel as late as 2.6.27,
+    # so we need a "branching" approach
+    # cf. 
+    #   http://unix.stackexchange.com/questions/151812/get-device-node-by-major-minor-numbers-pair
+    #   http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=e105b8bfc769b0545b6f0f395179d1e43cbee822
+
+    local kernel_version=$(kernel get_version)
+
+    version greater_than $kernel_version 2.6.27                      \
+        && __bashlets_os_block_canonicalise_post_2_6_27 "$target"    \
+        || __bashlets_os_block_canonicalise_pre_2_6_27 "$target"
+}
+
+function bashlets_os_block_canonicalise_parent()
+{
+    local target="$1"
+    local device="$(bashlets_os_block_canonicalise "$target")"
+    local parent_device parent_signature
+
+    test -n "$device" || return 1
+
+    # TODO: add explanation
+
+    parent_device="$(dirname "$device")"
+    test -f "$parent_device/dev" || return 1
+
+    parent_signature="$(cat "$parent_device/dev" 2> /dev/null)"
+    bashlets_os_block_validate_signature "$parent_signature" || return 1
+
+    echo "$parent_device"
+}
+
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh
