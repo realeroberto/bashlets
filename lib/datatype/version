@@ -48,9 +48,10 @@ function __bashlets_datatype_version_naive_sort()
 
 function bashlets_datatype_version_sort()
 {
-    echo "$@" | xargs -n 1 | sort --version-sort 2> /dev/null   \
-                                                                \
-        || __bashlets_datatype_version_naive_sort "$@"
+    (
+        echo "$@" | xargs -n 1 | sort --version-sort
+
+    ) 2> /dev/null || __bashlets_datatype_version_naive_sort "$@"
 }
 
 function bashlets_datatype_version_less_than()
