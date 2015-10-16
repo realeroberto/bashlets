@@ -40,12 +40,15 @@ source bashlet os/kernel
 source bashlet os/mounts
 
 
+# cf. https://www.kernel.org/doc/Documentation/sysfs-rules.txt
+
+
 function bashlets_os_block_get_signature()
 {
     local target="$1"
     local major="$(stat -c '%t' "$target")"  # major device type in HEX
     local minor="$(stat -c '%T' "$target")"  # minor device type in HEX
-    local signature="$(printf "%d:%d" $major $minor)"  # convert to decimal
+    local signature="$(printf "%d:%d" 0x$major 0x$minor)"  # convert to decimal
 
     echo $signature
 }
@@ -70,27 +73,23 @@ function __bashlets_os_block_canonicalise_pre_2_6_27()
 {
     local target="$1"
     local signature="$(bashlets_os_block_get_signature "$target")"
-    local sysfs="$(mounts get_mount_point_by_type sysfs)"
+    local sysfs="$(mounts get_mount_point_of_sysfs)"
 
     # TODO: add explanation
 
-    dirname "$(find "$sysfs/block" -name dev | xargs -r grep -l ^$signature$)"
+    dirname "$(  \
+        find "$sysfs/block" -name dev | xargs -r grep -l ^$signature$)"
 }
 
 function __bashlets_os_block_canonicalise_post_2_6_27()
 {
     local target="$1"
     local signature="$(bashlets_os_block_get_signature "$target")"
-    local sysfs="$(mounts get_mount_point_by_type sysfs)"
+    local sysfs="$(mounts get_mount_point_of_sysfs)"
 
     # TODO: add explanation
 
-    local device_name=$(
-        source "$sysfs/dev/block/$signature/uevent"
-        echo $DEVNAME
-    )
-
-    echo "$sysfs/class/block/$device_name"
+    readlink -e "$sysfs/dev/block/$signature"
 }
 
 function bashlets_os_block_canonicalise()
