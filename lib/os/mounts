@@ -51,6 +51,16 @@ function bashlets_os_mounts_get_mount_point_by_type()
     cat /proc/mounts | awk "\$3 == \"$type\" {print \$2}"
 }
 
+function bashlets_os_mounts_get_mount_point_of_sysfs()
+{
+    # the Linux documentation says that sysfs is always at /sys and that
+    # parsing /proc/mounts is a waste of time
+    # cf. https://www.kernel.org/doc/Documentation/sysfs-rules.txt
+
+    # bashlets_os_mounts_get_mount_point_by_type sysfs
+    echo /sys
+}
+
 
 # Local variables:
 # mode: shell-script
