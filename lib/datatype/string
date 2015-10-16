@@ -50,12 +50,12 @@ function bashlets_datatype_string_length()
 
 function bashlets_datatype_string_upper()
 {
-    echo "$*" | tr [a-z] [A-Z]
+    echo "$*" | tr a-z A-Z
 }
 
 function bashlets_datatype_string_lower()
 {
-    echo "$*" | tr [A-Z] [a-z]
+    echo "$*" | tr A-Z a-z
 }
 
 function bashlets_datatype_string_rot13()
