@@ -54,9 +54,6 @@ function bashlets_basic_shell_has_feature()
         "associative-arrays")
             version greater_than "$(bashlets_basic_shell_get_short_version)" 4
             ;;
-        "version-sort")
-            version are_fully_sortable
-            ;;
         *)
             echo "Feature unknown!"
             return 1

@@ -34,13 +34,7 @@
 ################################################################################
 
 
-function bashlets_datatype_version_are_fully_sortable()
-{
-    </dev/null sort --version-sort >/dev/null 2>&1
-    test $? -eq 0
-}
-
-function bashlets_datatype_version_naive_sort()
+function __bashlets_datatype_version_naive_sort()
 {
     # naive Bash implementation
     # cf. http://stackoverflow.com/questions/16989598/
@@ -54,12 +48,9 @@ function bashlets_datatype_version_naive_sort()
 
 function bashlets_datatype_version_sort()
 {
-    if bashlets_datatype_version_are_fully_sortable
-    then
-        echo "$@" | xargs -n 1 | sort --version-sort
-    else
-        bashlets_datatype_version_naive_sort "$@"
-    fi
+    echo "$@" | xargs -n 1 | sort --version-sort 2> /dev/null   \
+                                                                \
+        || __bashlets_datatype_version_naive_sort "$@"
 }
 
 function bashlets_datatype_version_less_than()
