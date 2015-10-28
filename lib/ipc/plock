@@ -1,0 +1,160 @@
+#!/bin/bash
+
+
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# Bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2014-5 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+#
+# the maximum lifetime of a lock file, in seconds; when expired, the lock
+# is assumed to be a stale one
+#
+__bashlets_ipc_plock_max_lifetime=3600
+
+#
+# when the lock is not available, how much do we need to wait before
+# trying again?
+#
+__bashlets_ipc_plock_delay=2
+
+
+###################
+##
+## acquire the lock
+##
+###################
+
+function bashlets_ipc_plock_acquire()
+{
+    local lockfile="$1"
+    local may_start=0
+
+    #
+    # busy-wait loop (with $__bashlets_ipc_plock_delay seconds between iterations)
+    #
+    while [[ $may_start == 0 ]]
+    do
+        #
+        # try to acquire the lock
+        #
+        # as pointed out by David Pashley in his essay at
+        # http://www.davidpashley.com/articles/writing-robust-shell-scripts.html,
+        # we cannot simply do something like this:
+        #
+        #    if [ ! -e $lockfile ]; then
+        #       touch $lockfile
+        #       critical-section
+        #       rm $lockfile
+        #    else
+        #       echo "critical-section is already running"
+        #    fi
+        #
+        # indeed, there is <<there is a slight race condition ... between the time
+        # we test for the lockfile and the time we create it>>
+        #
+        # so a possible solution <<might be to use IO redirection and bash's
+        # noclobber mode, which won't redirect to an existing file>>
+        #
+        if ! ( 
+            #
+            # we do this in a subshell so as to not pollute the global
+            # environment
+            #
+            set -o noclobber;
+            #
+            # let us close stderr to dispose of the annoying shell
+            # message 'cannot overwrite existing file'
+            #
+            exec 2>&-;
+            #
+            # in the hope to prevent stale locks to proliferate,
+            # we record in the lock file itself our pid, our name
+            # and the timestamp
+            #
+            echo "$$:`basename $0`:`date +%s`" > "$lockfile" )
+        then
+            #
+            # if we fail, the lock must be already held by another process;
+            # let us look at its contents, however
+            #
+            lock_contents=`cat $lockfile 2>/dev/null`
+            pid=`echo $lock_contents | sed 's/^\([0-9]*\):.*/\1/'`
+            cmd=`echo $lock_contents | cut -d':' -f2`
+            timestamp=`echo $lock_contents | sed 's/^.*:.*:\([0-9]*\)$/\1/'`
+            now=`date +%s`
+            #
+            # the pid and name recorded must correspond to a running
+            # process; moreover, the timestamp must not be too
+            # old
+            #
+            # if these conditions are not fulfilled, we can assume
+            # that the lock is a stale one
+            #
+            if [[ -z $pid || -z $cmd || -z $timestamp ||
+                -z `ps -C $cmd -o pid= | grep $pid` ||
+                `echo $now - $timestamp | bc` -ge $__bashlets_ipc_plock_max_lifetime ]]
+        then
+            rm -f $lockfile
+            may_start=1
+        else
+            sleep $__bashlets_ipc_plock_delay
+        fi
+    else
+        #
+        # we are done, do not forget to clean on exit
+        #
+        trap "bashlets_ipc_plock_exists; exit" TERM INT EXIT  # XXX
+
+        may_start=1
+    fi
+done
+}
+
+function bashlets_ipc_plock_release()
+{
+    local lockfile="$1"
+    rm -f "$lockfile"
+}
+
+function bashlets_ipc_plock_exists()
+{
+    local lockfile="$1"
+    [[ -e $lockfile ]]
+}
+
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh
