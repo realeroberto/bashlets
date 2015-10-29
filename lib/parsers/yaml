@@ -1,0 +1,107 @@
+#!/bin/bash
+
+
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# Bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2014-5 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+source bashlet charstream/infer
+source bashlet datatype/keyvalues
+
+#
+# Parses a (simplified) YAML file.
+# Based on http://stackoverflow.com/questions/5014632/.
+#
+
+function bashlets_parsers_yaml_to_keyvalues()
+{
+	local file="$1"
+	local prefix="$2"
+	local s='[[:space:]]*' w='[a-zA-Z0-9_]*' fs=$(echo -ne '\034')
+	local indent_step
+
+    test -e "$file" || return
+
+    indent_step="$(cat "$file" | infer indent_step)"
+	
+	sed                                                                     \
+		-ne "s|^\($s\):|\1|"                                                \
+		-e  "s|^\($s\)\($w\)$s:$s[\"']\(.*\)[\"']$s\$|\1$fs\2$fs\3|p"       \
+		-e  "s|^\($s\)\($w\)$s:$s\(.*\)$s\$|\1$fs\2$fs\3|p"   "$file"       \
+																			\
+	| awk -v indent_step="$indent_step" -v fs="$fs" -F$fs '{
+		indent = length($1)/indent_step;
+		vname[indent] = $2;
+		for (i in vname) {if (i > indent) {delete vname[i]}}
+		if (length($3) > 0) {
+			vn=""; for (i=0; i<indent; i++) {vn=(vn)(vname[i])("_")}
+			printf("%s%s%s"(fs)"%s\n", "'$prefix'", vn, $2, $3);
+		}
+	}'
+}
+
+
+function bashlets_parsers_yaml_list_keys()
+{
+	local file="$1"
+	local prefix="$2"
+
+    bashlets_parsers_yaml_to_keyvalues "$file" "$prefix"                    \
+        | keyvalues list_keys
+}
+
+function bashlets_parsers_yaml_list_values()
+{
+	local file="$1"
+	local prefix="$2"
+
+    bashlets_parsers_yaml_to_keyvalues "$file" "$prefix"                    \
+        | keyvalues list_values
+}
+
+function bashlets_parsers_yaml_get_by_key()
+{
+	local file="$1"
+	local prefix="$2"
+    local key="$3"
+
+    bashlets_parsers_yaml_to_keyvalues "$file" "$prefix"                    \
+        | keyvalues get_by_key "$key"
+}
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh
