@@ -34,21 +34,21 @@
 ################################################################################
 
 
-function bashlets_keyvalues_list_keys()
+function bashlets_datatype_keyvalues_list_keys()
 {
 	local fs="$1"
     test -n "$fs" || fs=$(echo -en "\034")
     cut -d$fs -f1 | sort -u
 }
 
-function bashlets_keyvalues_list_values()
+function bashlets_datatype_keyvalues_list_values()
 {
 	local fs="$2"
     test -n "$fs" || fs=$(echo -en "\034")
     cut -d$fs -f2 | sort -u
 }
 
-function bashlets_keyvalues_get_by_key()
+function bashlets_datatype_keyvalues_get_by_key()
 {
     local key="$1"
 	local fs="$2"
@@ -56,7 +56,7 @@ function bashlets_keyvalues_get_by_key()
     awk -F$fs "\$1 == \"$key\" {print \$2}"
 }
 
-function bashlets_keyvalues_get_by_value()
+function bashlets_datatype_keyvalues_get_by_value()
 {
     local value="$1"
 	local fs="$2"
