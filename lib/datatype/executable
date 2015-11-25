@@ -34,7 +34,7 @@
 ################################################################################
 
 
-function bashlets_datatype_function_exists()
+function bashlets_datatype_executable_is_function()
 {
     local fn="$1"
     [ -n "$(type -t "$fn")" ] && [ "$(type -t "$fn")" = function ]
