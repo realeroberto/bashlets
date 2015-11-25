@@ -37,9 +37,13 @@
 
 
 
-localPool=~/.bashlets
-remoteRepoLibrary=https://raw.githubusercontent.com/bashlets/bashlets-library/master/lib
-remoteRepoPlugins=https://raw.githubusercontent.com/bashlets/bashlets-plugins/master/plugins
+BASHLETS_LOCAL_POOL=~/.bashlets
+BASHLETS_REMOTE_REPO_LIBRARY=https://raw.githubusercontent.com/bashlets/bashlets-library/master/lib
+BASHLETS_REMOTE_REPO_PLUGINS=https://raw.githubusercontent.com/bashlets/bashlets-plugins/master/plugins
+
+export BASHLETS_LOCAL_POOL
+export BASHLETS_RE BASHLETS_REMOTE_REPO_LIBRARY
+export BASHLETS_RE BASHLETS_REMOTE_REPO_PLUGINS
 
 
 function bashlet_to_file()
@@ -49,9 +53,9 @@ function bashlet_to_file()
     # plugin names are prefixed by a colon
 
     [[ $bashlet =~ ^: ]] && {
-        echo "$localPool/plugins/${bashlet:1}"
+        echo "$BASHLETS_LOCAL_POOL/plugins/${bashlet:1}"
     } || {
-        echo "$localPool/lib/$bashlet"
+        echo "$BASHLETS_LOCAL_POOL/lib/$bashlet"
     }
 }
 
@@ -62,13 +66,13 @@ function bashlet_to_url()
     # plugin names are prefixed by a colon
 
     [[ $bashlet =~ ^: ]] && {
-        echo "$remoteRepoPlugins/${bashlet:1}"
+        echo "$BASHLETS_REMOTE_REPO_PLUGINS/${bashlet:1}"
     } || {
-        echo "$remoteRepoLibrary/$bashlet"
+        echo "$BASHLETS_REMOTE_REPO_LIBRARY/$bashlet"
     }
 }
 
-function download_bashlet()
+function bashlet_download()
 {
     local bashlet="$1"
     local file_name="$(bashlet_to_file "$bashlet")"
@@ -81,27 +85,42 @@ function download_bashlet()
     }
 }
 
-function import_bashlet_lazy()
+function bashlet_import_lazy()
 {
     local bashlet="$1"
     local file_name="$(bashlet_to_file "$1")"
 
     type bashlets_library_loader_import > /dev/null 2> /dev/null || {
         [[ $bashlet != "library/loader" ]] && 
-            import_bashlet_lazy library/loader
+            bashlet_import_lazy library/loader
     }
 
-    [[ -f "$file_name" ]] || download_bashlet "$bashlet" || return 1
+    [[ -f "$file_name" ]] || bashlet_download "$bashlet" || return 1
 
     source "$file_name"
 }
 
-function import_bashlet()
+function bashlet_import()
 {
     local bashlet="$1"
 
-    import_bashlet_lazy $bashlet || return 1
+    bashlet_import_lazy $bashlet || return 1
     bashlets_library_loader_import $bashlet || return 1
+}
+
+function bashlet_trace_enable()
+{
+    # cf. http://www.vctlabs.com/posts/2011/Nov/26/tracing_cheatsheet/
+    export BASHLETS_OLD_PS4="$PS4"
+    export PS4='+(${BASH_SOURCE[0]}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+    set -x
+}
+
+function bashlet_trace_disable()
+{
+    # cf. http://stackoverflow.com/questions/3601515/
+    set +x
+    [ -z ${BASHLETS_OLD_PS4+x} ] || export PS4="$BASHLETS_OLD_PS4"
 }
 
 
@@ -110,7 +129,7 @@ function import_bashlet()
     return 1
 }
 
-import_bashlet "$1" || {
+bashlet_import "$1" || {
     echo "Error!" >&2
     return 1
 }
