@@ -36,13 +36,13 @@
 
 function bashlets_os_tempdir_create()
 {
-	echo $(mktemp -d)
+    echo $(mktemp -d)
 }
 
 function bashlets_os_tempdir_destroy()
 {
     local tempdir="$1"
-	rm -fr "$tempdir"
+    rm -fr "$tempdir"
 }
 
 
