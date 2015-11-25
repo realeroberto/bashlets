@@ -49,7 +49,7 @@ function bashlets_marshal_dump_objects()
     done
 }
 
-function bashlets_marshal_dump_get_name()
+function bashlets_marshal_dump_get_by_name()
 {
     local object="$1"
     shift
