@@ -36,6 +36,26 @@
 
 source bashlet datatype/number
 
+
+function bashlets_math_integer_abs()
+{
+    local value="$1"
+    local opposite
+    number validate_as_integer "$value" || return 1
+    opposite="$((-1*value))"
+    [[ $value -ge $opposite ]] && echo "$value" || echo "$opposite"
+}
+
+function bashlets_math_integer_sign()
+{
+    local value="$1"
+    local opposite
+    number validate_as_integer "$value" || return 1
+    [[ $value -eq 0 ]] && { echo 0 ; return ; }
+    opposite="$((-1*value))"
+    [[ $value -ge $opposite ]] && echo 1 || echo -1
+}
+
 function bashlets_math_integer_get_unique_factors()
 {
     local pass_0
