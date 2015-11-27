@@ -55,7 +55,7 @@ function bashlets_os_random_get_stream()
 
     while (( $i <= $blk_count && $size > 0 ))
     do
-        (( $size < 4096 )) && blk_size=4096 || blk_size="$size"
+        (( $size > 4096 )) && blk_size=4096 || blk_size="$size"
         </dev/urandom tr -cd "$filter" | dd bs="$blk_size" count=1 2>/dev/null
         size="$((size-4096))"
         i="$((i-1))"
