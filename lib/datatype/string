@@ -36,6 +36,7 @@
 
 source bashlet charstream/reorder
 source bashlet charstream/reshape
+source bashlet os/random
 
 function bashlets_datatype_string_chop()
 {
@@ -56,6 +57,21 @@ function bashlets_datatype_string_upper()
 function bashlets_datatype_string_lower()
 {
     echo "$*" | tr A-Z a-z
+}
+
+function bashlets_datatype_string_to_bool()
+{
+    local value="$(bashlets_datatype_string_lower "$*")"
+    local try
+
+    [[ -n $value ]] || return 1
+
+    for try in y yes true 1
+    do
+        [[ $value == $try ]] && return
+    done
+
+    return 1
 }
 
 function bashlets_datatype_string_rot13()
@@ -125,6 +141,14 @@ function bashlets_datatype_string_lalign_n()
     len="$((n*q+r))"
 
     printf "%0${len}s" "$str" | tr " " "$pad"
+}
+
+
+function bashlets_datatype_string_generate_random()
+{
+    local size="${1:-16}"
+
+    random get_stream "$size" [[:print:]]
 }
 
 
