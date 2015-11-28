@@ -91,8 +91,8 @@ function bashlets_parsers_yaml_list_values()
 function bashlets_parsers_yaml_get_by_key()
 {
     local file="$1"
-    local prefix="$2"
-    local key="$3"
+    local key="$2"
+    local prefix="$3"
 
     bashlets_parsers_yaml_to_keyvalues "$file" "$prefix"                    \
         | keyvalues get_by_key "$key"
