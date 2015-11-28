@@ -1,10 +1,24 @@
-# bashlets-library
+# bashlets: Library Modules
 
-A modular extensible toolbox for Bash.
+## Introduction
+
+Bashlets is a modular extensible toolbox for Bash.
+
+This repository contains the core library modules.
+
+A reasonably sane GNU/Linux environment is assumed to be at hand; support for FreeBSD and Cygwin is available (in _homeopathic dilution_), yet highly experimental.
+
 
 ## Examples
 
-### Data types: generate and validate UUIDs
+### Data types: generating a random printable string of arbitrary length
+
+	$ source bashlet datatype/string
+
+	$ echo $(string generate_random 32)
+	6J-%.v(M)`N_de&2fvdVd;yy R;FRt=[
+
+### Data types: generating and validating UUIDs
 
 	$ source bashlet datatype/uuid
 
@@ -15,7 +29,7 @@ A modular extensible toolbox for Bash.
 	$ uuid validate 2fc83419-df73-4cfd-_f9d-85634c8370fd || echo INVALID
 	INVALID
 
-### Data types: intervals of timestamps
+### Data types: handling intervals of timestamps
 
 	$ export TZ=UTC
 	$ date
@@ -29,6 +43,17 @@ A modular extensible toolbox for Bash.
 	Fri Nov 27 00:00:00 UTC 2015
 	$ date -d @$(tsinterval get_t1 $delta)
 	Sat Nov 28 00:00:00 UTC 2015
+
+### Data types: comparing version strings
+
+	$ source bashlet datatype/version
+
+	$ version sort 1.44 1.4 1.4.4 1.4.4a 1.4-1234
+	1.4
+	1.4-1234
+	1.4.4
+	1.4.4a
+	1.44
 
 ### Cache: passing data around
 
@@ -45,8 +70,19 @@ A modular extensible toolbox for Bash.
 
 	$ fs destroy $cache
 
+### Character streams: converting formats without external tools
 
-### Math: manipulate complex numbers
+	$ source bashlet charstream/convert
+
+	$ cat << ??? | convert unix2dos | file -
+	> Shall I compare thee to a summer's day?
+	> Thou art more lovely and more temperate.
+	> Rough winds do shake the darling buds of May,
+	> And summer's lease hath all too short a date...
+	> ???
+	/dev/stdin: ASCII text, with CRLF line terminators
+
+### Math: manipulating complex numbers
 
 	$ source bashlet math/icomplex
 
@@ -54,14 +90,38 @@ A modular extensible toolbox for Bash.
 	$ icomplex to_real $(icomplex square $i)
 	-1
 
-### Math: calculate basic constants to (almost) arbitrary precision
+### Math: calculating basic constants to (almost) arbitrary precision
 
 	$ source bashlet math/constants
 
 	$ constants calculate phi 60
 	1.618033988749894848204586834365638117720309179805762862135448
 
-### User eXperience: a basic REPL cycle
+### Parsers: interpreting YAML documents in na(t)ive Bash code
+
+	$ # from http://yaml.org/spec/1.2/spec.html
+	$ cat sample.yaml
+	Date: 2001-11-23 15:03:17 -5
+	User: ed
+	Fatal:
+	  Unknown variable "bar"
+	Stack:
+	  - file: TopClass.py
+	    line: 23
+	    code: |
+	      x = MoreObject("345\n")
+	  - file: MoreClass.py
+	    line: 58
+	    code: |-
+	      foo = bar
+
+	$ source bashlet parsers/yaml
+
+	$ yaml get_by_key sample.yaml Stack__line
+	23
+	58
+
+### User eXperience: enjoying a basic REPL cycle
 
 	$ source bashlet ux/repl
 
