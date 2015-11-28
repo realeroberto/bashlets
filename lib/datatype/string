@@ -86,6 +86,20 @@ function bashlets_datatype_string_to_charstream()
     echo -n "$*" | while read -r -n1 chr; do echo "$chr"; done
 }
 
+function bashlets_datatype_string_reverse()
+{
+    # cf. http://stackoverflow.com/questions/11461625/
+    local str="$*"
+    local rev
+
+    for ((i=${#str}-1 ; i >= 0 ; i--))
+    do
+        rev="$rev${str:$i:1}"
+    done
+
+    echo "$rev"
+}
+
 function bashlets_datatype_string_transpose()
 {
     bashlets_datatype_string_to_charstream "$*"
