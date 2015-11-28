@@ -44,10 +44,10 @@ source bashlet datatype/keyvalues
 
 function bashlets_parsers_yaml_to_keyvalues()
 {
-	local file="$1"
-	local prefix="$2"
-	local s='[[:space:]]*' w='[a-zA-Z0-9_]*' fs=$(echo -ne '\034')
-	local indent_step
+    local file="$1"
+    local prefix="$2"
+    local s='[[:space:]]*' w='[a-zA-Z0-9_]*' fs=$(echo -ne '\034')
+    local indent_step
 
     test -e "$file" || return
 
@@ -72,8 +72,8 @@ function bashlets_parsers_yaml_to_keyvalues()
 
 function bashlets_parsers_yaml_list_keys()
 {
-	local file="$1"
-	local prefix="$2"
+    local file="$1"
+    local prefix="$2"
 
     bashlets_parsers_yaml_to_keyvalues "$file" "$prefix"                    \
         | keyvalues list_keys
@@ -81,8 +81,8 @@ function bashlets_parsers_yaml_list_keys()
 
 function bashlets_parsers_yaml_list_values()
 {
-	local file="$1"
-	local prefix="$2"
+    local file="$1"
+    local prefix="$2"
 
     bashlets_parsers_yaml_to_keyvalues "$file" "$prefix"                    \
         | keyvalues list_values
@@ -90,8 +90,8 @@ function bashlets_parsers_yaml_list_values()
 
 function bashlets_parsers_yaml_get_by_key()
 {
-	local file="$1"
-	local prefix="$2"
+    local file="$1"
+    local prefix="$2"
     local key="$3"
 
     bashlets_parsers_yaml_to_keyvalues "$file" "$prefix"                    \
