@@ -55,7 +55,9 @@ function bashlets_math_constants_calculate()
             return 1
     esac
 
-    echo "scale=$digits; $expr" | bc -l | tr -d "[\n\\\\]"
+    # some implementations of bc(1) will wrap the result string if it is too
+    # long, so remove any \n or \\ and add just one trailing newline
+    echo $(echo "scale=$digits; $expr" | bc -l | tr -d '[\n\\\\\ ]')
 }
 
 # Local variables:
