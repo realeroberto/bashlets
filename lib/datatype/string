@@ -49,6 +49,23 @@ function bashlets_datatype_string_length()
     echo ${#str}
 }
 
+function bashlets_datatype_string_index()
+{
+    # cf. https://github.com/marcomaggi/mbfl/blob/master/src/modules/string.sh.m4
+    local haystack="$1"
+    local needle="$2"
+    local start="${3:-0}"
+    local i
+
+    for ((i=$start; $i < ${#haystack}; ++i))
+    do
+        test "${haystack:$i:1}" = "$needle" && {
+            echo "$i"
+            return 0
+        }
+    done
+}
+
 function bashlets_datatype_string_upper()
 {
     echo "$*" | tr a-z A-Z
