@@ -34,7 +34,9 @@
 ################################################################################
 
 
+source bashlet marshal/dump
 source bashlet os/tempdir
+source bashlet utils/object
 
 
 function __bashlets_cache_fs_cache_to_path()
@@ -116,7 +118,32 @@ function bashlets_cache_fs_get()
     [[ -d "$path" ]]     || return 1
     [[ -e "$key_path" ]] || return 2
 
-    echo "$(cat "$key_path")"
+    [[ -d "$key_path" ]] && {
+        # array
+        declare -A array=()
+        for item in $key_path/*
+        do
+            array[$(basename $item)]="$(cat $item)"
+        done
+        # dump output
+        dump rename $(basename $key_path) "$(declare -p array)"
+    } || {
+        # scalar
+        echo "$(cat "$key_path")"
+    }
+}
+
+function bashlets_cache_fs_get_type()
+{
+    local cache="$1"
+    local key="$2"
+    local path="$(__bashlets_cache_fs_cache_to_path "$cache")"
+    local key_path="$(__bashlets_cache_fs_get_key_path "$path" "$key")"
+
+    [[ -d "$path" ]]     || return 1
+    [[ -e "$key_path" ]] || return 2
+
+    [[ -d "$key_path" ]] && echo array || echo scalar
 }
 
 function bashlets_cache_fs_set()
@@ -130,7 +157,38 @@ function bashlets_cache_fs_set()
 
     [[ -d "$path" ]] || return 1
 
-    echo $value > "$key_path"
+    echo "$value" > "$key_path"
+}
+
+function bashlets_cache_fs_set_array()
+{
+    # TODO: associative arrays
+
+    local cache="$1"
+    local key="$2"
+    local path="$(__bashlets_cache_fs_cache_to_path "$cache")"
+    local key_path="$(__bashlets_cache_fs_get_key_path "$path" "$key")"
+
+    # try not to mess with the global namespace here
+    local array_size array_name=__array__${RANDOM}__
+
+    object is_array $key || return 1
+
+    [[ -d "$path" ]] || return 1
+
+    # create container...
+    rm -fr "$key_path" && mkdir "$key_path" 
+
+    local count=0
+
+    key=$key[@]                     # no quotes here...
+    for item in "${!key}"           # ... but here the quotes are pivotal!
+    do  
+        echo $item > "$key_path/$count"
+        ((count++))
+    done
+
+    eval unset $array_name
 }
 
 function bashlets_cache_fs_unset()

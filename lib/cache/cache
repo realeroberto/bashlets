@@ -44,8 +44,10 @@ function __bashlets_cache_declare_interface()
         "destroy"     \
         "exists"      \
         "get"         \
+        "get_type"    \
         "list_keys"   \
         "set"         \
+        "set_array"   \
         "unconnect"
     do
         eval "function bashlets_cache_cache_$verb()
