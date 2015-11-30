@@ -49,6 +49,14 @@ function bashlets_marshal_dump_objects()
     done
 }
 
+function bashlets_marshal_dump_rename()
+{
+    local new="$1"
+    shift
+    echo "$@" |
+        sed "s/^declare -\\(.\\) \\([^=]\\+\\)=\\(.*\\)/declare -\\1 $new=\\3/"
+}
+
 function bashlets_marshal_dump_get_by_name()
 {
     local object="$1"
