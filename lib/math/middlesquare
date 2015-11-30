@@ -85,7 +85,7 @@ function bashlets_math_middlesquare_random()
     local i
 
     # get a valid input number or use number of seconds since the Epoch
-    number validate as_unsigned "$seed" || seed="$(date +%s)"
+    number validate_as_unsigned "$seed" || seed="$(date +%s)"
 
     for i in "$(seq 1 "$count")"
     do
