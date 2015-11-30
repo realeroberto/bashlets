@@ -46,6 +46,14 @@ function bashlets_utils_object_is_function()
     [ -n "$(type -t "$obj")" ] && [ "$(type -t "$obj")" = function ]
 }
 
+function bashlets_utils_object_rename()
+{
+    local obj="$1"
+    local new="${2:-$obj}"
+    declare -p "$obj" 2> /dev/null |
+        sed "s/^declare -\\(.\\) \\([^=]\\+\\)=\\(.*\\)/declare -\\1 $new=\\3/"
+}
+
 
 # Local variables:
 # mode: shell-script
