@@ -34,7 +34,7 @@
 ################################################################################
 
 
-source bashlet datatype/executable
+source bashlet utils/object
 
 
 function bashlets_marshal_dump_objects()
@@ -42,7 +42,7 @@ function bashlets_marshal_dump_objects()
     while test $# -gt 0
     do
         local object="$1"
-        executable is_function "$object"   \
+        object is_function "$object"       \
             && declare -f  "$object"       \
             || declare -p  "$object" 2> /dev/null
         shift
