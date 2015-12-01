@@ -1,0 +1,150 @@
+#!/bin/bash
+
+
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# Bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2014-5 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+source bashlet os/tempfile
+source bashlet marshal/uneval
+
+
+function __bashlets_charstream_interpolate_callback_plain()
+{
+    local input="$1"
+    local context_handler  # ignored
+    local sedexp
+    local key key2 value
+
+    [[ -e $input ]] || return 1
+
+    sedexp=$(cat "$input" | while read key
+        do
+            key2="$(echo $key | tr @ $)"
+            # get a value for VAR from the environment
+            value="$(eval echo "$key2")"
+            # escape path for sed
+            value="${value//\//\\/}"
+            # construct a list of sed substitutions
+            [[ -n $key && -n $value ]] && echo "-e s/$key/$value/g"
+        done | sed 'N; s/\n/ /')
+
+    echo "$sedexp"
+}
+
+function __bashlets_charstream_interpolate_callback_uneval()
+{
+    local input="$1"
+    local context_handler="$2"
+    local sedexp
+    local key key2 value
+
+    [[ -e $input && -n $context_handler ]] || return 1
+
+    sedexp=$(cat "$input" | while read key
+        do
+            key2="$(echo $key | tr -d @)"
+            # get a value for VAR from the context
+            value="$(uneval get_by_key "$context_handler" "$key2")"
+            # escape path for sed
+            value="${value//\//\\/}"
+            # construct a list of sed substitutions
+            [[ -n $key && -n $value ]] && echo "-e s/$key/$value/g"
+        done | sed 'N; s/\n/ /')
+
+    echo "$sedexp"
+}
+
+
+# safely substitute @var tokens with values from shell variables of the same
+# name (or from a marshal context, if assigned)
+
+function bashlets_charstream_interpolate_eval()
+{
+    local context="$1"
+    local context_handler="$2"
+    local input="$3"
+    local output="$4"
+
+    [[ -n $context ]] || return
+
+    local note1 note2
+    local callback sedexp regexp='@[A-Za-z0-9_]\+'
+    local stage1="$(tempfile create)" stage2="$(tempfile create)"
+
+    # build a list of @var's
+
+    (test -e "$input" && cat "$input" || cat)             \
+        | tee -a "$stage1"                      $note1    \
+        | sed "s/$regexp/&\n/g"                 $note2    \
+        | sed -n "s/.*\($regexp\).*/\1/p"                 \
+            > "$stage2"
+
+    # $note1  copy the input stream
+
+    # $note2  this is tricky since there might be many occurrences
+    #         of the same @var all in a row
+
+    case "$context"
+    in
+        plain)
+            callback=__bashlets_charstream_interpolate_callback_plain
+            ;;
+        uneval)
+            callback=__bashlets_charstream_interpolate_callback_uneval
+            ;;
+        *)
+            echo "Wrong context!"
+            return 1
+            ;;
+    esac
+
+    # read and parse the list constructed above
+    sedexp="$("$callback" "$stage2" "$context_handler")" || return 1
+
+    # apply substitutions (no quotes around $sedexp!)
+    [[ -n $sedexp ]] && sed $sedexp < "$stage1"         \
+        | (test -n "$output" && cat > "$output" || cat)
+
+    # cleanup
+    tempfile destroy "$stage1"
+    tempfile destroy "$stage2"
+}
+
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh
