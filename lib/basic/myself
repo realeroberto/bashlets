@@ -88,6 +88,11 @@ function bashlets_basic_myself_get_parent_name()
     ps -o comm= -p $(bashlets_basic_myself_get_ppid)
 }
 
+function bashlets_basic_myself_require_user()
+{
+    test $(whoami) = "$1"
+}
+
 
 # Local variables:
 # mode: shell-script
