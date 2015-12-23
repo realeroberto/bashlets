@@ -33,46 +33,105 @@
 #
 ################################################################################
 
+source bashlet cache/fs  # TODO: generalize!
 
 
-function bashlets_ux_repl_callback_default()
+function bashlets_ux_repl_get_verb()
 {
-    echo "${!1}"
+    local repl="$1"
+    local verb="$2"
+    fs get "$repl" "$verb"
 }
 
-function bashlets_ux_repl_callback_yell()
+function bashlets_ux_repl_set_verb()
 {
-    echo "${!1}" | tr a-z A-Z
+    local repl="$1"
+    local verb="$2"
+    local command="$3"
+    fs set "$repl" "$verb" "$command"
 }
 
-function bashlets_ux_repl_callback_quiet()
+function bashlets_ux_repl_get_help_for_verb()
 {
-    :
+    local repl="$1"
+    local verb="$2"
+    fs get "$repl" "$verb#help"
 }
 
-function bashlets_ux_repl_print_header()
+function bashlets_ux_repl_set_help_for_verb()
 {
-    :
+    local repl="$1"
+    local verb="$2"
+    local help="$3"
+    fs set "$repl" "$verb#help" "$help"
+}
+
+function bashlets_ux_repl_list_verbs()
+{
+    local repl="$1"
+    fs list_keys "$repl"
+}
+
+function bashlets_ux_repl_exec_verb()
+{
+    local repl="$1"
+    shift
+    local argv="${!1}"
+    local verb="${argv[0]}"
+    local command=$(bashlets_ux_repl_get_verb "$repl" $verb)
+
+    test "$(type -t "$command")" = function || {
+        echo "callback invalid!" >&2
+        return 1
+    }
+
+    $command argv[@]
+}
+
+function bashlets_ux_repl_help()
+{
+    local repl="$1"
+    local verb="$2"
+    bashlets_ux_repl_get_help_for_verb "$repl" "$verb"
+}
+
+function bashlets_ux_repl_create()
+{
+    fs create
+}
+
+function bashlets_ux_repl_destroy()
+{
+    fs destroy "$1"
 }
 
 function bashlets_ux_repl_start()
 {
-    local callback="${1:-default}"
-    local prompt="${2:->}"
-    local callback_fn="bashlets_ux_repl_callback_$callback"
+    local repl="$1"
+    local callback="${2:-default}"
+    local prompt="${3:->}"
     local argv
-
-    test "$(type -t "$callback_fn")" = function || {
-        echo "callback unknown!" >&2
-        return 1
-    }
 
     while $(true)
     do
         read -p "$prompt " -a argv
-        [[ ${argv[0]} == quit ]] && return 127
+        verb=${argv[0]}
 
-        "$callback_fn" argv[@]
+        if [[ $verb == help ]]
+        then
+            bashlets_ux_repl_help "$repl" ${argv[1]}
+        elif [[ $verb == quit || $verb == exit ]]
+        then
+            return 127
+        else
+            command=$(bashlets_ux_repl_get_verb "$repl" $verb)
+            if [[ -n $command ]]
+            then
+                bashlets_ux_repl_exec_verb "$repl" argv[@]
+            else
+                echo "Command not found!"
+            fi
+        fi
     done
 }
 
