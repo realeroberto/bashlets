@@ -1,0 +1,14 @@
+repository :
+	retention:
+
+backends:
+	fs:
+		base_path:
+		path_delimiter:
+	webdav:
+		base_uri:
+		username:
+		password:
+
+        
+# ex: ts=4 sw=4 et filetype=yaml noexpandtab
