@@ -111,8 +111,7 @@ function bashlets_ux_repl_destroy()
 function bashlets_ux_repl_start()
 {
     local repl="$1"
-    local callback="${2:-default}"
-    local prompt="${3:->}"
+    local prompt="${2:->}"
     local argv
 
     term is_tty || prompt=
