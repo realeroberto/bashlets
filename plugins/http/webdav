@@ -115,8 +115,8 @@ function bashlets_http_webdav_isfile()
 	local path="$2"
 	local target="$3"
 	local base_uri="$(bashlets_http_webdav_get_base_uri "$handler")"
-	local password="$(bashlets_http_webdav_get_password "$handler")"
 	local username="$(bashlets_http_webdav_get_username "$handler")"
+	local password="$(bashlets_http_webdav_get_password "$handler")"
 
 	curl -m 1 -s                               \
 		-u "$username:$password"               \
@@ -131,8 +131,8 @@ function bashlets_http_webdav_create()
     local handler="$1"
 	local target="$2"
 	local base_uri="$(bashlets_http_webdav_get_base_uri "$handler")"
-	local password="$(bashlets_http_webdav_get_password "$handler")"
 	local username="$(bashlets_http_webdav_get_username "$handler")"
+	local password="$(bashlets_http_webdav_get_password "$handler")"
 
 	curl -s                                    \
 		-u "$username:$password"               \
@@ -148,8 +148,8 @@ function bashlets_http_webdav_touch()
 	local path="$2"
 	local target="$3"
 	local base_uri="$(bashlets_http_webdav_get_base_uri "$handler")"
-	local password="$(bashlets_http_webdav_get_password "$handler")"
 	local username="$(bashlets_http_webdav_get_username "$handler")"
+	local password="$(bashlets_http_webdav_get_password "$handler")"
 
 	curl -s                                    \
 		-u "$username:$password"               \
@@ -166,8 +166,8 @@ function bashlets_http_webdav_copy()
 	local source="$2"
 	local target="$3"
 	local base_uri="$(bashlets_http_webdav_get_base_uri "$handler")"
-	local password="$(bashlets_http_webdav_get_password "$handler")"
 	local username="$(bashlets_http_webdav_get_username "$handler")"
+	local password="$(bashlets_http_webdav_get_password "$handler")"
 
 	curl -s                                    \
 		-u "$username:$password"               \
@@ -184,8 +184,8 @@ function bashlets_http_webdav_move()
 	local source="$2"
 	local target="$3"
 	local base_uri="$(bashlets_http_webdav_get_base_uri "$handler")"
-	local password="$(bashlets_http_webdav_get_password "$handler")"
 	local username="$(bashlets_http_webdav_get_username "$handler")"
+	local password="$(bashlets_http_webdav_get_password "$handler")"
 
 	curl -s                                    \
 		-u "$username:$password"               \
