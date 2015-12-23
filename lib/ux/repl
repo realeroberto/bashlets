@@ -95,7 +95,7 @@ function bashlets_ux_repl_help()
 {
     local repl="$1"
     local verb="$2"
-    bashlets_ux_repl_get_help_for_verb "$repl" "$verb"
+    echo "$verb: $(bashlets_ux_repl_get_help_for_verb "$repl" "$verb")"
 }
 
 function bashlets_ux_repl_create()
