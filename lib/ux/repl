@@ -34,7 +34,10 @@
 ################################################################################
 
 source bashlet cache/fs  # TODO: generalize!
+source bashlet os/term
 
+
+BASHLETS_UX_REPL_ERR_INVALID_ARG=2
 
 function bashlets_ux_repl_get_verb()
 {
@@ -69,7 +72,7 @@ function bashlets_ux_repl_set_help_for_verb()
 function bashlets_ux_repl_list_verbs()
 {
     local repl="$1"
-    fs list_keys "$repl"
+    fs list_keys "$repl" | grep -v "#help$"
 }
 
 function bashlets_ux_repl_exec_verb()
@@ -112,6 +115,8 @@ function bashlets_ux_repl_start()
     local prompt="${3:->}"
     local argv
 
+    term is_tty || prompt=
+
     while $(true)
     do
         read -p "$prompt " -a argv
@@ -119,7 +124,14 @@ function bashlets_ux_repl_start()
 
         if [[ $verb == help ]]
         then
-            bashlets_ux_repl_help "$repl" ${argv[1]}
+            verb=${argv[1]}
+            if [[ -n $verb ]]
+            then
+                bashlets_ux_repl_help "$repl" $verb
+            else
+                echo -e "Available commands:\n"
+                bashlets_ux_repl_list_verbs "$repl"
+            fi
         elif [[ $verb == quit || $verb == exit ]]
         then
             return 127
@@ -128,10 +140,17 @@ function bashlets_ux_repl_start()
             if [[ -n $command ]]
             then
                 bashlets_ux_repl_exec_verb "$repl" argv[@]
+                if [[ $? -eq $BASHLETS_UX_REPL_ERR_INVALID_ARG ]]
+                then
+                    echo "Invalid or missing argument!"
+                    echo "Type 'help <COMMAND>' for help."
+                fi
             else
                 echo "Command not found!"
             fi
         fi
+
+        term is_tty || break
     done
 }
 
