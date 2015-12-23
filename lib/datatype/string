@@ -76,6 +76,11 @@ function bashlets_datatype_string_lower()
     echo "$*" | tr A-Z a-z
 }
 
+function bashlets_datatype_string_to_integer()
+{
+    printf "%d\n" "$1"  # removes leading zero's
+}
+
 function bashlets_datatype_string_to_bool()
 {
     local value="$(bashlets_datatype_string_lower "$*")"
