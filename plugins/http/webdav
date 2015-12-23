@@ -1,0 +1,198 @@
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# Bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2014-5 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+# NOTE: requires curl
+
+source bashlet marshal/uneval
+
+
+function bashlets_http_webdav_get_handler()
+{
+    uneval create
+}
+
+function bashlets_http_webdav_release_handler()
+{
+    :
+}
+
+function bashlets_http_webdav_get_param()
+{
+    local handler="$1"
+    local key="$2"
+
+    [[ -n $handler && -n $key ]] || return
+
+    echo "$(uneval get_by_key "$handler" "$key")"
+}
+
+function bashlets_http_webdav_set_param()
+{
+    local handler="$1"
+    local key="$2"
+    local value="$3"
+
+    [[ -n $handler && -n $key ]] || return
+
+    uneval add_pair "$handler" "$key" "$value"
+}
+
+function bashlets_http_webdav_get_base_uri()
+{
+    local handler="$1"
+    bashlets_http_webdav_get_param "$handler" base_uri
+}
+
+function bashlets_http_webdav_set_base_uri()
+{
+    local handler="$1"
+    local base_uri="$2"
+    bashlets_http_webdav_set_param "$handler" "base_uri" "$base_uri"
+}
+
+function bashlets_http_webdav_get_password()
+{
+    local handler="$1"
+    bashlets_http_webdav_get_param "$handler" password
+}
+
+function bashlets_http_webdav_set_password()
+{
+    local handler="$1"
+    local password="$2"
+    bashlets_http_webdav_set_param "$handler" "password" "$password"
+}
+
+function bashlets_http_webdav_get_username()
+{
+    local handler="$1"
+    bashlets_http_webdav_get_param "$handler" username
+}
+
+function bashlets_http_webdav_set_username()
+{
+    local handler="$1"
+    local username="$2"
+    bashlets_http_webdav_set_param "$handler" "username" "$username"
+}
+
+
+# Returns true if the given target is a file.
+
+function bashlets_http_webdav_isfile()
+{
+    local handler="$1"
+	local path="$2"
+	local target="$3"
+	local base_uri="$(bashlets_http_webdav_get_base_uri "$handler")"
+	local password="$(bashlets_http_webdav_get_password "$handler")"
+	local username="$(bashlets_http_webdav_get_username "$handler")"
+
+	curl -m 1 -s                               \
+		-u "$username:$password"               \
+		-X HEAD                                \
+		"$base_uri/$path/$target"
+}
+
+# Creates a resource. 
+
+function bashlets_http_webdav_create()
+{
+    local handler="$1"
+	local target="$2"
+	local base_uri="$(bashlets_http_webdav_get_base_uri "$handler")"
+	local password="$(bashlets_http_webdav_get_password "$handler")"
+	local username="$(bashlets_http_webdav_get_username "$handler")"
+
+	curl -s                                    \
+		-u "$username:$password"               \
+		-X MKCOL                               \
+		"$base_uri/$target"
+}
+
+# Touches a resource.
+
+function bashlets_http_webdav_touch()
+{
+    local handler="$1"
+	local path="$2"
+	local target="$3"
+	local base_uri="$(bashlets_http_webdav_get_base_uri "$handler")"
+	local password="$(bashlets_http_webdav_get_password "$handler")"
+	local username="$(bashlets_http_webdav_get_username "$handler")"
+
+	curl -s                                    \
+		-u "$username:$password"               \
+		-X PUT                                 \
+		-H "Content-Length: 0 "                \
+		"$base_uri/$path/$target"
+}
+
+# Copies a resource.
+
+function bashlets_http_webdav_copy()
+{
+    local handler="$1"
+	local source="$2"
+	local target="$3"
+	local base_uri="$(bashlets_http_webdav_get_base_uri "$handler")"
+	local password="$(bashlets_http_webdav_get_password "$handler")"
+	local username="$(bashlets_http_webdav_get_username "$handler")"
+
+	curl -s                                    \
+		-u "$username:$password"               \
+		-X COPY                                \
+		-H "Destination: $base_uri/$target"    \
+		"$base_uri/$source"
+}
+
+# Moves a resource.
+
+function bashlets_http_webdav_move()
+{
+    local handler="$1"
+	local source="$2"
+	local target="$3"
+	local base_uri="$(bashlets_http_webdav_get_base_uri "$handler")"
+	local password="$(bashlets_http_webdav_get_password "$handler")"
+	local username="$(bashlets_http_webdav_get_username "$handler")"
+
+	curl -s                                    \
+		-u "$username:$password"               \
+		-X MOVE                                \
+		-H "Destination: $base_uri/$target"    \
+		"$base_uri/$source"
+}
+
+
+# ex: ts=4 sw=4 et filetype=sh noexpandtab
