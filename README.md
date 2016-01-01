@@ -1,10 +1,8 @@
-# bashlets: Library Modules
+# bashlets
 
 ## Introduction
 
 Bashlets is a modular extensible toolbox for Bash.
-
-This repository contains the core library modules.
 
 A reasonably sane GNU/Linux environment is assumed to be at hand; support for FreeBSD and Cygwin is available (in _homeopathic dilution_), yet highly experimental.
 

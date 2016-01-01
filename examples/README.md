@@ -4,4 +4,4 @@
 
 Bashlets is a modular extensible toolbox for Bash.
 
-This repository contains a collection of examples.
+This folder contains a collection of examples.
