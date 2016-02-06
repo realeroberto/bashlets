@@ -186,6 +186,38 @@ function bashlets_awk_math_sqrt_by_heron()
     "
 }
 
+
+
+# implement the Horner algorithm for evaluating a polynomial at a given point
+#
+#   (see http://en.wikipedia.org/wiki/Horner_scheme)
+
+function bashlets_awk_math_horner_eval()
+{
+    [ $# -gt 1 ] || return
+
+    echo $@ | awk -e '
+        function horner(poly, n, x_0, res) {
+            res = 0
+            
+            for (i = 1; i <= n; i++) {
+                res = res*x_0 + poly[i]
+            }
+            
+            return res
+        }
+         
+        {
+            split($0, poly)
+            delete poly[NF]
+            x_0 = $NF
+            
+            res = horner(poly, NF-1, x_0)
+            print res
+        }
+    '
+}
+
 # Local variables:
 # mode: shell-script
 # sh-basic-offset: 4
