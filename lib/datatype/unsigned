@@ -41,6 +41,18 @@ function bashlets_datatype_unsigned_validate()
     number validate_as_unsigned "$1"
 }
 
+function bashlets_datatype_unsigned_is_even()
+{
+    number validate_as_unsigned "$1" || return 1
+    (($1 % 2 == 0))
+}
+
+function bashlets_datatype_unsigned_is_odd()
+{
+    number validate_as_unsigned "$1" || return 1
+    (($1 % 2 == 1))
+}
+
 # Local variables:
 # mode: shell-script
 # sh-basic-offset: 4
