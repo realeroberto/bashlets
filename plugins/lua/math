@@ -34,6 +34,30 @@
 ################################################################################
 
 
+# Euclidean algorithm
+#
+# inspired by the C implementation at
+# http://www.codecodex.com/wiki/Euclidean_algorithm
+
+function bashlets_lua_math_gcd()
+{
+    local x=${1:-0} y=${2:-0}
+
+    lua -e "
+        function gcd(a, b)
+
+            if b == 0 then
+                return a
+            end
+
+            return gcd(b, a % b)
+        end
+
+        print (gcd($x, $y))
+    "
+}
+
+
 #
 # calculate (an approximation of) PI/2 with the aid of Wallis' product
 #
