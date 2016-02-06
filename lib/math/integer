@@ -35,6 +35,7 @@
 
 
 source bashlet datatype/number
+source bashlet math/float
 
 
 function bashlets_math_integer_abs()
@@ -54,6 +55,32 @@ function bashlets_math_integer_sign()
     [[ $value -eq 0 ]] && { echo 0 ; return ; }
     opposite="$((-1*value))"
     [[ $value -ge $opposite ]] && echo 1 || echo -1
+}
+
+function bashlets_math_integer_is_prime()
+{
+    number validate_as_integer "$1" || return 1
+
+    # cf. https://primes.utm.edu/notes/faq/negative_primes.html
+    local value=$(bashlets_math_integer_abs $1)
+
+    if (($value == 2))
+    then
+        return 0
+    elif (($value < 2)) || (($value % 2 == 0))
+    then
+        return 1
+    else
+        local i sqrt_value="$(float sqrt $value)"
+        for i in $(seq 3 2 "$sqrt_value")
+        do
+            if (($value % $i == 0))
+            then
+                return 1
+            fi
+        done
+        return 0
+    fi
 }
 
 function bashlets_math_integer_get_unique_factors()
