@@ -58,6 +58,11 @@ function bashlets_datatype_number_validate_as_float()
     [[ $1 =~ ^[-+]?[0-9]*\.?[0-9]+$ ]]
 }
 
+function bashlets_datatype_number_validate_as_unsigned_float()
+{
+    [[ $1 =~ ^\+?[0-9]*\.?[0-9]+$ ]]
+}
+
 function bashlets_datatype_number_to_int()
 {
     local x="$1"
