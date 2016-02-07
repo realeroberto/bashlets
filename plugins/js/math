@@ -41,6 +41,35 @@ source bashlet math/integer
 [ -n "$BASHLETS_JS_INTERPRETER" ] || export BASHLETS_JS_INTERPRETER=node
 
 
+#
+# calculate (an approximation of) PI with the aid of Wallis' product
+#
+
+function bashlets_js_math_wallis()
+{
+    local iterations=${1:-10000} pi
+
+    pi="$($BASHLETS_JS_INTERPRETER -e "
+        function wallis(n)
+        {
+            var value = 1;
+            var i = 1;
+
+            while (i < n) {
+                var i2 = i*2 * i*2;
+                value = value * i2 / (i2-1);
+                i++;
+            }
+
+            return value;
+        }
+
+        console.log(wallis($iterations) * 2);
+    ")"
+
+    echo $pi
+}
+
 
 # Lucas-Lehmer primality test for Mersenne numbers
 #
