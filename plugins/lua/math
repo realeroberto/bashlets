@@ -59,7 +59,7 @@ function bashlets_lua_math_gcd()
 
 
 #
-# calculate (an approximation of) PI/2 with the aid of Wallis' product
+# calculate (an approximation of) PI with the aid of Wallis' product
 #
 
 function bashlets_lua_math_get_pi_by_wallis()
