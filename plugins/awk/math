@@ -35,6 +35,7 @@
 
 
 source bashlet datatype/number
+source bashlet :awk/awklibrary
  
 
 # calculates an approximation of PI by means of Vi`ete's formula
@@ -216,6 +217,252 @@ function bashlets_awk_math_horner_eval()
             print res
         }
     '
+}
+
+
+
+#
+# fast modular exponentiation
+#
+#   see http://en.wikipedia.org/wiki/Modular_exponentiation
+#
+
+function bashlets_awk_math_modular_pow()
+{
+    local base=$1 expon=$2 mod=$3
+
+    number validate_as_integer  $base  || return 1
+    number validate_as_integer  $expon || return 1
+    number validate_as_unsigned $mod   || return 1
+
+    ((mod > 0)) || return 1
+
+    awk -v base=$base -v expon=$expon -v mod=$mod -e '
+        function modular_pow(base, expon, mod) {
+            result = 1
+
+            while (expon > 0) {
+                if (and(expon, 1) == 1) {
+                    result = (result * base) % mod
+                }
+
+                expon = rshift(expon, 1)
+                base = (base * base) % mod
+            }
+
+            return result
+        }
+
+        BEGIN {
+            print modular_pow(base, expon, mod)
+            exit
+        }
+    '
+}
+
+
+#
+# extended euclidean algorithm, private function
+#
+#   given two arbitrary integers a, b, calculates
+#   the gcd(a, b) and the unique s, t such that s*a + t*b = gcd(a, b)
+#
+# input: a, b
+#
+# output: a string in the form "s t gcd"
+#
+
+function bashlets_awk_math_extended_gcd()
+{
+    local a="${1:-0}" b="${2:-0}"
+
+    number validate_as_integer $a || return 1
+    number validate_as_integer $b || return 1
+
+    local awk_text="$(:awklibrary load)"
+
+    awk_text="
+        $awk_text
+
+        BEGIN {
+            print extended_gcd(a, b);
+            exit;
+        }
+    "
+
+    awk -v a=$a -v b=$b "$awk_text" | tr \; " "
+}
+
+
+#
+# AWK implementation of the Chinese remainder theorem
+#
+# given a positive integer k, positive integers a_1, ..., a_k which are
+# pairwise coprime and arbitrary integers n_1, ..., n_k, we find the unique
+# x such that
+#
+#     x = a_1 (mod n_1), ..., x = a_k (mod n_k)
+#
+# (see http://en.wikipedia.org/wiki/Chinese_remainder_theorem)
+#
+
+function bashlets_awk_math_chinese()
+{
+    local k="${1:-0}"
+    shift
+
+    local result return_code
+
+    number validate_as_unsigned $k || return 1
+    ((k > 0)) || return 1
+
+    local awk_text="$(:awklibrary load)"
+
+    awk_text="
+
+        $awk_text
+
+        #
+        # Chinese remainder theorem --- constructive algorithm
+        #
+        #   given positive integers a_1, ..., a_k which are pairwise coprime
+        #   and arbitrary integers n_1, ..., n_k, we find the unique x such
+        #   that
+        #
+        #       x = a_1 (mod n_1), ..., x = a_k (mod n_k)
+        #
+        #   (see http://en.wikipedia.org/wiki/Chinese_remainder_theorem)
+        #
+        #
+        # input: k
+        #        a_s: string of the form \"a_1;...;a_k\"
+        #        n_s: string of the form \"n_1;...;n_k\"
+        #
+        # output: the remainder rem or the string INV if the integers
+        #         n_1, ..., n_k are not pairwise coprime
+        #
+
+        function chinese_remainder(k, a_s, n_s, v, w, z, s, gcd, e, i, N, rem) {
+            N = 1
+            rem = 0
+            
+            split(a_s, v, \";\")
+            split(n_s, w, \";\")
+            
+            for (i = 1; i <= k; i++) {
+                N = N * w[i]
+            }
+            
+            for (i = 1; i <= k; i++) {
+                split(extended_gcd(w[i], N/w[i]), z, \";\")
+                s = z[2]
+                gcd = z[3]
+
+                if (abs(gcd) != 1)
+                    return \"INV\"
+                
+                e = s * N / w[i]
+                
+                rem = rem + v[i]*e
+            }
+            
+            return rem
+        }
+
+        #
+        # initialize the input state machine
+        #
+
+        BEGIN {
+            state_reading_a_s = 0
+            state_reading_n_s = 1
+            state = state_reading_a_s
+        }
+
+        #
+        # MAIN LOOP
+        #
+        #   read two consecutive lines of input, the first one being
+        #   of the form a_1 ... a_k, the second one of the form n_1 ... n_k;
+        #   then print the result, then start again
+        #
+
+        {
+            if (state == state_reading_a_s) {
+                a_s = \"\"
+                k = NF
+                
+                for (i = 1; i <= k; i++) {
+                    if (validate_int(\$i) < 0) {
+                        print \"ERROR: invalid field $\"i
+                        next
+                    }
+                    
+                    if (i == 1)
+                        a_s = \$i
+                    else
+                        a_s = a_s \";\" \$i
+                }
+            
+                state = state_reading_n_s
+            } else {
+                n_s = \"\"
+                N = 1
+
+                if (NF != k) {
+                    print \"ERROR: invalid number of fields\"
+                    exit
+                }
+                
+                for (i = 1; i <= k; i++) {
+                    if (validate_positive_int(\$i) < 0) {
+                        print \"ERROR: invalid field $\"i
+                        next
+                    }
+                    
+                    if (i == 1)
+                        n_s = \$i
+                    else
+                        n_s = n_s \";\" \$i
+                }
+                
+                if ((rem = chinese_remainder(k, a_s, n_s)) == \"INV\") {
+                    print \"ERROR: the n_s are not pairwise coprime\"
+                    exit
+                } else {
+                    # print output #
+                    print rem
+                    exit
+                }
+            }
+        }
+    "
+
+    # prepare input
+    local i a_s n_s
+
+    # the a's first...
+    for ((i = 0; i < k; i++))
+    do
+        a_s="$a_s $1"
+        shift
+    done
+
+    # then the n's
+    for ((i = 0; i < k; i++))
+    do
+        n_s="$n_s $1"
+        shift
+    done
+
+    # grind numbers...
+    result="$(echo -e "${a_s}\n${n_s}" | awk "$awk_text")"
+
+    # check result
+    number validate_as_integer $result && return_code=0
+
+    echo $result
+    return $return_code
 }
 
 # Local variables:
