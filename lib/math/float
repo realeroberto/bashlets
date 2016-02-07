@@ -35,7 +35,56 @@
 
 
 source bashlet datatype/number
+source bashlet math/bclibrary
 
+
+function bashlets_math_float_to_int()
+{
+    local x="$1"
+    local bc_text="$(bclibrary load)"
+
+    test -n "$x" || return
+
+    bc_text="
+        $bc_text
+
+        int($x)
+    "
+
+    echo "$bc_text" | bc -l
+}
+
+function bashlets_math_float_ceil()
+{
+    local x="$1"
+    local bc_text="$(bclibrary load)"
+
+    test -n "$x" || return
+
+    bc_text="
+        $bc_text
+
+        ceil($x)
+    "
+
+    echo "$bc_text" | bc -l
+}
+
+function bashlets_math_float_floor()
+{
+    local x="$1"
+    local bc_text="$(bclibrary load)"
+
+    test -n "$x" || return
+
+    bc_text="
+        $bc_text
+
+        floor($x)
+    "
+
+    echo "$bc_text" | bc -l
+}
 
 function bashlets_math_float_sqrt()
 {

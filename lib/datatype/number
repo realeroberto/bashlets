@@ -34,9 +34,6 @@
 ################################################################################
 
 
-source bashlet math/bclibrary
-
-
 function bashlets_datatype_number_validate_as_integer()
 {
     [[ $1 =~ ^[-+]?[0-9]+$ ]]
@@ -63,53 +60,6 @@ function bashlets_datatype_number_validate_as_unsigned_float()
     [[ $1 =~ ^\+?[0-9]*\.?[0-9]+$ ]]
 }
 
-function bashlets_datatype_number_to_int()
-{
-    local x="$1"
-    local bc_text="$(bclibrary load)"
-
-    test -n "$x" || return
-
-    bc_text="
-        $bc_text
-
-        int($x)
-    "
-
-    echo "$bc_text" | bc -l
-}
-
-function bashlets_datatype_number_ceil()
-{
-    local x="$1"
-    local bc_text="$(bclibrary load)"
-
-    test -n "$x" || return
-
-    bc_text="
-        $bc_text
-
-        ceil($x)
-    "
-
-    echo "$bc_text" | bc -l
-}
-
-function bashlets_datatype_number_floor()
-{
-    local x="$1"
-    local bc_text="$(bclibrary load)"
-
-    test -n "$x" || return
-
-    bc_text="
-        $bc_text
-
-        floor($x)
-    "
-
-    echo "$bc_text" | bc -l
-}
 
 # Local variables:
 # mode: shell-script
