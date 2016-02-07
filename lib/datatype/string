@@ -108,6 +108,14 @@ function bashlets_datatype_string_to_charstream()
     echo -n "$*" | while read -r -n1 chr; do echo "$chr"; done
 }
 
+function bashlets_datatype_string_to_matrix()
+{
+    declare -i cols=${1:-1} chr
+    shift
+    ((cols > 0)) || return 1
+    echo -n "$*" | xargs -n $cols
+}
+
 function bashlets_datatype_string_reverse()
 {
     # cf. http://stackoverflow.com/questions/11461625/
