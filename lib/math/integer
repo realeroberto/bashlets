@@ -83,6 +83,15 @@ function bashlets_math_integer_is_prime()
     fi
 }
 
+function bashlets_math_integer_is_perfect_square()
+{
+    local value=${1:-0}
+    local sqrt_value="$(float sqrt $value)" || return 1
+    sqrt_value="$(float to_int $sqrt_value)"
+
+    ((sqrt_value * sqrt_value == value))
+}
+
 function bashlets_math_integer_get_unique_factors()
 {
     local pass_0
