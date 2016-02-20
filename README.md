@@ -127,3 +127,7 @@ A reasonably sane GNU/Linux environment is assumed to be at hand; support for Fr
 	> quit
 	$
 
+
+## Bibliography
+
+- [Bash Weaknesses](http://mywiki.wooledge.org/BashWeaknesses)
