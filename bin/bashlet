@@ -42,8 +42,8 @@ BASHLETS_REMOTE_REPO_LIBRARY=https://raw.githubusercontent.com/bashlets/bashlets
 BASHLETS_REMOTE_REPO_PLUGINS=https://raw.githubusercontent.com/bashlets/bashlets/master/plugins
 
 export BASHLETS_LOCAL_POOL
-export BASHLETS_RE BASHLETS_REMOTE_REPO_LIBRARY
-export BASHLETS_RE BASHLETS_REMOTE_REPO_PLUGINS
+export BASHLETS_REMOTE_REPO_LIBRARY
+export BASHLETS_REMOTE_REPO_PLUGINS
 
 
 function bashlet_to_file()
