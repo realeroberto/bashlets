@@ -38,6 +38,7 @@ source bashlet datatype/number
 source bashlet math/float
 
 
+#@method
 function bashlets_math_integer_abs()
 {
     local value="$1"
@@ -47,6 +48,7 @@ function bashlets_math_integer_abs()
     [[ $value -ge $opposite ]] && echo "$value" || echo "$opposite"
 }
 
+#@method
 function bashlets_math_integer_sign()
 {
     local value="$1"
@@ -57,6 +59,7 @@ function bashlets_math_integer_sign()
     [[ $value -ge $opposite ]] && echo 1 || echo -1
 }
 
+#@method
 function bashlets_math_integer_is_prime()
 {
     number validate_as_integer "$1" || return 1
@@ -83,6 +86,7 @@ function bashlets_math_integer_is_prime()
     fi
 }
 
+#@method
 function bashlets_math_integer_is_perfect_square()
 {
     local value=${1:-0}
@@ -92,6 +96,7 @@ function bashlets_math_integer_is_perfect_square()
     ((sqrt_value * sqrt_value == value))
 }
 
+#@method
 function bashlets_math_integer_get_unique_factors()
 {
     local pass_0

@@ -34,12 +34,14 @@
 ################################################################################
 
 
+#@method
 function bashlets_os_path_join()
 {
     local IFS=/
     echo "$*"
 }
 
+#@method
 function bashlets_os_path_is_absolute()
 {
     [[ "$1" == /* ]]

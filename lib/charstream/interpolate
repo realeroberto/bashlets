@@ -88,6 +88,7 @@ function __bashlets_charstream_interpolate_callback_uneval()
 # safely substitute @var tokens with values from shell variables of the same
 # name (or from a marshal context, if assigned)
 
+#@method
 function bashlets_charstream_interpolate_eval()
 {
     local context="$1"

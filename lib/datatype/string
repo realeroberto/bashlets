@@ -38,17 +38,20 @@ source bashlet charstream/reorder
 source bashlet charstream/reshape
 source bashlet os/random
 
+#@method
 function bashlets_datatype_string_chop()
 {
     echo "$(echo "$@" | tr -d "\n")"
 }
 
+#@method
 function bashlets_datatype_string_length()
 {
     local str="$*"
     echo ${#str}
 }
 
+#@method
 function bashlets_datatype_string_index()
 {
     # cf. https://github.com/marcomaggi/mbfl/blob/master/src/modules/string.sh.m4
@@ -66,21 +69,25 @@ function bashlets_datatype_string_index()
     done
 }
 
+#@method
 function bashlets_datatype_string_upper()
 {
     echo "$*" | tr a-z A-Z
 }
 
+#@method
 function bashlets_datatype_string_lower()
 {
     echo "$*" | tr A-Z a-z
 }
 
+#@method
 function bashlets_datatype_string_to_integer()
 {
     printf "%d\n" "$1"  # removes leading zero's
 }
 
+#@method
 function bashlets_datatype_string_to_bool()
 {
     local value="$(bashlets_datatype_string_lower "$*")"
@@ -96,18 +103,21 @@ function bashlets_datatype_string_to_bool()
     return 1
 }
 
+#@method
 function bashlets_datatype_string_rot13()
 {
     # cf. http://rosettacode.org/wiki/Rot-13#Bourne_Shell
     echo "$*" | tr a-zA-Z n-za-mN-ZA-M
 }
 
+#@method
 function bashlets_datatype_string_to_charstream()
 {
     local chr
     echo -n "$*" | while read -r -n1 chr; do echo "$chr"; done
 }
 
+#@method
 function bashlets_datatype_string_to_matrix()
 {
     declare -i cols=${1:-1} chr
@@ -116,6 +126,7 @@ function bashlets_datatype_string_to_matrix()
     echo -n "$*" | xargs -n $cols
 }
 
+#@method
 function bashlets_datatype_string_reverse()
 {
     # cf. http://stackoverflow.com/questions/11461625/
@@ -130,11 +141,13 @@ function bashlets_datatype_string_reverse()
     echo "$rev"
 }
 
+#@method
 function bashlets_datatype_string_transpose()
 {
     bashlets_datatype_string_to_charstream "$*"
 }
 
+#@method
 function bashlets_datatype_string_shuffle()
 {
     local str="$*"
@@ -152,6 +165,7 @@ function bashlets_datatype_string_shuffle()
 # otherwise, return nothing
 #
 
+#@method
 function bashlets_datatype_string_middle_2n()
 {
     local str="$*"
@@ -169,6 +183,7 @@ function bashlets_datatype_string_middle_2n()
 # to the next multiple of N
 #
 
+#@method
 function bashlets_datatype_string_lalign_n()
 {
     local n="$1"
@@ -188,6 +203,7 @@ function bashlets_datatype_string_lalign_n()
 }
 
 
+#@method
 function bashlets_datatype_string_generate_random()
 {
     local size="${1:-16}"

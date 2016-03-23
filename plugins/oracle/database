@@ -38,6 +38,7 @@ source bashlet datatype/string
 source bashlet :oracle/sqlplus
 
 
+#@method
 function bashlets_oracle_database_get_instance_name()
 {
 	local query
@@ -46,6 +47,7 @@ function bashlets_oracle_database_get_instance_name()
 	string chop $(:sqlplus execute "$query")
 }
 
+#@method
 function bashlets_oracle_database_get_instance_number()
 {
     local query instance_name
@@ -61,6 +63,7 @@ function bashlets_oracle_database_get_instance_number()
 	string chop $(:sqlplus execute "$query")
 }
 
+#@method
 function bashlets_oracle_database_get_dbid()
 {
     local query
@@ -69,6 +72,7 @@ function bashlets_oracle_database_get_dbid()
 	echo $(:sqlplus execute "$query" | tr -d "\n")
 }
 
+#@method
 function bashlets_oracle_database_is_primary()
 {
     local query role
@@ -78,6 +82,7 @@ function bashlets_oracle_database_is_primary()
     [[ "$role" == "PRIMARY" ]]
 }
 
+#@method
 function bashlets_oracle_database_is_physical_standby()
 {
     local query role
@@ -87,6 +92,7 @@ function bashlets_oracle_database_is_physical_standby()
     [[ "$role" == "PHYSICAL STANDBY" ]]
 }
 
+#@method
 function bashlets_oracle_database_is_logical_standby()
 {
     local query role
@@ -96,6 +102,7 @@ function bashlets_oracle_database_is_logical_standby()
     [[ "$role" == "LOGICAL STANDBY" ]]
 }
 
+#@method
 function bashlets_oracle_database_is_standby()
 {
     bashlets_oracle_database_is_physical_standby ||

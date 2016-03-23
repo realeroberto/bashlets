@@ -34,6 +34,7 @@
 ################################################################################
 
 
+#@method
 function bashlets_charstream_reshape_join_lines()
 {
     local del="$1"
@@ -42,11 +43,13 @@ function bashlets_charstream_reshape_join_lines()
     head -c -1 | ([[ -n "$del" ]] && tr "\n" "$del" || tr -d "\n")
 }
 
+#@method
 function bashlets_charstream_reshape_transpose()
 {
     bashlets_charstream_reshape_join_lines
 }
 
+#@method
 function bashlets_charstream_reshape_to_string()
 {
     bashlets_charstream_reshape_join_lines

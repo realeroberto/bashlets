@@ -39,6 +39,7 @@ source bashlet datatype/number
 
 # favours lower powers...
 
+#@method
 function bashlets_perl_math_biased_rand()
 {
     local n=${1:-1000} rand
@@ -60,6 +61,7 @@ function bashlets_perl_math_biased_rand()
 #
 # inspired by the C implementation at http://www.codecodex.com/wiki/Euclidean_algorithm
 
+#@method
 function bashlets_perl_math_gcd()
 {
     local x=${1:-1} y=${2:-1} gcd
@@ -93,6 +95,7 @@ function bashlets_perl_math_gcd()
 #
 # inspired by http://www.btinternet.com/~se16/js/factor.htm
 
+#@method
 function bashlets_perl_math_factorize_integer()
 {
     local n=${1:-0} factors
@@ -140,6 +143,7 @@ function bashlets_perl_math_factorize_integer()
 
 # calculate the determinant of a square matrix, the slow old way...
 
+#@method
 function bashlets_perl_math_det()
 {
     local det

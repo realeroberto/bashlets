@@ -35,6 +35,7 @@
 
 
 
+#@method
 function bashlets_ruby_yaml_parse()
 {
     # see https://coderwall.com/p/bm_tpa

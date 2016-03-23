@@ -33,6 +33,7 @@
 #
 ################################################################################
 
+#@method
 function bashlets_datatype_tsinterval_create()
 {
     local string="$1"
@@ -73,11 +74,13 @@ function bashlets_datatype_tsinterval_create()
     )
 }
 
+#@method
 function bashlets_datatype_tsinterval_get_t0()
 {
     echo "$@" | cut -d' ' -f1
 }
 
+#@method
 function bashlets_datatype_tsinterval_get_t1()
 {
     echo "$@" | cut -d' ' -f2

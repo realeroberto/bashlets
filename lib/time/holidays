@@ -36,6 +36,7 @@
 
 # based on http://cfajohnson.com/shell/date-functions/?easter
 
+#@method
 function bashlets_time_holidays_easter()
 {
     declare -i a b c d e f g h i k l m p

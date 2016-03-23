@@ -36,11 +36,13 @@
 
 source bashlet datatype/number
 
+#@method
 function bashlets_datatype_float_validate()
 {
     number validate_as_float "$1"
 }
 
+#@method
 function bashlets_datatype_float_diff()
 {
     local x="$1"

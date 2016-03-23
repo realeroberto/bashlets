@@ -34,6 +34,7 @@
 ################################################################################
 
 
+#@method
 function bashlets_datatype_iban_validate()
 {
     # cf. http://rosettacode.org/wiki/IBAN#UNIX_Shell

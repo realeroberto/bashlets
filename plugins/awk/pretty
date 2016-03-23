@@ -36,6 +36,7 @@
 
 # simple ``pretty-printer'' for polynomials
 
+#@method
 function bashlets_awk_pretty_polynomial()
 {
     echo $@ | awk -e '

@@ -37,6 +37,7 @@
 source bashlet utils/object
 
 
+#@method
 function bashlets_marshal_dump_objects()
 {
     while test $# -gt 0
@@ -49,6 +50,7 @@ function bashlets_marshal_dump_objects()
     done
 }
 
+#@method
 function bashlets_marshal_dump_rename()
 {
     local new="$1"
@@ -57,6 +59,7 @@ function bashlets_marshal_dump_rename()
         sed "s/^declare -\\(.\\) \\([^=]\\+\\)=\\(.*\\)/declare -\\1 $new=\\3/"
 }
 
+#@method
 function bashlets_marshal_dump_get_by_name()
 {
     local object="$1"

@@ -36,16 +36,19 @@
 source bashlet marshal/uneval
 
 
+#@method
 function bashlets_http_webdav_get_handler()
 {
     uneval create
 }
 
+#@method
 function bashlets_http_webdav_release_handler()
 {
     :
 }
 
+#@method
 function bashlets_http_webdav_get_param()
 {
     local handler="$1"
@@ -56,6 +59,7 @@ function bashlets_http_webdav_get_param()
     echo "$(uneval get_by_key "$handler" "$key")"
 }
 
+#@method
 function bashlets_http_webdav_set_param()
 {
     local handler="$1"
@@ -67,12 +71,14 @@ function bashlets_http_webdav_set_param()
     uneval add_pair "$handler" "$key" "$value"
 }
 
+#@method
 function bashlets_http_webdav_get_base_uri()
 {
     local handler="$1"
     bashlets_http_webdav_get_param "$handler" base_uri
 }
 
+#@method
 function bashlets_http_webdav_set_base_uri()
 {
     local handler="$1"
@@ -80,12 +86,14 @@ function bashlets_http_webdav_set_base_uri()
     bashlets_http_webdav_set_param "$handler" "base_uri" "$base_uri"
 }
 
+#@method
 function bashlets_http_webdav_get_password()
 {
     local handler="$1"
     bashlets_http_webdav_get_param "$handler" password
 }
 
+#@method
 function bashlets_http_webdav_set_password()
 {
     local handler="$1"
@@ -93,12 +101,14 @@ function bashlets_http_webdav_set_password()
     bashlets_http_webdav_set_param "$handler" "password" "$password"
 }
 
+#@method
 function bashlets_http_webdav_get_username()
 {
     local handler="$1"
     bashlets_http_webdav_get_param "$handler" username
 }
 
+#@method
 function bashlets_http_webdav_set_username()
 {
     local handler="$1"
@@ -109,6 +119,7 @@ function bashlets_http_webdav_set_username()
 
 # Returns true if the given target is a file.
 
+#@method
 function bashlets_http_webdav_isfile()
 {
     local handler="$1"
@@ -126,6 +137,7 @@ function bashlets_http_webdav_isfile()
 
 # Creates a resource. 
 
+#@method
 function bashlets_http_webdav_create()
 {
     local handler="$1"
@@ -142,6 +154,7 @@ function bashlets_http_webdav_create()
 
 # Touches a resource.
 
+#@method
 function bashlets_http_webdav_touch()
 {
     local handler="$1"
@@ -160,6 +173,7 @@ function bashlets_http_webdav_touch()
 
 # Copies a resource.
 
+#@method
 function bashlets_http_webdav_copy()
 {
     local handler="$1"
@@ -178,6 +192,7 @@ function bashlets_http_webdav_copy()
 
 # Moves a resource.
 
+#@method
 function bashlets_http_webdav_move()
 {
     local handler="$1"

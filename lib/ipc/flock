@@ -35,6 +35,7 @@
 
 
 
+#@method
 function bashlets_ipc_flock_acquire()
 {
     local lockfile="$1"
@@ -43,12 +44,14 @@ function bashlets_ipc_flock_acquire()
     [[ -f $lockfile ]] && echo "lock acquired" >&2
 }
 
+#@method
 function bashlets_ipc_flock_release()
 {
     local lockfile="$1"
     [[ -n $lockfile ]] && rm -f "$lockfile"
 }
 
+#@method
 function bashlets_ipc_flock_exists()
 {
     local lockfile="$1"

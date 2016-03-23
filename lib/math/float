@@ -38,6 +38,7 @@ source bashlet datatype/number
 source bashlet math/bclibrary
 
 
+#@method
 function bashlets_math_float_to_int()
 {
     local x="$1"
@@ -54,6 +55,7 @@ function bashlets_math_float_to_int()
     echo "$bc_text" | bc -l
 }
 
+#@method
 function bashlets_math_float_ceil()
 {
     local x="$1"
@@ -70,6 +72,7 @@ function bashlets_math_float_ceil()
     echo "$bc_text" | bc -l
 }
 
+#@method
 function bashlets_math_float_floor()
 {
     local x="$1"
@@ -86,6 +89,7 @@ function bashlets_math_float_floor()
     echo "$bc_text" | bc -l
 }
 
+#@method
 function bashlets_math_float_sqrt()
 {
     number validate_as_unsigned_float "$1" || return 1

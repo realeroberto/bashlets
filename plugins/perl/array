@@ -38,6 +38,7 @@
 #
 # see http://en.wikipedia.org/wiki/Bubble_sort
 
+#@method
 function bashlets_perl_array_sort_by_bubblesort()
 {
     perl -e '
@@ -76,6 +77,7 @@ function bashlets_perl_array_sort_by_bubblesort()
 #
 # see http://en.wikipedia.org/wiki/Quicksort
 
+#@method
 function bashlets_perl_array_sort_by_quicksort()
 {
     perl -e '
@@ -118,6 +120,7 @@ function bashlets_perl_array_sort_by_quicksort()
 #
 # see http://en.wikipedia.org/wiki/Insertion_sort
 
+#@method
 function bashlets_perl_array_sort_by_insertion_sort()
 {
     perl -e '

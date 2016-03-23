@@ -78,6 +78,7 @@ source bashlet datatype/number
 source bashlet datatype/string
 
 
+#@method
 function bashlets_math_middlesquare_random()
 {
     local count="${1:-17}"  # count of iterations

@@ -36,6 +36,7 @@
 
 source bashlet datatype/number
 
+#@method
 function bashlets_datatype_byte_validate()
 {
     number validate_as_byte "$1"

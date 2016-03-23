@@ -42,6 +42,7 @@ source bashlet :awk/awklibrary
 #
 #   see http://en.wikipedia.org/wiki/Vi`ete's_formula
 
+#@method
 function bashlets_awk_math_pi_by_viete()
 {
     local tol=${1:-.000001}
@@ -73,6 +74,7 @@ function bashlets_awk_math_pi_by_viete()
 #
 #   see http://en.wikipedia.org/wiki/Arithmetic-geometric_mean
  
+#@method
 function bashlets_awk_math_agm()
 {
     local a=${1:-0} b=${2:-0}
@@ -112,6 +114,7 @@ function bashlets_awk_math_agm()
 # We use sqrt(x) ~ 2^(d/2), where d is the number of binary digits of either x
 # or 1/x, whatever happens to be greater.
 
+#@method
 function bashlets_awk_math_rough_sqrt()
 {
     awk -v x=${1:-0} -e '
@@ -146,6 +149,7 @@ function bashlets_awk_math_rough_sqrt()
 # (http://en.wikipedia.org/wiki/Methods_of_computing_square_roots#Babylonian_method)
 #
 
+#@method
 function bashlets_awk_math_sqrt_by_heron()
 {
     local x=${1:-1} tol=${2:-.000001}
@@ -193,6 +197,7 @@ function bashlets_awk_math_sqrt_by_heron()
 #
 #   (see http://en.wikipedia.org/wiki/Horner_scheme)
 
+#@method
 function bashlets_awk_math_horner_eval()
 {
     [ $# -gt 1 ] || return
@@ -227,6 +232,7 @@ function bashlets_awk_math_horner_eval()
 #   see http://en.wikipedia.org/wiki/Modular_exponentiation
 #
 
+#@method
 function bashlets_awk_math_modular_pow()
 {
     local base=$1 expon=$2 mod=$3
@@ -272,6 +278,7 @@ function bashlets_awk_math_modular_pow()
 # output: a string in the form "s t gcd"
 #
 
+#@method
 function bashlets_awk_math_extended_gcd()
 {
     local a="${1:-0}" b="${2:-0}"
@@ -306,6 +313,7 @@ function bashlets_awk_math_extended_gcd()
 # (see http://en.wikipedia.org/wiki/Chinese_remainder_theorem)
 #
 
+#@method
 function bashlets_awk_math_chinese()
 {
     local k="${1:-0}"

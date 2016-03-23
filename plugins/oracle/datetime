@@ -37,6 +37,7 @@
 source bashlet datatype/string
 source bashlet :oracle/sqlplus
 
+#@method
 function bashlets_oracle_datetime_from_unixts()
 {
     local unixts="$1"

@@ -76,6 +76,7 @@ function __bashlets_library_loader_bashlet_to_file()
     }
 }
 
+#@method
 function bashlets_library_loader_list_methods()
 {
     local bashlet="$(__bashlets_library_loader_bashlet_to_file "$1")"
@@ -100,6 +101,7 @@ function bashlets_library_loader_list_methods()
     unset __bashlets_library_loader_list_all_methods
 }
 
+#@method
 function bashlets_library_loader_import()
 {
     local bashlet="$1"

@@ -42,6 +42,7 @@ source bashlet datatype/keyvalues
 # Based on http://stackoverflow.com/questions/5014632/.
 #
 
+#@method
 function bashlets_parsers_yaml_to_keyvalues()
 {
     local file="$1"
@@ -70,6 +71,7 @@ function bashlets_parsers_yaml_to_keyvalues()
 }
 
 
+#@method
 function bashlets_parsers_yaml_list_keys()
 {
     local file="$1"
@@ -79,6 +81,7 @@ function bashlets_parsers_yaml_list_keys()
         | keyvalues list_keys
 }
 
+#@method
 function bashlets_parsers_yaml_list_values()
 {
     local file="$1"
@@ -88,6 +91,7 @@ function bashlets_parsers_yaml_list_values()
         | keyvalues list_values
 }
 
+#@method
 function bashlets_parsers_yaml_get_by_key()
 {
     local file="$1"

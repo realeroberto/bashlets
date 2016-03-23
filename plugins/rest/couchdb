@@ -37,16 +37,19 @@ source bashlet datatype/uuid
 source bashlet marshal/uneval
 
 
+#@method
 function bashlets_rest_couchdb_get_handler()
 {
     uneval create
 }
 
+#@method
 function bashlets_rest_couchdb_release_handler()
 {
     :
 }
 
+#@method
 function bashlets_rest_couchdb_get_param()
 {
     local handler="$1"
@@ -57,6 +60,7 @@ function bashlets_rest_couchdb_get_param()
     echo "$(uneval get_by_key "$handler" "$key")"
 }
 
+#@method
 function bashlets_rest_couchdb_set_param()
 {
     local handler="$1"
@@ -68,12 +72,14 @@ function bashlets_rest_couchdb_set_param()
     uneval add_pair "$handler" "$key" "$value"
 }
 
+#@method
 function bashlets_rest_couchdb_get_schema()
 {
     local handler="$1"
     bashlets_rest_couchdb_get_param "$handler" schema
 }
 
+#@method
 function bashlets_rest_couchdb_set_schema()
 {
     local handler="$1"
@@ -81,18 +87,21 @@ function bashlets_rest_couchdb_set_schema()
     bashlets_rest_couchdb_set_param "$handler" "schema" "$schema"
 }
 
+#@method
 function bashlets_rest_couchdb_set_schema_default()
 {
     local handler="$1"
     bashlets_rest_couchdb_set_schema "$handler" "http"
 }
 
+#@method
 function bashlets_rest_couchdb_get_host()
 {
     local handler="$1"
     bashlets_rest_couchdb_get_param "$handler" host
 }
 
+#@method
 function bashlets_rest_couchdb_set_host()
 {
     local handler="$1"
@@ -100,18 +109,21 @@ function bashlets_rest_couchdb_set_host()
     bashlets_rest_couchdb_set_param "$handler" "host" "$host"
 }
 
+#@method
 function bashlets_rest_couchdb_set_host_default()
 {
     local handler="$1"
     bashlets_rest_couchdb_set_host "$handler" "localhost"
 }
 
+#@method
 function bashlets_rest_couchdb_get_port()
 {
     local handler="$1"
     bashlets_rest_couchdb_get_param "$handler" port
 }
 
+#@method
 function bashlets_rest_couchdb_set_port()
 {
     local handler="$1"
@@ -119,18 +131,21 @@ function bashlets_rest_couchdb_set_port()
     bashlets_rest_couchdb_set_param "$handler" "port" "$port"
 }
 
+#@method
 function bashlets_rest_couchdb_set_port_default()
 {
     local handler="$1"
     bashlets_rest_couchdb_set_port "$handler" 5984
 }
 
+#@method
 function bashlets_rest_couchdb_get_db()
 {
     local handler="$1"
     bashlets_rest_couchdb_get_param "$handler" db
 }
 
+#@method
 function bashlets_rest_couchdb_set_db()
 {
     local handler="$1"
@@ -138,18 +153,21 @@ function bashlets_rest_couchdb_set_db()
     bashlets_rest_couchdb_set_param "$handler" "db" "$db"
 }
 
+#@method
 function bashlets_rest_couchdb_set_db_default()
 {
     local handler="$1"
     bashlets_rest_couchdb_set_db "$handler" "test"
 }
 
+#@method
 function bashlets_rest_couchdb_get_content_type()
 {
     local handler="$1"
     bashlets_rest_couchdb_get_param "$handler" content_type
 }
 
+#@method
 function bashlets_rest_couchdb_set_content_type()
 {
     local handler="$1"
@@ -157,12 +175,14 @@ function bashlets_rest_couchdb_set_content_type()
     bashlets_rest_couchdb_set_param "$handler" "content_type" "$content_type"
 }
 
+#@method
 function bashlets_rest_couchdb_set_content_type_default()
 {
     local handler="$1"
     bashlets_rest_couchdb_set_content_type "$handler" "text/plain"
 }
 
+#@method
 function bashlets_rest_couchdb_set_params_default()
 {
     local handler="$1"
@@ -174,11 +194,13 @@ function bashlets_rest_couchdb_set_params_default()
     echo "$handler"
 }
 
+#@method
 function bashlets_rest_couchdb_generate_session_id
 {
     uuid create
 }
 
+#@method
 function bashlets_rest_couchdb_create_db()
 {
     local handler="$1"
@@ -195,6 +217,7 @@ function bashlets_rest_couchdb_create_db()
     curl -s -o /dev/null -X PUT "$schema://$host:$port/$db"
 }
 
+#@method
 function bashlets_rest_couchdb_create_session()
 {
     local handler="$1"
@@ -222,6 +245,7 @@ function bashlets_rest_couchdb_create_session()
     return $retcode
 }
 
+#@method
 function bashlets_rest_couchdb_get_revision()
 {
     local handler="$1"
@@ -245,6 +269,7 @@ function bashlets_rest_couchdb_get_revision()
     echo "$revision"
 }
 
+#@method
 function bashlets_rest_couchdb_add_attachment()
 {
     local handler="$1"
@@ -278,6 +303,7 @@ function bashlets_rest_couchdb_add_attachment()
     return $retcode
 }
 
+#@method
 function bashlets_rest_couchdb_get_attachment()
 {
     local handler="$1"

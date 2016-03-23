@@ -39,6 +39,7 @@
 # inspired by the C implementation at
 # http://www.codecodex.com/wiki/Euclidean_algorithm
 
+#@method
 function bashlets_lua_math_gcd()
 {
     local x=${1:-0} y=${2:-0}
@@ -62,6 +63,7 @@ function bashlets_lua_math_gcd()
 # calculate (an approximation of) PI with the aid of Wallis' product
 #
 
+#@method
 function bashlets_lua_math_get_pi_by_wallis()
 {
     local iterations=${1:-1000000}

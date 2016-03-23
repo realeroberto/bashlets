@@ -38,6 +38,7 @@
 # 
 # (inspired by an exercise from the Advanced Bash-Scripting Guide)
 
+#@method
 function bashlets_games_flipcoin_flip()
 {
     local maxthrows=${1:-1000}

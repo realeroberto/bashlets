@@ -34,6 +34,7 @@
 ################################################################################
 
 
+#@method
 function bashlets_charstream_convert_dos2unix()
 {
     local input="$1"
@@ -51,6 +52,7 @@ function bashlets_charstream_convert_dos2unix()
     unset dos2unix
 }
 
+#@method
 function bashlets_charstream_convert_unix2dos()
 {
     local input="$1"

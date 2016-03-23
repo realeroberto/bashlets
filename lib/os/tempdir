@@ -34,11 +34,13 @@
 ################################################################################
 
 
+#@method
 function bashlets_os_tempdir_create()
 {
     echo $(mktemp -d)
 }
 
+#@method
 function bashlets_os_tempdir_destroy()
 {
     local tempdir="$1"

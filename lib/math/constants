@@ -34,6 +34,7 @@
 ################################################################################
 
 
+#@method
 function bashlets_math_constants_calculate()
 {
     local constant="$1"

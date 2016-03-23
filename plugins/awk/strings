@@ -47,6 +47,7 @@
 #  see http://en.wikipedia.org/wiki/Levenshtein_distance
 
 
+#@method
 function bashlets_awk_math_strings_levenshtein()
 {
     local s=$1 t=$2

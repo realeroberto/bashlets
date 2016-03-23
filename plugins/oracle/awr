@@ -40,6 +40,7 @@ source bashlet :oracle/sqlplus
 source bashlet :oracle/database
 source bashlet :oracle/datetime
 
+#@method
 function bashlets_oracle_awr_get_snap_id_begin_by_unixts()
 {
     local unixts_begin="$1"
@@ -64,6 +65,7 @@ function bashlets_oracle_awr_get_snap_id_begin_by_unixts()
     string chop $(:sqlplus execute "$query")
 }
 
+#@method
 function bashlets_oracle_awr_get_snap_id_end_by_unixts()
 {
     local unixts_end="$1"
@@ -88,6 +90,7 @@ function bashlets_oracle_awr_get_snap_id_end_by_unixts()
 	string chop $(:sqlplus execute "$query")
 }
 
+#@method
 function bashlets_oracle_awr_report_by_interval_of_unixts()
 {
     local tsinterval="$1"

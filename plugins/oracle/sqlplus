@@ -34,6 +34,7 @@
 ################################################################################
 
 
+#@method
 function bashlets_oracle_sqlplus_execute()
 {
     local timezone

@@ -38,16 +38,19 @@
 source bashlet marshal/uneval
 
 
+#@method
 function bashlets_subversion_svn_connect()
 {
     uneval create
 }
 
+#@method
 function bashlets_subversion_svn_disconnect()
 {
     :
 }
 
+#@method
 function bashlets_subversion_svn_get_param()
 {
     local repo="$1"
@@ -58,6 +61,7 @@ function bashlets_subversion_svn_get_param()
     echo "$(uneval get_by_key "$repo" "$key")"
 }
 
+#@method
 function bashlets_subversion_svn_set_param()
 {
     local repo="$1"
@@ -69,6 +73,7 @@ function bashlets_subversion_svn_set_param()
     uneval add_pair "$repo" "$key" "$value"
 }
 
+#@method
 function bashlets_subversion_svn_get_wd()
 {
     local repo="$1"
@@ -76,6 +81,7 @@ function bashlets_subversion_svn_get_wd()
     bashlets_subversion_svn_get_param "$repo" wd
 }
 
+#@method
 function bashlets_subversion_svn_get_username()
 {
     local repo="$1"
@@ -83,6 +89,7 @@ function bashlets_subversion_svn_get_username()
     bashlets_subversion_svn_get_param "$repo" username
 }
 
+#@method
 function bashlets_subversion_svn_get_password()
 {
     local repo="$1"
@@ -90,6 +97,7 @@ function bashlets_subversion_svn_get_password()
     bashlets_subversion_svn_get_param "$repo" password
 }
 
+#@method
 function bashlets_subversion_svn_set_wd()
 {
     local repo="$1"
@@ -98,6 +106,7 @@ function bashlets_subversion_svn_set_wd()
     bashlets_subversion_svn_set_param "$repo" wd "$wd"
 }
 
+#@method
 function bashlets_subversion_svn_set_username()
 {
     local repo="$1"
@@ -106,6 +115,7 @@ function bashlets_subversion_svn_set_username()
     bashlets_subversion_svn_set_param "$repo" username "$username"
 }
 
+#@method
 function bashlets_subversion_svn_set_password()
 {
     local repo="$1"
@@ -114,6 +124,7 @@ function bashlets_subversion_svn_set_password()
     bashlets_subversion_svn_set_param "$repo" password "$password"
 }
 
+#@method
 function bashlets_subversion_svn_touch()
 {
     local repo="$1"
@@ -138,6 +149,7 @@ function bashlets_subversion_svn_touch()
     )
 }
 
+#@method
 function bashlets_subversion_svn_checkout()
 {
     local repo="$1"
@@ -162,6 +174,7 @@ function bashlets_subversion_svn_checkout()
     )
 }
 
+#@method
 function bashlets_subversion_svn_update()
 {
     local repo="$1"
@@ -187,6 +200,7 @@ function bashlets_subversion_svn_update()
 }
 
 
+#@method
 function bashlets_subversion_svn_add()
 {
     local repo="$1"
@@ -210,6 +224,7 @@ function bashlets_subversion_svn_add()
     )
 }
 
+#@method
 function bashlets_subversion_svn_commit()
 {
     local repo="$1"

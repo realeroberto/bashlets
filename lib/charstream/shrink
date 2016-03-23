@@ -36,6 +36,7 @@
 
 # Inspired from (but improves on) code at http://bash.cyberciti.biz/
 
+#@method
 function bashlets_charstream_shrink_remove_c_comments()
 {
     sed -e '

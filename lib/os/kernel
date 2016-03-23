@@ -35,6 +35,7 @@
 
 
 
+#@method
 function bashlets_os_kernel_get_version()
 {
     local target="$1"

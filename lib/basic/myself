@@ -34,24 +34,28 @@
 ################################################################################
 
 
+#@method
 function bashlets_basic_myself_get_name()
 {
     [[ "$0" == "-bash" ]] && return
     basename "$0"
 }
 
+#@method
 function bashlets_basic_myself_get_name_canonical()
 {
     [[ "$0" == "-bash" ]] && return
     basename "$(readlink -m -- "$0")"
 }
 
+#@method
 function bashlets_basic_myself_get_path_canonical()
 {
     [[ "$0" == "-bash" ]] && return
     readlink -m -- "$0"
 }
 
+#@method
 function bashlets_basic_myself_get_path_effective()
 {
     # http://stackoverflow.com/questions/59895
@@ -77,17 +81,20 @@ function bashlets_basic_myself_get_path_effective()
     echo "$dir"
 }
 
+#@method
 function bashlets_basic_myself_get_ppid()
 {
     # echo it just to get rid of leading/trailing spaces
     echo $(ps -o ppid= -p $$)
 }
 
+#@method
 function bashlets_basic_myself_get_parent_name()
 {
     ps -o comm= -p $(bashlets_basic_myself_get_ppid)
 }
 
+#@method
 function bashlets_basic_myself_require_user()
 {
     test $(whoami) = "$1"

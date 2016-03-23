@@ -36,11 +36,13 @@
 source bashlet datatype/number
 
 
+#@method
 function bashlets_datatype_integer_validate()
 {
     number validate_as_integer "$1"
 }
 
+#@method
 function bashlets_datatype_integer_to_string()
 {
     # Converts a number into a string of the form 00..nnn, with just enough

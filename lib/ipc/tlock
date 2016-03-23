@@ -35,6 +35,7 @@
 
 
 
+#@method
 function bashlets_ipc_tlock_acquire()
 {
     local lockfile="$1"
@@ -42,6 +43,7 @@ function bashlets_ipc_tlock_acquire()
 }
 
 
+#@method
 function bashlets_ipc_tlock_release()
 {
     local lockfile="$1"
@@ -49,6 +51,7 @@ function bashlets_ipc_tlock_release()
 }
 
 
+#@method
 function bashlets_ipc_tlock_exists()
 {
     local lockfile="$1"

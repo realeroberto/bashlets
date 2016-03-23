@@ -34,6 +34,7 @@
 ################################################################################
 
 
+#@method
 function bashlets_charstream_reorder_shuffle()
 {
     local hint_nr=${1:-1024}

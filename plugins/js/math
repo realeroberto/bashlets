@@ -45,6 +45,7 @@ source bashlet math/integer
 # calculate (an approximation of) PI with the aid of Wallis' product
 #
 
+#@method
 function bashlets_js_math_wallis()
 {
     local iterations=${1:-10000} pi
@@ -75,6 +76,7 @@ function bashlets_js_math_wallis()
 #
 # cf. https://en.wikipedia.org/wiki/Lucas%E2%80%93Lehmer_primality_test
 
+#@method
 function bashlets_js_math_lucaslehmer()
 {
     local p=${1:-3} res

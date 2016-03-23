@@ -36,6 +36,7 @@
 
 # cf. http://stackoverflow.com/questions/35201357/
 
+#@method
 function bashlets_network_ip_dec2bin()
 {
     local decimal=${1:-0.0.0.0}
@@ -49,6 +50,7 @@ function bashlets_network_ip_dec2bin()
 }
 
 
+#@method
 function bashlets_network_ip_bin2dec()
 {
     local binary=${1:-00000000.00000000.00000000.00000000}

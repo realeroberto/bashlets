@@ -39,6 +39,7 @@ source bashlet os/term
 
 BASHLETS_UX_REPL_ERR_INVALID_ARG=2
 
+#@method
 function bashlets_ux_repl_get_verb()
 {
     local repl="$1"
@@ -46,6 +47,7 @@ function bashlets_ux_repl_get_verb()
     fs get "$repl" "$verb"
 }
 
+#@method
 function bashlets_ux_repl_set_verb()
 {
     local repl="$1"
@@ -54,6 +56,7 @@ function bashlets_ux_repl_set_verb()
     fs set "$repl" "$verb" "$command"
 }
 
+#@method
 function bashlets_ux_repl_get_help_for_verb()
 {
     local repl="$1"
@@ -61,6 +64,7 @@ function bashlets_ux_repl_get_help_for_verb()
     fs get "$repl" "$verb#help"
 }
 
+#@method
 function bashlets_ux_repl_set_help_for_verb()
 {
     local repl="$1"
@@ -69,12 +73,14 @@ function bashlets_ux_repl_set_help_for_verb()
     fs set "$repl" "$verb#help" "$help"
 }
 
+#@method
 function bashlets_ux_repl_list_verbs()
 {
     local repl="$1"
     fs list_keys "$repl" | grep -v "#help$"
 }
 
+#@method
 function bashlets_ux_repl_exec_verb()
 {
     local repl="$1"
@@ -91,6 +97,7 @@ function bashlets_ux_repl_exec_verb()
     $command argv[@]
 }
 
+#@method
 function bashlets_ux_repl_help()
 {
     local repl="$1"
@@ -98,16 +105,19 @@ function bashlets_ux_repl_help()
     echo "$verb: $(bashlets_ux_repl_get_help_for_verb "$repl" "$verb")"
 }
 
+#@method
 function bashlets_ux_repl_create()
 {
     fs create
 }
 
+#@method
 function bashlets_ux_repl_destroy()
 {
     fs destroy "$1"
 }
 
+#@method
 function bashlets_ux_repl_start()
 {
     local repl="$1"

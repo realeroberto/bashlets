@@ -37,6 +37,7 @@
 source bashlet datatype/string
 source bashlet :oracle/sqlplus
 
+#@method
 function bashlets_oracle_session_get_timezone()
 {
     local query="SELECT sessiontimezone FROM dual"
