@@ -38,12 +38,10 @@
 
 
 BASHLETS_LOCAL_POOL=~/.bashlets
-BASHLETS_REMOTE_REPO_LIBRARY=https://raw.githubusercontent.com/bashlets/bashlets/master/lib
-BASHLETS_REMOTE_REPO_PLUGINS=https://raw.githubusercontent.com/bashlets/bashlets/master/plugins
+BASHLETS_REMOTE_REPO=https://raw.githubusercontent.com/bashlets/bashlets/master
 
 export BASHLETS_LOCAL_POOL
-export BASHLETS_REMOTE_REPO_LIBRARY
-export BASHLETS_REMOTE_REPO_PLUGINS
+export BASHLETS_REMOTE_REPO
 
 
 function bashlet_get_ostype()
@@ -68,39 +66,28 @@ function bashlet_to_file()
 {
     local bashlet="$1"
     
-    # plugin names are prefixed by a colon
-
-    [[ $bashlet =~ ^: ]] && {
+    if [[ $bashlet =~ ^: ]]; then
+        # plugin names are prefixed by a colon
         echo "$BASHLETS_LOCAL_POOL/plugins/${bashlet:1}"
-    } || {
+    elif [[ $bashlet =~ @arch@ ]]; then
+        echo "$BASHLETS_LOCAL_POOL/arch/$BASHLETS_OSTYPE/$(basename $bashlet)"
+    else
         echo "$BASHLETS_LOCAL_POOL/lib/$bashlet"
-    }
-}
-
-function bashlet_to_file()
-{
-    local bashlet="$1"
-    
-    # plugin names are prefixed by a colon
-
-    [[ $bashlet =~ ^: ]] && {
-        echo "$BASHLETS_LOCAL_POOL/plugins/${bashlet:1}"
-    } || {
-        echo "$BASHLETS_LOCAL_POOL/lib/$bashlet"
-    }
+    fi
 }
 
 function bashlet_to_url()
 {
     local bashlet="$1"
     
-    # plugin names are prefixed by a colon
-
-    [[ $bashlet =~ ^: ]] && {
-        echo "$BASHLETS_REMOTE_REPO_PLUGINS/${bashlet:1}"
-    } || {
-        echo "$BASHLETS_REMOTE_REPO_LIBRARY/$bashlet"
-    }
+    if [[ $bashlet =~ ^: ]]; then
+        # plugin names are prefixed by a colon
+        echo "$BASHLETS_REMOTE_REPO/plugins/${bashlet:1}"
+    elif [[ $bashlet =~ @arch@ ]]; then
+        echo "$BASHLETS_REMOTE_REPO/arch/$BASHLETS_OSTYPE/$(basename $bashlet)"
+    else
+        echo "$BASHLETS_REMOTE_REPO/lib/$bashlet"
+    fi
 }
 
 function bashlet_download()

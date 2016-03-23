@@ -42,9 +42,8 @@ function __bashlets_library_loader_bashlet_to_name()
 {
     local bashlet="$1"
 
-    # plugin names are prefixed by a colon
-
     [[ $bashlet =~ ^: ]] && {
+        # plugin names are prefixed by a colon
         basename "${bashlet:1}"
     } || {
         basename "${bashlet}"
@@ -55,26 +54,28 @@ function __bashlets_library_loader_bashlet_to_path()
 {
     local bashlet="$1"
 
-    # plugin names are prefixed by a colon
-
-    [[ $bashlet =~ ^: ]] && {
+    if [[ $bashlet =~ ^: ]]; then
+        # plugin names are prefixed by a colon
         dirname "${bashlet:1}"
-    } || {
+    elif [[ $bashlet =~ @arch@ ]]; then
+        echo "arch/$BASHLETS_OSTYPE"
+    else
         dirname "$bashlet"
-    }
+    fi
 }
 
 function __bashlets_library_loader_bashlet_to_file()
 {
     local bashlet="$1"
 
-    # plugin names are prefixed by a colon
-
-    [[ $bashlet =~ ^: ]] && {
+    if [[ $bashlet =~ ^: ]]; then
+        # plugin names are prefixed by a colon
         echo "$__bashletLocalPool/plugins/${bashlet:1}"
-    } || {
+    elif [[ $bashlet =~ @arch@ ]]; then
+        echo "$__bashletLocalPool/arch/$BASHLETS_OSTYPE/$(basename "$bashlet")"
+    else
         echo "$__bashletLocalPool/lib/$bashlet"
-    }
+    fi
 }
 
 #@method
@@ -117,16 +118,23 @@ function bashlets_library_loader_import()
     local bashlet_name="$(__bashlets_library_loader_bashlet_to_name "$bashlet")"
     local bashlet_path="$(__bashlets_library_loader_bashlet_to_path "$bashlet")"
     local file_name="$(__bashlets_library_loader_bashlet_to_file "$bashlet")"
-    local method_prefix="bashlets_${bashlet_path}_${bashlet_name}"
     local bashlets_library_loader_list_methods
-    local container_name container_def
+    local container_name container_def method_prefix
 
     source "$file_name" || return 1
 
-    # container names of plugins are prefixed by a colon (like plugin names)
-    [[ $bashlet =~ ^: ]]                                   \
-        && container_name=":$bashlet_name"                 \
-        || container_name="$bashlet_name"
+    [[ $bashlet =~ ^: ]] && {
+        # container names of plugins are prefixed by a colon (like plugin names)
+        container_name=":$bashlet_name"
+    } || {
+        container_name="$bashlet_name"
+    }
+
+    [[ $bashlet =~ ^@arch@ ]] && {
+        method_prefix="bashlets_arch_${bashlet_name}"
+    } || {
+        method_prefix="bashlets_${bashlet_path}_${bashlet_name}"
+    }
 
     container_def="function ${container_name}()
     {
