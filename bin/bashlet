@@ -49,10 +49,10 @@ function bashlet_get_ostype()
     # cf. http://f00bar.com/blog/2011/07/09/simple-robust-os-detection-in-bash-using-ostype/
 
     case "$OSTYPE" in
-        solaris*)
-            echo "solaris" ;;
-        darwin*)
-            echo "osx" ;; 
+#       solaris*)
+#           echo "solaris" ;;
+#       darwin*)
+#           echo "osx" ;; 
         linux*)
             echo "linux" ;;
         bsd*)
