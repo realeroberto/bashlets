@@ -1,5 +1,12 @@
 # bashlets
 
+1. [Introduction](#introduction)
+2. [Examples](#examples)
+3. [Design Notes](#design-notes)
+4. [Style Guide](#style-guide)
+5. [Bibliography](#bibliography)
+
+
 ## Introduction
 
 Bashlets is a modular extensible toolbox for Bash.
