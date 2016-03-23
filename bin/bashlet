@@ -46,6 +46,37 @@ export BASHLETS_REMOTE_REPO_LIBRARY
 export BASHLETS_REMOTE_REPO_PLUGINS
 
 
+function bashlet_get_ostype()
+{
+    # cf. http://f00bar.com/blog/2011/07/09/simple-robust-os-detection-in-bash-using-ostype/
+
+    case "$OSTYPE" in
+        solaris*)
+            echo "solaris" ;;
+        darwin*)
+            echo "osx" ;; 
+        linux*)
+            echo "linux" ;;
+        bsd*)
+            echo "bsd" ;;
+        *)
+            echo "unknown" ;;
+    esac
+}
+
+function bashlet_to_file()
+{
+    local bashlet="$1"
+    
+    # plugin names are prefixed by a colon
+
+    [[ $bashlet =~ ^: ]] && {
+        echo "$BASHLETS_LOCAL_POOL/plugins/${bashlet:1}"
+    } || {
+        echo "$BASHLETS_LOCAL_POOL/lib/$bashlet"
+    }
+}
+
 function bashlet_to_file()
 {
     local bashlet="$1"
@@ -124,11 +155,17 @@ function bashlet_trace_disable()
 }
 
 
+# ``parse'' command line
 [[ $# != 1 ]] && {
     echo "Usage: bashlet <bashlet>" >&2
     return 1
 }
 
+# detect OS type
+BASHLETS_OSTYPE=$(bashlet_get_ostype)
+export BASHLETS_OSTYPE
+
+# library entry point
 bashlet_import "$1" || {
     echo "Error!" >&2
     return 1
