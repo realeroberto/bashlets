@@ -145,6 +145,8 @@ A reasonably sane GNU/Linux environment is assumed to be at hand; support for Fr
 
 ### Bash Hacking
 
+- [The Bash Hackers Wiki](http://wiki.bash-hackers.org/)
+
 ### Collections of scripts
 
 - [Bash One-Liners](http://bashoneliners.com/)
