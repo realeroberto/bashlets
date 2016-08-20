@@ -143,6 +143,8 @@ A reasonably sane GNU/Linux environment is assumed to be at hand; support for Fr
 
 ## Bibliography
 
+### Bash Hacking
+
 ### Collections of scripts
 
 - [Bash One-Liners](http://bashoneliners.com/)
