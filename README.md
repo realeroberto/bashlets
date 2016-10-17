@@ -137,9 +137,11 @@ A reasonably sane GNU/Linux environment is assumed to be at hand; support for Fr
 
 ## Design Notes
 
+TODO
 
 ## Style Guide
 
+TODO
 
 ## Bibliography
 
