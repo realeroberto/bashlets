@@ -145,7 +145,9 @@ A reasonably sane GNU/Linux environment is assumed to be at hand; support for Fr
 
 ### Bash Hacking
 
+- [Advanced Bash-Scripting Guide](http://www.tldp.org/LDP/abs/html/index.html)
 - [The Bash Hackers Wiki](http://wiki.bash-hackers.org/)
+- [Bash Design Patterns](http://stackoverflow.com/questions/78497/design-patterns-or-best-practices-for-shell-scripts)
 
 ### Collections of scripts
 
