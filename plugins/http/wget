@@ -33,6 +33,7 @@
 
 # code borrowed from https://github.com/falzm/burl/
 
+#@method
 function bashlets_http_wget_get()
 {
     shopt -s extquote
