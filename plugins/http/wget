@@ -1,0 +1,65 @@
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# Bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2014-6 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+function bashlets_http_wget_get()
+{
+    shopt -s extquote
+
+    local url host path headers_read
+
+    url=${1/http:\/\/}
+    host=${url%%/*}
+    path=${url#*/}
+
+    [[ $path == $host ]] && path=""
+
+    exec 3<>/dev/tcp/${host}/80
+
+    printf "GET /${path} HTTP/1.1\nHost: ${host}\nUser-Agent: bashlets ${BASHLETS_VERSION}\n\n" >&3
+
+    IFS=
+    while read -r -t 1 line 0<&3; do
+        line=${line//$'\r'}
+
+        if [[ ! -v headers_read && $BASHLETS_HTTP_WGET_INCLUDE_HEADERS -eq 0 ]]; then
+            [[ -z $line ]] && headers_read=yes
+            continue
+        fi
+
+        echo "$line"
+    done
+
+    exec 3<&-
+}
+
+# ex: ts=4 sw=4 et filetype=sh noexpandtab
