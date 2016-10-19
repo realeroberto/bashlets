@@ -213,7 +213,7 @@ function bashlets_http_httpd_serve_dir()
 }
 
 #@method
-function serve_dir_or_file_from()
+function bashlets_http_httpd_serve_dir_or_file_from()
 {
 	local URL_PATH=$1/$3
 	shift
