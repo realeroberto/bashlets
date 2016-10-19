@@ -57,6 +57,7 @@ declare -a BASHLETS_HTTP_HTTPD_RESPONSE_HEADERS=(
 	 "Server: bashlets"
 )
 
+#@method
 function bashlets_http_httpd_add_response_header() {
 	BASHLETS_HTTP_HTTPD_RESPONSE_HEADERS+=("$1: $2")
 }
