@@ -79,18 +79,18 @@ function bashlets_http_httpd_send_response()
 {
 	local code=$1
 
-	send "HTTP/1.0 $1 ${BASHLETS_HTTP_HTTPD_HTTP_RESPONSE[$1]}"
+	bashlets_http_httpd_send "HTTP/1.0 $1 ${BASHLETS_HTTP_HTTPD_HTTP_RESPONSE[$1]}"
 
 	for i in "${__BASHLETS_HTTP_HTTPD_HTTP_RESPONSE_HEADERS[@]}"
 	do
-		send "$i"
+		bashlets_http_httpd_send "$i"
 	done
 
-	send
+	bashlets_http_httpd_send
 
 	while read -r line
 	do
-		send "$line"
+		bashlets_http_httpd_send "$line"
 	done
 }
 
