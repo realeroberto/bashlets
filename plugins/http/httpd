@@ -256,7 +256,7 @@ function bashlets_http_httpd_on_uri_match()
 }
 
 #@method
-function bashlets_http_httd_unconditionally()
+function bashlets_http_httpd_unconditionally()
 {
    "$@" "$__BASHLETS_HTTP_HTTPD_REQUEST_URI"
 }
