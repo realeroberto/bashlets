@@ -139,7 +139,7 @@ function bashlets_http_httpd_get_request_http_version()
 }
 
 #@method
-function bashlets_http_httpd_get_request_http_version()
+function bashlets_http_httpd_set_request_http_version()
 {
 	__BASHLETS_HTTP_HTTPD_REQUEST_HTTP_VERSION="$1"
 }
