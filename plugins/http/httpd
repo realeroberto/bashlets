@@ -51,14 +51,14 @@ declare -a BASHLETS_HTTP_HTTPD_HTTP_RESPONSE=(
 )
 
 __BASHLETS_HTTP_HTTPD_DATE=$(date +"%a, %d %b %Y %H:%M:%S %Z")
-declare -a RESPONSE_HEADERS=(
+declare -a BASHLETS_HTTP_HTTPD_RESPONSE_HEADERS=(
 	   "Date: $__BASHLETS_HTTP_HTTPD_DATE"
 	"Expires: $__BASHLETS_HTTP_HTTPD_DATE"
 	 "Server: bashlets"
 )
 
-function __bashlets_http_httpd_add_response_header() {
-	__BASHLETS_HTTP_HTTPD_RESPONSE_HEADERS+=("$1: $2")
+function bashlets_http_httpd_add_response_header() {
+	BASHLETS_HTTP_HTTPD_RESPONSE_HEADERS+=("$1: $2")
 }
 
 #@method
@@ -109,6 +109,42 @@ function bashlets_http_httpd_fail_with()
 }
 
 #@method
+function bashlets_http_httpd_get_request_method()
+{
+	echo "$__BASHLETS_HTTP_HTTPD_REQUEST_METHOD"
+}
+
+#@method
+function bashlets_http_httpd_set_request_method()
+{
+	__BASHLETS_HTTP_HTTPD_REQUEST_METHOD="$1"
+}
+
+#@method
+function bashlets_http_httpd_get_request_uri()
+{
+	echo "$__BASHLETS_HTTP_HTTPD_REQUEST_URI"
+}
+
+#@method
+function bashlets_http_httpd_set_request_uri()
+{
+	__BASHLETS_HTTP_HTTPD_REQUEST_URI="$1"
+}
+
+#@method
+function bashlets_http_httpd_get_request_http_version()
+{
+	echo "$__BASHLETS_HTTP_HTTPD_REQUEST_HTTP_VERSION"
+}
+
+#@method
+function bashlets_http_httpd_get_request_http_version()
+{
+	__BASHLETS_HTTP_HTTPD_REQUEST_HTTP_VERSION="$1"
+}
+
+#@method
 function bashlets_http_httpd_serve_file()
 {
 	local file=$1
@@ -129,10 +165,10 @@ function bashlets_http_httpd_serve_file()
 			;;
 	esac
 
-	__bashlets_http_httpd_add_response_header "Content-Type" "$CONTENT_TYPE";
+	bashlets_http_httpd_add_response_header "Content-Type" "$CONTENT_TYPE";
 
 	read -r CONTENT_LENGTH < <(stat -c'%s' "$file")         && \
-		__bashlets_http_httpd_add_response_header "Content-Length" "$CONTENT_LENGTH"
+		bashlets_http_httpd_add_response_header "Content-Length" "$CONTENT_LENGTH"
 
 	bashlets_http_httpd_send_response_ok_exit < "$file"
 }
@@ -142,7 +178,7 @@ function bashlets_http_httpd_serve_dir_with_tree()
 {
 	local dir="$1" tree_vers tree_opts basehref x
 
-	__bashlets_http_httpd_add_response_header "Content-Type" "text/html"
+	bashlets_http_httpd_add_response_header "Content-Type" "text/html"
 
 	# The --du option was added in 1.6.0.
 	read x tree_vers x < <(tree --version)
@@ -157,7 +193,7 @@ function bashlets_http_httpd_serve_dir_with_ls()
 {
 	local dir=$1
 
-	__bashlets_http_httpd_add_response_header "Content-Type" "text/plain"
+	bashlets_http_httpd_add_response_header "Content-Type" "text/plain"
 
 	bashlets_http_httpd_send_response_ok_exit < <(ls -la "$dir")
 }
@@ -206,7 +242,7 @@ function serve_dir_or_file_from()
 #@method
 function bashlets_http_httpd_serve_static_string()
 {
-	__bashlets_http_httpd_add_response_header "Content-Type" "text/plain"
+	bashlets_http_httpd_add_response_header "Content-Type" "text/plain"
 	bashlets_http_httpd_send_response_ok_exit <<< "$1"
 }
 
@@ -216,13 +252,13 @@ function bashlets_http_httpd_on_uri_match()
 	local regex=$1
 	shift
 
-	[[ $REQUEST_URI =~ $regex ]] && "$@" "${BASH_REMATCH[@]}"
+	[[ $__BASHLETS_HTTP_HTTPD_REQUEST_URI =~ $regex ]] && "$@" "${BASH_REMATCH[@]}"
 }
 
 #@method
 function bashlets_http_httd_unconditionally()
 {
-   "$@" "$REQUEST_URI"
+   "$@" "$__BASHLETS_HTTP_HTTPD_REQUEST_URI"
 }
 
 # ex: ts=4 sw=4 et filetype=sh noexpandtab
