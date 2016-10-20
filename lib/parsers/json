@@ -1,0 +1,244 @@
+#!/bin/bash
+
+
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# Bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2016 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+################################################################################
+#
+# Based on JSON.sh, cf. https://github.com/dominictarr/JSON.sh
+#
+# Requires GNU awk
+#
+################################################################################
+
+################################################################################
+#
+# Global Variables
+#
+#
+#   BASHLETS_PARSERS_JSON_ERROR_RING
+#   The parser's error ring
+#
+#   BASHLETS_PARSERS_JSON_LEAFONLY
+#   Leaf only mode: only show leaf nodes, which stops data duplication
+#   
+#   BASHLETS_PARSERS_JSON_PRUNE
+#   Prune empty mode: exclude fields with empty values
+#
+#   BASHLETS_PARSERS_JSON_BRIEF
+#   Combines 'Leaf only' and 'Prune empty' modes
+#
+#   BASHLETS_PARSERS_JSON_NO_HEAD
+#   Do not show nodes that have no path (lines that start with [])
+#
+#   BASHLETS_PARSERS_JSON_NORMALIZE_SOLIDUS
+#   Remove escaping of the solidus symbol (straight slash)
+#
+################################################################################
+
+
+
+function bashlets_parsers_json_throw()
+{
+   BASHLETS_PARSERS_JSON_ERROR_RING="$*"
+}
+
+function bashlets_parsers_json_tokenize()
+{
+    local GREP
+    local ESCAPE
+    local CHAR
+
+    function __bashlets_parsers_json_awk_egrep()
+    {
+        local pattern_string=$1
+
+        gawk '{
+            while ($0) {
+                start=match($0, pattern);
+                token=substr($0, start, RLENGTH);
+                print token;
+                $0=substr($0, start+RLENGTH);
+            }
+        }' pattern="$pattern_string"
+    }
+
+    if echo "test string" | egrep -ao --color=never "test" >/dev/null 2>&1
+    then
+        GREP='egrep -ao --color=never'
+    else
+        GREP='egrep -ao'
+    fi
+
+    if echo "test string" | egrep -o "test" >/dev/null 2>&1
+    then
+        ESCAPE='(\\[^u[:cntrl:]]|\\u[0-9a-fA-F]{4})'
+        CHAR='[^[:cntrl:]"\\]'
+    else
+        GREP=__bashlets_parsers_json_awk_egrep
+        ESCAPE='(\\\\[^u[:cntrl:]]|\\u[0-9a-fA-F]{4})'
+        CHAR='[^[:cntrl:]"\\\\]'
+    fi
+
+    local STRING="\"$CHAR*($ESCAPE$CHAR*)*\""
+    local NUMBER='-?(0|[1-9][0-9]*)([.][0-9]*)?([eE][+-]?[0-9]*)?'
+    local KEYWORD='null|false|true'
+    local SPACE='[[:space:]]+'
+
+    $GREP "$STRING|$NUMBER|$KEYWORD|$SPACE|." | egrep -v "^$SPACE$"
+
+    unset __bashlets_parsers_json_awk_egrep
+}
+
+function bashlets_parsers_json_parse_array()
+{
+    local index=0
+    local ary=''
+
+    read -r token
+
+    case "$token" in
+        ']') ;;
+        *)
+            while :
+            do
+                bashlets_parsers_json_parse_value "$1" "$index"
+                index=$((index+1))
+                ary="$ary""$value" 
+                read -r token
+                case "$token" in
+                    ']') break ;;
+                    ',') ary="$ary," ;;
+                    *) bashlets_parsers_json_throw "EXPECTED , or ] GOT ${token:-EOF}" ; return 1 ;;
+                esac
+                read -r token
+            done
+    ;;
+    esac
+    [[ "$BASHLETS_PARSERS_JSON_BRIEF" -eq 0 ]] && value=$(printf '[%s]' "$ary") || value=
+    :
+}
+
+function bashlets_parsers_json_parse_object()
+{
+    local key
+    local obj=''
+
+    read -r token
+
+    case "$token" in
+        '}') ;;
+        *)
+            while :
+            do
+                case "$token" in
+                    '"'*'"') key=$token ;;
+                    *) bashlets_parsers_json_throw "EXPECTED string GOT ${token:-EOF}" ; exit 1 ;;
+                esac
+                read -r token
+                case "$token" in
+                    ':') ;;
+                    *) bashlets_parsers_json_throw "EXPECTED : GOT ${token:-EOF}" ; exit 1 ;;
+                esac
+                read -r token
+                bashlets_parsers_json_parse_value "$1" "$key"
+                obj="$obj$key:$value"        
+                read -r token
+                case "$token" in
+                    '}') break ;;
+                    ',') obj="$obj," ;;
+                    *) bashlets_parsers_json_throw "EXPECTED , or } GOT ${token:-EOF}" ; exit 1 ;;
+                esac
+                read -r token
+            done
+        ;;
+    esac
+    [[ "$BASHLETS_PARSERS_JSON_BRIEF" -eq 0 ]] && value=$(printf '{%s}' "$obj") || value=
+    :
+}
+
+function bashlets_parsers_json_parse_value()
+{
+    local jpath="${1:+$1,}$2" isleaf=0 isempty=0 print=0 value
+    case "$token" in
+        '{')
+            bashlets_parsers_json_parse_object "$jpath" ;;
+        '[')
+            bashlets_parsers_json_parse_array  "$jpath" ;;
+            # At this point, the only valid single-character tokens are digits.
+            ''|[!0-9]) bashlets_parsers_json_throw "EXPECTED value GOT ${token:-EOF}" ; return 1;;
+        *)
+            value=$token
+            # if asked, replace solidus ("\/") in json strings with normalized value: "/"
+            [[ "$NORMALIZE_SOLIDUS" -eq 1 ]] && value=$(echo "$value" | sed 's#\\/#/#g')
+            isleaf=1
+            [ "$value" = '""' ] && isempty=1
+            ;;
+    esac
+
+    [ "$value" = '' ] && return
+    [[ "$BASHLETS_PARSERS_JSON_NO_HEAD" -eq 1 ]] && [ -z "$jpath" ] && return
+
+    [[ "$BASHLETS_PARSERS_JSON_LEAFONLY" -eq 0 ]] && [[ "$BASHLETS_PARSERS_JSON_PRUNE" -eq 0 ]] && print=1
+    [[ "$BASHLETS_PARSERS_JSON_LEAFONLY" -eq 1 ]] && [ "$isleaf" -eq 1 ] && [ $BASHLETS_PARSERS_JSON_PRUNE -eq 0 ]] && print=1
+    [[ "$BASHLETS_PARSERS_JSON_LEAFONLY" -eq 0 ]] && [[ "$BASHLETS_PARSERS_JSON_PRUNE" -eq 1 ]] && [ "$isempty" -eq 0 ] && print=1
+    [[ "$BASHLETS_PARSERS_JSON_LEAFONLY" -eq 1 ]] && [ "$isleaf" -eq 1 ] && \
+    [[ "$BASHLETS_PARSERS_JSON_PRUNE" -eq 1 ]] && [ $isempty -eq 0 ] && print=1
+    [ "$print" -eq 1 ] && printf "[%s]\t%s\n" "$jpath" "$value"
+    :
+}
+
+function bashlets_parsers_json_parse()
+{
+    read -r token
+    bashlets_parsers_json_parse_value
+    read -r token
+    case "$token" in
+        '') ;;
+        *) bashlets_parsers_json_throw "EXPECTED EOF GOT $token" ; return 1 ;;
+    esac
+}
+
+function bashlets_parsers_json_to_charstream()
+{
+    bashlets_parsers_json_tokenize | bashlets_parsers_json_parse
+}
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh
