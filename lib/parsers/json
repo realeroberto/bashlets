@@ -195,18 +195,19 @@ function bashlets_parsers_json_parse_object()
 #@method
 function bashlets_parsers_json_parse_value()
 {
-    local jpath="${1:+$1,}$2" isleaf=0 isempty=0 print=0 value
+    local jpath="${1:+$1,}$2" isleaf=0 isempty=0 print=0
     case "$token" in
         '{')
             bashlets_parsers_json_parse_object "$jpath" ;;
         '[')
             bashlets_parsers_json_parse_array  "$jpath" ;;
-            # At this point, the only valid single-character tokens are digits.
-            ''|[!0-9]) bashlets_parsers_json_throw "EXPECTED value GOT ${token:-EOF}" ; return 1;;
+        # At this point, the only valid single-character tokens are digits.
+        ''|[!0-9])
+            bashlets_parsers_json_throw "EXPECTED value GOT ${token:-EOF}" ; return 1;;
         *)
             value=$token
             # if asked, replace solidus ("\/") in json strings with normalized value: "/"
-            [[ "$NORMALIZE_SOLIDUS" -eq 1 ]] && value=$(echo "$value" | sed 's#\\/#/#g')
+            [[ "$BASHLETS_PARSERS_JSON_NORMALIZE_SOLIDUS" -eq 1 ]] && value=$(echo "$value" | sed 's#\\/#/#g')
             isleaf=1
             [ "$value" = '""' ] && isempty=1
             ;;
@@ -241,6 +242,7 @@ function bashlets_parsers_json_to_charstream()
 {
     bashlets_parsers_json_tokenize | bashlets_parsers_json_parse
 }
+
 
 # Local variables:
 # mode: shell-script
