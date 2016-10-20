@@ -65,6 +65,9 @@
 #   BASHLETS_PARSERS_JSON_NORMALIZE_SOLIDUS
 #   Remove escaping of the solidus symbol (straight slash)
 #
+#   BASHLETS_PARSERS_JSON_LEAVES_AS_DIRS
+#   Determines how the JSON-to-fs translator should represent leaf nodes
+#
 ################################################################################
 
 
@@ -247,13 +250,27 @@ function bashlets_parsers_json_to_charstream()
 function bashlets_parsers_json_to_fs()
 {
     local base="${1:-/tmp}"
+
+    # 'Brief' mode is requires, so we save the current settings
+    local old_BASHLETS_PARSERS_JSON_BRIEF=$BASHLETS_PARSERS_JSON_BRIEF
+    export BASHLETS_PARSERS_JSON_BRIEF=1
+
     bashlets_parsers_json_to_charstream | while read jpath value
     do
         jpath=$(echo $jpath | xargs echo)  # unquote
 
-        mkdir -p $(dirname $base/$jpath)
-        echo "$value" > $base/$jpath
+        if [[ "$BASHLETS_PARSERS_JSON_LEAVES_AS_DIRS" -eq 1 ]]
+        then
+            value=$(echo $value | xargs echo)  # unquote
+            mkdir -p $base/$jpath/"$value"
+        else
+            mkdir -p $(dirname $base/$jpath)
+            echo "$value" > $base/$jpath
+        fi
     done
+
+    # restore the old settings
+    export BASHLETS_PARSERS_JSON_BRIEF=$old_BASHLETS_PARSERS_JSON_BRIEF
 }
 
 
