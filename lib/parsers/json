@@ -195,7 +195,7 @@ function bashlets_parsers_json_parse_object()
 #@method
 function bashlets_parsers_json_parse_value()
 {
-    local jpath="${1:+$1,}$2" isleaf=0 isempty=0 print=0
+    local jpath="${1:+$1/}$2" isleaf=0 isempty=0 print=0
     case "$token" in
         '{')
             bashlets_parsers_json_parse_object "$jpath" ;;
@@ -221,7 +221,7 @@ function bashlets_parsers_json_parse_value()
     [[ "$BASHLETS_PARSERS_JSON_LEAFONLY" -eq 0 ]] && [[ "$BASHLETS_PARSERS_JSON_PRUNE" -eq 1 ]] && [ "$isempty" -eq 0 ] && print=1
     [[ "$BASHLETS_PARSERS_JSON_LEAFONLY" -eq 1 ]] && [ "$isleaf" -eq 1 ] && \
     [[ "$BASHLETS_PARSERS_JSON_PRUNE" -eq 1 ]] && [ $isempty -eq 0 ] && print=1
-    [ "$print" -eq 1 ] && printf "[%s]\t%s\n" "$jpath" "$value"
+    [ "$print" -eq 1 ] && printf "%s\t%s\n" "$jpath" "$value"
     :
 }
 
@@ -241,6 +241,19 @@ function bashlets_parsers_json_parse()
 function bashlets_parsers_json_to_charstream()
 {
     bashlets_parsers_json_tokenize | bashlets_parsers_json_parse
+}
+
+#@method
+function bashlets_parsers_json_to_fs()
+{
+    local base="${1:-/tmp}"
+    bashlets_parsers_json_to_charstream | while read jpath value
+    do
+        jpath=$(echo $jpath | xargs echo)  # unquote
+
+        mkdir -p $(dirname $base/$jpath)
+        echo "$value" > $base/$jpath
+    done
 }
 
 
