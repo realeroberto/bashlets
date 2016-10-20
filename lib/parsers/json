@@ -69,11 +69,13 @@
 
 
 
+#@method
 function bashlets_parsers_json_throw()
 {
    BASHLETS_PARSERS_JSON_ERROR_RING="$*"
 }
 
+#@method
 function bashlets_parsers_json_tokenize()
 {
     local GREP
@@ -121,6 +123,7 @@ function bashlets_parsers_json_tokenize()
     unset __bashlets_parsers_json_awk_egrep
 }
 
+#@method
 function bashlets_parsers_json_parse_array()
 {
     local index=0
@@ -150,6 +153,7 @@ function bashlets_parsers_json_parse_array()
     :
 }
 
+#@method
 function bashlets_parsers_json_parse_object()
 {
     local key
@@ -188,6 +192,7 @@ function bashlets_parsers_json_parse_object()
     :
 }
 
+#@method
 function bashlets_parsers_json_parse_value()
 {
     local jpath="${1:+$1,}$2" isleaf=0 isempty=0 print=0 value
@@ -219,6 +224,7 @@ function bashlets_parsers_json_parse_value()
     :
 }
 
+#@method
 function bashlets_parsers_json_parse()
 {
     read -r token
@@ -230,6 +236,7 @@ function bashlets_parsers_json_parse()
     esac
 }
 
+#@method
 function bashlets_parsers_json_to_charstream()
 {
     bashlets_parsers_json_tokenize | bashlets_parsers_json_parse
