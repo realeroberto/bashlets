@@ -163,4 +163,5 @@ TODO
 ### Frameworks
 
 - [bashinator](https://github.com/wschlich/bashinator)
+- [bashworks](https://github.com/jpic/bashworks)
 - [log4sh](https://sites.google.com/a/forestent.com/projects/log4sh)
