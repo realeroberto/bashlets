@@ -154,6 +154,7 @@ TODO
 ### Collections of scripts
 
 - [Bash One-Liners](http://bashoneliners.com/)
+- [Awesome Shell](https://github.com/alebcay/awesome-shell)
 
 ### Bash Criticism
 
