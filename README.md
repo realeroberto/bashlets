@@ -158,3 +158,6 @@ TODO
 ### Bash Criticism
 
 - [Bash Weaknesses](http://mywiki.wooledge.org/BashWeaknesses)
+
+### Frameworks
+
