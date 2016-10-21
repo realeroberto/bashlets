@@ -151,14 +151,14 @@ TODO
 - [The Bash Hackers Wiki](http://wiki.bash-hackers.org/)
 - [Bash Design Patterns](http://stackoverflow.com/questions/78497/design-patterns-or-best-practices-for-shell-scripts)
 
+### Bash Criticism
+
+- [Bash Weaknesses](http://mywiki.wooledge.org/BashWeaknesses)
+
 ### Collections of scripts
 
 - [Bash One-Liners](http://bashoneliners.com/)
 - [Awesome Shell](https://github.com/alebcay/awesome-shell)
-
-### Bash Criticism
-
-- [Bash Weaknesses](http://mywiki.wooledge.org/BashWeaknesses)
 
 ### Frameworks
 
