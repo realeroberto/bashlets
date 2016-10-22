@@ -171,6 +171,7 @@ TODO
 - [mbfl](https://github.com/marcomaggi/mbfl)
 - [oobash](https://github.com/domachine/oobash)
 - [shesfw](https://code.google.com/archive/p/shesfw/)
+- [ticktick](https://github.com/kristopolous/TickTick)
 
 ### Special-purpose libraries
 
