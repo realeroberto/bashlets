@@ -167,6 +167,7 @@ TODO
 - [bash manager](https://github.com/lingtalfi/bashmanager)
 - [bash toolbox](https://github.com/hallison/bash-toolbox)
 - [bashworks](https://github.com/jpic/bashworks)
+- [bash automated testing system](https://github.com/sstephenson/bats)
 - [blp](https://github.com/mikelking/blp)
 - [log4sh](https://sites.google.com/a/forestent.com/projects/log4sh)
 - [mbfl](https://github.com/marcomaggi/mbfl)
