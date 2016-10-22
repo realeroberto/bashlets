@@ -165,6 +165,7 @@ TODO
 - [bang.sh](https://github.com/bashlets/bangsh)
 - [bashinator](https://github.com/wschlich/bashinator)
 - [bash manager](https://github.com/lingtalfi/bashmanager)
+- [bash toolbox](https://github.com/hallison/bash-toolbox)
 - [bashworks](https://github.com/jpic/bashworks)
 - [blp](https://github.com/mikelking/blp)
 - [log4sh](https://sites.google.com/a/forestent.com/projects/log4sh)
