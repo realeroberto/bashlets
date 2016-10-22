@@ -168,7 +168,6 @@ TODO
 - [bash toolbox](https://github.com/hallison/bash-toolbox)
 - [bashworks](https://github.com/jpic/bashworks)
 - [blp](https://github.com/mikelking/blp)
-- [log4sh](https://sites.google.com/a/forestent.com/projects/log4sh)
 - [mbfl](https://github.com/marcomaggi/mbfl)
 - [oobash](https://github.com/domachine/oobash)
 - [shesfw](https://code.google.com/archive/p/shesfw/)
@@ -176,3 +175,4 @@ TODO
 ### Special-purpose libraries
 
 - [bash automated testing system](https://github.com/sstephenson/bats)
+- [log4sh](https://sites.google.com/a/forestent.com/projects/log4sh)
