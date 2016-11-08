@@ -1,7 +1,3 @@
-# bashlets: Architecture-dependent Modules
+# bashlets
 
-## Introduction
-
-Bashlets is a modular extensible toolbox for Bash.
-
-This folder contains the architecture-dependent modules.
+## Architecture-dependent Modules
