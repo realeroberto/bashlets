@@ -6,8 +6,7 @@
 2. [Examples](#examples)
 3. [Design Notes](#design-notes)
 4. [Style Guide](#style-guide)
-5. [TODO](#todo)
-6. [Bibliography](#bibliography)
+5. [Bibliography](#bibliography)
 
 
 ## Introduction
@@ -142,11 +141,11 @@ A reasonably sane GNU/Linux environment is assumed to be at hand; support for Fr
 
 TODO
 
+
 ## Style Guide
 
 TODO
 
-## TODO
 
 ## Bibliography
 
