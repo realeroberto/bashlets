@@ -47,7 +47,7 @@ function bashlets_library_version_get()
 }
 
 #@method
-function bashlets_library_version_require_exactly()
+function bashlets_library_version_require()
 {
     local required="$1" actual max
 
@@ -59,8 +59,8 @@ function bashlets_library_version_require_exactly()
 
     if [[ $max != $actual ]]
     then
-        echo "[FATAL] BASHLETS_VERSION is $actual (required is $required)."
-#        exit 1
+        echo "[FATAL] BASHLETS_VERSION is $actual (required is at least $required)."
+        return 1
     fi
 }
 
