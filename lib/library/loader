@@ -161,6 +161,14 @@ function bashlets_library_loader_import()
         case \"\$method\" in
     "
 
+#    for method in $(
+#        bashlets_library_loader_search_methods "$bashlet" |  \
+#            sed "s/${method_prefix}_//"
+#    )
+#    do
+#        echo $method
+#    done
+
     if [[ $BASHLETS_LIB_LIBRARY_LOADER_STYLE == new ]]; then
         bashlets_library_loader_list_methods=bashlets_library_loader_list_methods_new
     elif [[ $BASHLETS_LIB_LIBRARY_LOADER_STYLE == old ]]; then
