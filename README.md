@@ -1,5 +1,7 @@
 # bashlets
 
+[![Read the Docs](https://readthedocs.org/projects/bashlets/badge/?version=latest)](http://bashlets.readthedocs.io/en/latest/?badge=latest)
+
 1. [Introduction](#introduction)
 2. [Examples](#examples)
 3. [Design Notes](#design-notes)
