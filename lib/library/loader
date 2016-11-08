@@ -108,7 +108,7 @@ function bashlets_library_loader_list_methods_new()
 {
     local bashlet="$(__bashlets_library_loader_bashlet_to_file "$1")"
 
-    grep -A 1 '^#@method' <"$bashlet" | sed -n 's/function \(.*\)()/\1/p'
+    grep -A 1 '^#@method' < "$bashlet" | sed -n 's/function \(.*\)()/\1/p'
 }
 
 #@method
