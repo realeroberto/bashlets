@@ -73,6 +73,18 @@ function bashlets_datatype_version_greater_than()
     [[ $max == $1 ]]
 }
 
+#@method
+function bashlets_datatype_version_min()
+{
+    bashlets_datatype_version_sort "$@" | head -1
+}
+
+#@method
+function bashlets_datatype_version_max()
+{
+    bashlets_datatype_version_sort "$@" | tail -1
+}
+
 # Local variables:
 # mode: shell-script
 # sh-basic-offset: 4
