@@ -1,0 +1,328 @@
+#!/bin/bash
+
+
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# Bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2014-6 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+source bashlet datatype/number
+source bashlet marshal/uneval
+source bashlet os/term
+
+
+function __bashlets_logger_channel_describe_verbosity()
+{
+    local verbosity="$1" description
+
+    case "$verbosity" in
+        0)
+            # system is unusable
+            description=EMERGENCY ;;
+        1)
+            # action must be taken immediately
+            description=ALERT ;;
+        2)
+            # critical conditions
+            description=CRITICAL ;;
+        3)
+            # error conditions
+            description=ERROR ;;
+        4)
+            # warning conditions
+            description=WARNING ;;
+        5)
+            # normal, but significant, condition
+            description=NOTICE ;;
+        6)
+            # informational message
+            description=INFO ;;
+        7)
+            # debug-level message
+            description=DEBUG ;;
+        *)
+            # default -> error
+            description=ERROR ;;
+    esac
+
+    echo "$description"
+}
+
+#@method
+function bashlets_logger_channel_get_param()
+{
+    local channel="$1"
+    local key="$2"
+
+    [[ -n $channel && -n $key ]] || return
+
+    echo "$(uneval get_by_key "$channel" "$key")"
+}
+
+#@method
+function bashlets_logger_channel_set_param()
+{
+    local channel="$1"
+    local key="$2"
+    local value="$3"
+
+    [[ -n $channel && -n $key ]] || return
+
+    uneval add_pair "$channel" "$key" "$value"
+}
+
+#@method
+function bashlets_logger_channel_get_type()
+{
+    bashlets_logger_channel_get_param "$1" type
+}
+
+#@method
+function bashlets_logger_channel_set_type()
+{
+    local channel="$1"
+    local type="$2"
+
+    [[ -n $channel ]] || return 1
+
+    case "$type" in
+        auto|stdout|stderr|syslog|logfile|none)
+            bashlets_logger_channel_set_param "$channel" type "$type"
+            ;;
+        *)
+            # unsupported type
+            return 1
+            ;;
+    esac
+}
+
+#@method
+function bashlets_logger_channel_get_verbosity()
+{
+    bashlets_logger_channel_get_param "$1" verbosity
+}
+
+#@method
+function bashlets_logger_channel_describe_verbosity()
+{
+    local verbosity="$(bashlets_logger_channel_get_verbosity "$1")"
+
+    __bashlets_logger_channel_describe_verbosity "$verbosity"
+}
+
+#@method
+function bashlets_logger_channel_set_verbosity()
+{
+    local channel="$1"
+    local verbosity="$2"
+
+    number validate_as_unsigned "$verbosity" || return 1
+    bashlets_logger_channel_set_param "$channel" verbosity "$verbosity"
+}
+
+#@method
+function bashlets_logger_channel_get_format()
+{
+    bashlets_logger_channel_get_param "$1" format
+}
+
+#@method
+function bashlets_logger_channel_set_format()
+{
+    local channel="$1" ; shift
+    local format="$@"
+    bashlets_logger_channel_set_param "$channel" format "$format"
+}
+
+#@method
+function bashlets_logger_channel_get_tag()
+{
+    bashlets_logger_channel_get_param "$1" tag
+}
+
+#@method
+function bashlets_logger_channel_set_tag()
+{
+    bashlets_logger_channel_set_param "$1" tag "$2"
+}
+
+function __bashlets_logger_channel_parse_format()
+{
+    local format="$1"
+    local verbosity="$2"
+    local tag="$3"
+    shift 3
+
+    local msg="$@"
+    local pid="$$"
+
+    local append output chr state=0 i
+
+    [[ -n $format ]] || format="%d %t[%p]: %v: %m"
+
+    for ((i = 0; i < ${#format}; i++))
+    do
+        chr="${format:i:1}"
+        append=
+
+        case "$state" in
+            0)
+                [[ $chr == % ]] && state=1 || append="$chr"
+                ;;
+            1)
+                [[ $chr == d ]] && append="$(date)"
+                [[ $chr == m ]] && append="$msg"
+                [[ $chr == p ]] && append="$pid"
+                [[ $chr == t ]] && append="$tag"
+                [[ $chr == v ]] && append="$(
+                        __bashlets_logger_channel_describe_verbosity "$verbosity"
+                    )"
+                [[ $chr == % ]] && append="%"
+                state=0
+                ;;
+            *)
+                ;;
+        esac
+
+        output="$output$append"
+    done
+
+    echo "$output"
+}
+
+function __bashlets_logger_channel_stdout_write()
+{
+    shift  # $1 => channel   (unused)
+    shift  # $2 => verbosity (unused)
+    shift  # $3 => tag       (unused)
+
+    local output="$@"
+
+    echo "$output" > /dev/stdout
+}
+
+function __bashlets_logger_channel_stderr_write()
+{
+    shift  # $1 => channel   (unused)
+    shift  # $2 => verbosity (unused)
+    shift  # $3 => tag       (unused)
+
+    local output="$@"
+
+    echo "$output" > /dev/stderr
+}
+
+function __bashlets_logger_channel_logfile_write()
+{
+    # TODO to be implemented
+    :
+}
+
+function __bashlets_core_channel_syslog_write()
+{
+    # TODO to be implemented
+    :
+}
+
+#@method
+function bashlets_logger_channel_write()
+{
+    local channel="$1"
+    local verbosity="${2:-5}"
+    shift 2
+
+    local msg="$@"
+
+    local ch_type ch_verbosity ch_tag ch_format
+    local output io_handler
+
+         ch_type="$(bashlets_logger_channel_get_type      "$channel")"
+    ch_verbosity="$(bashlets_logger_channel_get_verbosity "$channel")"
+          ch_tag="$(bashlets_logger_channel_get_tag       "$channel")"
+       ch_format="$(bashlets_logger_channel_get_format    "$channel")"
+
+    [[ $verbosity -gt $ch_verbosity ]] && return
+
+    if [[ $ch_type == auto ]]
+    then
+        term is_tty && ch_type=stderr || ch_type=syslog
+    fi
+
+    if [[ $ch_type == none ]]
+    then
+        return
+
+    elif [[ $ch_type == syslog ]]
+    then
+        output="$msg"
+
+    else
+        output="$(__bashlets_logger_channel_parse_format  \
+            "$ch_format" "$verbosity" "$ch_tag" "$msg")" 
+    fi
+
+    io_handler="__bashlets_logger_channel_${ch_type}_write"
+    type "$io_handler" > /dev/null 2>&1 || return 1
+
+    "$io_handler" "$channel" "$verbosity" "$ch_tag" "$output"
+}
+
+#@method
+function bashlets_logger_channel_open()
+{
+    local channel="$(uneval create)"
+
+    [[ -n $channel ]] || return 1
+
+    # set default verbosity to NOTICE level
+    bashlets_logger_channel_set_verbosity "$channel" 5
+
+    bashlets_logger_channel_set_type "$channel" auto
+}
+
+#@method
+function bashlets_logger_channel_close()
+{
+    local channel="$1"
+
+    [[ -n $channel ]] || return
+
+    # TODO destroy channel
+    :
+}
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh
