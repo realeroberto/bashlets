@@ -78,19 +78,18 @@ function __bashlets_library_loader_bashlet_to_file()
     fi
 }
 
+function __bashlets_library_loader_list_all_methods()
+{
+    declare -F | sed 's/declare -f //' | grep -v "^$FUNCNAME$"
+}
+
 #@method
 function bashlets_library_loader_list_methods_old()
 {
     local bashlet="$(__bashlets_library_loader_bashlet_to_file "$1")"
 
-    function __bashlets_library_loader_list_all_methods()
-    {
-        declare -F | sed 's/declare -f //' | grep -v "^$FUNCNAME$"
-    }
-
     (
-        for method in $(
-            __bashlets_library_loader_list_all_methods)
+        for method in $(__bashlets_library_loader_list_all_methods)
         do
             unset -f -- "$method"
         done
@@ -99,8 +98,6 @@ function bashlets_library_loader_list_methods_old()
 
         __bashlets_library_loader_list_all_methods
     )
-
-    unset __bashlets_library_loader_list_all_methods
 }
 
 #@method
@@ -109,6 +106,25 @@ function bashlets_library_loader_list_methods_new()
     local bashlet="$(__bashlets_library_loader_bashlet_to_file "$1")"
 
     grep -A 1 '^#@method' < "$bashlet" | sed -n 's/function \(.*\)()/\1/p'
+}
+
+#@method
+function bashlets_library_loader_search_methods()
+{
+    local bashlet_name="$1"
+    local method_fullname method_name pattern bashlet_path
+
+    for method_fullname in $(__bashlets_library_loader_list_all_methods)
+    do
+        pattern="^bashlets_([^_]+)_${bashlet_name}_(.+)"
+
+        if [[ $method_fullname =~ $pattern ]]
+        then
+            bashlet_path=${BASH_REMATCH[1]}
+            method_name=${BASH_REMATCH[2]}
+        echo $bashlet_path $bashlet_name $method_name
+        fi
+    done
 }
 
 #@method
