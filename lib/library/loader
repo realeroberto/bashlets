@@ -123,7 +123,7 @@ function bashlets_library_loader_search_methods()
             bashlet_path=${BASH_REMATCH[1]}
              method_name=${BASH_REMATCH[2]}
 
-            echo $bashlet_path $bashlet_name $method_name
+            echo "$bashlet_path:$bashlet_name:$method_name"
         fi
     done
 }
@@ -134,7 +134,8 @@ function bashlets_library_loader_import()
     local bashlet="$1"
     local bashlet_name bashlet_path file_name
     local bashlets_library_loader_list_methods
-    local container_name container_def method_prefix
+    local container_name container_def container_def_0 method_prefix
+    local method method_full
 
     bashlet_name="$(__bashlets_library_loader_bashlet_to_name "$bashlet")"
     bashlet_path="$(__bashlets_library_loader_bashlet_to_path "$bashlet")"
@@ -155,6 +156,8 @@ function bashlets_library_loader_import()
         method_prefix="bashlets_${bashlet_path}_${bashlet_name}"
     }
 
+    # container header
+
     container_def="function ${container_name}()
     {
         local method=\"\$1\" ; shift
@@ -162,13 +165,26 @@ function bashlets_library_loader_import()
         case \"\$method\" in
     "
 
-#    for method in $(
-#        bashlets_library_loader_search_methods "$bashlet" |  \
-#            sed "s/${method_prefix}_//"
-#    )
-#    do
-#        echo $method
-#    done
+    # inherited methods (to be added afterwards)
+
+    for method_full in $(
+        bashlets_library_loader_search_methods "$bashlet_name"
+    )
+    do
+        local v bashlet_name_0 bashlet_path_0 method_prefix_0
+
+        IFS=: read -r bashlet_path_0 bashlet_name_0 method <<<"$method_full"
+
+        method_prefix_0="bashlets_${bashlet_path_0}_${bashlet_name_0}"
+
+        container_def_0="$container_def_0
+            $method)
+                ${method_prefix_0}_\$method \"\$@\"
+                ;;
+        "
+    done
+
+    # new methods
 
     if [[ $BASHLETS_LIB_LIBRARY_LOADER_STYLE == new ]]; then
         bashlets_library_loader_list_methods=bashlets_library_loader_list_methods_new
@@ -189,6 +205,14 @@ function bashlets_library_loader_import()
                 ;;
         "
     done
+
+    # add inherited methods
+
+    container_def="$container_def
+    $container_def_0
+    "
+
+    # container footer
 
     container_def="$container_def
             *)
