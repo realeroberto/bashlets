@@ -47,6 +47,30 @@ function bashlets_os_path_is_absolute()
     [[ "$1" == /* ]]
 }
 
+#@method
+function bashlets_os_path_get_absolute()
+{
+    # http://stackoverflow.com/questions/59895
+
+    local source="$1" dir
+
+    # resolve $source until the file is no longer a symlink
+    while [[ -h $source ]]
+    do
+        dir="$(cd -P "$(dirname "$source")" && pwd)"
+        source="$(readlink "$source")"
+
+        # if $source was a relative symlink, we need to resolve it relative to
+        # the path where the symlink file was located
+        [[ $source != /* ]]  \
+            && source="$(bashlets_os_path_join "$dir" "$source")"
+    done
+
+    # TODO not sure if needed
+    dir="$(cd -P "$source" && pwd)"
+
+    echo "$dir"
+}
 
 # Local variables:
 # mode: shell-script
