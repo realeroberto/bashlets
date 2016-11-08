@@ -131,11 +131,13 @@ function bashlets_library_loader_search_methods()
 function bashlets_library_loader_import()
 {
     local bashlet="$1"
-    local bashlet_name="$(__bashlets_library_loader_bashlet_to_name "$bashlet")"
-    local bashlet_path="$(__bashlets_library_loader_bashlet_to_path "$bashlet")"
-    local file_name="$(__bashlets_library_loader_bashlet_to_file "$bashlet")"
+    local bashlet_name bashlet_path file_name
     local bashlets_library_loader_list_methods
     local container_name container_def method_prefix
+
+    bashlet_name="$(__bashlets_library_loader_bashlet_to_name "$bashlet")"
+    bashlet_path="$(__bashlets_library_loader_bashlet_to_path "$bashlet")"
+       file_name="$(__bashlets_library_loader_bashlet_to_file "$bashlet")"
 
     source "$file_name" || return 1
 
