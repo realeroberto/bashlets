@@ -41,7 +41,7 @@ function bashlets_marshal_pairs_get_by_key()
     [[ -n $mykey ]] || return
     while read line
     do
-        local pair=($(IFS=: echo "$line"))
+        IFS=: read -r -a pair <<< "$line"
         if [[ ${pair[0]} == $mykey ]]
         then
             echo "${pair[1]}"
@@ -57,7 +57,7 @@ function bashlets_marshal_pairs_set_by_key()
     local -i set=0
     while read line
     do
-        local pair=($(IFS=: echo "$line"))
+        IFS=: read -r -a pair <<< "$line"
         if [[ ${pair[0]} == $mykey ]]
         then
             if [[ $set -eq 0 ]]
