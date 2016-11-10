@@ -1,0 +1,191 @@
+#!/bin/bash
+
+################################################################################
+#
+# |              |    |         |
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#
+# Bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2015-6 Roberto Reale
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+################################################################################
+#
+# warrev
+#
+#
+# Purpose:
+#
+#    get/set revision for WAR files
+#
+# Environment variables:
+#
+#    none
+#
+# Example of call:
+#
+#    warrev --get-revision <WAR_FILE>
+#    warrev --set-revision <REVISION> <WAR_FILE>
+#
+################################################################################
+
+
+#
+# library modules/plugins
+################################################################################
+
+source bashlet basic/myself
+#source bashlet :file/zip
+function zip()
+{
+    # stub
+    :
+}
+
+
+#
+# global variables
+################################################################################
+
+# script version
+WARREV_VERSION='0.1'
+# revision marker
+WARREV_REVISION_MARKER="WARREVISION"
+
+
+#
+# utilities
+################################################################################
+
+#
+# warrev_get_revision
+#
+#
+# Purpose:
+#
+#    get revision of the WAR file
+#
+# Example of call:
+#
+#     get_war_revision war_file
+#
+# Local variables:
+#
+#     warfile, comment
+#
+
+function warrev_get_revision()
+{
+    local warfile="$1"
+    local comment
+
+    zip get_comment "$warfile" "$WARREV_REVISION_MARKER"
+}
+
+
+#
+# warrev_set_revision
+#
+#
+# Purpose:
+#
+#    set revision of the WAR file
+#
+# Example of call:
+#
+#    warrev_get_revision war_file revision
+#
+# Local variables:
+#
+#    warfile, revision, comment
+#
+
+function warrev_set_revision()
+{
+    local warfile="$1"
+    local revision="$2"
+
+    zip set_comment "$warfile" "$WARREV_REVISION_MARKER" "$comment"
+}
+
+
+#
+# warrev_usage
+#
+#
+# Purpose:
+#
+#    prints usage information
+#
+# Example of call:
+#
+#    warrev_usage
+#
+# Local variables:
+#
+#    none
+#
+
+function warrev_usage()
+{
+    echo "Get or set WAR revision.  Usage: "
+    echo "    $(myself get_name) --get-revision <WAR_FILE>"
+    echo "    $(myself get_name) --set-revision <REVISION> <WAR_FILE>"
+}
+
+
+#
+# main loop
+################################################################################
+
+if [ $# -lt 2 ]
+then
+    warrev_usage
+    exit 1
+fi
+
+
+if [ "$1" == "--get-revision" ]
+then
+    warrev_get_revision $2
+    exit 0
+
+elif [ "$1" == "--set-revision" ]
+then
+    if [ $# -lt 3 ]; then
+        warrev_usage
+        exit 1
+    fi
+    warrev_set_revision $3 $2
+    exit 0
+fi
+
+
+warrev_usage
+exit 1
+
+# ex: ts=4 sw=4 et filetype=sh
