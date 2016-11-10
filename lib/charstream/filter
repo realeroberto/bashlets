@@ -35,6 +35,12 @@
 
 
 #@method
+function bashlets_charstream_filter_till_pattern()
+{
+    awk "1;/$1/{exit}"
+}
+
+#@method
 function bashlets_charstream_filter_after_pattern()
 {
     # cf. http://stackoverflow.com/questions/17283567/
