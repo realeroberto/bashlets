@@ -41,7 +41,6 @@ source bashlet os/tempfile
 function bashlets_charstream_append_generic()
 {
     local filename="$1"
-
     local tempfile="$(tempfile create)"
 
     # stream A
