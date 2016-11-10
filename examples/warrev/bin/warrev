@@ -48,8 +48,8 @@
 #
 # Example of call:
 #
-#    warrev --get-revision <WAR_FILE>
-#    warrev --set-revision <REVISION> <WAR_FILE>
+#    warrev --get-revision <WARFILE>
+#    warrev --set-revision <REVISION> <WARFILE>
 #
 ################################################################################
 
@@ -59,12 +59,7 @@
 ################################################################################
 
 source bashlet basic/myself
-#source bashlet :file/zip
-function zip()
-{
-    # stub
-    :
-}
+source bashlet :file/zip
 
 
 #
@@ -91,7 +86,7 @@ WARREV_REVISION_MARKER="WARREVISION"
 #
 # Example of call:
 #
-#     get_war_revision war_file
+#     get_war_revision warfile
 #
 # Local variables:
 #
@@ -103,7 +98,7 @@ function warrev_get_revision()
     local warfile="$1"
     local comment
 
-    zip get_comment "$warfile" "$WARREV_REVISION_MARKER"
+    :zip get_comment_by_key "$warfile" "$WARREV_REVISION_MARKER"
 }
 
 
@@ -117,7 +112,7 @@ function warrev_get_revision()
 #
 # Example of call:
 #
-#    warrev_get_revision war_file revision
+#    warrev_get_revision warfile revision
 #
 # Local variables:
 #
@@ -129,7 +124,31 @@ function warrev_set_revision()
     local warfile="$1"
     local revision="$2"
 
-    zip set_comment "$warfile" "$WARREV_REVISION_MARKER" "$comment"
+    :zip set_comment_by_key "$warfile" "$WARREV_REVISION_MARKER" "$revision"
+}
+
+
+#
+# warrev_check_warfile
+#
+#
+# Purpose:
+#
+#    check for WAR file existence (and sanity, TODO)
+#
+# Example of call:
+#
+#    warrev_check_warfile warfile
+#
+# Local variables:
+#
+#    warfile
+#
+
+function warrev_check_warfile()
+{
+    local warfile="$1"
+    [[ -f $warfile ]]
 }
 
 
@@ -153,8 +172,8 @@ function warrev_set_revision()
 function warrev_usage()
 {
     echo "Get or set WAR revision.  Usage: "
-    echo "    $(myself get_name) --get-revision <WAR_FILE>"
-    echo "    $(myself get_name) --set-revision <REVISION> <WAR_FILE>"
+    echo "    $(myself get_name) --get-revision <WARFILE>"
+    echo "    $(myself get_name) --set-revision <REVISION> <WARFILE>"
 }
 
 
@@ -168,9 +187,9 @@ then
     exit 1
 fi
 
-
 if [ "$1" == "--get-revision" ]
 then
+    warrev_check_warfile $2 || { echo "ERROR on WAR file!" ; exit 1 ; }
     warrev_get_revision $2
     exit 0
 
@@ -180,6 +199,7 @@ then
         warrev_usage
         exit 1
     fi
+    warrev_check_warfile $3 || { echo "ERROR on WAR file!" ; exit 1 ; }
     warrev_set_revision $3 $2
     exit 0
 fi
