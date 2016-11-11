@@ -142,9 +142,16 @@ function bashlet_trace_disable()
 }
 
 
+
+# check if the script is sourced
+[[ "${BASH_SOURCE[0]}" != "${0}" ]] || {
+    echo "[bashlets:FATAL] Loader script must be sourced!"
+    exit 1
+}
+
 # ``parse'' command line
 [[ $# != 1 ]] && {
-    echo "Usage: bashlet <bashlet>" >&2
+    echo "[bashlets:FATAL] Loader usage: bashlet <BASHLET>" >&2
     return 1
 }
 
@@ -154,7 +161,7 @@ export BASHLETS_OSTYPE
 
 # library entry point
 bashlet_import "$1" || {
-    echo "Error!" >&2
+    echo "[bashlets:FATAL] Generic loader error." >&2
     return 1
 }
 
