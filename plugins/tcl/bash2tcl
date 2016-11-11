@@ -38,6 +38,20 @@ source bashlet datatype/number
 
 
 #@method
+function bashlets_tcl_bash2tcl_convert_scalar()
+{
+    local x
+
+    number validate_as_float "$1" && {
+        x="$1"
+    } || {
+        x="\"$1\""
+    }
+
+    echo "$x"
+}
+
+#@method
 function bashlets_tcl_bash2tcl_convert_list()
 {
     local list
