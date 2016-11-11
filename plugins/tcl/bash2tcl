@@ -38,7 +38,6 @@ source bashlet datatype/number
 
 function bashlets_tcl_bash2tcl_convert_list()
 {
-    local listname="$1" ; shift
     local list
 
     for x in "$@"
@@ -50,7 +49,7 @@ function bashlets_tcl_bash2tcl_convert_list()
         }
     done
 
-    echo "set $listname {$list}"
+    echo "{$list}"
 }
 
 # Local variables:
