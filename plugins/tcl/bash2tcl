@@ -36,6 +36,8 @@
 
 source bashlet datatype/number
 
+
+#@method
 function bashlets_tcl_bash2tcl_convert_list()
 {
     local list
