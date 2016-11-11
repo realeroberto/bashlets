@@ -131,7 +131,10 @@ function bashlet_download_loader()
     do
         local file_name="$d/bashlet"
         mkdir -p "$d" 2> /dev/null  # try and create the directory
-        bashlet_download "$url" "$file_name" 2> /dev/null && return
+        bashlet_download "$url" "$file_name" 2> /dev/null && {
+            chmod +x "$file_name"   # permit the loader to be invoked locally
+            return
+        }
     done
 
     return 1
@@ -193,8 +196,8 @@ function bashlet_trace_disable()
 BASHLETS_OSTYPE=$(bashlet_get_ostype)
 export BASHLETS_OSTYPE
 
-# check if the script is sourced
-[[ "${BASH_SOURCE[0]}" != "$0" ]] || {
+# check if the script is sourced 
+[[ $0 == -bash ]] || {
     bashlet_download_loader || {
         echo "[bashlets:FATAL] Cannot download the loader!"
         exit 1
