@@ -1,0 +1,198 @@
+#!/bin/bash
+
+
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# Bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2014-6 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+source bashlet :tcl/bash2tcl
+
+
+#
+# (numerical) insertion sort
+#
+
+function bashlets_tcl_sort_insertsort()
+{
+    local tcl_text
+
+    tcl_text="
+        proc insertSort {l} {
+            for {set i 1} {\$i < [llength \$l]} {incr i} {
+                set value [lindex \$l \$i]
+                set j [expr {\$i - 1}]
+
+                while {\$j >= 0 && [lindex \$l \$j] > \$value} {
+                    set k [expr {\$j + 1}]
+                    set l [lreplace \$l \$k \$k [lindex \$l \$j]]
+                    set j [expr {\$j - 1}]
+                }
+                
+                set k [expr {\$j + 1}]
+                set l [lreplace \$l \$k \$k \$value]
+            }
+            
+            return \$l
+        }
+
+
+        set l $(:bash2tcl convert_list $@)
+        puts [insertSort \$l]
+    "
+
+    tclsh <<< "$tcl_text"
+}
+
+
+#
+# a simple implementation of the Bubble Sort algorithm
+#
+
+function bashlets_tcl_sort_bubblesort()
+{
+    local tcl_text
+
+    tcl_text="
+
+        #
+        # swap two elements in a list
+        #
+        proc swap {x y} {
+            set z \$y
+            set y \$x
+            set x \$z
+            
+            return [list \$x \$y]
+        }
+
+        #
+        # flatten a nested list
+        #
+        proc flatten {l} {
+            set q [list]
+            
+            foreach element \$l {
+                set q [concat \$q \$element]
+            }
+            
+            return \$q
+        }
+
+        #
+        # the actual sort
+        #
+        proc bubbleSort {l} {
+            while 1 {
+                set swapped 0
+                
+                for {set i 1} {\$i < [llength \$l]} {incr i} {
+                    set j [expr {\$i - 1}]
+                    set x [lindex \$l \$j]
+                    set y [lindex \$l \$i]
+                    
+                    if {\$x > \$y} {
+                        set l [flatten [lreplace \$l \$j \$i [swap \$x \$y]]]
+                        set swapped 1
+                    }
+                }
+                    
+                if {\$swapped == 0} {
+                    break
+                }
+            }
+            
+            return \$l
+        }
+
+
+        set l $(:bash2tcl convert_list $@)
+        puts [bubbleSort \$l]
+    "
+
+    tclsh <<< "$tcl_text"
+}
+
+
+#
+# simple implementation of the Quicksort algorithm
+#
+
+function bashlets_tcl_sort_quicksort()
+{
+    local tcl_text
+
+    tcl_text="
+
+        proc quickSort {l} {
+            if {[llength \$l] <= 1} {
+                return \$l
+            }
+
+            set less [list]
+            set greater [list]
+            
+            # choose as pivot an element about the middle of the list
+            set pivot_index [expr {[llength \$l] / 2}]
+            set pivot [lindex \$l \$pivot_index]
+            
+            for {set i 0} {\$i < [llength \$l]} {incr i} {
+                if {\$i == \$pivot_index} {
+                    continue
+                }
+                
+                set element [lindex \$l \$i]
+                
+                if {\$element <= \$pivot} {
+                    lappend less \$element
+                } else {
+                    lappend greater \$element
+                }
+            }
+            
+            return [concat [quickSort \$less] \$pivot [quickSort \$greater]]
+        }
+
+
+        set l $(:bash2tcl convert_list $@)
+        puts [quickSort \$l]
+    "
+
+    tclsh <<< "$tcl_text"
+}
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh
