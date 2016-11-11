@@ -3,10 +3,11 @@
 [![Read the Docs](https://readthedocs.org/projects/bashlets/badge/?version=latest)](http://bashlets.readthedocs.io/en/latest/?badge=latest)
 
 1. [Introduction](#introduction)
-2. [Examples](#examples)
-3. [Design Notes](#design-notes)
-4. [Style Guide](#style-guide)
-5. [Bibliography](#bibliography)
+1. [Installing](#installing)
+3. [Examples](#examples)
+4. [Design Notes](#design-notes)
+5. [Style Guide](#style-guide)
+6. [Bibliography](#bibliography)
 
 
 ## Introduction
@@ -16,7 +17,20 @@ Bashlets is a modular extensible toolbox for Bash.
 A reasonably sane GNU/Linux environment is assumed to be at hand; support for FreeBSD and Cygwin is available (in _homeopathic dilution_), yet highly experimental.
 
 
+## Installing
+
+	$ curl bashlets.github.io | bash
+
+
 ## Examples
+
+### Basic interaction
+
+	$ source bashlet library/interact
+	$ interact say_hello
+	
+	Hello, this is bashlets 1.0 speaking!
+
 
 ### Data types: generating a random printable string of arbitrary length
 
