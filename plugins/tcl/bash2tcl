@@ -68,6 +68,61 @@ function bashlets_tcl_bash2tcl_convert_list()
     echo "{$list}"
 }
 
+#@method
+function bashlets_tcl_bash2tcl_get_text()
+{
+    local f="$1"
+    local tcl_text
+
+    case "$f" in 
+        exec-command)
+            tcl_text='
+                package require Tcl 8.5
+
+                proc execCommand {args} {
+
+                    # see http://www.tcl.tk/man/tcl8.4/TclCmd/exec.htm
+
+                    # TODO add auto_execok
+                    # TODO compatibility with Tcl 8.4 and lower (without {*})
+                    if {[catch {exec {*}$args} results]} {
+                        if {[lindex $::errorCode 0] eq "CHILDSTATUS"} {
+                            # error condition
+                            # TODO $::errorInfo
+                            return [expr [lindex $::errorCode 2]]
+                        } else {
+                            # some kind of unexpected failure
+                            return 127
+                        }
+                    } else {
+                        return 0
+                    }
+                }
+            '
+            ;;
+        *)
+            # TODO error!
+            ;;
+    esac
+
+    cat <<< "$tcl_text"
+}
+
+
+#@method
+function bashlets_tcl_bash2tcl_exec_command()
+{
+    local tcl_text
+
+    tcl_text="
+        $(bashlets_tcl_bash2tcl_get_text exec-command)
+
+        exit [execCommand $@]
+    "
+
+    tclsh <<< "$tcl_text"
+}
+
 # Local variables:
 # mode: shell-script
 # sh-basic-offset: 4
