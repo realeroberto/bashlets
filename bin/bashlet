@@ -37,6 +37,8 @@
 
 
 
+BASHLETS_LOADER_DESTINATIONS=~/.local/bin:/usr/local/bin
+BASHLET_DOWNLOAD_AGENT=curl
 BASHLETS_LOCAL_POOL=~/.bashlets
 BASHLETS_REMOTE_REPO=https://raw.githubusercontent.com/bashlets/bashlets/master
 
@@ -90,17 +92,59 @@ function bashlet_to_url()
     fi
 }
 
+function bashlet_download_with_curl()
+{
+    local url="$1"
+    local file_name="$2"
+
+    curl -f -s "$url" > "$file_name"
+}
+
+function bashlet_download_with_wget()
+{
+    local url="$1"
+    local file_name="$2"
+
+    wget -q -O "$file_name" "$url"
+}
+
 function bashlet_download()
 {
-    local bashlet="$1"
-    local file_name="$(bashlet_to_file "$bashlet")"
-    local url="$(bashlet_to_url "$bashlet")"
+    local url="$1"
+    local file_name="$2"
+    local agent="${BASHLET_DOWNLOAD_AGENT:-curl}"
 
-    mkdir -p "$(dirname "$file_name")" 2> /dev/null
-    curl -f -s "$url" > "$file_name" || {
+    bashlet_download_with_$agent "$url" "$file_name" || {
         rm -f "$file_name"
         return 1
     }
+}
+
+function bashlet_download_loader()
+{
+    local url="$BASHLETS_REMOTE_REPO/bin/bashlet"
+    local d
+
+    # cycle possible destinations
+    IFS=: read -r -a destinations <<< "$BASHLETS_LOADER_DESTINATIONS"
+    for d in ${destinations[@]}
+    do
+        local file_name="$d/bashlet"
+        mkdir -p "$d" 2> /dev/null  # try and create the directory
+        bashlet_download "$url" "$file_name" 2> /dev/null && return
+    done
+
+    return 1
+}
+
+function bashlet_download_bashlet()
+{
+    local bashlet="$1"
+    local url="$(bashlet_to_url "$bashlet")"
+    local file_name="$(bashlet_to_file "$bashlet")"
+
+    mkdir -p "$(dirname "$file_name")" 2> /dev/null
+    bashlet_download "$url" "$file_name"
 }
 
 function bashlet_import_lazy()
@@ -113,7 +157,9 @@ function bashlet_import_lazy()
             bashlet_import_lazy library/loader
     }
 
-    [[ -f "$file_name" ]] || bashlet_download "$bashlet" || return 1
+    [[ -f "$file_name" ]] || {
+        bashlet_download_bashlet "$bashlet" || return 1
+    }
 
     source "$file_name"
 }
@@ -143,10 +189,17 @@ function bashlet_trace_disable()
 
 
 
+# detect OS type
+BASHLETS_OSTYPE=$(bashlet_get_ostype)
+export BASHLETS_OSTYPE
+
 # check if the script is sourced
-[[ "${BASH_SOURCE[0]}" != "${0}" ]] || {
-    echo "[bashlets:FATAL] Loader script must be sourced!"
-    exit 1
+[[ "${BASH_SOURCE[0]}" != "$0" ]] || {
+    bashlet_download_loader || {
+        echo "[bashlets:FATAL] Cannot download the loader!"
+        exit 1
+    }
+    exit 0
 }
 
 # ``parse'' command line
@@ -154,10 +207,6 @@ function bashlet_trace_disable()
     echo "[bashlets:FATAL] Loader usage: bashlet <BASHLET>" >&2
     return 1
 }
-
-# detect OS type
-BASHLETS_OSTYPE=$(bashlet_get_ostype)
-export BASHLETS_OSTYPE
 
 # library entry point
 bashlet_import "$1" || {
