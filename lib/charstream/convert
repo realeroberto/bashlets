@@ -106,7 +106,7 @@ function __bashlets_charstream_convert_punch()
         {0..9} {A..Z}
     )
 
-    # ASCII table that coeresponds to CHARS
+    # ASCII table that corresponds to CHARS
     declare -a DEC=(   
         33 34 35 36 37 38 39 40 41 43 44
         45 46 47 58 59 60 61 62 63 64
