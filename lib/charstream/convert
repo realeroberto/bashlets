@@ -99,7 +99,7 @@ function __bashlets_charstream_convert_punch()
 
     declare -u str="$@"
 
-    local COLUMNS=48
+    local COLUMNS=48 i row p
 
 
     declare -a ROWCHARS=(" " " " " " 1 2 3 4 5 6 7 8 9)
@@ -184,7 +184,7 @@ function bashlets_charstream_convert_punch()
     done
 }
 
-################################ EOF ###################################
+
 # Local variables:
 # mode: shell-script
 # sh-basic-offset: 4
