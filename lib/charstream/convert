@@ -35,6 +35,7 @@
 
 
 source bashlet datatype/char
+source bashlet datatype/number
 
 #@method
 function bashlets_charstream_convert_dos2unix()
@@ -120,11 +121,6 @@ function __bashlets_charstream_convert_punch()
         528 520 516 514 513 130 2054 2082 1536 642 0
     )
 
-    function _bit()
-    {
-        echo $(( $1 & (1<<$2) ))
-    }
-
     if [ ${#str} -gt $COLUMNS ]; then
         str=${str:0:COLUMNS}
     fi
@@ -159,7 +155,7 @@ function __bashlets_charstream_convert_punch()
         for ((i=0; i<${#str}; i++))
         do
             p=$(char ascii2decimal ${str:i:1})
-            if [ $(_bit ${HOLES[p]} $((11 - row)) ) -ne 0 ]; then
+            if [ $(number select_bit ${HOLES[p]} $((11 - row)) ) -ne 0 ]; then
                 echo -n "]"
             else
                 echo -n "${ROWCHARS[row]}"
@@ -177,8 +173,6 @@ function __bashlets_charstream_convert_punch()
         echo -n "_"
     done
     echo "|"
-
-    unset _bit
 }
 
 #@method
