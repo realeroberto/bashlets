@@ -35,7 +35,7 @@
 
 
 source bashlet datatype/char
-source bashlet datatype/number
+source bashlet datatype/integer
 
 #@method
 function bashlets_datatype_string_punch()
@@ -122,7 +122,7 @@ function bashlets_datatype_string_punch()
         for ((i=0; i<${#str}; i++))
         do
             p=$(char ascii2decimal ${str:i:1})
-            if [ $(number select_bit ${HOLES[p]} $((11 - row)) ) -ne 0 ]; then
+            if [ $(integer select_bit ${HOLES[p]} $((11 - row)) ) -ne 0 ]; then
                 echo -n "]"
             else
                 echo -n "${ROWCHARS[row]}"
