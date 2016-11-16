@@ -36,7 +36,8 @@
 
 
 __bashletLocalPool=~/.bashlets
-BASHLETS_LIB_LIBRARY_LOADER_STYLE=new  # old/new
+BASHLETS_LIB_LIBRARY_LOADER_STYLE=new   # old/new
+BASHLETS_LIB_LIBRARY_ALLOW_NO_PREFIX=1  # if 1, methods can be called without prefix
 
 function __bashlets_library_loader_bashlet_to_name()
 {
