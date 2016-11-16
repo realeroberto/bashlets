@@ -331,10 +331,71 @@ function bashlets_datatype_string_encode_base64()
 }
 
 #@method
+function bashlets_datatype_string_rotate()
+{
+    ########################################################################
+    #
+    # Code borrowed from:
+    #
+    # rot - rotate the alphabet and encode a string
+    # cf. https://gist.github.com/ldante86/bbb0f3e69aa61a90710d52a9928487cb
+    #
+    # Copyright (C) 2014 Luciano D. Cecere <ldante86@aol.com>
+    #
+    # This program is free software: you can redistribute it and/or modify
+    # it under the terms of the GNU General Public License as published by
+    # the Free Software Foundation, either version 3 of the License, or
+    # (at your option) any later version.
+    #
+    # This program is distributed in the hope that it will be useful,
+    # but WITHOUT ANY WARRANTY; without even the implied warranty of
+    # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    # GNU General Public License for more details.
+    #
+    # You should have received a copy of the GNU General Public License
+    # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    #
+    #########################################################################
+
+    local rot="$1" ; shift
+
+    [[ $# -eq 0 ]] && return
+
+    case $rot in
+        0 )  echo "$input" ;; # no rotation
+        1 )  tr 'A-Za-z' 'B-ZA-Ab-za-a' <<< "$@" ;;
+        2 )  tr 'A-Za-z' 'C-ZA-Bc-za-b' <<< "$@" ;;
+        3 )  tr 'A-Za-z' 'D-ZA-Cd-za-c' <<< "$@" ;;
+        4 )  tr 'A-Za-z' 'E-ZA-De-za-d' <<< "$@" ;;
+        5 )  tr 'A-Za-z' 'F-ZA-Ef-za-e' <<< "$@" ;;
+        6 )  tr 'A-Za-z' 'G-ZA-Fg-za-f' <<< "$@" ;;
+        7 )  tr 'A-Za-z' 'H-ZA-Gh-za-g' <<< "$@" ;;
+        8 )  tr 'A-Za-z' 'I-ZA-Hi-za-h' <<< "$@" ;;
+        9 )  tr 'A-Za-z' 'J-ZA-Ij-za-i' <<< "$@" ;;
+        10)  tr 'A-Za-z' 'K-ZA-Jk-za-j' <<< "$@" ;;
+        11)  tr 'A-Za-z' 'L-ZA-Kl-za-k' <<< "$@" ;;
+        12)  tr 'A-Za-z' 'M-ZA-Lm-za-l' <<< "$@" ;;
+        13)  tr 'A-Za-z' 'N-ZA-Mn-za-m' <<< "$@" ;; # rot13
+        14)  tr 'A-Za-z' 'O-ZA-No-za-n' <<< "$@" ;;
+        15)  tr 'A-Za-z' 'P-ZA-Op-za-o' <<< "$@" ;;
+        16)  tr 'A-Za-z' 'Q-ZA-Pq-za-p' <<< "$@" ;;
+        17)  tr 'A-Za-z' 'R-ZA-Qr-za-s' <<< "$@" ;;
+        18)  tr 'A-Za-z' 'S-ZA-Rs-za-r' <<< "$@" ;;
+        19)  tr 'A-Za-z' 'T-ZA-St-za-s' <<< "$@" ;;
+        20)  tr 'A-Za-z' 'U-ZA-Tu-za-t' <<< "$@" ;;
+        21)  tr 'A-Za-z' 'V-ZA-Uv-za-u' <<< "$@" ;;
+        22)  tr 'A-Za-z' 'W-ZA-Vw-za-v' <<< "$@" ;;
+        23)  tr 'A-Za-z' 'X-ZA-Wx-za-w' <<< "$@" ;;
+        24)  tr 'A-Za-z' 'Y-ZA-Xy-za-x' <<< "$@" ;;
+        25)  tr 'A-Za-z' 'Z-ZA-Yz-za-y' <<< "$@" ;;
+        * )  return 1 ;;
+    esac
+}
+
+#@method
 function bashlets_datatype_string_rot13()
 {
-    # cf. http://rosettacode.org/wiki/Rot-13#Bourne_Shell
-    echo "$*" | tr a-zA-Z n-za-mN-ZA-M
+    bashlets_datatype_string_rotate 13 "$@"
 }
 
 #@method
