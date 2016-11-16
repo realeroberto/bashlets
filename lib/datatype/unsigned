@@ -56,6 +56,18 @@ function bashlets_datatype_unsigned_is_odd()
     (($1 % 2 == 1))
 }
 
+#@method
+function bashlets_datatype_unsigned_bin_to_dec()
+{
+    eval echo "$((2#$1))"
+}
+
+#@method
+function bashlets_datatype_unsigned_bin_to_hex()
+{
+    printf "%x\n" $(bashlets_datatype_unsigned_bin_to_dec $1)
+}
+
 # Local variables:
 # mode: shell-script
 # sh-basic-offset: 4
