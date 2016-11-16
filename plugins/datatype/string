@@ -169,6 +169,8 @@ function bashlets_datatype_string_to_piglatin()
     #
     ########################################################################
 
+    [[ -n $1 ]] || return
+
     local prefix=${1%%[aeiouy]*}
     local suffix=$(sed 's/^[bcdfghjklmnpqrstvxwz]*//' <<< $1)
 
@@ -181,6 +183,8 @@ function bashlets_datatype_string_to_piglatin()
       [0-9]  )  printf "$1 " ;;
       *      )  printf "${suffix}${prefix}ay " ;;
     esac
+
+    printf "\n"
 }
 
 
