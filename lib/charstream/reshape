@@ -50,7 +50,7 @@ function bashlets_charstream_reshape_transpose()
 }
 
 #@method
-function bashlets_charstream_reshape_to_string()
+function bashlets_charstream_reshape_as_string()
 {
     bashlets_charstream_reshape_join_lines
 }
