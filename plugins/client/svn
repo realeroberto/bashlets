@@ -39,19 +39,19 @@ source bashlet marshal/uneval
 
 
 #@method
-function bashlets_subversion_svn_connect()
+function bashlets_client_svn_connect()
 {
     uneval create
 }
 
 #@method
-function bashlets_subversion_svn_disconnect()
+function bashlets_client_svn_disconnect()
 {
     :
 }
 
 #@method
-function bashlets_subversion_svn_get_param()
+function bashlets_client_svn_get_param()
 {
     local repo="$1"
     local key="$2"
@@ -62,7 +62,7 @@ function bashlets_subversion_svn_get_param()
 }
 
 #@method
-function bashlets_subversion_svn_set_param()
+function bashlets_client_svn_set_param()
 {
     local repo="$1"
     local key="$2"
@@ -74,66 +74,66 @@ function bashlets_subversion_svn_set_param()
 }
 
 #@method
-function bashlets_subversion_svn_get_wd()
+function bashlets_client_svn_get_wd()
 {
     local repo="$1"
 
-    bashlets_subversion_svn_get_param "$repo" wd
+    bashlets_client_svn_get_param "$repo" wd
 }
 
 #@method
-function bashlets_subversion_svn_get_username()
+function bashlets_client_svn_get_username()
 {
     local repo="$1"
 
-    bashlets_subversion_svn_get_param "$repo" username
+    bashlets_client_svn_get_param "$repo" username
 }
 
 #@method
-function bashlets_subversion_svn_get_password()
+function bashlets_client_svn_get_password()
 {
     local repo="$1"
 
-    bashlets_subversion_svn_get_param "$repo" password
+    bashlets_client_svn_get_param "$repo" password
 }
 
 #@method
-function bashlets_subversion_svn_set_wd()
+function bashlets_client_svn_set_wd()
 {
     local repo="$1"
     local wd="$2"
 
-    bashlets_subversion_svn_set_param "$repo" wd "$wd"
+    bashlets_client_svn_set_param "$repo" wd "$wd"
 }
 
 #@method
-function bashlets_subversion_svn_set_username()
+function bashlets_client_svn_set_username()
 {
     local repo="$1"
     local username="$2"
 
-    bashlets_subversion_svn_set_param "$repo" username "$username"
+    bashlets_client_svn_set_param "$repo" username "$username"
 }
 
 #@method
-function bashlets_subversion_svn_set_password()
+function bashlets_client_svn_set_password()
 {
     local repo="$1"
     local password="$2"
 
-    bashlets_subversion_svn_set_param "$repo" password "$password"
+    bashlets_client_svn_set_param "$repo" password "$password"
 }
 
 #@method
-function bashlets_subversion_svn_touch()
+function bashlets_client_svn_touch()
 {
     local repo="$1"
     local object="$2"
     local rev="${3:-HEAD}"
 
-    local wd="$(bashlets_subversion_svn_get_wd "$repo")"
-    local username="$(bashlets_subversion_svn_get_username "$repo")"
-    local password="$(bashlets_subversion_svn_get_password "$repo")"
+    local wd="$(bashlets_client_svn_get_wd "$repo")"
+    local username="$(bashlets_client_svn_get_username "$repo")"
+    local password="$(bashlets_client_svn_get_password "$repo")"
 
     [[ -n $object && -d $wd ]] || return 1
 
@@ -150,15 +150,15 @@ function bashlets_subversion_svn_touch()
 }
 
 #@method
-function bashlets_subversion_svn_checkout()
+function bashlets_client_svn_checkout()
 {
     local repo="$1"
     local object="$2"
     local rev="${3:-HEAD}"
 
-    local wd="$(bashlets_subversion_svn_get_wd "$repo")"
-    local username="$(bashlets_subversion_svn_get_username "$repo")"
-    local password="$(bashlets_subversion_svn_get_password "$repo")"
+    local wd="$(bashlets_client_svn_get_wd "$repo")"
+    local username="$(bashlets_client_svn_get_username "$repo")"
+    local password="$(bashlets_client_svn_get_password "$repo")"
 
     [[ -n $object && -d $wd ]] || return 1
 
@@ -175,15 +175,15 @@ function bashlets_subversion_svn_checkout()
 }
 
 #@method
-function bashlets_subversion_svn_update()
+function bashlets_client_svn_update()
 {
     local repo="$1"
     local object="$2"
     local rev="${3:-HEAD}"
 
-    local wd="$(bashlets_subversion_svn_get_wd "$repo")"
-    local username="$(bashlets_subversion_svn_get_username "$repo")"
-    local password="$(bashlets_subversion_svn_get_password "$repo")"
+    local wd="$(bashlets_client_svn_get_wd "$repo")"
+    local username="$(bashlets_client_svn_get_username "$repo")"
+    local password="$(bashlets_client_svn_get_password "$repo")"
 
     [[ -n $object && -d $wd ]] || return 1
 
@@ -201,14 +201,14 @@ function bashlets_subversion_svn_update()
 
 
 #@method
-function bashlets_subversion_svn_add()
+function bashlets_client_svn_add()
 {
     local repo="$1"
     local object="$2"
 
-    local wd="$(bashlets_subversion_svn_get_wd "$repo")"
-    local username="$(bashlets_subversion_svn_get_username "$repo")"
-    local password="$(bashlets_subversion_svn_get_password "$repo")"
+    local wd="$(bashlets_client_svn_get_wd "$repo")"
+    local username="$(bashlets_client_svn_get_username "$repo")"
+    local password="$(bashlets_client_svn_get_password "$repo")"
 
     [[ -n $object && -d $wd ]] || return 1
 
@@ -225,15 +225,15 @@ function bashlets_subversion_svn_add()
 }
 
 #@method
-function bashlets_subversion_svn_commit()
+function bashlets_client_svn_commit()
 {
     local repo="$1"
     local object="$2"
     shift 2
 
-    local wd="$(bashlets_subversion_svn_get_wd "$repo")"
-    local username="$(bashlets_subversion_svn_get_username "$repo")"
-    local password="$(bashlets_subversion_svn_get_password "$repo")"
+    local wd="$(bashlets_client_svn_get_wd "$repo")"
+    local username="$(bashlets_client_svn_get_username "$repo")"
+    local password="$(bashlets_client_svn_get_password "$repo")"
 
     [[ -n $object && -d $wd ]] || return 1
 
