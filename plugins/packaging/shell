@@ -1,0 +1,94 @@
+#!/bin/bash
+
+
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# Bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2014-6 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+source bashlet :api/choosealicense
+
+
+#@method
+function bashlets_packaging_shell_create_project()
+{
+    ########################################################################
+    #
+    # Creates a new shell project with common directories and files included.
+    #
+    # Code borrowed from: mkpr.sh by Luciano D. Cecere
+    #
+    # cf. https://gist.github.com/ldante86/f4997e0569c04706a4606c41066ad48b
+    #
+    ########################################################################
+
+    local    path="${1:-~}"
+    local project="${2:-myproject}"
+    local version="${3:-0.0.1}"
+    local license="${4:-gpl-3.0}"
+
+    local project="$project-$version"
+
+    [[ -d "$path/$project" ]] && {
+        # TODO echo "$PROJECT already exists"
+        return 1
+    }
+
+    mkdir -p "$path/$project"/{bin,src,lib,scripts,test,man} && {
+
+        # Add a README
+        echo "## README for $project" > "$path/$project/README"
+
+        # Add a license
+        :choosealicense get_license "$license" > "$path/$project/COPYING"
+
+        # Add a TODO file
+        echo "## TODO for $project" > "$path/$project/TODO"
+
+        # Add a main executable
+        local executable="$path/$project/bin/${project%-*}.sh"
+        echo "#!/bin/bash" > "$executable"
+        echo "# This file is a part of ${project%-*}" >> "$executable"
+        chmod +x "$executable"
+
+    } || {
+        # TODO echo "ERROR when creating project."
+        return 1
+    }
+}
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh
