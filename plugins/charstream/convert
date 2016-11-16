@@ -41,6 +41,8 @@ function __bashlets_charstream_convert_punch()
 {
     ########################################################################
     #
+    # Code borrowed from:
+    #
     # punch - Convert text to punch cards
     # cf. https://github.com/ldante86/punch/blob/master/punch.sh
     #
@@ -145,6 +147,55 @@ function bashlets_charstream_convert_punch()
     while read
     do
         __bashlets_charstream_convert_punch "$REPLY"
+    done
+}
+
+function __bashlets_charstream_convert_to_piglatin()
+{
+    ########################################################################
+    #
+    # Code borrowed from:
+    #
+    # igpay - convert standard input to standard pig latin :@)
+    # cf. https://gist.github.com/ldante86/79de4e724693b60eed5379291e975761
+    #
+    # Copyright (C) 2014 Luciano D. Cecere <ldante86@aol.com>
+    #
+    # This program is free software: you can redistribute it and/or modify
+    # it under the terms of the GNU General Public License as published by
+    # the Free Software Foundation, either version 2 of the License, or
+    # (at your option) any later version.
+    #
+    # This program is distributed in the hope that it will be useful,
+    # but WITHOUT ANY WARRANTY; without even the implied warranty of
+    # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    # GNU General Public License for more details.
+    #
+    # You should have received a copy of the GNU General Public License
+    # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    #
+    ########################################################################
+
+    local prefix=${1%%[aeiouy]*}
+    local suffix=$(sed 's/^[bcdfghjklmnpqrstvxwz]*//' <<< $1)
+
+    case ${1:0:2} in
+      qu)  printf "${1:2}${1:0:2}ay "
+           return ;;
+    esac
+    case ${1:0:1} in
+      [aeiou])  printf "${suffix}${prefix}way " ;;
+      [0-9]  )  printf "$1 " ;;
+      *      )  printf "${suffix}${prefix}ay " ;;
+    esac
+}
+
+#@method
+function bashlets_charstream_convert_to_piglatin()
+{
+    while read
+    do
+        __bashlets_charstream_convert_to_piglatin "$REPLY"
     done
 }
 
