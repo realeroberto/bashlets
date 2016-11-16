@@ -34,6 +34,8 @@
 ################################################################################
 
 
+source bashlet datatype/string
+
 #@method
 function bashlets_charstream_convert_dos2unix()
 {
@@ -70,6 +72,23 @@ function bashlets_charstream_convert_unix2dos()
     unset unix2dos
 }
 
+#@method
+function bashlets_charstream_convert_rotate()
+{
+    while read
+    do
+        string rotate "${1:-13}" "$REPLY"
+    done
+}
+
+#@method
+function bashlets_charstream_convert_rot13()
+{
+    while read
+    do
+        string rot13 "$REPLY"
+    done
+}
 
 # Local variables:
 # mode: shell-script
