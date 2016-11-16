@@ -43,7 +43,7 @@ function bashlets_charstream_convert_punch()
 {
     while read
     do
-        bashlets_datatype_string_punch "$REPLY"
+        :string punch "$REPLY"
     done
 }
 
@@ -52,7 +52,7 @@ function bashlets_charstream_convert_to_piglatin()
 {
     while read
     do
-        bashlets_datatype_string_to_piglatin "$REPLY"
+        :string to_piglatin "$REPLY"
     done
 }
 
