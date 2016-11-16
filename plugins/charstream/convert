@@ -34,8 +34,7 @@
 ################################################################################
 
 
-source bashlet :datatype/char
-source bashlet :datatype/number
+source bashlet :datatype/string
 
 
 #@method
