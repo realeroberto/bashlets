@@ -35,7 +35,7 @@
 
 
 
-__bashletLocalPool=~/.bashlets
+BASHLETS_LOCAL_POOL=~/.bashlets
 BASHLETS_LIB_LIBRARY_LOADER_STYLE=new   # old/new
 BASHLETS_LIB_LIBRARY_ALLOW_NO_PREFIX=1  # if 1, methods can be called without prefix
 
@@ -71,11 +71,11 @@ function __bashlets_library_loader_bashlet_to_file()
 
     if [[ $bashlet =~ ^: ]]; then
         # plugin names are prefixed by a colon
-        echo "$__bashletLocalPool/plugins/${bashlet:1}"
+        echo "$BASHLETS_LOCAL_POOL/plugins/${bashlet:1}"
     elif [[ $bashlet =~ @arch@ ]]; then
-        echo "$__bashletLocalPool/arch/$BASHLETS_OSTYPE/$(basename "$bashlet")"
+        echo "$BASHLETS_LOCAL_POOL/arch/$BASHLETS_OSTYPE/$(basename "$bashlet")"
     else
-        echo "$__bashletLocalPool/lib/$bashlet"
+        echo "$BASHLETS_LOCAL_POOL/lib/$bashlet"
     fi
 }
 
