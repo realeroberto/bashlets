@@ -39,6 +39,7 @@ BASHLETS_LOCAL_POOL=~/.bashlets
 BASHLETS_LIB_LIBRARY_LOADER_STYLE=new   # old/new
 BASHLETS_LIB_LIBRARY_ALLOW_NO_PREFIX=1  # if 1, methods can be called without prefix
 BASHLETS_NAMESPACE=bash$$
+BASHLETS_NAMESPACE_QUOTED=bash\$\$
 
 function __bashlets_library_loader_bashlet_to_name()
 {

@@ -42,10 +42,12 @@ BASHLET_DOWNLOAD_AGENT=curl
 BASHLETS_LOCAL_POOL=~/.bashlets
 BASHLETS_REMOTE_REPO=https://raw.githubusercontent.com/bashlets/bashlets/master
 BASHLETS_NAMESPACE=bash$$
+BASHLETS_NAMESPACE_QUOTED=bash\$\$
 
 export BASHLETS_LOCAL_POOL
 export BASHLETS_REMOTE_REPO
 export BASHLETS_NAMESPACE
+export BASHLETS_NAMESPACE_QUOTED
 
 
 function bashlet_get_ostype()
