@@ -59,7 +59,7 @@
 ################################################################################
 
 source bashlet basic/myself
-source bashlet :file/zip
+source bashlet filetype/zip
 
 
 #
@@ -98,7 +98,7 @@ function warrev_get_revision()
     local warfile="$1"
     local comment
 
-    :zip get_comment_by_key "$warfile" "$WARREV_REVISION_MARKER"
+    $BASHLETS_NAMESPACE zip get_comment_by_key "$warfile" "$WARREV_REVISION_MARKER"
 }
 
 
@@ -124,7 +124,7 @@ function warrev_set_revision()
     local warfile="$1"
     local revision="$2"
 
-    :zip set_comment_by_key "$warfile" "$WARREV_REVISION_MARKER" "$revision"
+    $BASHLETS_NAMESPACE zip set_comment_by_key "$warfile" "$WARREV_REVISION_MARKER" "$revision"
 }
 
 
@@ -172,8 +172,8 @@ function warrev_check_warfile()
 function warrev_usage()
 {
     echo "Get or set WAR revision.  Usage: "
-    echo "    $(myself get_name) --get-revision <WARFILE>"
-    echo "    $(myself get_name) --set-revision <REVISION> <WARFILE>"
+    echo "    $($BASHLETS_NAMESPACE myself get_name) --get-revision <WARFILE>"
+    echo "    $($BASHLETS_NAMESPACE myself get_name) --set-revision <REVISION> <WARFILE>"
 }
 
 
