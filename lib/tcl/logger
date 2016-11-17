@@ -172,7 +172,7 @@ function bashlets_tcl_logger_write()
 
 	test $# -gt 0 || return
 
-	term is_tty && interactive=1
+	$BASHLETS_NAMESPACE term is_tty && interactive=1
 
 	bashlets_tcl_logger_validate_priority "$priority" || return 1
 

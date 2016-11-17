@@ -34,7 +34,7 @@
 ################################################################################
 
 
-source bashlet :tcl/bash2tcl
+source bashlet tcl/bash2tcl
 
 
 #@method
@@ -167,7 +167,7 @@ function bashlets_tcl_sort_insertsort()
     tcl_text="
         $(bashlets_tcl_sort_get_text insert)
 
-        set l $(:bash2tcl convert_list $@)
+        set l $($BASHLETS_NAMESPACE bash2tcl convert_list $@)
         puts [insertSort \$l]
     "
 
@@ -182,7 +182,7 @@ function bashlets_tcl_sort_bubblesort()
     tcl_text="
         $(bashlets_tcl_sort_get_text bubble)
 
-        set l $(:bash2tcl convert_list $@)
+        set l $($BASHLETS_NAMESPACE bash2tcl convert_list $@)
         puts [bubbleSort \$l]
     "
 
@@ -197,7 +197,7 @@ function bashlets_tcl_sort_quicksort()
     tcl_text="
         $(bashlets_tcl_sort_get_text quick)
 
-        set l $(:bash2tcl convert_list $@)
+        set l $($BASHLETS_NAMESPACE bash2tcl convert_list $@)
         puts [quickSort \$l]
     "
 

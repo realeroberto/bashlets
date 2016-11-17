@@ -34,7 +34,7 @@
 ################################################################################
 
 
-source bashlet :tcl/bash2tcl
+source bashlet tcl/bash2tcl
 
 
 #@method
@@ -92,8 +92,8 @@ function bashlets_tcl_search_binary()
     tcl_text="
         $(bashlets_tcl_search_get_text binary)
 
-        set l      $(:bash2tcl convert_list   $@)
-        set needle $(:bash2tcl convert_scalar $needle)
+        set l      $($BASHLETS_NAMESPACE bash2tcl convert_list   $@)
+        set needle $($BASHLETS_NAMESPACE bash2tcl convert_scalar $needle)
 
         set index [binarySearch \$l \$needle]
 

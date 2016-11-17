@@ -42,7 +42,7 @@ function bashlets_tcl_bash2tcl_convert_scalar()
 {
     local x
 
-    number validate_as_float "$1" && {
+    $BASHLETS_NAMESPACE number validate_as_float "$1" && {
         x="$1"
     } || {
         x="\"$1\""
@@ -58,7 +58,7 @@ function bashlets_tcl_bash2tcl_convert_list()
 
     for x in "$@"
     do
-        number validate_as_float "$x" && {
+        $BASHLETS_NAMESPACE number validate_as_float "$x" && {
             [ -n "$list" ] && list="$list $x" || list="$x"
         } || {
             [ -n "$list" ] && list="$list \"$x\"" || list="\"$x\""
