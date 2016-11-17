@@ -81,8 +81,8 @@ function bashlets_js_math_lucaslehmer()
 {
     local p=${1:-3} res
 
-    unsigned is_odd $p || return 1
-    integer is_prime $p || return 1
+    $BASHLETS_NAMESPACE unsigned is_odd $p || return 1
+    $BASHLETS_NAMESPACE integer is_prime $p || return 1
 
     res="$($BASHLETS_JS_INTERPRETER -e "
         function LucasLehmer(p) {
