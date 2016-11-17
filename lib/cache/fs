@@ -72,7 +72,7 @@ function bashlets_cache_fs_count_keys()
 #@method
 function bashlets_cache_fs_create()
 {
-    local __path="$(tempdir create)" || return 1
+    local __path="$($BASHLETS_NAMESPACE tempdir create)" || return 1
     local path="$(__bashlets_cache_fs_cache_to_path "$__path")"
 
     echo "$path"
@@ -132,7 +132,8 @@ function bashlets_cache_fs_get()
             array[$(basename $item)]="$(cat $item)"
         done
         # dump output
-        dump rename $(basename $key_path) "$(declare -p array)"
+        $BASHLETS_NAMESPACE dump rename  \
+            $(basename $key_path) "$(declare -p array)"
     } || {
         # scalar
         echo "$(cat "$key_path")"
@@ -181,7 +182,7 @@ function bashlets_cache_fs_set_array()
     # try not to mess with the global namespace here
     local array_size array_name=__array__${RANDOM}__
 
-    object is_array $key || return 1
+    $BASHLETS_NAMESPACE object is_array $key || return 1
 
     [[ -d "$path" ]] || return 1
 
