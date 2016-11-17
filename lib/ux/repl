@@ -44,7 +44,7 @@ function bashlets_ux_repl_get_verb()
 {
     local repl="$1"
     local verb="$2"
-    fs get "$repl" "$verb"
+    $BASHLETS_NAMESPACE fs get "$repl" "$verb"
 }
 
 #@method
@@ -53,7 +53,7 @@ function bashlets_ux_repl_set_verb()
     local repl="$1"
     local verb="$2"
     local command="$3"
-    fs set "$repl" "$verb" "$command"
+    $BASHLETS_NAMESPACE fs set "$repl" "$verb" "$command"
 }
 
 #@method
@@ -61,7 +61,7 @@ function bashlets_ux_repl_get_help_for_verb()
 {
     local repl="$1"
     local verb="$2"
-    fs get "$repl" "$verb#help"
+    $BASHLETS_NAMESPACE fs get "$repl" "$verb#help"
 }
 
 #@method
@@ -70,14 +70,14 @@ function bashlets_ux_repl_set_help_for_verb()
     local repl="$1"
     local verb="$2"
     local help="$3"
-    fs set "$repl" "$verb#help" "$help"
+    $BASHLETS_NAMESPACE fs set "$repl" "$verb#help" "$help"
 }
 
 #@method
 function bashlets_ux_repl_list_verbs()
 {
     local repl="$1"
-    fs list_keys "$repl" | grep -v "#help$"
+    $BASHLETS_NAMESPACE fs list_keys "$repl" | grep -v "#help$"
 }
 
 #@method
@@ -108,13 +108,13 @@ function bashlets_ux_repl_help()
 #@method
 function bashlets_ux_repl_create()
 {
-    fs create
+    $BASHLETS_NAMESPACE fs create
 }
 
 #@method
 function bashlets_ux_repl_destroy()
 {
-    fs destroy "$1"
+    $BASHLETS_NAMESPACE fs destroy "$1"
 }
 
 #@method
@@ -124,7 +124,7 @@ function bashlets_ux_repl_start()
     local prompt="${2:->}"
     local argv
 
-    term is_tty || prompt=
+    $BASHLETS_NAMESPACE term is_tty || prompt=
 
     while $(true)
     do
@@ -159,7 +159,7 @@ function bashlets_ux_repl_start()
             fi
         fi
 
-        term is_tty || break
+        $BASHLETS_NAMESPACE term is_tty || break
     done
 }
 
