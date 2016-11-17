@@ -75,12 +75,12 @@ function bashlets_charstream_generate_ascii_chart()
 
 	for ((i=0; i<${#ascii[@]}; i++))
 	do
-		printf "%"-$p"s%"$p"s%"$p"s%"$p"s%"$p"s\n"    \
-            "${ascii[i]}"                             \
-            "${binary[i]}"                            \
-            "${decimal[i]}"                           \
-		    "$(string dec_to_hex "${decimal[i]}")"    \
-            "$(string encode_base64 "${ascii[i]}")"
+		printf "%"-$p"s%"$p"s%"$p"s%"$p"s%"$p"s\n"                        \
+            "${ascii[i]}"                                                 \
+            "${binary[i]}"                                                \
+            "${decimal[i]}"                                               \
+		    "$($BASHLETS_NAMESPACE string dec_to_hex "${decimal[i]}")"    \
+            "$($BASHLETS_NAMESPACE string encode_base64 "${ascii[i]}")"
 	done
 }
 
