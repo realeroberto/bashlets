@@ -46,8 +46,8 @@ function bashlets_api_choosealicense_get_license()
 
     curl -s "$BASHLETS_API_CHOOSEALICENSE_URL/$license/"  \
         | sed -n '/<pre id="license-text">/,/<\/pre>/p'   \
-        | strip leading_spaces                            \
-        | strip html_tags
+        | $BASHLETS_NAMESPACE strip leading_spaces        \
+        | $BASHLETS_NAMESPACE strip html_tags
 }
 
 #@method
