@@ -34,7 +34,7 @@
 ################################################################################
 
 
-source bashlet datatype/float
+source bashlet datatype/number
 
 #@method
 function bashlets_time_elapsed_seconds_to_formatted()
