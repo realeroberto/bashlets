@@ -38,6 +38,7 @@
 BASHLETS_LOCAL_POOL=~/.bashlets
 BASHLETS_LIB_LIBRARY_LOADER_STYLE=new   # old/new
 BASHLETS_LIB_LIBRARY_ALLOW_NO_PREFIX=1  # if 1, methods can be called without prefix
+BASHLETS_LIB_LIBRARY_NAMESPACE=bash$$
 
 function __bashlets_library_loader_bashlet_to_name()
 {
@@ -135,6 +136,7 @@ function bashlets_library_loader_import()
     local bashlet="$1"
     local bashlet_name bashlet_path file_name
     local bashlets_library_loader_list_methods
+    local loader_def
     local container_name container_def container_def_0 method_prefix
     local method method_full
 
@@ -157,9 +159,20 @@ function bashlets_library_loader_import()
         method_prefix="bashlets_${bashlet_path}_${bashlet_name}"
     }
 
+    # loader
+
+    loader_def="function $BASHLETS_LIB_LIBRARY_NAMESPACE()
+    {
+        local container=\"\$1\" ; shift
+
+        bashlets_\$container \"\$@\"
+    }"
+
+    eval "$loader_def"
+
     # container header
 
-    container_def="function ${container_name}()
+    container_def="function bashlets_${container_name}()
     {
         local method=\"\$1\" ; shift
 
