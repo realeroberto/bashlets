@@ -41,7 +41,7 @@ source bashlet marshal/uneval
 #@method
 function bashlets_client_svn_connect()
 {
-    uneval create
+    $BASHLETS_NAMESPACE uneval create
 }
 
 #@method
@@ -58,7 +58,7 @@ function bashlets_client_svn_get_param()
 
     [[ -n $repo && -n $key ]] || return
 
-    echo "$(uneval get_by_key "$repo" "$key")"
+    echo "$($BASHLETS_NAMESPACE uneval get_by_key "$repo" "$key")"
 }
 
 #@method
@@ -70,7 +70,7 @@ function bashlets_client_svn_set_param()
 
     [[ -n $repo && -n $key ]] || return
 
-    uneval add_pair "$repo" "$key" "$value"
+    $BASHLETS_NAMESPACE uneval add_pair "$repo" "$key" "$value"
 }
 
 #@method
