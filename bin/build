@@ -36,15 +36,14 @@
 ################################################################################
 
 
-set -x
 source bashlet charstream/interpolate
-echo ciao
+
 [[ $# -eq 2 ]] || {
 	echo "ERROR: build <template> <output>"
 	exit 1
 }
 
-$BASHLETS_NAMESPACE interpolate eval2 $1 > $2
+$BASHLETS_NAMESPACE interpolate eval2 < $1 > $2
 
 # Local variables:
 # mode: shell-script
