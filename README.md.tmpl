@@ -60,9 +60,9 @@ A reasonably sane GNU/Linux environment is assumed to be at hand; support for Fr
 
 	$ delta=$(tsinterval create yesterday)
 
-	$ date -d @$(tsinterval get_t0 $delta)
+	$ date -d @printf '\100'@$(tsinterval get_t0 $delta)
 	Fri Nov 27 00:00:00 UTC 2015
-	$ date -d @$(tsinterval get_t1 $delta)
+	$ date -d @printf '\100'@$(tsinterval get_t1 $delta)
 	Sat Nov 28 00:00:00 UTC 2015
 
 ### Data types: comparing version strings
