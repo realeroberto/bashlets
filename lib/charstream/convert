@@ -11,7 +11,7 @@
 #                                        
 # Bashlets -- A modular extensible toolbox for Bash
 #
-# Copyright (c) 2014-5 Roberto Reale
+# Copyright (c) 2014-6 Roberto Reale
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -35,6 +35,7 @@
 
 
 source bashlet datatype/string
+
 
 #@method
 function bashlets_charstream_convert_dos2unix()
@@ -89,6 +90,25 @@ function bashlets_charstream_convert_rot13()
         $BASHLETS_NAMESPACE string rot13 "$REPLY"
     done
 }
+
+#@method
+function bashlets_charstream_convert_punch()
+{
+    while read
+    do
+        $BASHLETS_NAMESPACE string punch "$REPLY"
+    done
+}
+
+#@method
+function bashlets_charstream_convert_to_piglatin()
+{
+    while read
+    do
+        $BASHLETS_NAMESPACE string to_piglatin "$REPLY"
+    done
+}
+
 
 # Local variables:
 # mode: shell-script
