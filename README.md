@@ -168,6 +168,7 @@ TODO
 - [Advanced Bash-Scripting Guide](http://www.tldp.org/LDP/abs/html/index.html)
 - [The Bash Hackers Wiki](http://wiki.bash-hackers.org/)
 - [Bash Design Patterns](http://stackoverflow.com/questions/78497/design-patterns-or-best-practices-for-shell-scripts)
+- [Why is printf better than echo?](http://unix.stackexchange.com/questions/65803/why-is-printf-better-than-echo)
 
 ### Bash Criticism
 
