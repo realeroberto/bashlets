@@ -52,7 +52,7 @@ function bashlets_parsers_yaml_to_keyvalues()
 
     test -e "$file" || return
 
-    indent_step="$(cat "$file" | infer indent_step)"
+    indent_step="$(cat "$file" | $BASHLETS_NAMESPACE infer indent_step)"
 	
 	sed                                                                     \
 		-ne "s|^\($s\):|\1|"                                                \
@@ -78,7 +78,7 @@ function bashlets_parsers_yaml_list_keys()
     local prefix="$2"
 
     bashlets_parsers_yaml_to_keyvalues "$file" "$prefix"                    \
-        | keyvalues list_keys
+        | $BASHLETS_NAMESPACE keyvalues list_keys
 }
 
 #@method
@@ -88,7 +88,7 @@ function bashlets_parsers_yaml_list_values()
     local prefix="$2"
 
     bashlets_parsers_yaml_to_keyvalues "$file" "$prefix"                    \
-        | keyvalues list_values
+        | $BASHLETS_NAMESPACE keyvalues list_values
 }
 
 #@method
@@ -99,7 +99,7 @@ function bashlets_parsers_yaml_get_by_key()
     local prefix="$3"
 
     bashlets_parsers_yaml_to_keyvalues "$file" "$prefix"                    \
-        | keyvalues get_by_key "$key"
+        | $BASHLETS_NAMESPACE keyvalues get_by_key "$key"
 }
 
 # Local variables:
