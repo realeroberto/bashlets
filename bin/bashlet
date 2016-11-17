@@ -198,8 +198,8 @@ function bashlet_trace_disable()
 BASHLETS_OSTYPE=$(bashlet_get_ostype)
 export BASHLETS_OSTYPE
 
-# check if the script is sourced 
-[[ $0 == -bash ]] || {
+# check if the script is being sourced 
+[[ $0 != bashlet ]] || {
     bashlet_download_loader || {
         echo "[bashlets:FATAL] Cannot download the loader!"
         exit 1
