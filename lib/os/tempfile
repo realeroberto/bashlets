@@ -41,6 +41,13 @@ function bashlets_os_tempfile_create()
 }
 
 #@method
+function bashlets_os_tempfile_exists()
+{
+	local tempfile="$1"
+    [[ -n $tempfile && -e $tempfile ]]
+}
+
+#@method
 function bashlets_os_tempfile_destroy()
 {
     local tempfile="$1"
