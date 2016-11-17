@@ -39,7 +39,7 @@ source bashlet marshal/uneval
 #@method
 function bashlets_http_webdav_get_handler()
 {
-    uneval create
+    $BASHLETS_NAMESPACE uneval create
 }
 
 #@method
@@ -56,7 +56,7 @@ function bashlets_http_webdav_get_param()
 
     [[ -n $handler && -n $key ]] || return
 
-    echo "$(uneval get_by_key "$handler" "$key")"
+    echo "$($BASHLETS_NAMESPACE uneval get_by_key "$handler" "$key")"
 }
 
 #@method
@@ -68,7 +68,7 @@ function bashlets_http_webdav_set_param()
 
     [[ -n $handler && -n $key ]] || return
 
-    uneval add_pair "$handler" "$key" "$value"
+    $BASHLETS_NAMESPACE uneval add_pair "$handler" "$key" "$value"
 }
 
 #@method
