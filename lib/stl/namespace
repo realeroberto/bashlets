@@ -34,48 +34,47 @@
 ################################################################################
 
 
-source bashlet stl/stack
-
+source bashlet stl/stack 
 
 #@method
 function bashlets_stl_namespace_exists()
 {
-    stack exists __namespaces
+    $BASHLETS_NAMESPACE stack exists __namespaces
 }
 
 #@method
 function bashlets_stl_namespace_create()
 {
     bashlets_stl_namespace_exists && return 1
-    stack create __namespaces
+    $BASHLETS_NAMESPACE stack create __namespaces
 }
 
 #@method
 function bashlets_stl_namespace_destroy()
 {
     bashlets_stl_namespace_exists && return
-    stack destroy __namespaces
+    $BASHLETS_NAMESPACE stack destroy __namespaces
 }
 
 #@method
 function bashlets_stl_namespace_push()
 {
     bashlets_stl_namespace_exists && return 1
-    stack push __namespaces "$1"
+    $BASHLETS_NAMESPACE stack push __namespaces "$1"
 }
 
 #@method
 function bashlets_core_namespace_pop()
 {
     bashlets_stl_namespace_exists && return 1
-    stack pop __namespace
+    $BASHLETS_NAMESPACE stack pop __namespace
 }
 
 #@method
 function bashlets_core_namespace_list()
 {
     bashlets_stl_namespace_exists && return 1
-    stack list __namespaces
+    $BASHLETS_NAMESPACE stack list __namespaces
 }
 
 
