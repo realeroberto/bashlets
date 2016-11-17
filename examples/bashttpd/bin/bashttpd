@@ -68,7 +68,7 @@
 ################################################################################
 
 source bashlet basic/myself
-source bashlet :http/httpd
+source bashlet http/httpd
 
 
 #
@@ -144,7 +144,7 @@ function usage()
     cat <<-EOF
 		Usage:
 
-		    $(myself get_name) [ -C <BASHTTPD_CONF_FILE> ]
+		    $($BASHLETS_NAMESPACE myself get_name) [ -C <BASHTTPD_CONF_FILE> ]
 
 		Options:
 
@@ -180,7 +180,7 @@ function usage()
 function version()
 {
     cat <<-EOF
-		$(myself get_name) $BASHTTPD_VERSION
+		$($BASHLETS_NAMESPACE myself get_name) $BASHTTPD_VERSION
 	EOF
 } 
 
@@ -224,11 +224,11 @@ done
 ################################################################################
 
 # Request-Line HTTP RFC 2616 $5.1
-read -r line || :httpd fail_with 400
+read -r line || $BASHLETS_NAMESPACE httpd fail_with 400
 
 # strip trailing CR if it exists
 line=${line%%$'\r'}
-:httpd recv "$line"
+$BASHLETS_NAMESPACE httpd recv "$line"
 
 # parse first header line
 read -r REQUEST_METHOD REQUEST_URI REQUEST_HTTP_VERSION <<< "$line"
@@ -236,21 +236,21 @@ read -r REQUEST_METHOD REQUEST_URI REQUEST_HTTP_VERSION <<< "$line"
 [ -n "$REQUEST_METHOD"       ] && \
 [ -n "$REQUEST_URI"          ] && \
 [ -n "$REQUEST_HTTP_VERSION" ]    \
-	|| :httpd fail_with 400
+	|| $BASHLETS_NAMESPACE httpd fail_with 400
 
 # only GET is supported at this time
-[ "$REQUEST_METHOD" = "GET" ] || :httpd fail_with 405
+[ "$REQUEST_METHOD" = "GET" ] || $BASHLETS_NAMESPACE httpd fail_with 405
 
-:httpd set_request_method       "$REQUEST_METHOD"
-:httpd set_request_uri          "$REQUEST_URI"
-:httpd set_request_http_version "$REQUEST_HTTP_VERSION"
+$BASHLETS_NAMESPACE httpd set_request_method       "$REQUEST_METHOD"
+$BASHLETS_NAMESPACE httpd set_request_uri          "$REQUEST_URI"
+$BASHLETS_NAMESPACE httpd set_request_http_version "$REQUEST_HTTP_VERSION"
 
 declare -a REQUEST_HEADERS
 
 while read -r line
 do
 	line=${line%%$'\r'}
-	:httpd recv "$line"
+	$BASHLETS_NAMESPACE httpd recv "$line"
 
 	# if we've reached the end of the headers, break
 	[ -z "$line" ] && break
@@ -270,7 +270,7 @@ source "$BASHTTPD_CONF_FILE"
 # send closing status code
 ################################################################################
 
-:httpd fail_with 500
+$BASHLETS_NAMESPACE httpd fail_with 500
 
 
 # ex: ts=4 sw=4 et filetype=sh noexpandtab
