@@ -43,8 +43,8 @@ function bashlets_marshal_dump_objects()
     while test $# -gt 0
     do
         local object="$1"
-        object is_function "$object"       \
-            && declare -f  "$object"       \
+        $BASHLETS_NAMESPACE object is_function "$object"  \
+            && declare -f  "$object"                      \
             || declare -p  "$object" 2> /dev/null
         shift
     done
