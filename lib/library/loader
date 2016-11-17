@@ -38,7 +38,7 @@
 BASHLETS_LOCAL_POOL=~/.bashlets
 BASHLETS_LIB_LIBRARY_LOADER_STYLE=new   # old/new
 BASHLETS_LIB_LIBRARY_ALLOW_NO_PREFIX=1  # if 1, methods can be called without prefix
-BASHLETS_LIB_LIBRARY_NAMESPACE=bash$$
+BASHLETS_NAMESPACE=bash$$
 
 function __bashlets_library_loader_bashlet_to_name()
 {
@@ -161,7 +161,7 @@ function bashlets_library_loader_import()
 
     # loader
 
-    loader_def="function $BASHLETS_LIB_LIBRARY_NAMESPACE()
+    loader_def="function $BASHLETS_NAMESPACE()
     {
         local container=\"\$1\" ; shift
 
