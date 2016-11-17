@@ -8,7 +8,7 @@
 #                                        
 # Bashlets -- A modular extensible toolbox for Bash
 #
-# Copyright (c) 2014-5 Roberto Reale
+# Copyright (c) 2014-6 Roberto Reale
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -40,7 +40,7 @@ source bashlet marshal/uneval
 #@method
 function bashlets_rest_couchdb_get_handler()
 {
-    uneval create
+    $BASHLETS_NAMESPACE uneval create
 }
 
 #@method
@@ -57,7 +57,7 @@ function bashlets_rest_couchdb_get_param()
 
     [[ -n $handler && -n $key ]] || return
 
-    echo "$(uneval get_by_key "$handler" "$key")"
+    echo "$($BASHLETS_NAMESPACE uneval get_by_key "$handler" "$key")"
 }
 
 #@method
@@ -69,7 +69,7 @@ function bashlets_rest_couchdb_set_param()
 
     [[ -n $handler && -n $key ]] || return
 
-    uneval add_pair "$handler" "$key" "$value"
+    $BASHLETS_NAMESPACE uneval add_pair "$handler" "$key" "$value"
 }
 
 #@method
@@ -197,7 +197,7 @@ function bashlets_rest_couchdb_set_params_default()
 #@method
 function bashlets_rest_couchdb_generate_session_id
 {
-    uuid create
+    $BASHLETS_NAMESPACE uuid create
 }
 
 #@method
