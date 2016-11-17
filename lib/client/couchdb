@@ -204,10 +204,12 @@ function bashlets_client_couchdb_generate_session_id
 function bashlets_client_couchdb_create_db()
 {
     local handler="$1"
-    local schema="$(bashlets_client_couchdb_get_schema "$handler")"
-    local host="$(bashlets_client_couchdb_get_host     "$handler")"
-    local port="$(bashlets_client_couchdb_get_port     "$handler")"
-    local db="$(bashlets_client_couchdb_get_db         "$handler")"
+    local schema host port db
+
+    schema="$(bashlets_client_couchdb_get_schema "$handler")"
+      host="$(bashlets_client_couchdb_get_host   "$handler")"
+      port="$(bashlets_client_couchdb_get_port   "$handler")"
+        db="$(bashlets_client_couchdb_get_db     "$handler")"
 
     [[ -n $schema ]] || return 1
     [[ -n $host   ]] || return 1
@@ -222,12 +224,15 @@ function bashlets_client_couchdb_create_session()
 {
     local handler="$1"
     local tag="$2"
+
     local session_id="$(bashlets_client_couchdb_generate_session_id)"
-    local schema="$(bashlets_client_couchdb_get_schema "$handler")"
-    local host="$(bashlets_client_couchdb_get_host     "$handler")"
-    local port="$(bashlets_client_couchdb_get_port     "$handler")"
-    local db="$(bashlets_client_couchdb_get_db         "$handler")"
-    local retcode
+
+    local schema host port db retcode
+
+    schema="$(bashlets_client_couchdb_get_schema "$handler")"
+      host="$(bashlets_client_couchdb_get_host   "$handler")"
+      port="$(bashlets_client_couchdb_get_port   "$handler")"
+        db="$(bashlets_client_couchdb_get_db     "$handler")"
 
     [[ -n $schema ]] || return 1
     [[ -n $host   ]] || return 1
@@ -250,11 +255,13 @@ function bashlets_client_couchdb_get_revision()
 {
     local handler="$1"
     local session_id="$2"
-    local schema="$(bashlets_client_couchdb_get_schema "$handler")"
-    local host="$(bashlets_client_couchdb_get_host     "$handler")"
-    local port="$(bashlets_client_couchdb_get_port     "$handler")"
-    local db="$(bashlets_client_couchdb_get_db         "$handler")"
-    local revision
+
+    local schema host port db revision
+
+    schema="$(bashlets_client_couchdb_get_schema "$handler")"
+      host="$(bashlets_client_couchdb_get_host   "$handler")"
+      port="$(bashlets_client_couchdb_get_port   "$handler")"
+        db="$(bashlets_client_couchdb_get_db     "$handler")"
 
     [[ -n $session_id ]] || return 1
     [[ -n $schema     ]] || return 1
@@ -272,17 +279,20 @@ function bashlets_client_couchdb_get_revision()
 #@method
 function bashlets_client_couchdb_add_attachment()
 {
-    local handler="$1"
+    local    handler="$1"
     local session_id="$2"
-    local revision="$3"
-    local att_path="$4"
-    local att_name="$(basename "$att_path")"
-    local schema="$(bashlets_client_couchdb_get_schema "$handler")"
-    local host="$(bashlets_client_couchdb_get_host     "$handler")"
-    local port="$(bashlets_client_couchdb_get_port     "$handler")"
-    local db="$(bashlets_client_couchdb_get_db         "$handler")"
-    local content_type="$(bashlets_client_couchdb_get_content_type "$handler")"
-    local retcode
+    local   revision="$3"
+    local   att_path="$4"
+
+    local schema host port db content_type att_name retcode
+
+    schema="$(bashlets_client_couchdb_get_schema "$handler")"
+      host="$(bashlets_client_couchdb_get_host   "$handler")"
+      port="$(bashlets_client_couchdb_get_port   "$handler")"
+        db="$(bashlets_client_couchdb_get_db     "$handler")"
+
+    content_type="$(bashlets_client_couchdb_get_content_type "$handler")"
+        att_name="$(basename "$att_path")"
 
     [[ -n $session_id   ]] || return 1
     [[ -n $schema       ]] || return 1
@@ -306,15 +316,18 @@ function bashlets_client_couchdb_add_attachment()
 #@method
 function bashlets_client_couchdb_get_attachment()
 {
-    local handler="$1"
-    local session_id="$2"
-    local revision="$3"
-    local att_name="$4"
+    local       handler="$1"
+    local    session_id="$2"
+    local      revision="$3"
+    local      att_name="$4"
     local att_save_path="$5"
-    local schema="$(bashlets_client_couchdb_get_schema "$handler")"
-    local host="$(bashlets_client_couchdb_get_host     "$handler")"
-    local port="$(bashlets_client_couchdb_get_port     "$handler")"
-    local db="$(bashlets_client_couchdb_get_db         "$handler")"
+
+    local schema host port db
+
+    schema="$(bashlets_client_couchdb_get_schema "$handler")"
+      host="$(bashlets_client_couchdb_get_host   "$handler")"
+      port="$(bashlets_client_couchdb_get_port   "$handler")"
+        db="$(bashlets_client_couchdb_get_db     "$handler")"
 
     [[ -n $session_id    ]] || return 1
     [[ -n $schema        ]] || return 1
