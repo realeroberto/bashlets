@@ -11,7 +11,7 @@
 #
 # Bashlets -- A modular extensible toolbox for Bash
 #
-# Copyright (c) 2015 Roberto Reale
+# Copyright (c) 2014-6 Roberto Reale
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -63,9 +63,8 @@ source bashlet datatype/integer
 source bashlet datatype/string
 source bashlet datatype/uuid
 source bashlet parsers/yaml
+source bashlet http/webdav
 source bashlet ux/repl
-
-source bashlet :http/webdav
 
 
 #
@@ -77,7 +76,7 @@ FACILEBACKUP_VERSION='0.1'
 # default MANIFEST
 FACILEBACKUP_MANIFEST=~/.facilebackup.yaml
 # REPL prompt
-FACILEBACKUP_PROMPT="$(myself get_name)> "
+FACILEBACKUP_PROMPT="$($BASHLETS_NAMESPACE myself get_name)> "
 
 
 unset FACILEBACKUP_FS_BASE_PATH
@@ -150,7 +149,7 @@ function facilebackup_usage()
     cat <<-EOF
 		Usage:
 
-		    $(myself get_name) [ -B <BACKEND> ] [ -M <MANIFEST> ]
+		    $($BASHLETS_NAMESPACE myself get_name) [ -B <BACKEND> ] [ -M <MANIFEST> ]
 
 		Options:
 
@@ -214,7 +213,7 @@ function facilebackup_list_backends()
 function facilebackup_version()
 {
     cat <<-EOF
-		$(myself get_name) $FACILEBACKUP_VERSION
+		$($BASHLETS_NAMESPACE myself get_name) $FACILEBACKUP_VERSION
 	EOF
 } 
 
@@ -252,8 +251,12 @@ function facilebackup_fs_init()
 	{
 		local manifest="$FACILEBACKUP_MANIFEST"
 
-		FACILEBACKUP_FS_BASE_PATH="$(yaml get_by_key "$manifest" backends_fs_base_path)"
-		FACILEBACKUP_FS_PATH_DELIMITER="$(yaml get_by_key "$manifest" backends_fs_path_delimiter)"
+		FACILEBACKUP_FS_BASE_PATH="$(
+			$BASHLETS_NAMESPACE yaml get_by_key "$manifest" backends_fs_base_path
+		)"
+		FACILEBACKUP_FS_PATH_DELIMITER="$(
+			$BASHLETS_NAMESPACE yaml get_by_key "$manifest" backends_fs_path_delimiter
+		)"
 	}
 
 	facilebackup_parse_manifest
@@ -483,15 +486,22 @@ function facilebackup_webdav_init()
 	{
 		local manifest="$FACILEBACKUP_MANIFEST"
 
-		local base_uri="$(yaml get_by_key "$manifest" backends_webdav_base_uri)"
-		local username="$(yaml get_by_key "$manifest" backends_webdav_username)"
-		local password="$(yaml get_by_key "$manifest" backends_webdav_password)"
+		local base_uri="$(
+			$BASHLETS_NAMESPACE yaml get_by_key "$manifest" backends_webdav_base_uri
+		)"
+		local username="$(
+			$BASHLETS_NAMESPACE yaml get_by_key "$manifest" backends_webdav_username
+		)"
+		local password="$(
+			$BASHLETS_NAMESPACE yaml get_by_key "$manifest" backends_webdav_password
+		)"
 
-		local handler="$(:webdav get_handler)"
+		local handler
 
-		handler="$(:webdav set_base_uri "$handler" "$base_uri")"
-		handler="$(:webdav set_username "$handler" "$username")"
-		handler="$(:webdav set_password "$handler" "$password")"
+		handler="$($BASHLETS_NAMESPACE webdav get_handler)"
+		handler="$($BASHLETS_NAMESPACE webdav set_base_uri "$handler" "$base_uri")"
+		handler="$($BASHLETS_NAMESPACE webdav set_username "$handler" "$username")"
+		handler="$($BASHLETS_NAMESPACE webdav set_password "$handler" "$password")"
 
 		FACILEBACKUP_WEBDAV_HANDLER="$handler"
 	}
@@ -526,7 +536,7 @@ function facilebackup_webdav_isfile()
 	local path="$1"
 	local target="$2"
 
-	:webdav is_file "$FACILEBACKUP_WEBDAV_HANDLER" "$path" "$target"
+	$BASHLETS_NAMESPACE webdav is_file "$FACILEBACKUP_WEBDAV_HANDLER" "$path" "$target"
 }
 
 
@@ -555,7 +565,7 @@ function facilebackup_webdav_create()
 {
 	local target="$1"
 
-	:webdav create "$FACILEBACKUP_WEBDAV_HANDLER" "$target"
+	$BASHLETS_NAMESPACE webdav create "$FACILEBACKUP_WEBDAV_HANDLER" "$target"
 }
 
 
@@ -585,7 +595,7 @@ function facilebackup_webdav_touch()
 	local path="$1"
 	local target="$2"
 
-	:webdav touch "$FACILEBACKUP_WEBDAV_HANDLER" "$path" "$target"
+	$BASHLETS_NAMESPACE webdav touch "$FACILEBACKUP_WEBDAV_HANDLER" "$path" "$target"
 }
 
 
@@ -615,7 +625,7 @@ function facilebackup_webdav_copy()
 	local source="$1"
 	local target="$2"
 
-	:webdav copy "$FACILEBACKUP_WEBDAV_HANDLER" "$source" "$target"
+	$BASHLETS_NAMESPACE webdav copy "$FACILEBACKUP_WEBDAV_HANDLER" "$source" "$target"
 }
 
 
@@ -645,7 +655,7 @@ function facilebackup_webdav_move()
 	local source="$1"
 	local target="$2"
 
-	:webdav copy "$FACILEBACKUP_WEBDAV_HANDLER" "$source" "$target"
+	$BASHLETS_NAMESPACE webdav copy "$FACILEBACKUP_WEBDAV_HANDLER" "$source" "$target"
 }
 
 
@@ -674,7 +684,7 @@ function facilebackup_webdav_get_path()
 {
 	local path="$1"
 	local path_type="$2"
-	local base_uri="$(:webdav get_base_uri "$FACILEBACKUP_WEBDAV_HANDLER")"
+	local base_uri="$($BASHLETS_NAMESPACE webdav get_base_uri "$FACILEBACKUP_WEBDAV_HANDLER")"
 
 	[[ $path_type == full ]] && echo "${base_uri}/${path}" || echo "${path}"
 }
@@ -722,7 +732,7 @@ function facilebackup_isbranch()
 {
 	local target="$1"
 	local backend="$FACILEBACKUP_BACKEND"
-	local magic=".$(myself get_name)"
+	local magic=".$($BASHLETS_NAMESPACE myself get_name)"
 
 	facilebackup_"${backend}_isfile" "$target" "$magic"
 }
@@ -756,7 +766,9 @@ function facilebackup_get_numbered_branch()
 	local backend="$FACILEBACKUP_BACKEND"
 	local branch
 
-	branch="$(integer to_string "$n" "$FACILEBACKUP_RETENTION")"
+	branch="$(
+		$BASHLETS_NAMESPACE integer to_string "$n" "$FACILEBACKUP_RETENTION"
+	)"
 	facilebackup_"${backend}_get_path" "$branch" "$full_path"
 }
 
@@ -846,7 +858,7 @@ function facilebackup_create_branch()
 {
 	local target="$1"
 	local backend="$FACILEBACKUP_BACKEND"
-	local magic=".$(myself get_name)"
+	local magic=".$($BASHLETS_NAMESPACE myself get_name)"
 
 	facilebackup_"${backend}_create" "$target"
 	facilebackup_"${backend}_touch" "$target" "$magic"
@@ -944,8 +956,8 @@ function facilebackup_delete_branch()
 	local target
 	local uuid
 
-	string to_bool "$use_trash" || {
-		uuid=$(uuid create)
+	$BASHLETS_NAMESPACE string to_bool "$use_trash" || {
+		uuid=$($BASHLETS_NAMESPACE uuid create)
 		target="${source}.${uuid}.trash"
 		facilebackup_"${backend}_move" "$source" "$target"
 		return $?
@@ -1195,7 +1207,7 @@ function facilebackup_cmd_set()
 			FACILEBACKUP_BACKEND="$argument"
 			;;
 		"debug")
-			string to_bool "$argument" && set -x || set +x
+			$BASHLETS_NAMESPACE string to_bool "$argument" && set -x || set +x
 			;;
 		*)
 			return $BASHLETS_UX_REPL_ERR_INVALID_ARG
@@ -1241,7 +1253,9 @@ function facilebackup_init()
 	{
 		local manifest="$MANIFEST"
 
-		RETENTION="$(yaml get_by_key "$manifest" repository_retention)"
+		RETENTION="$(
+			$BASHLETS_NAMESPACE yaml get_by_key "$manifest" repository_retention
+		)"
 	}
 
 	facilebackup_parse_manifest
@@ -1250,6 +1264,8 @@ function facilebackup_init()
 	do
 		"facilebackup_${backend}_init"
 	done
+
+	unset facilebackup_parse_manifest
 }
 
 
@@ -1261,20 +1277,21 @@ facilebackup_init "$MANIFEST"
 # main loop
 ################################################################################
 
-repl=$(repl create)
-repl set_verb $repl create facilebackup_cmd_create
-repl set_verb $repl get    facilebackup_cmd_get
-repl set_verb $repl list   facilebackup_cmd_list
-repl set_verb $repl rotate facilebackup_cmd_rotate
-repl set_verb $repl set    facilebackup_cmd_set
+repl=$($BASHLETS_NAMESPACE repl create)
 
-repl set_help_for_verb $repl create "unimplemented"
-repl set_help_for_verb $repl get    "gets a branch"
-repl set_help_for_verb $repl list   "lists backends or branches"
-repl set_help_for_verb $repl rotate "rotate branches"
-repl set_help_for_verb $repl set    "sets configuration values"
+$BASHLETS_NAMESPACE repl set_verb $repl create facilebackup_cmd_create
+$BASHLETS_NAMESPACE repl set_verb $repl get    facilebackup_cmd_get
+$BASHLETS_NAMESPACE repl set_verb $repl list   facilebackup_cmd_list
+$BASHLETS_NAMESPACE repl set_verb $repl rotate facilebackup_cmd_rotate
+$BASHLETS_NAMESPACE repl set_verb $repl set    facilebackup_cmd_set
 
-repl start $repl $FACILEBACKUP_PROMPT
+$BASHLETS_NAMESPACE repl set_help_for_verb $repl create "unimplemented"
+$BASHLETS_NAMESPACE repl set_help_for_verb $repl get    "gets a branch"
+$BASHLETS_NAMESPACE repl set_help_for_verb $repl list   "lists backends or branches"
+$BASHLETS_NAMESPACE repl set_help_for_verb $repl rotate "rotate branches"
+$BASHLETS_NAMESPACE repl set_help_for_verb $repl set    "sets configuration values"
+
+$BASHLETS_NAMESPACE repl start $repl $FACILEBACKUP_PROMPT
 
 
 # ex: ts=4 sw=4 et filetype=sh noexpandtab
