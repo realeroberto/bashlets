@@ -160,12 +160,13 @@ function bashlets_charstream_interpolate_eval2()
 
     function __bashlets_charstream_interpolate_textbuffer_append()
     {
-        printf "%c" "$1" >> "$textbuffer"
+        [[ -n "$1" ]] && printf "%c" "$1" >> "$textbuffer"
     }
 
     function __bashlets_charstream_interpolate_textbuffer_dump()
     {
         cat "$textbuffer"
+        echo
     }
 
     function __bashlets_charstream_interpolate_textbuffer_destroy()
