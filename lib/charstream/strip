@@ -41,6 +41,13 @@ function bashlets_charstream_strip_leading_spaces()
 }
 
 #@method
+function bashlets_charstream_strip_nonprintable()
+{
+    # cf. http://stackoverflow.com/questions/20371049/
+    tr -cd '\11\12\15\40-\176'
+}
+
+#@method
 function bashlets_charstream_strip_xml_tags()
 {
     sed 's/<[^>]\+>//g'
