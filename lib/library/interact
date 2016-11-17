@@ -39,7 +39,7 @@ source bashlet library/version
 #@method
 function bashlets_library_interact_say_hello()
 {
-    echo "Hello, this is bashlets $(version get) speaking!"
+    echo "Hello, this is bashlets $($BASHLETS_NAMESPACE version get) speaking!"
 }
 
 # Local variables:

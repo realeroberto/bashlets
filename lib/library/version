@@ -53,7 +53,7 @@ function bashlets_library_version_require()
 
     actual=$(bashlets_library_version_get)
 
-    max="$(version max "$required" "$actual")"
+    max="$($BASHLETS_NAMESPACE version max "$required" "$actual")"
 
     [[ -n $required ]] || return
 
