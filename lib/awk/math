@@ -35,7 +35,7 @@
 
 
 source bashlet datatype/number
-source bashlet :awk/awklibrary
+source bashlet awk/awklibrary
  
 
 # calculates an approximation of PI by means of Vi`ete's formula
@@ -155,7 +155,7 @@ function bashlets_awk_math_sqrt_by_heron()
     local x=${1:-1} tol=${2:-.000001}
     declare -i r
 
-    number validate_as_unsigned_float $x || {
+    $BASHLETS_NAMESPACE number validate_as_unsigned_float $x || {
         echo "input should be a valid number"
         return 1
     }
@@ -237,9 +237,9 @@ function bashlets_awk_math_modular_pow()
 {
     local base=$1 expon=$2 mod=$3
 
-    number validate_as_integer  $base  || return 1
-    number validate_as_integer  $expon || return 1
-    number validate_as_unsigned $mod   || return 1
+    $BASHLETS_NAMESPACE number validate_as_integer  $base  || return 1
+    $BASHLETS_NAMESPACE number validate_as_integer  $expon || return 1
+    $BASHLETS_NAMESPACE number validate_as_unsigned $mod   || return 1
 
     ((mod > 0)) || return 1
 
@@ -283,10 +283,10 @@ function bashlets_awk_math_extended_gcd()
 {
     local a="${1:-0}" b="${2:-0}"
 
-    number validate_as_integer $a || return 1
-    number validate_as_integer $b || return 1
+    $BASHLETS_NAMESPACE number validate_as_integer $a || return 1
+    $BASHLETS_NAMESPACE number validate_as_integer $b || return 1
 
-    local awk_text="$(:awklibrary load)"
+    local awk_text="$($BASHLETS_NAMESPACE awklibrary load)"
 
     awk_text="
         $awk_text
@@ -321,10 +321,10 @@ function bashlets_awk_math_chinese()
 
     local result return_code
 
-    number validate_as_unsigned $k || return 1
+    $BASHLETS_NAMESPACE number validate_as_unsigned $k || return 1
     ((k > 0)) || return 1
 
-    local awk_text="$(:awklibrary load)"
+    local awk_text="$($BASHLETS_NAMESPACE awklibrary load)"
 
     awk_text="
 
@@ -467,7 +467,7 @@ function bashlets_awk_math_chinese()
     result="$(echo -e "${a_s}\n${n_s}" | awk "$awk_text")"
 
     # check result
-    number validate_as_integer $result && return_code=0
+    $BASHLETS_NAMESPACE number validate_as_integer $result && return_code=0
 
     echo $result
     return $return_code
