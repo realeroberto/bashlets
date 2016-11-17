@@ -27,7 +27,7 @@ A reasonably sane GNU/Linux environment is assumed to be at hand; support for Fr
 ### Basic interaction
 
 	$ source bashlet library/interact
-	$ interact say_hello
+	$ @printf "$BASHLETS_NAMESPACE_QUOTED"@ interact say_hello
 	
 	Hello, this is bashlets 1.0 speaking!
 
@@ -36,18 +36,18 @@ A reasonably sane GNU/Linux environment is assumed to be at hand; support for Fr
 
 	$ source bashlet datatype/string
 
-	$ echo $(string generate_random 32)
+	$ echo $(@printf "$BASHLETS_NAMESPACE_QUOTED"@ string generate_random 32)
 	6J-%.v(M)`N_de&2fvdVd;yy R;FRt=[
 
 ### Data types: generating and validating UUIDs
 
 	$ source bashlet datatype/uuid
 
-	$ uuid create
+	$ @printf "$BASHLETS_NAMESPACE_QUOTED"@ uuid create
 	2fc83419-df73-4cfd-bf9d-85634c8370fd
 
-	$ uuid validate 2fc83419-df73-4cfd-bf9d-85634c8370fd || echo INVALID
-	$ uuid validate 2fc83419-df73-4cfd-_f9d-85634c8370fd || echo INVALID
+	$ @printf "$BASHLETS_NAMESPACE_QUOTED"@ uuid validate 2fc83419-df73-4cfd-bf9d-85634c8370fd || echo INVALID
+	$ @printf "$BASHLETS_NAMESPACE_QUOTED"@ uuid validate 2fc83419-df73-4cfd-_f9d-85634c8370fd || echo INVALID
 	INVALID
 
 ### Data types: handling intervals of timestamps
@@ -58,18 +58,18 @@ A reasonably sane GNU/Linux environment is assumed to be at hand; support for Fr
 
 	$ source datatype/tsinterval
 
-	$ delta=$(tsinterval create yesterday)
+	$ delta=$(@printf "$BASHLETS_NAMESPACE_QUOTED"@ tsinterval create yesterday)
 
-	$ date -d @printf '\100'@$(tsinterval get_t0 $delta)
+	$ date -d @printf '\100'@$(@printf "$BASHLETS_NAMESPACE_QUOTED"@ tsinterval get_t0 $delta)
 	Fri Nov 27 00:00:00 UTC 2015
-	$ date -d @printf '\100'@$(tsinterval get_t1 $delta)
+	$ date -d @printf '\100'@$(@printf "$BASHLETS_NAMESPACE_QUOTED"@ tsinterval get_t1 $delta)
 	Sat Nov 28 00:00:00 UTC 2015
 
 ### Data types: comparing version strings
 
 	$ source bashlet datatype/version
 
-	$ version sort 1.44 1.4 1.4.4 1.4.4a 1.4-1234
+	$ @printf "$BASHLETS_NAMESPACE_QUOTED"@ version sort 1.44 1.4 1.4.4 1.4.4a 1.4-1234
 	1.4
 	1.4-1234
 	1.4.4
@@ -80,22 +80,22 @@ A reasonably sane GNU/Linux environment is assumed to be at hand; support for Fr
 
 	$ source bashlet cache/fs
 
-	$ cache=$(fs create)
+	$ cache=$(@printf "$BASHLETS_NAMESPACE_QUOTED"@ fs create)
 
 	$ # set key/value in a subshell...
-	$ ( fs set $cache question 'To be, or not to be...' )
+	$ ( @printf "$BASHLETS_NAMESPACE_QUOTED"@ fs set $cache question 'To be, or not to be...' )
 
 	$ # read value in the parent shell
-	$ fs get $cache question
+	$ @printf "$BASHLETS_NAMESPACE_QUOTED"@ fs get $cache question
 	To be, or not to be...
 
-	$ fs destroy $cache
+	$ @printf "$BASHLETS_NAMESPACE_QUOTED"@ fs destroy $cache
 
 ### Character streams: converting formats without external tools
 
 	$ source bashlet charstream/convert
 
-	$ cat << ??? | convert unix2dos | file -
+	$ cat << ??? | @printf "$BASHLETS_NAMESPACE_QUOTED"@ convert unix2dos | file -
 	> Shall I compare thee to a summer's day?
 	> Thou art more lovely and more temperate.
 	> Rough winds do shake the darling buds of May,
@@ -107,15 +107,15 @@ A reasonably sane GNU/Linux environment is assumed to be at hand; support for Fr
 
 	$ source bashlet math/icomplex
 
-	$ i=$(icomplex create 0 1)
-	$ icomplex to_real $(icomplex square $i)
+	$ i=$(@printf "$BASHLETS_NAMESPACE_QUOTED"@ icomplex create 0 1)
+	$ @printf "$BASHLETS_NAMESPACE_QUOTED"@ icomplex to_real $(@printf "$BASHLETS_NAMESPACE_QUOTED"@ icomplex square $i)
 	-1
 
 ### Math: calculating basic constants to (almost) arbitrary precision
 
 	$ source bashlet math/constants
 
-	$ constants calculate phi 60
+	$ @printf "$BASHLETS_NAMESPACE_QUOTED"@ constants calculate phi 60
 	1.618033988749894848204586834365638117720309179805762862135448
 
 ### Parsers: interpreting YAML documents in na(t)ive Bash code
@@ -138,7 +138,7 @@ A reasonably sane GNU/Linux environment is assumed to be at hand; support for Fr
 
 	$ source bashlet parsers/yaml
 
-	$ yaml get_by_key sample.yaml Stack__line
+	$ @printf "$BASHLETS_NAMESPACE_QUOTED"@ yaml get_by_key sample.yaml Stack__line
 	23
 	58
 
@@ -146,7 +146,7 @@ A reasonably sane GNU/Linux environment is assumed to be at hand; support for Fr
 
 	$ source bashlet ux/repl
 
-	$ repl start
+	$ @printf "$BASHLETS_NAMESPACE_QUOTED"@ repl start
 	> quit
 	$
 
