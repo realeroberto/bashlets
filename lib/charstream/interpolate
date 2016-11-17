@@ -145,6 +145,108 @@ function bashlets_charstream_interpolate_eval()
 }
 
 
+# evaluates expressions inside a @,@ pair of delimiters
+
+#@method
+function bashlets_charstream_interpolate_eval2()
+{
+    # these hold the constant buffer and the buffer to be eval'ed, respect.
+    local textbuffer codebuffer
+
+    function __bashlets_charstream_interpolate_textbuffer_create()
+    {
+        textbuffer="$($BASHLETS_NAMESPACE tempfile create)"
+    }
+
+    function __bashlets_charstream_interpolate_textbuffer_append()
+    {
+        printf "%c" "$1" >> "$textbuffer"
+    }
+
+    function __bashlets_charstream_interpolate_textbuffer_dump()
+    {
+        cat "$textbuffer"
+    }
+
+    function __bashlets_charstream_interpolate_textbuffer_destroy()
+    {
+        $BASHLETS_NAMESPACE tempfile destroy "$textbuffer"
+    }
+
+    function __bashlets_charstream_interpolate_codebuffer_create()
+    {
+                         $BASHLETS_NAMESPACE tempfile exists "$codebuffer"  \
+        || codebuffer="$($BASHLETS_NAMESPACE tempfile create)"
+    }
+
+    function __bashlets_charstream_interpolate_codebuffer_append()
+    {
+        printf "%c" "$1" >> "$codebuffer"
+    }
+
+    function __bashlets_charstream_interpolate_codebuffer_eval()
+    {
+        eval "$(cat "$codebuffer")" >> "$textbuffer"
+    }
+
+    function __bashlets_charstream_interpolate_codebuffer_destroy()
+    {
+        $BASHLETS_NAMESPACE tempfile destroy "$codebuffer"
+    }
+
+
+    local status=text
+
+    while IFS= read -r line
+    do
+
+        __bashlets_charstream_interpolate_textbuffer_create
+
+        echo "$line" | while IFS= read -r -n 1 c
+        do
+            case $status in
+                text)
+                    if [[ $c == @ ]]
+                    then
+                        status=code
+                        continue
+                    else
+                        __bashlets_charstream_interpolate_textbuffer_append "$c"
+                    fi
+                    ;;
+                code)
+                    if [[ $c == @ ]]
+                    then
+                        status=text
+                        __bashlets_charstream_interpolate_codebuffer_eval
+                        __bashlets_charstream_interpolate_codebuffer_destroy
+                        continue
+                    else
+                        __bashlets_charstream_interpolate_codebuffer_create
+                        __bashlets_charstream_interpolate_codebuffer_append "$c"
+                    fi
+                    ;;
+                *)
+                    return 1  # TODO error (and cleanup)
+                    ;;
+            esac
+        done
+
+        __bashlets_charstream_interpolate_textbuffer_dump
+        __bashlets_charstream_interpolate_textbuffer_destroy
+
+    done
+
+    unset __bashlets_charstream_interpolate_textbuffer_create
+    unset __bashlets_charstream_interpolate_textbuffer_append
+    unset __bashlets_charstream_interpolate_textbuffer_dump
+    unset __bashlets_charstream_interpolate_textbuffer_destroy
+    unset __bashlets_charstream_interpolate_codebuffer_create
+    unset __bashlets_charstream_interpolate_codebuffer_append
+    unset __bashlets_charstream_interpolate_codebuffer_eval
+    unset __bashlets_charstream_interpolate_codebuffer_destroy
+}
+
 # Local variables:
 # mode: shell-script
 # sh-basic-offset: 4
