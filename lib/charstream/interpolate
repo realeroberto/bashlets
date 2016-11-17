@@ -74,7 +74,9 @@ function __bashlets_charstream_interpolate_callback_uneval()
         do
             key2="$(echo $key | tr -d @)"
             # get a value for VAR from the context
-            value="$(uneval get_by_key "$context_handler" "$key2")"
+            value="$(
+                $BASHLETS_NAMESPACE uneval get_by_key "$context_handler" "$key2"
+            )"
             # escape path for sed
             value="${value//\//\\/}"
             # construct a list of sed substitutions
@@ -100,7 +102,8 @@ function bashlets_charstream_interpolate_eval()
 
     local note1 note2
     local callback sedexp regexp='@[A-Za-z0-9_]\+'
-    local stage1="$(tempfile create)" stage2="$(tempfile create)"
+    local stage1="$($BASHLETS_NAMESPACE tempfile create)"
+    local stage2="$($BASHLETS_NAMESPACE tempfile create)"
 
     # build a list of @var's
 
@@ -137,8 +140,8 @@ function bashlets_charstream_interpolate_eval()
         | (test -n "$output" && cat > "$output" || cat)
 
     # cleanup
-    tempfile destroy "$stage1"
-    tempfile destroy "$stage2"
+    $BASHLETS_NAMESPACE tempfile destroy "$stage1"
+    $BASHLETS_NAMESPACE tempfile destroy "$stage2"
 }
 
 
