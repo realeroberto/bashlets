@@ -44,7 +44,7 @@ function bashlets_perl_math_biased_rand()
 {
     local n=${1:-1000} rand
 
-    number validate_as_unsigned $n || return 1
+    $BASHLETS_NAMESPACE number validate_as_unsigned $n || return 1
 
     rand="$(perl -e '
         # log() is to favour lower powers
@@ -66,8 +66,8 @@ function bashlets_perl_math_gcd()
 {
     local x=${1:-1} y=${2:-1} gcd
 
-    number validate_as_unsigned $x || return 1
-    number validate_as_unsigned $y || return 1
+    $BASHLETS_NAMESPACE number validate_as_unsigned $x || return 1
+    $BASHLETS_NAMESPACE number validate_as_unsigned $y || return 1
 
     gcd="$(perl -e '
         use warnings;
@@ -100,7 +100,7 @@ function bashlets_perl_math_factorize_integer()
 {
     local n=${1:-0} factors
 
-    number validate_as_unsigned $n || return 1
+    $BASHLETS_NAMESPACE number validate_as_unsigned $n || return 1
 
     factors="$(perl -e '
         use warnings;
