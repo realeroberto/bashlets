@@ -35,7 +35,7 @@
 
 
 source bashlet datatype/string
-source bashlet :oracle/sqlplus
+source bashlet oracle/sqlplus
 
 #@method
 function bashlets_oracle_datetime_from_unixts()
@@ -52,7 +52,9 @@ function bashlets_oracle_datetime_from_unixts()
         FROM dual
     "
 
-    string chop $(:sqlplus execute $query)
+    $BASHLETS_NAMESPACE string chop "$(
+        $BASHLETS_NAMESPACE sqlplus execute "$query"
+    )"
 }
 
 # Local variables:
