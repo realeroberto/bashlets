@@ -41,17 +41,17 @@ source bashlet os/tempfile
 BASHLETS_FILE_ZIP_ZIPNOTE=zipnote
 
 #@method
-function bashlets_file_zip_get_comments()
+function bashlets_filetype_zip_get_comments()
 {
     local filename="$1"
 	local startmarker="@.*(zip file comment below this line)"
 
 	$BASHLETS_FILE_ZIP_ZIPNOTE "$filename"  \
-		| filter after_pattern "$startmarker"
+		| $BASHLETS_NAMESPACE filter after_pattern "$startmarker"
 }
 
 #@method
-function bashlets_file_zip_set_comments()
+function bashlets_filetype_zip_set_comments()
 {
     local filename="$1"
     local comments_filename="$2"
@@ -61,33 +61,35 @@ function bashlets_file_zip_set_comments()
 	[ -e "$filename" ]          || return 1
 	[ -e "$comments_filename" ] || return 1
 
-    tempfile="$(tempfile create)"
+    tempfile="$($BASHLETS_NAMESPACE tempfile create)"
 
 	# extract header
-	$BASHLETS_FILE_ZIP_ZIPNOTE "$filename"    \
-		| filter till_pattern "$startmarker"  \
+	$BASHLETS_FILE_ZIP_ZIPNOTE "$filename"                          \
+		| $BASHLETS_NAMESPACE filter till_pattern "$startmarker"    \
 		> "$tempfile"
 
 	# append comments
 	cat "$tempfile"                                                 \
-		| append after_pattern "$comments_filename" "$startmarker"  \
+		| $BASHLETS_NAMESPACE append after_pattern                  \
+			"$comments_filename"                                    \
+			"$startmarker"                                          \
 		| $BASHLETS_FILE_ZIP_ZIPNOTE -w "$filename"
 
-    tempfile destroy "$tempfile"
+    $BASHLETS_NAMESPACE tempfile destroy "$tempfile"
 }
 
 #@method
-function bashlets_file_zip_get_comment_by_key()
+function bashlets_filetype_zip_get_comment_by_key()
 {
     local filename="$1"
 	local key="$2"
 
-	bashlets_file_zip_get_comments $filename  \
-		| pairs get_by_key "$key"
+	bashlets_filetype_zip_get_comments $filename  \
+		| $BASHLETS_NAMESPACE pairs get_by_key "$key"
 }
 
 #@method
-function bashlets_file_zip_set_comment_by_key()
+function bashlets_filetype_zip_set_comment_by_key()
 {
     local filename="$1"
 	local key="$2"
@@ -98,16 +100,16 @@ function bashlets_file_zip_set_comment_by_key()
 
 	[ -e "$filename" ] || return 1
 
-    comments_tempfile="$(tempfile create)"
+    comments_tempfile="$($BASHLETS_NAMESPACE tempfile create)"
 
-	bashlets_file_zip_get_comments $filename  \
-		| pairs set_by_key "$key" "$value"    \
+	bashlets_filetype_zip_get_comments $filename                    \
+		| $BASHLETS_NAMESPACE pairs set_by_key "$key" "$value"      \
 		> "$comments_tempfile"
 
-	bashlets_file_zip_set_comments "$filename" "$comments_tempfile"
+	bashlets_filetype_zip_set_comments "$filename" "$comments_tempfile"
 	retval=$?
 
-	tempfile destroy "$comments_tempfile"
+	$BASHLETS_NAMESPACE tempfile destroy "$comments_tempfile"
 
 	return $retval
 }
