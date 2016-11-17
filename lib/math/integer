@@ -43,7 +43,7 @@ function bashlets_math_integer_abs()
 {
     local value="$1"
     local opposite
-    number validate_as_integer "$value" || return 1
+    $BASHLETS_NAMESPACE number validate_as_integer "$value" || return 1
     opposite="$((-1*value))"
     [[ $value -ge $opposite ]] && echo "$value" || echo "$opposite"
 }
@@ -53,7 +53,7 @@ function bashlets_math_integer_sign()
 {
     local value="$1"
     local opposite
-    number validate_as_integer "$value" || return 1
+    $BASHLETS_NAMESPACE number validate_as_integer "$value" || return 1
     [[ $value -eq 0 ]] && { echo 0 ; return ; }
     opposite="$((-1*value))"
     [[ $value -ge $opposite ]] && echo 1 || echo -1
@@ -62,7 +62,7 @@ function bashlets_math_integer_sign()
 #@method
 function bashlets_math_integer_is_prime()
 {
-    number validate_as_integer "$1" || return 1
+    $BASHLETS_NAMESPACE number validate_as_integer "$1" || return 1
 
     # cf. https://primes.utm.edu/notes/faq/negative_primes.html
     local value=$(bashlets_math_integer_abs $1)
@@ -74,7 +74,7 @@ function bashlets_math_integer_is_prime()
     then
         return 1
     else
-        local i sqrt_value="$(float sqrt $value)"
+        local i sqrt_value="$($BASHLETS_NAMESPACE float sqrt $value)"
         for i in $(seq 3 2 "$sqrt_value")
         do
             if (($value % $i == 0))
@@ -90,8 +90,8 @@ function bashlets_math_integer_is_prime()
 function bashlets_math_integer_is_perfect_square()
 {
     local value=${1:-0}
-    local sqrt_value="$(float sqrt $value)" || return 1
-    sqrt_value="$(float to_int $sqrt_value)"
+    local sqrt_value="$($BASHLETS_NAMESPACE float sqrt $value)" || return 1
+    sqrt_value="$($BASHLETS_NAMESPACE float to_int $sqrt_value)"
 
     ((sqrt_value * sqrt_value == value))
 }
@@ -101,7 +101,7 @@ function bashlets_math_integer_get_unique_factors()
 {
     local pass_0
 
-    number validate_as_integer "$1" || return 1
+    $BASHLETS_NAMESPACE number validate_as_integer "$1" || return 1
 
     declare -i n="$1"
     declare -i sign=1

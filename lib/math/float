@@ -42,7 +42,7 @@ source bashlet math/bclibrary
 function bashlets_math_float_to_int()
 {
     local x="$1"
-    local bc_text="$(bclibrary load)"
+    local bc_text="$($BASHLETS_NAMESPACE bclibrary load)"
 
     test -n "$x" || return
 
@@ -59,7 +59,7 @@ function bashlets_math_float_to_int()
 function bashlets_math_float_ceil()
 {
     local x="$1"
-    local bc_text="$(bclibrary load)"
+    local bc_text="$($BASHLETS_NAMESPACE bclibrary load)"
 
     test -n "$x" || return
 
@@ -76,7 +76,7 @@ function bashlets_math_float_ceil()
 function bashlets_math_float_floor()
 {
     local x="$1"
-    local bc_text="$(bclibrary load)"
+    local bc_text="$($BASHLETS_NAMESPACE bclibrary load)"
 
     test -n "$x" || return
 
@@ -92,7 +92,7 @@ function bashlets_math_float_floor()
 #@method
 function bashlets_math_float_sqrt()
 {
-    number validate_as_unsigned_float "$1" || return 1
+    $BASHLETS_NAMESPACE number validate_as_unsigned_float "$1" || return 1
     echo "scale=${2:-20}; sqrt($1)" | bc -q
 }
 

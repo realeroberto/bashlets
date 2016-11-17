@@ -86,13 +86,14 @@ function bashlets_math_middlesquare_random()
     local i
 
     # get a valid input number or use number of seconds since the Epoch
-    number validate_as_unsigned "$seed" || seed="$(date +%s)"
+    $BASHLETS_NAMESPACE number validate_as_unsigned "$seed"  \
+        || seed="$(date +%s)"
 
     for i in "$(seq 1 "$count")"
     do
         seed="$((seed*seed))"
-        seed="$(string lalign_n 4 0 "$seed")"
-        seed="$(string middle_2n "$seed")"
+        seed="$($BASHLETS_NAMESPACE string lalign_n 4 0 "$seed")"
+        seed="$($BASHLETS_NAMESPACE string middle_2n "$seed")"
     done
 
     # done
