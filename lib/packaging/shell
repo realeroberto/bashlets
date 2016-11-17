@@ -34,7 +34,7 @@
 ################################################################################
 
 
-source bashlet :api/choosealicense
+source bashlet api/choosealicense
 
 
 #@method
@@ -68,7 +68,8 @@ function bashlets_packaging_shell_create_project()
         echo "## README for $project" > "$path/$project/README"
 
         # Add a license
-        :choosealicense get_license "$license" > "$path/$project/COPYING"
+        $BASHLETS_NAMESPACE choosealicense get_license "$license"  \
+            > "$path/$project/COPYING"
 
         # Add a TODO file
         echo "## TODO for $project" > "$path/$project/TODO"
