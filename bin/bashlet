@@ -41,9 +41,11 @@ BASHLETS_LOADER_DESTINATIONS=~/.local/bin:/usr/local/bin
 BASHLET_DOWNLOAD_AGENT=curl
 BASHLETS_LOCAL_POOL=~/.bashlets
 BASHLETS_REMOTE_REPO=https://raw.githubusercontent.com/bashlets/bashlets/master
+BASHLETS_NAMESPACE=bash$$
 
 export BASHLETS_LOCAL_POOL
 export BASHLETS_REMOTE_REPO
+export BASHLETS_NAMESPACE
 
 
 function bashlet_get_ostype()
