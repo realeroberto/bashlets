@@ -39,14 +39,14 @@ source bashlet os/tempfile
 #@method
 function bashlets_datatype_counter_create()
 {
-    tempfile create
+    $BASHLETS_NAMESPACE tempfile create
 }
 
 #@method
 function bashlets_datatype_counter_destroy()
 {
     local counter="$1"
-    tempfile destroy "$counter"
+    $BASHLETS_NAMESPACE tempfile destroy "$counter"
 }
 
 #@method

@@ -39,7 +39,7 @@ source bashlet datatype/number
 #@method
 function bashlets_datatype_float_validate()
 {
-    number validate_as_float "$1"
+    $BASHLETS_NAMESPACE number validate_as_float "$1"
 }
 
 #@method
@@ -49,8 +49,8 @@ function bashlets_datatype_float_diff()
     local y="$2"
     local scale="${3:-2}"
 
-    number validate_as_float "$1" || return 1
-    number validate_as_float "$2" || return 1
+    $BASHLETS_NAMESPACE number validate_as_float "$1" || return 1
+    $BASHLETS_NAMESPACE number validate_as_float "$2" || return 1
 
     LC_NUMERIC=C printf "%.${scale}f\n" "$(echo "$x - $y" | bc)"
 }

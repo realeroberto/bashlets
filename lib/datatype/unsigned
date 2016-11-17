@@ -39,20 +39,20 @@ source bashlet datatype/number
 #@method
 function bashlets_datatype_unsigned_validate()
 {
-    number validate_as_unsigned "$1"
+    $BASHLETS_NAMESPACE number validate_as_unsigned "$1"
 }
 
 #@method
 function bashlets_datatype_unsigned_is_even()
 {
-    number validate_as_unsigned "$1" || return 1
+    $BASHLETS_NAMESPACE number validate_as_unsigned "$1" || return 1
     (($1 % 2 == 0))
 }
 
 #@method
 function bashlets_datatype_unsigned_is_odd()
 {
-    number validate_as_unsigned "$1" || return 1
+    $BASHLETS_NAMESPACE number validate_as_unsigned "$1" || return 1
     (($1 % 2 == 1))
 }
 

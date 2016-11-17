@@ -77,7 +77,7 @@ function bashlets_datatype_uuid_create()
     local UUID
 
     # try getting it from the system
-    UUID="$(random get_uuid)"
+    UUID="$($BASHLETS_NAMESPACE random get_uuid)"
     # should that fail, we resort to a pure Bash implementation
     UUID="${UUID:-$(__bashlets_datatype_uuid_create)}"
 

@@ -443,8 +443,8 @@ function bashlets_datatype_string_shuffle()
     [[ -n $str ]] || return
 
     bashlets_datatype_string_to_charstream "$str"    \
-        | reorder shuffle                            \
-        | reshape transpose
+        | $BASHLETS_NAMESPACE reorder shuffle        \
+        | $BASHLETS_NAMESPACE reshape transpose
 }
 
 
@@ -496,7 +496,7 @@ function bashlets_datatype_string_generate_random()
 {
     local size="${1:-16}"
 
-    random get_stream "$size" [[:print:]]
+    $BASHLETS_NAMESPACE random get_stream "$size" [[:print:]]
 }
 
 
