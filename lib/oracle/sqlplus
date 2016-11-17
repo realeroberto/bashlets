@@ -11,7 +11,7 @@
 #                                        
 # Bashlets -- A modular extensible toolbox for Bash
 #
-# Copyright (c) 2014-5 Roberto Reale
+# Copyright (c) 2014-6 Roberto Reale
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -41,7 +41,7 @@ function bashlets_oracle_sqlplus_execute()
     local cmd
     local funcname="$FUNCNAME"
 
-    function bashlets_oracle_sqlplus_execute_usage()
+    function __bashlets_oracle_sqlplus_execute_usage()
     {
         echo "Usage: $funcname [-z <timezone>]"
     }
@@ -59,7 +59,7 @@ function bashlets_oracle_sqlplus_execute()
                 timezone="${OPTARG}"
                 ;;
             *)
-                bashlets_oracle_sqlplus_execute_usage # && return 2
+                __bashlets_oracle_sqlplus_execute_usage # && return 2
                 ;;
         esac
     done
@@ -85,6 +85,9 @@ function bashlets_oracle_sqlplus_execute()
         EXIT"
 
     echo "$cmd" | "$ORACLE_HOME/bin/sqlplus" -s /nolog
+
+    # TODO
+    # unset __bashlets_oracle_sqlplus_execute_usage
 }
 
 # Local variables:
