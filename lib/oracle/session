@@ -11,7 +11,7 @@
 #                                        
 # Bashlets -- A modular extensible toolbox for Bash
 #
-# Copyright (c) 2014-5 Roberto Reale
+# Copyright (c) 2014-6 Roberto Reale
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -35,13 +35,15 @@
 
 
 source bashlet datatype/string
-source bashlet :oracle/sqlplus
+source bashlet oracle/sqlplus
 
 #@method
 function bashlets_oracle_session_get_timezone()
 {
     local query="SELECT sessiontimezone FROM dual"
-    string chop $(:sqlplus execute "$query")
+    $BASHLETS_NAMESPACE string chop "$(
+        $BASHLETS_NAMESPACE sqlplus execute "$query"
+    )"
 }
 
 
