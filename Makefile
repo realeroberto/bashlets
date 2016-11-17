@@ -1,2 +1,7 @@
 README.md: README.md.tmpl
-	cat README.md.tmpl > README.md
+	bin/build README.md.tmpl README.md
+
+clean:
+	rm -f README.md
+
+.phony: clean
