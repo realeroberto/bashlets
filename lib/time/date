@@ -47,7 +47,7 @@ function bashlets_time_date_get_random()
 
     year=$((RANDOM % (last - first) + first))
     month=$((RANDOM % 12 + 1))
-    days_in_month="$(month count_days "$month" "$year")"
+    days_in_month="$($BASHLETS_NAMESPACE month count_days "$month" "$year")"
     day=$((RANDOM % days_in_month + 1))
     printf -v date "%d-%02d-%02d" "$year" "$month" "$day"
     echo "$date"

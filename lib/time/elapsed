@@ -51,7 +51,7 @@ function bashlets_time_elapsed_seconds_to_formatted()
 
     [[ -n $elapsed ]] || return
 
-    number validate_as_unsigned_float $elapsed || return 1
+    $BASHLETS_NAMESPACE number validate_as_unsigned_float $elapsed || return 1
 
        days=$((elapsed / SECONDS_IN_DAY))
     SECONDS=$((elapsed % SECONDS_IN_DAY))
@@ -78,7 +78,7 @@ function bashlets_time_elapsed_seconds_to_description()
 
     [[ -n $elapsed ]] || return
 
-    number validate_as_unsigned_float $elapsed || return 1
+    $BASHLETS_NAMESPACE number validate_as_unsigned_float $elapsed || return 1
 
        days=$((elapsed / SECONDS_IN_DAY))
     SECONDS=$((elapsed % SECONDS_IN_DAY))
