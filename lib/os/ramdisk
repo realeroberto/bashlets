@@ -45,10 +45,10 @@ function bashlets_os_ramdisk_create()
 
     if test $(whoami) = "root"
     then
-        [[ -d "$path" ]] || path="$(tempdir create)"
+        [[ -d "$path" ]] || path="$($BASHLETS_NAMESPACE tempdir create)"
         mount -t $fs_type -o size=$size $fs_type "$path"
     else
-        path="$(tempdir create /tmp/shm)"
+        path="$($BASHLETS_NAMESPACE tempdir create /tmp/shm)"
     fi
 
     echo $path
@@ -65,7 +65,7 @@ function bashlets_os_ramdisk_destroy()
     then
         mount | grep "$path" && umount "$path"
     else
-        tempdir destroy "$path"
+        $BASHLETS_NAMESPACE tempdir destroy "$path"
     fi
 }
 

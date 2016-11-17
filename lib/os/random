@@ -48,7 +48,7 @@ function bashlets_os_random_get_stream()
     local blk_size
     local i
 
-    unsigned validate "$size" || return 1
+    $BASHLETS_NAMESPACE unsigned validate "$size" || return 1
 
     # let's try to overcome a limitation on the block size in dd
     blk_count="$((size/4096))"
