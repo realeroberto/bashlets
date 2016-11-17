@@ -11,7 +11,7 @@
 #                                        
 # Bashlets -- A modular extensible toolbox for Bash
 #
-# Copyright (c) 2014-5 Roberto Reale
+# Copyright (c) 2014-6 Roberto Reale
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -35,7 +35,7 @@
 
 
 source bashlet datatype/string
-source bashlet :oracle/sqlplus
+source bashlet oracle/sqlplus
 
 
 #@method
@@ -44,7 +44,10 @@ function bashlets_oracle_database_get_instance_name()
 	local query
     
     query="SELECT SYS_CONTEXT('userenv', 'instance_name') FROM dual"
-	string chop $(:sqlplus execute "$query")
+
+	$BASHLETS_NAMESPACE string chop "$(
+        $BASHLETS_NAMESPACE sqlplus execute "$query"
+    )"
 }
 
 #@method
@@ -60,7 +63,9 @@ function bashlets_oracle_database_get_instance_number()
             WHERE UPPER(instance_name) = UPPER('$instance_name')
     "
 
-	string chop $(:sqlplus execute "$query")
+	$BASHLETS_NAMESPACE string chop "$(
+        $BASHLETS_NAMESPACE sqlplus execute "$query"
+    )"
 }
 
 #@method
@@ -69,7 +74,7 @@ function bashlets_oracle_database_get_dbid()
     local query
     
     query="SELECT DISTINCT dbid FROM v\$database"
-	echo $(:sqlplus execute "$query" | tr -d "\n")
+	echo $($BASHLETS_NAMESPACE sqlplus execute "$query" | tr -d "\n")
 }
 
 #@method
@@ -78,7 +83,7 @@ function bashlets_oracle_database_is_primary()
     local query role
     
     query="SELECT database_role FROM v\$database"
-	role="$(:sqlplus execute "$query" | tr -d "\n")"
+	role="$($BASHLETS_NAMESPACE sqlplus execute "$query" | tr -d "\n")"
     [[ "$role" == "PRIMARY" ]]
 }
 
@@ -88,7 +93,7 @@ function bashlets_oracle_database_is_physical_standby()
     local query role
     
     query="SELECT database_role FROM v\$database"
-	role="$(:sqlplus execute "$query" | tr -d "\n")"
+	role="$($BASHLETS_NAMESPACE sqlplus execute "$query" | tr -d "\n")"
     [[ "$role" == "PHYSICAL STANDBY" ]]
 }
 
@@ -98,15 +103,15 @@ function bashlets_oracle_database_is_logical_standby()
     local query role
     
     query="SELECT database_role FROM v\$database"
-	role="$(:sqlplus execute "$query" | tr -d "\n")"
+	role="$($BASHLETS_NAMESPACE sqlplus execute "$query" | tr -d "\n")"
     [[ "$role" == "LOGICAL STANDBY" ]]
 }
 
 #@method
 function bashlets_oracle_database_is_standby()
 {
-    bashlets_oracle_database_is_physical_standby ||
-        bashlets_oracle_database_is_logical_standby
+       bashlets_oracle_database_is_physical_standby  \
+    || bashlets_oracle_database_is_logical_standby
 }
 
 # Local variables:
