@@ -84,7 +84,7 @@ function bashlets_logger_channel_get_param()
 
     [[ -n $channel && -n $key ]] || return
 
-    echo "$(uneval get_by_key "$channel" "$key")"
+    echo "$($BASHLETS_NAMESPACE uneval get_by_key "$channel" "$key")"
 }
 
 #@method
@@ -96,7 +96,7 @@ function bashlets_logger_channel_set_param()
 
     [[ -n $channel && -n $key ]] || return
 
-    uneval add_pair "$channel" "$key" "$value"
+    $BASHLETS_NAMESPACE uneval add_pair "$channel" "$key" "$value"
 }
 
 #@method
@@ -144,7 +144,7 @@ function bashlets_logger_channel_set_verbosity()
     local channel="$1"
     local verbosity="$2"
 
-    number validate_as_unsigned "$verbosity" || return 1
+    $BASHLETS_NAMESPACE number validate_as_unsigned "$verbosity" || return 1
     bashlets_logger_channel_set_param "$channel" verbosity "$verbosity"
 }
 
@@ -273,7 +273,7 @@ function bashlets_logger_channel_write()
 
     if [[ $ch_type == auto ]]
     then
-        term is_tty && ch_type=stderr || ch_type=syslog
+        $BASHLETS_NAMESPACE term is_tty && ch_type=stderr || ch_type=syslog
     fi
 
     if [[ $ch_type == none ]]
@@ -298,7 +298,7 @@ function bashlets_logger_channel_write()
 #@method
 function bashlets_logger_channel_open()
 {
-    local channel="$(uneval create)"
+    local channel="$($BASHLETS_NAMESPACE uneval create)"
 
     [[ -n $channel ]] || return 1
 
