@@ -36,33 +36,37 @@
 #@method
 function bashlets_http_wget_get()
 {
-    shopt -s extquote
+	(
+		# run everything in a subshell
 
-    local url host path headers_read
+		shopt -s extquote
 
-    url=${1/http:\/\/}
-    host=${url%%/*}
-    path=${url#*/}
+		local url host path headers_read
 
-    [[ $path == $host ]] && path=""
+		url=${1/http:\/\/}
+		host=${url%%/*}
+		path=${url#*/}
 
-    exec 3<>/dev/tcp/${host}/80
+		[[ $path == $host ]] && path=""
 
-    printf "GET /${path} HTTP/1.1\nHost: ${host}\nUser-Agent: bashlets ${BASHLETS_VERSION}\n\n" >&3
+		exec 3<>/dev/tcp/${host}/80
 
-    IFS=
-    while read -r -t 1 line 0<&3; do
-        line=${line//$'\r'}
+		printf "GET /${path} HTTP/1.1\nHost: ${host}\nUser-Agent: bashlets ${BASHLETS_VERSION}\n\n" >&3
 
-        if [[ ! -v headers_read && $BASHLETS_HTTP_WGET_INCLUDE_HEADERS -eq 0 ]]; then
-            [[ -z $line ]] && headers_read=yes
-            continue
-        fi
+		IFS=
+		while read -r -t 1 line 0<&3; do
+			line=${line//$'\r'}
 
-        echo "$line"
-    done
+			if [[ ! -v headers_read && $BASHLETS_HTTP_WGET_INCLUDE_HEADERS -eq 0 ]]; then
+				[[ -z $line ]] && headers_read=yes
+				continue
+			fi
 
-    exec 3<&-
+			echo "$line"
+		done
+
+		exec 3<&-
+	)
 }
 
 # ex: ts=4 sw=4 et filetype=sh noexpandtab
