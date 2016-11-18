@@ -41,35 +41,35 @@ BASHLETS_NAMESPACE=bash$$
 BASHLETS_NAMESPACE_QUOTED=bash\$\$
 
 
-function bashlet_import_lazy()
+function bashlet2_import_lazy()
 {
     local bashlet="$1" file
 
     type bashlets_library_loader_import > /dev/null 2> /dev/null || {
         [[ $bashlet != "library/loader" ]] && 
-            bashlet_import_lazy library/loader
+            bashlet2_import_lazy library/loader
     }
 
     file="$BASHLETS_BASE/${BASHLETS_REV:-DEFAULT}/lib/$bashlet"
     source "$file"
 }
 
-function bashlet_import()
+function bashlet2_import()
 {
     local bashlet="$1"
 
-    bashlet_import_lazy $bashlet || return 1
+    bashlet2_import_lazy $bashlet || return 1
     bashlets_library_loader_import $bashlet || return 1
 }
 
-function bashlet_are_we_sourced()
+function bashlet2_are_we_sourced()
 {
     [[ "${BASH_SOURCE[0]}" != "${0}" ]]
 }
 
 
 # check if the script is being sourced 
-bashlet_are_we_sourced || {
+bashlet2_are_we_sourced || {
     echo "[bashlets:FATAL] Must be sourced!" >&2
     exit 1
 }
@@ -81,7 +81,7 @@ bashlet_are_we_sourced || {
 }
 
 # library entry point
-bashlet_import "$1" || {
+bashlet2_import "$1" || {
     echo "[bashlets:FATAL] Generic loader error." >&2
     return 1
 }
