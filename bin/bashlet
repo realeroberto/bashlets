@@ -50,24 +50,6 @@ export BASHLETS_NAMESPACE
 export BASHLETS_NAMESPACE_QUOTED
 
 
-function bashlet_get_ostype()
-{
-    # cf. http://f00bar.com/blog/2011/07/09/simple-robust-os-detection-in-bash-using-ostype/
-
-    case "$OSTYPE" in
-#       solaris*)
-#           echo "solaris" ;;
-#       darwin*)
-#           echo "osx" ;; 
-        linux*)
-            echo "linux" ;;
-        bsd*)
-            echo "bsd" ;;
-        *)
-            echo "unknown" ;;
-    esac
-}
-
 function bashlet_to_file()
 {
     local bashlet="$1"
@@ -195,10 +177,6 @@ function bashlet_trace_disable()
 }
 
 
-
-# detect OS type
-BASHLETS_OSTYPE=$(bashlet_get_ostype)
-export BASHLETS_OSTYPE
 
 # check if the script is being sourced 
 [[ $0 != bashlet ]] || {
