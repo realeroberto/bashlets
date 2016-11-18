@@ -19,7 +19,11 @@ A reasonably sane GNU/Linux environment is assumed to be at hand; support for Fr
 
 ## Installing
 
-	$ curl bashlets.github.io | bash
+	$ git clone https://github.com/bashlets/bashlets.git
+	$ cd bashlets
+	$ make install
+
+That's all!
 
 
 ## Examples

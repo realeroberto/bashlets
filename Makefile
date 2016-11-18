@@ -1,7 +1,10 @@
 README.md: README.md.tmpl
 	bin/build README.md.tmpl README.md
 
+install:
+	bin/install
+
 clean:
 	rm -f README.md
 
-.phony: clean
+.phony: install clean
