@@ -31,19 +31,35 @@
 ################################################################################
 
 
-# code borrowed from https://github.com/falzm/burl/
+BASHLETS_CLIENT_HTTP_BACKEND=native
+BASHLETS_CLIENT_HTTP_USERAGENT="bashlets_$BASHLETS_VERSION"
 
-#@method
-function bashlets_client_http_get()
+
+function __bashlets_client_http_send()
 {
+	local verb="$1" url="$2" host="$3" path="$4" contents
+
+	contents="$verb /${path} HTTP/1.1\n"
+	contents="${contents}Host: ${host}\n"
+	contents="${contents}User-Agent: $BASHLETS_CLIENT_HTTP_USERAGENT\n\n"
+
+	printf "$contents"
+}
+
+function __bashlets_client_http_native()
+{
+	declare -u verb="$1"
+
 	(
+		# code borrowed from https://github.com/falzm/burl/
+
 		# run everything in a subshell
 
 		shopt -s extquote
 
 		local url host path headers_read
 
-		url=${1/http:\/\/}
+		url=${2/http:\/\/}
 		host=${url%%/*}
 		path=${url#*/}
 
@@ -51,15 +67,16 @@ function bashlets_client_http_get()
 
 		exec 3<>/dev/tcp/${host}/80
 
-		printf "GET /${path} HTTP/1.1\nHost: ${host}\nUser-Agent: bashlets ${BASHLETS_VERSION}\n\n" >&3
+		__bashlets_client_http_send "$verb" "$url" "$host" "$path" >&3
 
 		IFS=
-		while read -r -t 1 line 0<&3; do
+		while read -r -t 1 line 0<&3
+		do
 			line=${line//$'\r'}
 
-			if [[ ! -v headers_read && $BASHLETS_HTTP_WGET_INCLUDE_HEADERS -eq 0 ]]; then
+			if [[ ! -v headers_read ]]; then
 				[[ -z $line ]] && headers_read=yes
-				continue
+				[[ $verb != HEAD ]] && continue
 			fi
 
 			echo "$line"
@@ -67,6 +84,117 @@ function bashlets_client_http_get()
 
 		exec 3<&-
 	)
+}
+
+function __bashlets_client_http_curl()
+{
+	local verb="$1" url="$2" options
+
+			 [[ -n $BASHLETS_CLIENT_HTTP_USERAGENT ]]  \
+	&& options="-A $BASHLETS_CLIENT_HTTP_USERAGENT"
+
+	case $verb in
+		get)
+			curl $options -s "$url"
+			;;
+		head)
+			curl $options -s -I "$url"
+			;;
+		*)
+			return 1
+			;;
+	esac
+}
+
+function __bashlets_client_http_lynx()
+{
+	local verb="$1" url="$2" options
+
+           			 [[ -n $BASHLETS_CLIENT_HTTP_USERAGENT ]]  \
+	&& options="-useragent $BASHLETS_CLIENT_HTTP_USERAGENT"
+
+	case $verb in
+		get)
+			lynx -dump -nolist -noredir -source "$url"
+			;;
+		head)
+			lynx -head -dump -source "$url"
+			;;
+		*)
+			return 1
+			;;
+	esac
+}
+
+function __bashlets_client_http_ncat()
+{
+	declare -u verb="$1"
+
+	(
+		# code inspired by https://github.com/falzm/burl/
+
+		# run everything in a subshell
+
+		shopt -s extquote
+
+		local url host path headers_read
+
+		url=${2/http:\/\/}
+		host=${url%%/*}
+		path=${url#*/}
+
+		[[ $path == $host ]] && path=""
+
+		__bashlets_client_http_send "$verb" "$url" "$host" "$path"  \
+		| ncat "$host" 80                                           \
+		| while IFS= read -r -t 1 line
+		do
+			line=${line//$'\r'}
+
+			if [[ ! -v headers_read ]]; then
+				[[ -z $line ]] && headers_read=yes
+				[[ $verb != HEAD ]] && continue
+			fi
+
+			echo "$line"
+		done
+	)
+}
+
+
+#@method
+function bashlets_client_http_sanitize_url()
+{
+	local url="$1"
+
+	# assume http
+	[[ $url =~ ^(http|https)://.*$ ]] || url="http://$url"
+
+	echo "$url"
+}
+
+#@method
+function bashlets_client_http_get()
+{
+	local url="$1"
+	local backend=$BASHLETS_CLIENT_HTTP_BACKEND
+
+	[[ -n $url ]] || return
+	url="$(bashlets_client_http_sanitize_url "$url")"
+
+	__bashlets_client_http_$backend get "$url"
+}
+
+#@method
+function bashlets_client_http_head()
+{
+	local url="$1"
+	local backend=$BASHLETS_CLIENT_HTTP_BACKEND
+
+	[[ -n $url ]] || return
+	url="$(bashlets_client_http_sanitize_url "$url")"
+
+	__bashlets_client_http_$backend head "$url"
 }
 
 # ex: ts=4 sw=4 et filetype=sh noexpandtab
