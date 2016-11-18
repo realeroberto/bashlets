@@ -37,19 +37,19 @@ source bashlet marshal/uneval
 
 
 #@method
-function bashlets_http_webdav_get_handler()
+function bashlets_client_webdav_get_handler()
 {
     $BASHLETS_NAMESPACE uneval create
 }
 
 #@method
-function bashlets_http_webdav_release_handler()
+function bashlets_client_webdav_release_handler()
 {
     :
 }
 
 #@method
-function bashlets_http_webdav_get_param()
+function bashlets_client_webdav_get_param()
 {
     local handler="$1"
     local key="$2"
@@ -60,7 +60,7 @@ function bashlets_http_webdav_get_param()
 }
 
 #@method
-function bashlets_http_webdav_set_param()
+function bashlets_client_webdav_set_param()
 {
     local handler="$1"
     local key="$2"
@@ -72,62 +72,62 @@ function bashlets_http_webdav_set_param()
 }
 
 #@method
-function bashlets_http_webdav_get_base_uri()
+function bashlets_client_webdav_get_base_uri()
 {
     local handler="$1"
-    bashlets_http_webdav_get_param "$handler" base_uri
+    bashlets_client_webdav_get_param "$handler" base_uri
 }
 
 #@method
-function bashlets_http_webdav_set_base_uri()
+function bashlets_client_webdav_set_base_uri()
 {
     local handler="$1"
     local base_uri="$2"
-    bashlets_http_webdav_set_param "$handler" "base_uri" "$base_uri"
+    bashlets_client_webdav_set_param "$handler" "base_uri" "$base_uri"
 }
 
 #@method
-function bashlets_http_webdav_get_password()
+function bashlets_client_webdav_get_password()
 {
     local handler="$1"
-    bashlets_http_webdav_get_param "$handler" password
+    bashlets_client_webdav_get_param "$handler" password
 }
 
 #@method
-function bashlets_http_webdav_set_password()
+function bashlets_client_webdav_set_password()
 {
     local handler="$1"
     local password="$2"
-    bashlets_http_webdav_set_param "$handler" "password" "$password"
+    bashlets_client_webdav_set_param "$handler" "password" "$password"
 }
 
 #@method
-function bashlets_http_webdav_get_username()
+function bashlets_client_webdav_get_username()
 {
     local handler="$1"
-    bashlets_http_webdav_get_param "$handler" username
+    bashlets_client_webdav_get_param "$handler" username
 }
 
 #@method
-function bashlets_http_webdav_set_username()
+function bashlets_client_webdav_set_username()
 {
     local handler="$1"
     local username="$2"
-    bashlets_http_webdav_set_param "$handler" "username" "$username"
+    bashlets_client_webdav_set_param "$handler" "username" "$username"
 }
 
 
 # Returns true if the given target is a file.
 
 #@method
-function bashlets_http_webdav_isfile()
+function bashlets_client_webdav_isfile()
 {
     local handler="$1"
 	local path="$2"
 	local target="$3"
-	local base_uri="$(bashlets_http_webdav_get_base_uri "$handler")"
-	local username="$(bashlets_http_webdav_get_username "$handler")"
-	local password="$(bashlets_http_webdav_get_password "$handler")"
+	local base_uri="$(bashlets_client_webdav_get_base_uri "$handler")"
+	local username="$(bashlets_client_webdav_get_username "$handler")"
+	local password="$(bashlets_client_webdav_get_password "$handler")"
 
 	curl -m 1 -s                               \
 		-u "$username:$password"               \
@@ -138,13 +138,13 @@ function bashlets_http_webdav_isfile()
 # Creates a resource. 
 
 #@method
-function bashlets_http_webdav_create()
+function bashlets_client_webdav_create()
 {
     local handler="$1"
 	local target="$2"
-	local base_uri="$(bashlets_http_webdav_get_base_uri "$handler")"
-	local username="$(bashlets_http_webdav_get_username "$handler")"
-	local password="$(bashlets_http_webdav_get_password "$handler")"
+	local base_uri="$(bashlets_client_webdav_get_base_uri "$handler")"
+	local username="$(bashlets_client_webdav_get_username "$handler")"
+	local password="$(bashlets_client_webdav_get_password "$handler")"
 
 	curl -s                                    \
 		-u "$username:$password"               \
@@ -155,14 +155,14 @@ function bashlets_http_webdav_create()
 # Touches a resource.
 
 #@method
-function bashlets_http_webdav_touch()
+function bashlets_client_webdav_touch()
 {
     local handler="$1"
 	local path="$2"
 	local target="$3"
-	local base_uri="$(bashlets_http_webdav_get_base_uri "$handler")"
-	local username="$(bashlets_http_webdav_get_username "$handler")"
-	local password="$(bashlets_http_webdav_get_password "$handler")"
+	local base_uri="$(bashlets_client_webdav_get_base_uri "$handler")"
+	local username="$(bashlets_client_webdav_get_username "$handler")"
+	local password="$(bashlets_client_webdav_get_password "$handler")"
 
 	curl -s                                    \
 		-u "$username:$password"               \
@@ -174,14 +174,14 @@ function bashlets_http_webdav_touch()
 # Copies a resource.
 
 #@method
-function bashlets_http_webdav_copy()
+function bashlets_client_webdav_copy()
 {
     local handler="$1"
 	local source="$2"
 	local target="$3"
-	local base_uri="$(bashlets_http_webdav_get_base_uri "$handler")"
-	local username="$(bashlets_http_webdav_get_username "$handler")"
-	local password="$(bashlets_http_webdav_get_password "$handler")"
+	local base_uri="$(bashlets_client_webdav_get_base_uri "$handler")"
+	local username="$(bashlets_client_webdav_get_username "$handler")"
+	local password="$(bashlets_client_webdav_get_password "$handler")"
 
 	curl -s                                    \
 		-u "$username:$password"               \
@@ -193,14 +193,14 @@ function bashlets_http_webdav_copy()
 # Moves a resource.
 
 #@method
-function bashlets_http_webdav_move()
+function bashlets_client_webdav_move()
 {
     local handler="$1"
 	local source="$2"
 	local target="$3"
-	local base_uri="$(bashlets_http_webdav_get_base_uri "$handler")"
-	local username="$(bashlets_http_webdav_get_username "$handler")"
-	local password="$(bashlets_http_webdav_get_password "$handler")"
+	local base_uri="$(bashlets_client_webdav_get_base_uri "$handler")"
+	local username="$(bashlets_client_webdav_get_username "$handler")"
+	local password="$(bashlets_client_webdav_get_password "$handler")"
 
 	curl -s                                    \
 		-u "$username:$password"               \
