@@ -11,7 +11,7 @@
 #                                        
 # Bashlets -- A modular extensible toolbox for Bash
 #
-# Copyright (c) 2014-5 Roberto Reale
+# Copyright (c) 2014-6 Roberto Reale
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -37,7 +37,7 @@
 # cf. http://stackoverflow.com/questions/35201357/
 
 #@method
-function bashlets_network_ip_dec2bin()
+function bashlets_datatype_ip_dec2bin()
 {
     local decimal=${1:-0.0.0.0}
     declare -a CONV=({0..1}{0..1}{0..1}{0..1}{0..1}{0..1}{0..1}{0..1})
@@ -51,7 +51,7 @@ function bashlets_network_ip_dec2bin()
 
 
 #@method
-function bashlets_network_ip_bin2dec()
+function bashlets_datatype_ip_bin2dec()
 {
     local binary=${1:-00000000.00000000.00000000.00000000}
     local byte decimal
