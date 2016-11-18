@@ -106,6 +106,14 @@ function bashlets_datatype_string_to_bool()
 }
 
 #@method
+function bashlets_datatype_string_urlencode()
+{
+    # TODO requires perl
+    # cf. https://www.if-not-true-then-false.com/2009/google-search-from-linux-and-unix-command-line/
+    echo -n $@ | perl -pe's/([^-_.~A-Za-z0-9])/sprintf("%%%02X", ord($1))/seg'
+}
+
+#@method
 function bashlets_datatype_string_ascii_to_bin()
 {
     ########################################################################
