@@ -41,7 +41,8 @@ function __bashlets_client_http_send()
 
 	contents="$verb /${path} HTTP/1.1\n"
 	contents="${contents}Host: ${host}\n"
-	contents="${contents}User-Agent: $BASHLETS_CLIENT_HTTP_USERAGENT\n\n"
+	contents="${contents}User-Agent: $BASHLETS_CLIENT_HTTP_USERAGENT\n"
+	contents="${contents}Accept: */*\n\n"
 
 	printf "$contents"
 }
