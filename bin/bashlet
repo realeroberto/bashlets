@@ -47,7 +47,7 @@ BASHLETS_BASE=~/.bashlets
 }
 
 # load second stage
-source "$BASHLETS_BASE/${BASHLETS_REV:-DEFAULT}/bin/bashlet" "$@"
+source "$BASHLETS_BASE/${BASHLETS_REV:-DEFAULT}/bin/bashlet2" "$@"
 
 # Local variables:
 # mode: shell-script
