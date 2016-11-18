@@ -39,6 +39,14 @@
 
 BASHLETS_BASE=~/.bashlets
 
+
+# check if we are being sourced
+[[ "${BASH_SOURCE[0]}" != "${0}" ]] || {
+    echo "[bashlet:FATAL] Must be sourced!" >&2
+    exit 1
+}
+
+# load second stage
 source "$BASHLETS_BASE/${BASHLETS_REV:-DEFAULT}/bin/bashlet" "$@"
 
 # Local variables:
