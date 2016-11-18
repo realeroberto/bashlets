@@ -37,17 +37,26 @@
 
 
 
+BASHLETS_NAME=bashlets
 BASHLETS_BASE=~/.bashlets
+BASHLETS_LOADER_1ST_STAGE="${BASH_SOURCE[0]}"
+BASHLETS_LOADER_2ND_STAGE="$BASHLETS_BASE/${BASHLETS_REV:-DEFAULT}/bin/bashlet2"
+BASHLETS_ERRORS_LOADING_ERROR=1
 
 
 # check if we are being sourced
-[[ "${BASH_SOURCE[0]}" != "${0}" ]] || {
-    echo "[bashlet:FATAL] Must be sourced!" >&2
-    exit 1
+[[ "$BASHLETS_LOADER_1ST_STAGE" != "$0" ]] || {
+    echo "[$BASHLETS_NAME] First-stage loader must be sourced!" >&2
+    exit $BASHLETS_ERRORS_LOADING_ERROR
 }
 
 # load second stage
-source "$BASHLETS_BASE/${BASHLETS_REV:-DEFAULT}/bin/bashlet2" "$@"
+[[ -r "$BASHLETS_LOADER_2ND_STAGE" ]] || {
+    echo "[$BASHLETS_NAME] Second-stage loader not found!" >&2
+    return $BASHLETS_ERRORS_LOADING_ERROR
+}
+
+source "$BASHLETS_LOADER_2ND_STAGE" "$@"
 
 # Local variables:
 # mode: shell-script
