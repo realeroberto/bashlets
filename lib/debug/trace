@@ -38,7 +38,7 @@
 function bashlets_debug_trace_enable()
 {
     # cf. http://www.vctlabs.com/posts/2011/Nov/26/tracing_cheatsheet/
-    export BASHLETS_OLD_PS4="$PS4"
+    export BASHLETS_DEBUG_TRACE_OLD_PS4="$PS4"
     export PS4='+(${BASH_SOURCE[0]}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
     set -x
 }
@@ -48,7 +48,9 @@ function bashlets_debug_trace_disable()
 {
     # cf. http://stackoverflow.com/questions/3601515/
     set +x
-    [ -z ${BASHLETS_OLD_PS4+x} ] || export PS4="$BASHLETS_OLD_PS4"
+
+             [[ -z $BASHLETS_DEBUG_TRACE_OLD_PS4 ]]  \
+    || export PS4="$BASHLETS_DEBUG_TRACE_OLD_PS4"
 }
 
 # Local variables:
