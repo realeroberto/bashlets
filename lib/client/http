@@ -34,7 +34,7 @@
 # code borrowed from https://github.com/falzm/burl/
 
 #@method
-function bashlets_http_wget_get()
+function bashlets_client_http_get()
 {
 	(
 		# run everything in a subshell
