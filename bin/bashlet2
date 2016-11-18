@@ -36,21 +36,25 @@
 ################################################################################
 
 
-
+BASHLETS_NAME=bashlets
+BASHLETS_BASE=~/.bashlets
+BASHLETS_LOADER_2ND_STAGE="${BASH_SOURCE[0]}"
 BASHLETS_NAMESPACE=bash$$
 BASHLETS_NAMESPACE_QUOTED=bash\$\$
+BASHLETS_ERRORS_LOADING_ERROR=1
 
 
 function bashlet2_import_lazy()
 {
     local bashlet="$1" file
 
-    type bashlets_library_loader_import > /dev/null 2> /dev/null || {
+    type bashlets_library_loader_import > /dev/null 2>&1 || {
         [[ $bashlet != "library/loader" ]] && 
-            bashlet2_import_lazy library/loader
+            bashlet2_import_lazy "library/loader"
     }
 
     file="$BASHLETS_BASE/${BASHLETS_REV:-DEFAULT}/lib/$bashlet"
+
     source "$file"
 }
 
@@ -58,32 +62,30 @@ function bashlet2_import()
 {
     local bashlet="$1"
 
-    bashlet2_import_lazy $bashlet || return 1
-    bashlets_library_loader_import $bashlet || return 1
+    bashlet2_import_lazy $bashlet            \
+        || return $BASHLETS_ERRORS_LOADING_ERROR
+
+    bashlets_library_loader_import $bashlet  \
+        || return $BASHLETS_ERRORS_LOADING_ERROR
 }
 
-function bashlet2_are_we_sourced()
-{
-    [[ "${BASH_SOURCE[0]}" != "${0}" ]]
-}
 
-
-# check if the script is being sourced 
-bashlet2_are_we_sourced || {
-    echo "[bashlets:FATAL] Must be sourced!" >&2
-    exit 1
+# check if we are being sourced
+[[ "$BASHLETS_LOADER_2ND_STAGE" != "$0" ]] || {
+    echo "[$BASHLETS_NAME] Second-stage loader must be sourced!" >&2
+    exit $BASHLETS_ERRORS_LOADING_ERROR
 }
 
 # ``parse'' command line
 [[ $# != 1 ]] && {
-    echo "[bashlets:FATAL] Loader usage: bashlet <BASHLET>" >&2
-    return 1
+    echo "[$BASHLETS_NAME] Loader usage: bashlet <BASHLET>" >&2
+    return $BASHLETS_ERRORS_LOADING_ERROR
 }
 
 # library entry point
 bashlet2_import "$1" || {
-    echo "[bashlets:FATAL] Generic loader error." >&2
-    return 1
+    echo "[$BASHLETS_NAME] Generic loader error!" >&2
+    return $BASHLETS_ERRORS_LOADING_ERROR
 }
 
 
