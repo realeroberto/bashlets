@@ -167,12 +167,18 @@ TODO
 
 ## Bibliography
 
+### Reference Works
+
+- [Bash Reference Manual](https://www.gnu.org/software/bash/manual/bash.html)
+- [The Open Group Base Specifications Issue 7, _Shell & Utilities_](http://pubs.opengroup.org/onlinepubs/9699919799/utilities/contents.html)
+
 ### Bash Hacking
 
 - [Advanced Bash-Scripting Guide](http://www.tldp.org/LDP/abs/html/index.html)
 - [The Bash Hackers Wiki](http://wiki.bash-hackers.org/)
 - [Bash Design Patterns](http://stackoverflow.com/questions/78497/design-patterns-or-best-practices-for-shell-scripts)
 - [Why is printf better than echo?](http://unix.stackexchange.com/questions/65803/why-is-printf-better-than-echo)
+- [How to check if a variable is set in Bash?](http://stackoverflow.com/questions/3601515/how-to-check-if-a-variable-is-set-in-bash)
 
 ### Bash Criticism
 
@@ -189,6 +195,7 @@ TODO
 - [bashinator](https://github.com/wschlich/bashinator)
 - [bash manager](https://github.com/lingtalfi/bashmanager)
 - [bash toolbox](https://github.com/hallison/bash-toolbox)
+- [bash-it](https://github.com/Bash-it/bash-it)
 - [bashworks](https://github.com/jpic/bashworks)
 - [blp](https://github.com/mikelking/blp)
 - [mbfl](https://github.com/marcomaggi/mbfl)
