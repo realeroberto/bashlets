@@ -34,108 +34,34 @@
 ################################################################################
 
 
+source bashlet datatype/string
+source bashlet client/https
+source bashlet os/term
+
+BASHLETS_API_MANKIER_URL="https://www.mankier.com/api/explain/?cols=\${cols}\&q="
+
 
 #@method
-function bashlets_os_term_is_tty()
+function bashlets_api_mankier_explain()
 {
-    local fd=0  # stdin
+    ########################################################################
+    #
+    # Code inspired by:
+    #
+    # https://github.com/Bash-it/bash-it/blob/master/plugins/available/explain.plugin.bash
+    #
+    ########################################################################
 
-    # http://www.tldp.org/LDP/abs/html/intandnonint.html
-    [[ -t "$fd" ]]
-}
+    local cols=$(term get_cols 2> /dev/null)
+    cols=${cols:-80}
 
-#@method
-function bashlets_os_term_get_lines()
-{
-    tput lines
-}
+    local url="$(eval echo "$BASHLETS_API_MANKIER_URL")" query
 
-#@method
-function bashlets_os_term_get_cols()
-{
-    tput cols
-}
+    [[ $# -gt 0 ]] || return
 
-#@method
-function bashlets_os_term_get_window_size()
-{
-    echo "$(tput lines):$(tput cols)"
-}
+    query="$($BASHLETS_NAMESPACE string urlencode "$@")"
 
-#@method
-function bashlets_os_term_move_up_one_line()
-{
-    printf "\033[1A"  # move cursor one line up
-    printf "\033[K"   # delete till end of line
-}
-
-#@method
-function bashlets_os_term_reset()
-{
-    reset
-}
-
-#@method
-function bashlets_os_term_colour()
-{
-    local colour="${1:normal}"
-    local escseq
-
-    case "$colour" in
-        normal)
-            escseq="\033[0m"
-            ;;
-        red)
-            escseq="\033[91m"
-            ;;
-        yellow)
-            escseq="\033[93m"
-            ;;
-        *)
-            echo 'Invalid colour!'
-            ;;
-    esac
-            
-    echo -en "$escseq"
-}
-
-#@method
-function bashlets_os_term_flasher()
-{
-    # cf. https://en.wikipedia.org/wiki/ANSI_escape_code
-    local delay="${1:-.1}"
-
-    while true
-    do
-        printf "\e[?5h"
-        sleep $delay
-        printf "\e[?5l"
-        read -s -n1 -t1 && break
-    done
-
-    printf "\e[?5l"
-}
-
-#@method
-function bashlets_os_term_read_as_text()
-{
-    local prompt="$*"
-    local input
-
-    [[ -n $prompt ]] && read -p "$prompt: " input || read input
-
-    echo "$input"
-}
-
-#@method
-function bashlets_os_term_read_as_password()
-{
-    local prompt="$*"
-    local input
-
-    [[ -n $prompt ]] && read -s -p "$prompt: " input || read -s input
-
-    echo "$input"
+    $BASHLETS_NAMESPACE https get "${url}${query}"
 }
 
 
