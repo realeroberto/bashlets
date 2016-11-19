@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 ################################################################################
 #                                         
 # |              |    |         |         
@@ -36,13 +35,15 @@
 ################################################################################
 
 
-
 #
 # global variables
 ################################################################################
 
 BASHLETS_BASE=~/.bashlets
 BASHLETS_LOADER_1ST_STAGE_DESTINATIONS=~/.local/bin:/usr/local/bin
+
+# which Git branch are we interested in?
+branch=master
 
 # install the first stage loader
 unset install_1st_stage_loader
@@ -60,12 +61,13 @@ function usage()
     cat <<-EOF
 		Usage:
 
-		    bin/install [ -1 ] [ -D ]
+		    bin/install [ -1 ] [ -D ] [ -B <branch> ]
 
 		Options:
 
 		   -1      install the first-stage loader
 		   -D      set the current installation as the default one
+		   -B      switch to another Git branch
 		   -?      display this help and exit
 		   -V      output version information and exit
 
@@ -79,21 +81,29 @@ function version()
 	EOF
 } 
 
+function cleanup()
+{
+    [[ -n $current_branch ]] && git checkout -q $current_branch
+}
+
+trap cleanup EXIT
+
 
 #
 # parse command line options
 ################################################################################
 
-while getopts "1D?V" OPTION
+while getopts "1DB:?V" OPTION
 do
     case $OPTION in
 		1)
 			install_1st_stage_loader=1
-            shift
 			;;
 		D)
 			set_as_default=1
-            shift
+			;;
+		B)
+			branch=$OPTARG
 			;;
 		?)
 			echo ; version
@@ -107,6 +117,8 @@ do
     esac
 done
 
+shift $((OPTIND-1))
+
 
 #
 # some sanity checks
@@ -118,13 +130,16 @@ done
     exit 1
 }
 
+# save the current branch, in case we need to switch branch
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+
 
 #
 # determine (and create it if needed) the installation folder
 ################################################################################
 
 # revision can be given (optionally) on command line
-rev="${1:-$(git rev-parse master)}"
+rev="${1:-$(git rev-parse $branch)}"
 
 # installation folder
 install_path="$BASHLETS_BASE/$rev"
@@ -137,13 +152,22 @@ install_path="$BASHLETS_BASE/$rev"
 # install the codebase
 ################################################################################
 
-# export codebase into the installation folder
-git archive $rev | tar -x -C "$install_path"
+# switch to the given branch
+git checkout -q $branch || {
+    echo "ERROR: could not switch to $branch branch!" >&2
+    exit 1
+}
+
+# export the codebase into the installation folder
+git archive $rev | tar -x -C "$install_path" || {
+    echo "ERROR: could not install the first-stage loader!" >&2
+    exit 1
+}
 
 # if required set the current installation as the default one
 # ($BASHLETS_BASE can contain multiple installations)
-[[ ! -e $BASHLETS_BASE/DEFAULT || -v $set_as_default ]] && {
-    ln -fs $rev "$BASHLETS_BASE/DEFAULT"
+[[ ! -e $BASHLETS_BASE/DEFAULT || -n $set_as_default ]] && {
+    rm -f "$BASHLETS_BASE/DEFAULT" && ln -s $rev "$BASHLETS_BASE/DEFAULT"
 }
 
 
@@ -161,7 +185,7 @@ do
 
     # if the loader does already exist AND the user did not require
     # anything, we are done
-    [[ -e $file_name && ! -v $install_1st_stage_loader ]] && break
+    [[ -e $file_name && -z $install_1st_stage_loader ]] && break
 
     {
         # try and create the directory
@@ -181,7 +205,7 @@ done
 ################################################################################
 
 # check that everything was ok
-[[ ! -v $install_1st_stage_loader || -v $_1st_stage_loader_installed ]] || {
+[[ -z $install_1st_stage_loader || -n $_1st_stage_loader_installed ]] || {
     echo "ERROR: could not install the first-stage loader!" >&2
     exit 1
 }
