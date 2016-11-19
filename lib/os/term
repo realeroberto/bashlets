@@ -11,7 +11,7 @@
 #                                        
 # Bashlets -- A modular extensible toolbox for Bash
 #
-# Copyright (c) 2014-5 Roberto Reale
+# Copyright (c) 2014-6 Roberto Reale
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -42,6 +42,18 @@ function bashlets_os_term_is_tty()
 
     # http://www.tldp.org/LDP/abs/html/intandnonint.html
     [[ -t "$fd" ]]
+}
+
+#@method
+function bashlets_os_term_get_lines()
+{
+    tput lines
+}
+
+#@method
+function bashlets_os_term_get_cols()
+{
+    tput cols
 }
 
 #@method
