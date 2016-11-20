@@ -1,0 +1,117 @@
+#!/bin/bash
+
+
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# Bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2014-6 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+source bashlet tcl/bash2tcl
+
+
+#@method
+function bashlets_tcl_search_get_text()
+{
+    local f="$1"
+    local tcl_text
+
+    case "$f" in 
+        binary)
+            tcl_text='
+                #
+                # binary search --- tail recursive version
+                # 
+
+                proc binarySearch {l value {low 0} {high ""}} {
+                    if {$high eq ""} {
+                        set high [expr {[llength $l] - 1}]
+                    }
+
+                    if {$low > $high} {
+                        return -1 ; # not found
+                    }
+                    
+                    # cf. https://research.googleblog.com/2006/06/extra-extra-read-all-about-it-nearly.html
+                    set mid [expr {$low + ($high - $low)/2}]
+
+                    if {[lindex $l $mid] > $value} {
+                        return [binarySearch $l $value $low [expr {$mid - 1}]]
+                    } elseif {[lindex $l $mid] < $value} {
+                        return [binarySearch $l $value [expr {$mid + 1}] $high]
+                    } else {
+                        return $mid ; # found!
+                    }
+                }
+            '
+            ;;
+        *)
+            # TODO error!
+            ;;
+    esac
+
+    cat <<< "$tcl_text"
+}
+
+
+#@method
+function bashlets_tcl_search_binary()
+{
+    local needle="$1" ; shift
+    local tcl_text index
+
+    # WARNING: $@ must be ALREADY sorted; only numeric values are permissible
+
+    tcl_text="
+        $(bashlets_tcl_search_get_text binary)
+
+        set l      $($BASHLETS_NAMESPACE bash2tcl convert_list   $@)
+        set needle $($BASHLETS_NAMESPACE bash2tcl convert_scalar $needle)
+
+        set index [binarySearch \$l \$needle]
+
+        if {\$index > -1} {
+            puts \$index
+        } else {
+            # not found
+        }
+    "
+
+    tclsh <<< "$tcl_text"
+}
+
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh

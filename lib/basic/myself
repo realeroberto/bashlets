@@ -1,0 +1,110 @@
+#!/bin/bash
+
+
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# Bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2014-5 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+#@method
+function bashlets_basic_myself_get_name()
+{
+    [[ "$0" == "-bash" ]] && return
+    basename "$0"
+}
+
+#@method
+function bashlets_basic_myself_get_name_canonical()
+{
+    [[ "$0" == "-bash" ]] && return
+    basename "$(readlink -m -- "$0")"
+}
+
+#@method
+function bashlets_basic_myself_get_path_canonical()
+{
+    [[ "$0" == "-bash" ]] && return
+    readlink -m -- "$0"
+}
+
+#@method
+function bashlets_basic_myself_get_path_effective()
+{
+    # http://stackoverflow.com/questions/59895
+
+    local source="${BASH_SOURCE[0]}"
+
+    [[ "$0" == "-bash" ]] && return
+
+    # resolve $source until the file is no longer a symlink
+    while [[ -h $source ]]
+    do
+        dir="$(cd -P "$(dirname "$source")" && pwd)"
+        source="$(readlink "$source")"
+
+        # if $source was a relative symlink, we need to resolve it relative to
+        # the path where the symlink file was located
+        [[ $source != /* ]]  \
+            && source="$(bashlets os path_join "$dir" "$source")"
+    done
+
+    dir="$(cd -P "$(dirname "$source")" && pwd)"
+
+    echo "$dir"
+}
+
+#@method
+function bashlets_basic_myself_get_ppid()
+{
+    # echo it just to get rid of leading/trailing spaces
+    echo $(ps -o ppid= -p $$)
+}
+
+#@method
+function bashlets_basic_myself_get_parent_name()
+{
+    ps -o comm= -p $(bashlets_basic_myself_get_ppid)
+}
+
+#@method
+function bashlets_basic_myself_require_user()
+{
+    test $(whoami) = "$1"
+}
+
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh

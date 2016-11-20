@@ -1,0 +1,170 @@
+#!/bin/bash
+
+
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# Bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2014-6 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+# a simple implementation of Bubblesort in Perl
+#
+# see http://en.wikipedia.org/wiki/Bubble_sort
+
+#@method
+function bashlets_perl_array_sort_by_bubblesort()
+{
+    perl -e '
+        use warnings;
+
+        sub bubblesort
+        {
+            my @array = @_;
+            my $swapped;
+
+            do {
+                $swapped = 0;
+                
+                for (my $i = 1; $i <= $#array; $i++) {
+                    if ($array[$i - 1] > $array[$i]) {
+                        my $temp = $array[$i];
+                        $array[$i] = $array[$i - 1];
+                        $array[$i - 1] = $temp;
+                        $swapped = 1;
+                    }
+                }
+            } while ($swapped);
+
+            return @array;
+        }
+
+
+        my @output = bubblesort(@ARGV);
+        foreach $n (@output) { print $n, "\n"; }
+    ' $@
+}
+
+
+
+# naive implementation of the Quicksort algorithm in Perl
+#
+# see http://en.wikipedia.org/wiki/Quicksort
+
+#@method
+function bashlets_perl_array_sort_by_quicksort()
+{
+    perl -e '
+        use warnings;
+
+        sub quicksort
+        {
+            my @array = @_;
+            my @less = ();
+            my @greater = ();
+
+            my $pivot = $array[$#array]; # it is a very bad choice, I know...
+
+            local $^W = 0;               # silence deep recursion warning
+
+            if ($#array == -1) {
+                return ();
+            }
+
+            for (my $i = 0; $i <= $#array-1; $i++) {
+                if ($array[$i] <= $pivot) {
+                    @less = (@less, $array[$i]);
+                } else {
+                    @greater = (@greater, $array[$i]);
+                }
+            }
+
+            return (quicksort (@less), $pivot, quicksort (@greater));
+        }
+
+
+        my @output = quicksort(@ARGV);
+        foreach $n (@output) { print $n, "\n"; }
+    ' $@
+}
+
+
+
+# a simple implementation of Insertion Sort in Perl
+#
+# see http://en.wikipedia.org/wiki/Insertion_sort
+
+#@method
+function bashlets_perl_array_sort_by_insertion_sort()
+{
+    perl -e '
+        use warnings;
+
+        sub insertion_sort
+        {
+            my @array = @_;
+
+            for (my $i = 1; $i <= $#array; $i++) {
+                my $value = $array[$i];
+                my $j = $i - 1;
+                my $done = 0;
+
+                do {
+                    if ($array[$j] > $value) {
+                        $array[$j + 1] = $array[$j];
+                        $j--;
+                        
+                        if ($j < 0) {
+                            $done = 1;
+                        }
+                    } else {
+                        $done = 1;
+                    }
+                } until ($done);
+
+                $array[$j + 1] = $value;
+            }
+
+            return @array;
+        }
+
+
+        my @output = insertion_sort(@ARGV);
+        foreach $n (@output) { print $n, "\n"; }
+    ' $@
+}
+
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh

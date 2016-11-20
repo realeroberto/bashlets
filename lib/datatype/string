@@ -1,0 +1,669 @@
+#!/bin/bash
+
+
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# Bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2014-6 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+source bashlet datatype/char
+source bashlet datatype/integer
+source bashlet charstream/reorder
+source bashlet charstream/reshape
+source bashlet os/random
+
+#@method
+function bashlets_datatype_string_chop()
+{
+    echo "$(echo "$@" | tr -d "\n")"
+}
+
+#@method
+function bashlets_datatype_string_length()
+{
+    local str="$*"
+    echo ${#str}
+}
+
+#@method
+function bashlets_datatype_string_index()
+{
+    # cf. https://github.com/marcomaggi/mbfl/blob/master/src/modules/string.sh.m4
+    local haystack="$1"
+    local needle="$2"
+    local start="${3:-0}"
+    local i
+
+    for ((i=$start; $i < ${#haystack}; ++i))
+    do
+        test "${haystack:$i:1}" = "$needle" && {
+            echo "$i"
+            return 0
+        }
+    done
+}
+
+#@method
+function bashlets_datatype_string_upper()
+{
+    echo "$*" | tr a-z A-Z
+}
+
+#@method
+function bashlets_datatype_string_lower()
+{
+    echo "$*" | tr A-Z a-z
+}
+
+#@method
+function bashlets_datatype_string_to_integer()
+{
+    printf "%d\n" "$1"  # removes leading zero's
+}
+
+#@method
+function bashlets_datatype_string_to_bool()
+{
+    local value="$(bashlets_datatype_string_lower "$*")"
+    local try
+
+    [[ -n $value ]] || return 1
+
+    for try in y yes true 1
+    do
+        [[ $value == $try ]] && return
+    done
+
+    return 1
+}
+
+#@method
+function bashlets_datatype_string_urlencode()
+{
+    # TODO requires perl
+    # cf. https://www.if-not-true-then-false.com/2009/google-search-from-linux-and-unix-command-line/
+    echo -n $@ | perl -pe's/([^-_.~A-Za-z0-9])/sprintf("%%%02X", ord($1))/seg'
+}
+
+#@method
+function bashlets_datatype_string_ascii_to_bin()
+{
+    ########################################################################
+    #
+    # Code borrowed from: text_convert.sh by Luciano D. Cerere
+    #
+    # cf. https://gist.github.com/ldante86/679c2240acd7cc838e1d6fcac97dc4d3
+    #
+    ########################################################################
+
+    declare -a ascii=(
+        \! \" \# \$ % \& \' \( \) '*' + , - . / 0 1 2 3 4 5 6 7 8 9 : \; \< = \> ? @
+        A B C D E F G H I J K L M N O P Q R S T U V W X Y Z \[ \\ \] \^ _ \`
+        a b c d e f g h i j k l m n o p q r s t u v w x y z \{ \| \} \~ " "
+    )
+
+    declare -a binary=(
+        00100001 00100010 00100011 00100100 00100101 00100110 00100111 00101000
+        00101001 00101010 00101011 00101100 00101101 00101110 00101111 00110000
+        00110001 00110010 00110011 00110100 00110101 00110110 00110111 00111000
+        00111001 00111010 00111011 00111100 00111101 00111110 00111111 01000000
+        01000001 01000010 01000011 01000100 01000101 01000110 01000111 01001000
+        01001001 01001010 01001011 01001100 01001101 01001110 01001111 01010000
+        01010001 01010010 01010011 01010100 01010101 01010110 01010111 01011000
+        01011001 01011010 01011011 01011100 01011101 01011110 01011111 01100000
+        01100001 01100010 01100011 01100100 01100101 01100110 01100111 01101000
+        01101001 01101010 01101011 01101100 01101101 01101110 01101111 01110000
+        01110001 01110010 01110011 01110100 01110101 01110110 01110111 01111000
+        01111001 01111010 01111011 01111100 01111101 01111110 00100000
+    )
+
+	local a i str="$@"
+
+	for ((i=0; i<${#str}; i++))
+	do
+		while true
+		do
+			for ((a=0; a<=${#ascii[@]}; a++))
+			do
+				if [ "${ascii[a]}" = "${str:i:1}" ]
+				then
+					printf "%s" "${binary[a]}"
+					break 2
+				fi
+			done
+		done
+	done
+}
+
+#@method
+function bashlets_datatype_string_ascii_to_dec()
+{
+    ########################################################################
+    #
+    # Code borrowed from: text_convert.sh by Luciano D. Cerere
+    #
+    # cf. https://gist.github.com/ldante86/679c2240acd7cc838e1d6fcac97dc4d3
+    #
+    ########################################################################
+
+    # TODO extend to the entire ASCII set
+
+    declare -a ascii=(
+        \! \" \# \$ % \& \' \( \) '*' + , - . / 0 1 2 3 4 5 6 7 8 9 : \; \< = \> ? @
+        A B C D E F G H I J K L M N O P Q R S T U V W X Y Z \[ \\ \] \^ _ \`
+        a b c d e f g h i j k l m n o p q r s t u v w x y z \{ \| \} \~ " "
+    )
+
+    declare -a decimal=( {33..126} 32)
+
+	local a i str="$@"
+
+	for ((i=0; i<${#str}; i++))
+	do
+		while true
+		do
+			for ((a=0; a<=${#ascii[@]}; a++))
+			do
+				if [ "${ascii[a]}" = "${str:i:1}" ]
+				then
+					printf "%s " "${decimal[a]}"
+					break 2
+				fi
+			done
+		done
+	done
+}
+
+#@method
+function bashlets_datatype_string_bin_to_dec()
+{
+    ########################################################################
+    #
+    # Code borrowed from: text_convert.sh by Luciano D. Cerere
+    #
+    # cf. https://gist.github.com/ldante86/679c2240acd7cc838e1d6fcac97dc4d3
+    #
+    ########################################################################
+
+	local bin=$1
+	local i jump=1 dec=0
+
+	for ((i=${#bin}; i>0; i--))
+	do
+		case ${bin:i-1:1} in
+			1) ((dec+=jump)) ;;
+		esac
+		((jump*=2))
+	done
+
+	echo $dec
+}
+
+#@method
+function bashlets_datatype_string_dec_to_hex()
+{
+    ########################################################################
+    #
+    # Code borrowed from: text_convert.sh by Luciano D. Cerere
+    #
+    # cf. https://gist.github.com/ldante86/679c2240acd7cc838e1d6fcac97dc4d3
+    #
+    ########################################################################
+
+    declare -a base16=( {0..10} {A..F} )
+
+	local dec="$1" digit size hex
+
+	[ -z "$dec" ] && return 1
+
+	while (( dec != 0 ))
+	do
+		((digit=dec % 16))
+		if (( digit >= 10 ))
+		then
+			hex=${base16[digit+1]}${hex}
+		else
+			hex=${base16[digit]}${hex}
+		fi
+		((dec/=16))
+	done
+
+	echo $hex
+}
+
+#@method
+function bashlets_datatype_string_get_ascii_sum()
+{
+    ########################################################################
+    #
+    # Code borrowed from: text_convert.sh by Luciano D. Cerere
+    #
+    # cf. https://gist.github.com/ldante86/679c2240acd7cc838e1d6fcac97dc4d3
+    #
+    ########################################################################
+
+	local exp=0
+	local str=$(bashlets_datatype_string_ascii_to_dec "$@")
+
+	for i in $str
+	do
+		((exp+=i))
+	done
+	echo $exp
+}
+
+
+BASHLETS_DATATYPE_STRING_ENCODE_BASE64_NEWLINE=0
+
+#@method
+function bashlets_datatype_string_encode_base64()
+{
+    ########################################################################
+    #
+    # Code borrowed from: text_convert.sh by Luciano D. Cerere
+    #
+    # cf. https://gist.github.com/ldante86/679c2240acd7cc838e1d6fcac97dc4d3
+    #
+    ########################################################################
+
+    declare -a base64=( {A..Z} {a..z} {0..9} + / )
+
+	local str i block lastblock
+
+	str=$(bashlets_datatype_string_ascii_to_bin "$@")
+	[ -z "$str" ] && return 1
+
+	for (( i=0; i<${#str}; ((i+=6)) ))
+	do
+		block="${str:i:6}"
+		if (( ${#block} < 5 ))
+		then
+			lastblock=${#block}
+		fi
+
+		while (( ${#block} < 6 ))
+		do
+			block="${block}0"
+		done
+
+		echo -n "${base64[ $(bashlets_datatype_string_bin_to_dec ${block}) ]}"
+	done
+
+	case $lastblock in
+		4)	((lastblock -= 2)) ;;
+		*)	((lastblock -= 1)) ;;
+	esac
+
+	case $BASHLETS_DATATYPE_STRING_ENCODE_BASE64_NEWLINE in
+		0)
+			case $lastblock in
+				1)	echo "o=" ;;
+				2)	echo "K" ;;
+				*)	echo "Cg==" ;;
+			esac
+			;;
+		1)
+			case $lastblock in
+				1)	echo "==" ;;
+				2)	echo "=" ;;
+				*)	echo  ;;
+			esac
+			;;
+	esac
+}
+
+#@method
+function bashlets_datatype_string_rotate()
+{
+    ########################################################################
+    #
+    # Code borrowed from:
+    #
+    # rot - rotate the alphabet and encode a string
+    # cf. https://gist.github.com/ldante86/bbb0f3e69aa61a90710d52a9928487cb
+    #
+    # Copyright (C) 2014 Luciano D. Cecere <ldante86@aol.com>
+    #
+    # This program is free software: you can redistribute it and/or modify
+    # it under the terms of the GNU General Public License as published by
+    # the Free Software Foundation, either version 3 of the License, or
+    # (at your option) any later version.
+    #
+    # This program is distributed in the hope that it will be useful,
+    # but WITHOUT ANY WARRANTY; without even the implied warranty of
+    # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    # GNU General Public License for more details.
+    #
+    # You should have received a copy of the GNU General Public License
+    # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    #
+    #########################################################################
+
+    local rot="$1" ; shift
+
+    [[ $# -eq 0 ]] && return
+
+    case $rot in
+        0 )  echo "$input" ;; # no rotation
+        1 )  tr 'A-Za-z' 'B-ZA-Ab-za-a' <<< "$@" ;;
+        2 )  tr 'A-Za-z' 'C-ZA-Bc-za-b' <<< "$@" ;;
+        3 )  tr 'A-Za-z' 'D-ZA-Cd-za-c' <<< "$@" ;;
+        4 )  tr 'A-Za-z' 'E-ZA-De-za-d' <<< "$@" ;;
+        5 )  tr 'A-Za-z' 'F-ZA-Ef-za-e' <<< "$@" ;;
+        6 )  tr 'A-Za-z' 'G-ZA-Fg-za-f' <<< "$@" ;;
+        7 )  tr 'A-Za-z' 'H-ZA-Gh-za-g' <<< "$@" ;;
+        8 )  tr 'A-Za-z' 'I-ZA-Hi-za-h' <<< "$@" ;;
+        9 )  tr 'A-Za-z' 'J-ZA-Ij-za-i' <<< "$@" ;;
+        10)  tr 'A-Za-z' 'K-ZA-Jk-za-j' <<< "$@" ;;
+        11)  tr 'A-Za-z' 'L-ZA-Kl-za-k' <<< "$@" ;;
+        12)  tr 'A-Za-z' 'M-ZA-Lm-za-l' <<< "$@" ;;
+        13)  tr 'A-Za-z' 'N-ZA-Mn-za-m' <<< "$@" ;; # rot13
+        14)  tr 'A-Za-z' 'O-ZA-No-za-n' <<< "$@" ;;
+        15)  tr 'A-Za-z' 'P-ZA-Op-za-o' <<< "$@" ;;
+        16)  tr 'A-Za-z' 'Q-ZA-Pq-za-p' <<< "$@" ;;
+        17)  tr 'A-Za-z' 'R-ZA-Qr-za-s' <<< "$@" ;;
+        18)  tr 'A-Za-z' 'S-ZA-Rs-za-r' <<< "$@" ;;
+        19)  tr 'A-Za-z' 'T-ZA-St-za-s' <<< "$@" ;;
+        20)  tr 'A-Za-z' 'U-ZA-Tu-za-t' <<< "$@" ;;
+        21)  tr 'A-Za-z' 'V-ZA-Uv-za-u' <<< "$@" ;;
+        22)  tr 'A-Za-z' 'W-ZA-Vw-za-v' <<< "$@" ;;
+        23)  tr 'A-Za-z' 'X-ZA-Wx-za-w' <<< "$@" ;;
+        24)  tr 'A-Za-z' 'Y-ZA-Xy-za-x' <<< "$@" ;;
+        25)  tr 'A-Za-z' 'Z-ZA-Yz-za-y' <<< "$@" ;;
+        * )  return 1 ;;
+    esac
+}
+
+#@method
+function bashlets_datatype_string_rot13()
+{
+    bashlets_datatype_string_rotate 13 "$@"
+}
+
+#@method
+function bashlets_datatype_string_to_charstream()
+{
+    local chr
+    echo -n "$*" | while read -r -n1 chr; do echo "$chr"; done
+}
+
+#@method
+function bashlets_datatype_string_to_matrix()
+{
+    declare -i cols=${1:-1} chr
+    shift
+    ((cols > 0)) || return 1
+    echo -n "$*" | xargs -n $cols
+}
+
+#@method
+function bashlets_datatype_string_reverse()
+{
+    # cf. http://stackoverflow.com/questions/11461625/
+    local str="$*"
+    local rev
+
+    for ((i=${#str}-1 ; i >= 0 ; i--))
+    do
+        rev="$rev${str:$i:1}"
+    done
+
+    echo "$rev"
+}
+
+#@method
+function bashlets_datatype_string_transpose()
+{
+    bashlets_datatype_string_to_charstream "$*"
+}
+
+#@method
+function bashlets_datatype_string_shuffle()
+{
+    local str="$*"
+
+    [[ -n $str ]] || return
+
+    bashlets_datatype_string_to_charstream "$str"    \
+        | $BASHLETS_NAMESPACE reorder shuffle        \
+        | $BASHLETS_NAMESPACE reshape transpose
+}
+
+
+#
+# if $* has length 2^n, return the central 2^(n-1) characters;
+# otherwise, return nothing
+#
+
+#@method
+function bashlets_datatype_string_middle_2n()
+{
+    local str="$*"
+    local len=${#str}
+
+    local c2="$((len/2))"
+    local c4="$((len/4))"
+
+    echo "$str" | sed -n "s/^.\{$c4\}\(.\{$c2\}\).\{$c4\}$/\1/p"
+}
+
+
+#
+# left-pad a given string with PAD, so that its length is rounded up
+# to the next multiple of N
+#
+
+#@method
+function bashlets_datatype_string_lalign_n()
+{
+    local n="$1"
+    local pad="$2"
+    shift 2
+    local str="$*"
+    local len=${#str}
+
+    local q="$((len/n))"
+    local r="$((len%n))"
+
+    [[ $r -eq 0 ]] || r=n
+
+    len="$((n*q+r))"
+
+    printf "%0${len}s" "$str" | tr " " "$pad"
+}
+
+
+#@method
+function bashlets_datatype_string_generate_random()
+{
+    local size="${1:-16}"
+
+    $BASHLETS_NAMESPACE random get_stream "$size" [[:print:]]
+}
+
+#@method
+function bashlets_datatype_string_punch()
+{
+    ########################################################################
+    #
+    # Code borrowed from:
+    #
+    # punch - Convert text to punch cards
+    # cf. https://github.com/ldante86/punch/blob/master/punch.sh
+    #
+    # Copyright (C) 2015 Luciano D. Cecere <ldante86@aol.com>
+    #
+    # This program is free software: you can redistribute it and/or modify
+    # it under the terms of the GNU General Public License as published by
+    # the Free Software Foundation, either version 2 of the License, or
+    # (at your option) any later version.
+    #
+    # This program is distributed in the hope that it will be useful,
+    # but WITHOUT ANY WARRANTY; without even the implied warranty of
+    # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    # GNU General Public License for more details.
+    #
+    # You should have received a copy of the GNU General Public License
+    # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    #
+    ########################################################################
+
+    declare -u str="$@"
+
+    local COLUMNS=48 i row p
+
+
+    declare -a ROWCHARS=(" " " " " " 1 2 3 4 5 6 7 8 9)
+
+    declare -a HOLES=(
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 518
+        522 66 1090 546 2048 1030 2066 1042 1058 2560 578 1024 2114 768 512 256
+        128 64 32 16 8 4 2 1 18 1034 2058 530 10 6 34 2304 2176 2112 2080 2064
+        2056 2052 2050 2049 1280 1152 1088 1056 1040 1032 1028 1026 1025 640
+        576 544 528 520 516 514 513 130 2082 1536 642 783 2304 2176 2112 2080
+        2064 2056 2052 2050 2049 1280 1152 1088 1056 1040 1032 1028 1026 1025
+        640 576 544 528 520 516 514 513 130 2054 2082 1536 642 0 0 0 0 0 0 0 0
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 518 522 66 1090 546
+        2048 1030 2066 1042 1058 2560 578 1024 2114 768 512 256 128 64 32 16 8
+        4 2 1 18 1034 2058 530 10 6 34 2304 2176 2112 2080 2064 2056 2052 2050
+        2049 1280 1152 1088 1056 1040 1032 1028 1026 1025 640 576 544 528 520
+        516 514 513 130 2054 2082 1536 642 783 2304 2176 2112 2080 2064 2056
+        2052 2050 2049 1280 1152 1088 1056 1040 1032 1028 1026 1025 640 576 544
+        528 520 516 514 513 130 2054 2082 1536 642 0
+    )
+
+    if [ ${#str} -gt $COLUMNS ]; then
+        str=${str:0:COLUMNS}
+    fi
+
+    echo -n " "
+    for ((i=0; i<=$COLUMNS; i++))
+    do
+        echo -n "_"
+    done
+    echo
+
+    echo -n "/"
+    for ((i=0; i<${#str}; i++))
+    do
+        p=$($BASHLETS_NAMESPACE char ascii2decimal ${str:i:1})
+        if [ ${HOLES[p]} ]; then
+            echo -n "${str:i:1}"
+        else
+            echo -n " "
+        fi
+    done
+
+    while [ $((i++)) -lt $COLUMNS ]
+    do
+        echo -n " "
+    done
+    echo "|"
+
+    for ((row=0; row<=11; row++))
+    do
+        echo -n "|"
+        for ((i=0; i<${#str}; i++))
+        do
+            p=$($BASHLETS_NAMESPACE char ascii2decimal ${str:i:1})
+            if [ $($BASHLETS_NAMESPACE integer select_bit ${HOLES[p]} $((11 - row)) ) -ne 0 ]; then
+                echo -n "]"
+            else
+                echo -n "${ROWCHARS[row]}"
+            fi
+        done
+        while [ $((i++)) -lt $COLUMNS ]
+        do
+            echo -n "${ROWCHARS[row]}"
+        done
+        echo "|"
+    done
+
+    for ((i=0; i<=$COLUMNS; i++))
+    do
+        echo -n "_"
+    done
+    echo "|"
+}
+
+#@method
+function bashlets_datatype_string_to_piglatin()
+{
+    ########################################################################
+    #
+    # Code borrowed from:
+    #
+    # igpay - convert standard input to standard pig latin :@)
+    # cf. https://gist.github.com/ldante86/79de4e724693b60eed5379291e975761
+    #
+    # Copyright (C) 2014 Luciano D. Cecere <ldante86@aol.com>
+    #
+    # This program is free software: you can redistribute it and/or modify
+    # it under the terms of the GNU General Public License as published by
+    # the Free Software Foundation, either version 2 of the License, or
+    # (at your option) any later version.
+    #
+    # This program is distributed in the hope that it will be useful,
+    # but WITHOUT ANY WARRANTY; without even the implied warranty of
+    # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    # GNU General Public License for more details.
+    #
+    # You should have received a copy of the GNU General Public License
+    # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    #
+    ########################################################################
+
+    [[ -n $1 ]] || return
+
+    local prefix=${1%%[aeiouy]*}
+    local suffix=$(sed 's/^[bcdfghjklmnpqrstvxwz]*//' <<< $1)
+
+    case ${1:0:2} in
+      qu)  printf "${1:2}${1:0:2}ay "
+           return ;;
+    esac
+    case ${1:0:1} in
+      [aeiou])  printf "${suffix}${prefix}way " ;;
+      [0-9]  )  printf "$1 " ;;
+      *      )  printf "${suffix}${prefix}ay " ;;
+    esac
+
+    printf "\n"
+}
+
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh

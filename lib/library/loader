@@ -1,0 +1,217 @@
+#!/bin/bash
+
+
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2014-5 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+
+BASHLETS_LIB_LIBRARY_LOADER_STYLE=new   # old/new
+BASHLETS_LIB_LIBRARY_ALLOW_NO_PREFIX=1  # if 1, methods can be called without prefix
+BASHLETS_NAMESPACE=bash$$
+BASHLETS_NAMESPACE_QUOTED=bash\$\$
+
+function __bashlets_library_loader_bashlet_to_name()
+{
+    basename "$1"
+}
+
+function __bashlets_library_loader_bashlet_to_path()
+{
+    dirname "$1"
+}
+
+function __bashlets_library_loader_bashlet_to_file()
+{
+    local bashlet="$1"
+
+    echo "$BASHLETS_BASE/${BASHLETS_REV:-DEFAULT}/lib/$bashlet"
+}
+
+function __bashlets_library_loader_list_all_methods()
+{
+    declare -F | sed 's/declare -f //' | grep -v "^$FUNCNAME$"
+}
+
+#@method
+function bashlets_library_loader_list_methods_old()
+{
+    local file="$(__bashlets_library_loader_bashlet_to_file "$1")"
+
+    (
+        for method in $(__bashlets_library_loader_list_all_methods)
+        do
+            unset -f -- "$method"
+        done
+
+        source "$file"
+
+        __bashlets_library_loader_list_all_methods
+    )
+}
+
+#@method
+function bashlets_library_loader_list_methods_new()
+{
+    local file="$(__bashlets_library_loader_bashlet_to_file "$1")"
+
+    grep -A 1 '^#@method' < "$file" | sed -n 's/function \(.*\)()/\1/p'
+}
+
+#@method
+function bashlets_library_loader_search_methods()
+{
+    local bashlet_name="$1"
+    local method_fullname method_name pattern bashlet_path
+
+    for method_fullname in $(__bashlets_library_loader_list_all_methods)
+    do
+        pattern="^bashlets_([^_]+)_${bashlet_name}_(.+)"
+
+        if [[ $method_fullname =~ $pattern ]]
+        then
+            bashlet_path=${BASH_REMATCH[1]}
+            method_name=${BASH_REMATCH[2]}
+
+            echo "$bashlet_path:$bashlet_name:$method_name"
+        fi
+    done
+}
+
+#@method
+function bashlets_library_loader_import()
+{
+    local bashlet="$1"
+    local bashlet_name bashlet_path file_name
+    local bashlets_library_loader_list_methods
+    local loader_def
+    local container_name container_def container_def_0 method_prefix
+    local method method_full
+
+    bashlet_name="$(__bashlets_library_loader_bashlet_to_name "$bashlet")"
+    bashlet_path="$(__bashlets_library_loader_bashlet_to_path "$bashlet")"
+       file_name="$(__bashlets_library_loader_bashlet_to_file "$bashlet")"
+
+    source "$file_name" || return 1
+
+    container_name="$bashlet_name"
+    method_prefix="bashlets_${bashlet_path}_${bashlet_name}"
+
+    # loader
+
+    loader_def="function $BASHLETS_NAMESPACE()
+    {
+        local container=\"\$1\" ; shift
+
+        bashlets_\$container \"\$@\"
+    }"
+
+    eval "$loader_def"
+
+    # container header
+
+    container_def="function bashlets_${container_name}()
+    {
+        local method=\"\$1\" ; shift
+
+        case \"\$method\" in
+    "
+
+    # inherited methods (to be added afterwards)
+
+    for method_full in $(
+        bashlets_library_loader_search_methods "$bashlet_name"
+    )
+    do
+        local v bashlet_name_0 bashlet_path_0 method_prefix_0
+
+        IFS=: read -r bashlet_path_0 bashlet_name_0 method <<<"$method_full"
+
+        method_prefix_0="bashlets_${bashlet_path_0}_${bashlet_name_0}"
+
+        container_def_0="$container_def_0
+            $method)
+                ${method_prefix_0}_\$method \"\$@\"
+                ;;
+        "
+    done
+
+    # new methods
+
+    if [[ $BASHLETS_LIB_LIBRARY_LOADER_STYLE == new ]]; then
+        bashlets_library_loader_list_methods=bashlets_library_loader_list_methods_new
+    elif [[ $BASHLETS_LIB_LIBRARY_LOADER_STYLE == old ]]; then
+        bashlets_library_loader_list_methods=bashlets_library_loader_list_methods_old
+    else
+        return 1
+    fi
+
+    for method in $(
+        $bashlets_library_loader_list_methods "$bashlet" |  \
+            sed "s/${method_prefix}_//"
+    )
+    do
+        container_def="$container_def
+            $method)
+                ${method_prefix}_\$method \"\$@\"
+                ;;
+        "
+    done
+
+    # add inherited methods
+
+    container_def="$container_def
+    $container_def_0
+    "
+
+    # container footer
+
+    container_def="$container_def
+            *)
+                echo \"Method not found!\"
+                return 1
+                ;;
+        esac
+    }
+    "
+
+    eval "$container_def"
+}
+
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh

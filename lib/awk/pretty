@@ -1,0 +1,85 @@
+#!/bin/bash
+
+
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# Bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2014-6 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+# simple ``pretty-printer'' for polynomials
+
+#@method
+function bashlets_awk_pretty_polynomial()
+{
+    echo $@ | awk -e '
+        #
+        # construct a string of n consecutive spaces
+        #
+        function sp(n, i, str) {
+            for (i = 0; i < n; i++) {
+                str = str " "
+            }
+            
+            return str
+        }
+
+        #
+        # pretty-printer
+        #
+        function poly_print(poly, n, line1, line2, i) {
+            for (i = 1; i <= n; i++) {
+                line2 = line2 sp(length(line1) - length(line2))
+                if (i > 1) { line2 = line2 " + " }
+                line2 = line2 poly[i]
+                if (i < n) { line2 = line2 "x" }
+                
+                line1 = line1 sp(length(line2) - length(line1))
+                if (i <= n-2) { line1 = line1 n-i }
+            }
+            
+            return line1 "\n" line2
+        }
+
+        {
+            split($0, poly)
+	        split(poly_print(poly, NF), lines, "\n")
+            print lines[1] "\n" lines[2]
+        }
+    '
+}
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh

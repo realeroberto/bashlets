@@ -1,0 +1,139 @@
+#!/bin/bash
+
+
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# Bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2014-6 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+
+BASHLETS_API_REDDIT_URL="https://www.reddit.com/"
+
+function __bashlets_api_reddit_get_karma()
+{
+    ########################################################################
+    #
+    # Code borrowed from: redditcli.sh by Luciano D. Cerere
+    #
+    # cf. https://gist.github.com/ldante86/83b10a370526acc593bffcd919f03ba1
+    #
+    ########################################################################
+
+    # TODO: remove lynx dependency
+
+    [[ -n $1 ]] || return  # no username entered
+
+	local reddit_user="user/$1"
+	local page=$(lynx -source "$BASHLETS_API_REDDIT_URL${reddit_user}/")
+
+	echo "$page" | grep "page not found" >/dev/null && {
+		# TODO echo "/u/${reddit_user} not found"
+		return 1
+	}
+
+	echo "$page"
+}
+
+#@method
+function bashlets_api_reddit_get_post_karma()
+{
+    ########################################################################
+    #
+    # Code borrowed from: redditcli.sh by Luciano D. Cerere
+    #
+    # cf. https://gist.github.com/ldante86/83b10a370526acc593bffcd919f03ba1
+    #
+    ########################################################################
+
+    [[ -n $1 ]] || return  # no username entered
+
+    local page="$(__bashlets_api_reddit_get_karma "$1")"
+
+    [[ -n $page ]] || return 1
+
+	echo "$page"| grep -io "<span class=\"karma\">*[0-9,]*" | sed 's/.*>//'
+}
+
+#@method
+function bashlets_api_reddit_get_comment_karma()
+{
+    ########################################################################
+    #
+    # Code borrowed from: redditcli.sh by Luciano D. Cerere
+    #
+    # cf. https://gist.github.com/ldante86/83b10a370526acc593bffcd919f03ba1
+    #
+    ########################################################################
+
+    [[ -n $1 ]] || return  # no username entered
+
+    local page="$(__bashlets_api_reddit_get_karma "$1")"
+
+    [[ -n $page ]] || return 1
+
+	echo "$page"| grep -io "<span class=\"karma comment-karma\">*[0-9,]*" | sed 's/.*>//'
+}
+
+#@method
+function bashlets_api_reddit_show_top_post()
+{
+    ########################################################################
+    #
+    # Code borrowed from: redditcli.sh by Luciano D. Cerere
+    #
+    # cf. https://gist.github.com/ldante86/83b10a370526acc593bffcd919f03ba1
+    #
+    ########################################################################
+
+    # TODO: remove lynx dependency
+
+    local subreddit="${1:-bash}"
+    local chunk top_post
+
+	chunk=$(
+        lynx -source "${BASHLETS_API_REDDIT_URL}r/${subreddit}/"  \
+            | grep -Po 'data-rank=\"1\" \K.*(?= data-rank=\"2\")'
+    )
+
+	top_post=$(echo "$chunk" | grep -o "${BASHLETS_API_REDDIT_URL}r/${subreddit}/comments/\S*")
+	top_post="${top_post%%\"}"
+
+    [[ -n $top_post ]] && echo "$top_post"
+}
+
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh

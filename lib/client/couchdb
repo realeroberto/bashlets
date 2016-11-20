@@ -1,0 +1,351 @@
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# Bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2014-6 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+# NOTE: requires curl and python
+
+source bashlet datatype/uuid
+source bashlet marshal/uneval
+
+
+#@method
+function bashlets_client_couchdb_get_handler()
+{
+    $BASHLETS_NAMESPACE uneval create
+}
+
+#@method
+function bashlets_client_couchdb_release_handler()
+{
+    :
+}
+
+#@method
+function bashlets_client_couchdb_get_param()
+{
+    local handler="$1"
+    local key="$2"
+
+    [[ -n $handler && -n $key ]] || return
+
+    echo "$($BASHLETS_NAMESPACE uneval get_by_key "$handler" "$key")"
+}
+
+#@method
+function bashlets_client_couchdb_set_param()
+{
+    local handler="$1"
+    local key="$2"
+    local value="$3"
+
+    [[ -n $handler && -n $key ]] || return
+
+    $BASHLETS_NAMESPACE uneval add_pair "$handler" "$key" "$value"
+}
+
+#@method
+function bashlets_client_couchdb_get_schema()
+{
+    local handler="$1"
+    bashlets_client_couchdb_get_param "$handler" schema
+}
+
+#@method
+function bashlets_client_couchdb_set_schema()
+{
+    local handler="$1"
+    local schema="$2"
+    bashlets_client_couchdb_set_param "$handler" "schema" "$schema"
+}
+
+#@method
+function bashlets_client_couchdb_set_schema_default()
+{
+    local handler="$1"
+    bashlets_client_couchdb_set_schema "$handler" "http"
+}
+
+#@method
+function bashlets_client_couchdb_get_host()
+{
+    local handler="$1"
+    bashlets_client_couchdb_get_param "$handler" host
+}
+
+#@method
+function bashlets_client_couchdb_set_host()
+{
+    local handler="$1"
+    local host="$2"
+    bashlets_client_couchdb_set_param "$handler" "host" "$host"
+}
+
+#@method
+function bashlets_client_couchdb_set_host_default()
+{
+    local handler="$1"
+    bashlets_client_couchdb_set_host "$handler" "localhost"
+}
+
+#@method
+function bashlets_client_couchdb_get_port()
+{
+    local handler="$1"
+    bashlets_client_couchdb_get_param "$handler" port
+}
+
+#@method
+function bashlets_client_couchdb_set_port()
+{
+    local handler="$1"
+    local port="$2"
+    bashlets_client_couchdb_set_param "$handler" "port" "$port"
+}
+
+#@method
+function bashlets_client_couchdb_set_port_default()
+{
+    local handler="$1"
+    bashlets_client_couchdb_set_port "$handler" 5984
+}
+
+#@method
+function bashlets_client_couchdb_get_db()
+{
+    local handler="$1"
+    bashlets_client_couchdb_get_param "$handler" db
+}
+
+#@method
+function bashlets_client_couchdb_set_db()
+{
+    local handler="$1"
+    local db="$2"
+    bashlets_client_couchdb_set_param "$handler" "db" "$db"
+}
+
+#@method
+function bashlets_client_couchdb_set_db_default()
+{
+    local handler="$1"
+    bashlets_client_couchdb_set_db "$handler" "test"
+}
+
+#@method
+function bashlets_client_couchdb_get_content_type()
+{
+    local handler="$1"
+    bashlets_client_couchdb_get_param "$handler" content_type
+}
+
+#@method
+function bashlets_client_couchdb_set_content_type()
+{
+    local handler="$1"
+    local content_type="$2"
+    bashlets_client_couchdb_set_param "$handler" "content_type" "$content_type"
+}
+
+#@method
+function bashlets_client_couchdb_set_content_type_default()
+{
+    local handler="$1"
+    bashlets_client_couchdb_set_content_type "$handler" "text/plain"
+}
+
+#@method
+function bashlets_client_couchdb_set_params_default()
+{
+    local handler="$1"
+    handler=$(bashlets_client_couchdb_set_schema_default       "$handler")
+    handler=$(bashlets_client_couchdb_set_host_default         "$handler")
+    handler=$(bashlets_client_couchdb_set_port_default         "$handler")
+    handler=$(bashlets_client_couchdb_set_db_default           "$handler")
+    handler=$(bashlets_client_couchdb_set_content_type_default "$handler")
+    echo "$handler"
+}
+
+#@method
+function bashlets_client_couchdb_generate_session_id
+{
+    $BASHLETS_NAMESPACE uuid create
+}
+
+#@method
+function bashlets_client_couchdb_create_db()
+{
+    local handler="$1"
+    local schema host port db
+
+    schema="$(bashlets_client_couchdb_get_schema "$handler")"
+      host="$(bashlets_client_couchdb_get_host   "$handler")"
+      port="$(bashlets_client_couchdb_get_port   "$handler")"
+        db="$(bashlets_client_couchdb_get_db     "$handler")"
+
+    [[ -n $schema ]] || return 1
+    [[ -n $host   ]] || return 1
+    [[ -n $port   ]] || return 1
+    [[ -n $db     ]] || return 1
+
+    curl -s -o /dev/null -X PUT "$schema://$host:$port/$db"
+}
+
+#@method
+function bashlets_client_couchdb_create_session()
+{
+    local handler="$1"
+    local tag="$2"
+
+    local session_id="$(bashlets_client_couchdb_generate_session_id)"
+
+    local schema host port db retcode
+
+    schema="$(bashlets_client_couchdb_get_schema "$handler")"
+      host="$(bashlets_client_couchdb_get_host   "$handler")"
+      port="$(bashlets_client_couchdb_get_port   "$handler")"
+        db="$(bashlets_client_couchdb_get_db     "$handler")"
+
+    [[ -n $schema ]] || return 1
+    [[ -n $host   ]] || return 1
+    [[ -n $port   ]] || return 1
+    [[ -n $db     ]] || return 1
+    [[ -n $tag    ]] || return 1
+
+    curl -s -o /dev/null -X PUT                    \
+        "$schema://$host:$port/$db/$session_id"    \
+        -d "{\"Title\":\"$tag\"}"
+
+    retcode=$?
+
+    echo "$session_id"
+    return $retcode
+}
+
+#@method
+function bashlets_client_couchdb_get_revision()
+{
+    local handler="$1"
+    local session_id="$2"
+
+    local schema host port db revision
+
+    schema="$(bashlets_client_couchdb_get_schema "$handler")"
+      host="$(bashlets_client_couchdb_get_host   "$handler")"
+      port="$(bashlets_client_couchdb_get_port   "$handler")"
+        db="$(bashlets_client_couchdb_get_db     "$handler")"
+
+    [[ -n $session_id ]] || return 1
+    [[ -n $schema     ]] || return 1
+    [[ -n $host       ]] || return 1
+    [[ -n $port       ]] || return 1
+    [[ -n $db         ]] || return 1
+
+    revision="$(curl -s -X GET                     \
+        "$schema://$host:$port/$db/$session_id" |  \
+        python -c "import sys, json; print json.load(sys.stdin)['_rev']")"
+
+    echo "$revision"
+}
+
+#@method
+function bashlets_client_couchdb_add_attachment()
+{
+    local    handler="$1"
+    local session_id="$2"
+    local   revision="$3"
+    local   att_path="$4"
+
+    local schema host port db content_type att_name retcode
+
+    schema="$(bashlets_client_couchdb_get_schema "$handler")"
+      host="$(bashlets_client_couchdb_get_host   "$handler")"
+      port="$(bashlets_client_couchdb_get_port   "$handler")"
+        db="$(bashlets_client_couchdb_get_db     "$handler")"
+
+    content_type="$(bashlets_client_couchdb_get_content_type "$handler")"
+        att_name="$(basename "$att_path")"
+
+    [[ -n $session_id   ]] || return 1
+    [[ -n $schema       ]] || return 1
+    [[ -n $host         ]] || return 1
+    [[ -n $port         ]] || return 1
+    [[ -n $db           ]] || return 1
+    [[ -n $att_name     ]] || return 1
+    [[ -n $att_path     ]] || return 1
+    [[ -n $content_type ]] || return 1
+
+    curl -s -o /dev/null -X PUT                                          \
+        "$schema://$host:$port/$db/$session_id/$att_name?rev=$revision"  \
+        --data-binary "@$att_path" -H "Content-Type: $content_type"
+
+    retcode=$?
+
+    echo "$att_name"
+    return $retcode
+}
+
+#@method
+function bashlets_client_couchdb_get_attachment()
+{
+    local       handler="$1"
+    local    session_id="$2"
+    local      revision="$3"
+    local      att_name="$4"
+    local att_save_path="$5"
+
+    local schema host port db
+
+    schema="$(bashlets_client_couchdb_get_schema "$handler")"
+      host="$(bashlets_client_couchdb_get_host   "$handler")"
+      port="$(bashlets_client_couchdb_get_port   "$handler")"
+        db="$(bashlets_client_couchdb_get_db     "$handler")"
+
+    [[ -n $session_id    ]] || return 1
+    [[ -n $schema        ]] || return 1
+    [[ -n $host          ]] || return 1
+    [[ -n $port          ]] || return 1
+    [[ -n $db            ]] || return 1
+    [[ -n $att_name      ]] || return 1
+    [[ -n $att_save_path ]] || return 1
+
+    curl -s -o "$att_save_path" -X GET  \
+        "$schema://$host:$port/$db/$session_id/$att_name"
+}
+
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh

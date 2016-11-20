@@ -1,0 +1,134 @@
+#!/bin/bash
+
+
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# Bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2014-5 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+source bashlet datatype/number
+source bashlet math/float
+
+
+#@method
+function bashlets_math_integer_abs()
+{
+    local value="$1"
+    local opposite
+    $BASHLETS_NAMESPACE number validate_as_integer "$value" || return 1
+    opposite="$((-1*value))"
+    [[ $value -ge $opposite ]] && echo "$value" || echo "$opposite"
+}
+
+#@method
+function bashlets_math_integer_sign()
+{
+    local value="$1"
+    local opposite
+    $BASHLETS_NAMESPACE number validate_as_integer "$value" || return 1
+    [[ $value -eq 0 ]] && { echo 0 ; return ; }
+    opposite="$((-1*value))"
+    [[ $value -ge $opposite ]] && echo 1 || echo -1
+}
+
+#@method
+function bashlets_math_integer_is_prime()
+{
+    $BASHLETS_NAMESPACE number validate_as_integer "$1" || return 1
+
+    # cf. https://primes.utm.edu/notes/faq/negative_primes.html
+    local value=$(bashlets_math_integer_abs $1)
+
+    if (($value == 2))
+    then
+        return 0
+    elif (($value < 2)) || (($value % 2 == 0))
+    then
+        return 1
+    else
+        local i sqrt_value="$($BASHLETS_NAMESPACE float sqrt $value)"
+        for i in $(seq 3 2 "$sqrt_value")
+        do
+            if (($value % $i == 0))
+            then
+                return 1
+            fi
+        done
+        return 0
+    fi
+}
+
+#@method
+function bashlets_math_integer_is_perfect_square()
+{
+    local value=${1:-0}
+    local sqrt_value="$($BASHLETS_NAMESPACE float sqrt $value)" || return 1
+    sqrt_value="$($BASHLETS_NAMESPACE float to_int $sqrt_value)"
+
+    ((sqrt_value * sqrt_value == value))
+}
+
+#@method
+function bashlets_math_integer_get_unique_factors()
+{
+    local pass_0
+
+    $BASHLETS_NAMESPACE number validate_as_integer "$1" || return 1
+
+    declare -i n="$1"
+    declare -i sign=1
+
+    # is $n < 0?
+    test $n -lt 0 && {
+        sign=-1
+        n=$((-1*n))
+    }
+
+    # call factor(1)
+    pass_0="$(factor $n 2> /dev/null)" || return 1
+
+    # is $n == 0?
+    # then the call to factor(1) above just returned the string "0:"
+    test $n -eq 0 && pass_0="$pass_0 0"
+
+    echo "$pass_0" | cut -d: -f2 | (
+        test $sign -lt 0 && echo -1
+        cat
+    ) | xargs -n 1 echo | uniq -c
+}
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh

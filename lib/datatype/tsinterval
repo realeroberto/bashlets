@@ -1,0 +1,96 @@
+#!/bin/bash
+
+
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# Bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2014-5 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+#@method
+function bashlets_datatype_tsinterval_create()
+{
+    local string="$1"
+    local timezone="${2:-UTC}"
+    local t_0 t_1
+
+    (
+        export TZ="$timezone"
+
+        case "$string" in
+            previous-hour)
+                t_0=$(date -d"$(date -d'2 hours ago' +%H)" +%s)
+                t_1=$(date -d"$(date -d'1 hour ago' +%H)" +%s)
+                ;;
+            yesterday)
+                t_0=$(date -d'yesterday 00:00:00' +%s)
+                t_1=$(date -d'today 00:00:00' +%s)
+                ;;
+            previous-week)
+                t_0=$(date -d'monday-fortnight ago' +%s)
+                t_1=$(date -dlast-monday +%s)
+                ;;
+            previous-week0)
+                t_0=$(date -d'sunday-fortnight ago' +%s)
+                t_1=$(date -dlast-sunday +%s)
+                ;;
+            from-epoch)
+                t_0=0
+                t_1=$(date +%s)
+                ;;
+            *)
+                echo "Invalid interval specification $string!"
+                return 1
+                ;;
+        esac
+
+        echo $t_0 $t_1
+    )
+}
+
+#@method
+function bashlets_datatype_tsinterval_get_t0()
+{
+    echo "$@" | cut -d' ' -f1
+}
+
+#@method
+function bashlets_datatype_tsinterval_get_t1()
+{
+    echo "$@" | cut -d' ' -f2
+}
+
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh

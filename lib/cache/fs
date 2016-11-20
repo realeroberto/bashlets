@@ -1,0 +1,224 @@
+#!/bin/bash
+
+
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# Bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2014-5 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+source bashlet marshal/dump
+source bashlet os/tempdir
+source bashlet utils/object
+
+
+function __bashlets_cache_fs_cache_to_path()
+{
+    local cache="$1"
+
+    echo "$cache"
+}
+
+function __bashlets_cache_fs_get_key_path()
+{
+    local path="$1"
+    local key="$2"
+
+    echo "$path/$key"
+}
+
+#@method
+function bashlets_cache_fs_count_keys()
+{
+    local cache="$1"
+    local path="$(__bashlets_cache_fs_cache_to_path "$cache")"
+    local count
+
+    [[ -d "$path" ]] || return 1
+
+    count="$(find "$path" -type f | wc -l)" || return 1
+    [[ -z $count ]] && count=0
+
+    echo "$count"
+}
+
+#@method
+function bashlets_cache_fs_create()
+{
+    local __path="$($BASHLETS_NAMESPACE tempdir create)" || return 1
+    local path="$(__bashlets_cache_fs_cache_to_path "$__path")"
+
+    echo "$path"
+}
+
+#@method
+function bashlets_cache_fs_destroy()
+{
+    local cache="$1"
+    local path="$(__bashlets_cache_fs_cache_to_path "$cache")"
+
+    [[ -d "$path" ]] || return 1
+
+    rm -fr "$path"
+}
+
+#@method
+function bashlets_cache_fs_exists()
+{
+    local cache="$1"
+    local key="$2"
+    local path="$(__bashlets_cache_fs_cache_to_path "$cache")"
+    local key_path="$(__bashlets_cache_fs_get_key_path "$path" "$key")"
+
+    [[ -d "$path" ]] || return 1
+
+    [[ -e "$key_path" ]]
+}
+
+#@method
+function bashlets_cache_fs_list_keys()
+{
+    local cache="$1"
+    local path="$(__bashlets_cache_fs_cache_to_path "$cache")"
+
+    [[ -d "$path" ]] || return 1
+
+    find "$path" -type f -printf "%f\n"
+}
+
+#@method
+function bashlets_cache_fs_get()
+{
+    local cache="$1"
+    local key="$2"
+    local path="$(__bashlets_cache_fs_cache_to_path "$cache")"
+    local key_path="$(__bashlets_cache_fs_get_key_path "$path" "$key")"
+
+    [[ -d "$path" ]]     || return 1
+    [[ -e "$key_path" ]] || return 2
+
+    [[ -d "$key_path" ]] && {
+        # array
+        declare -A array=()
+        for item in $key_path/*
+        do
+            array[$(basename $item)]="$(cat $item)"
+        done
+        # dump output
+        $BASHLETS_NAMESPACE dump rename  \
+            $(basename $key_path) "$(declare -p array)"
+    } || {
+        # scalar
+        echo "$(cat "$key_path")"
+    }
+}
+
+#@method
+function bashlets_cache_fs_get_type()
+{
+    local cache="$1"
+    local key="$2"
+    local path="$(__bashlets_cache_fs_cache_to_path "$cache")"
+    local key_path="$(__bashlets_cache_fs_get_key_path "$path" "$key")"
+
+    [[ -d "$path" ]]     || return 1
+    [[ -e "$key_path" ]] || return 2
+
+    [[ -d "$key_path" ]] && echo array || echo scalar
+}
+
+#@method
+function bashlets_cache_fs_set()
+{
+    local cache="$1"
+    local key="$2"
+    shift 2
+    local value="$@"
+    local path="$(__bashlets_cache_fs_cache_to_path "$cache")"
+    local key_path="$(__bashlets_cache_fs_get_key_path "$path" "$key")"
+
+    [[ -d "$path" ]] || return 1
+
+    echo "$value" > "$key_path"
+}
+
+#@method
+function bashlets_cache_fs_set_array()
+{
+    # TODO: associative arrays
+
+    local cache="$1"
+    local key="$2"
+    local path="$(__bashlets_cache_fs_cache_to_path "$cache")"
+    local key_path="$(__bashlets_cache_fs_get_key_path "$path" "$key")"
+
+    # try not to mess with the global namespace here
+    local array_size array_name=__array__${RANDOM}__
+
+    $BASHLETS_NAMESPACE object is_array $key || return 1
+
+    [[ -d "$path" ]] || return 1
+
+    # create container...
+    rm -fr "$key_path" && mkdir "$key_path" 
+
+    local count=0
+
+    key=$key[@]                     # no quotes here...
+    for item in "${!key}"           # ... but here the quotes are pivotal!
+    do  
+        echo $item > "$key_path/$count"
+        ((count++))
+    done
+
+    eval unset $array_name
+}
+
+#@method
+function bashlets_cache_fs_unset()
+{
+    local cache="$1"
+    local key="$2"
+    local path="$(__bashlets_cache_fs_cache_to_path "$cache")"
+    local key_path="$(__bashlets_cache_fs_get_key_path "$path" "$key")"
+
+    [[ -d "$path" ]]     || return 1
+    [[ -e "$key_path" ]] || return
+
+    rm -f "$key_path"
+}
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh
