@@ -52,6 +52,16 @@ function bashlets_api_oeis_validate_sequence_id()
 }
 
 #@method
+function bashlets_api_oeis_internal_get_name()
+{
+    while read line
+    do
+        [[ $line =~ ^%N[[:space:]]A[0-9]{6}[[:space:]](.*) ]]  \
+            && echo ${BASH_REMATCH[1]} 
+    done
+}
+
+#@method
 function bashlets_api_oeis_get_sequence_by_id()
 {
     declare -u sequence_id="${1:-A000040}"  # the prime numbers
@@ -61,6 +71,20 @@ function bashlets_api_oeis_get_sequence_by_id()
 
     query="search?q=id:$sequence_id&fmt=$BASHLETS_API_OEIS_PREFERRED_FORMAT"
     $BASHLETS_NAMESPACE https get "$BASHLETS_API_OEIS_URL/$query"
+}
+
+#@method
+function bashlets_api_oeis_describe_sequence_by_id()
+{
+    declare -u sequence_id="${1:-A000040}"  # the prime numbers
+
+    (
+        # we need to use the internal format
+        BASHLETS_API_OEIS_PREFERRED_FORMAT=text
+
+        bashlets_api_oeis_get_sequence_by_id "$sequence_id"  \
+            | bashlets_api_oeis_internal_get_name
+    )
 }
 
 #@method
@@ -76,6 +100,20 @@ function bashlets_api_oeis_get_sequences_by_points()
     $BASHLETS_NAMESPACE https get "$BASHLETS_API_OEIS_URL/$query"
 
     unset join_by
+}
+
+#@method
+function bashlets_api_oeis_describe_sequences_by_points()
+{
+    declare -u sequence_id="${1:-A000040}"  # the prime numbers
+
+    (
+        # we need to use the internal format
+        BASHLETS_API_OEIS_PREFERRED_FORMAT=text
+
+        bashlets_api_oeis_get_sequences_by_points "$@"  \
+            | bashlets_api_oeis_internal_get_name
+    )
 }
 
 # grabs the images used to graph the data points
