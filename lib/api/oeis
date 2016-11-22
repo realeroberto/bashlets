@@ -34,6 +34,69 @@
 ################################################################################
 
 
+# cf. http://stackoverflow.com/questions/5991756/
+# TODO parse internal output format!
+
+
+source bashlet client/https
+
+BASHLETS_API_OEIS_URL="https://oeis.org/"
+BASHLETS_API_OEIS_PREFERRED_FORMAT=text  # text/json
+
+
+#@method
+function bashlets_api_oeis_validate_sequence_id()
+{
+    declare -u sequence_id="$1"
+    [[ $sequence_id =~ ^A[0-9]{6}$ ]]
+}
+
+#@method
+function bashlets_api_oeis_get_sequence_by_id()
+{
+    declare -u sequence_id="${1:-A000040}"  # the prime numbers
+    local query
+
+    bashlets_api_oeis_validate_sequence_id "$sequence_id"
+
+    query="search?q=id:$sequence_id&fmt=$BASHLETS_API_OEIS_PREFERRED_FORMAT"
+    $BASHLETS_NAMESPACE https get "$BASHLETS_API_OEIS_URL/$query"
+}
+
+#@method
+function bashlets_api_oeis_get_sequence_by_points()
+{
+    local points="$@"
+    local query
+
+    # cf. http://stackoverflow.com/questions/1527049/
+    function join_by() { local IFS="$1"; shift; echo "$*"; }
+
+    query="search?q=$(join_by , $@)&fmt=$BASHLETS_API_OEIS_PREFERRED_FORMAT"
+    $BASHLETS_NAMESPACE https get "$BASHLETS_API_OEIS_URL/$query"
+
+    unset join_by
+}
+
+# grabs an image used to graph the data points
+
+#@method
+function bashlets_api_oeis_get_graph()
+{
+    declare -u sequence_id="${1:-A000040}"  # the prime numbers
+    local query
+
+    bashlets_api_oeis_validate_sequence_id "$sequence_id"
+
+    query="$sequence_id/graph?png=1"
+    $BASHLETS_NAMESPACE https get "$BASHLETS_API_OEIS_URL/$query"
+}
+
+#@method
+function bashlets_api_oeis_get_recent()
+{
+    $BASHLETS_NAMESPACE https get "$BASHLETS_API_OEIS_URL/recent.txt"
+}
 
 # Local variables:
 # mode: shell-script
