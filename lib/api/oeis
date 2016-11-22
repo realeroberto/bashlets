@@ -64,7 +64,7 @@ function bashlets_api_oeis_get_sequence_by_id()
 }
 
 #@method
-function bashlets_api_oeis_get_sequence_by_points()
+function bashlets_api_oeis_get_sequences_by_points()
 {
     local points="$@"
     local query
@@ -78,7 +78,7 @@ function bashlets_api_oeis_get_sequence_by_points()
     unset join_by
 }
 
-# grabs an image used to graph the data points
+# grabs the images used to graph the data points
 
 #@method
 function bashlets_api_oeis_get_graph()
