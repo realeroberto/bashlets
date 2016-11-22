@@ -154,6 +154,18 @@ That's all!
 	> quit
 	$
 
+### API: describing a sequence of integers
+
+	$ source bashlet api/oeis
+
+	$ bash$$ oeis describe_sequences_by_points 1 1 2 3 5
+	Fibonacci numbers: F(n) = F(n-1) + F(n-2) with F(0) = 0 and F(1) = 1.
+	a(n) = number of partitions of n (the partition numbers).
+	Triangle read by rows in which row n lists A000041(n-1) 1's followed by the list of juxtaposed lexicographically ordered partitions of n that do not contain 1 as a part.
+	Floor(3^n/2^n).
+	List of all finite permutations in reversed colexicographic ordering.
+	...
+
 
 ## Design Notes
 
