@@ -190,12 +190,15 @@ TODO
 - [The Bash Hackers Wiki](http://wiki.bash-hackers.org/)
 - [Bash Design Patterns](http://stackoverflow.com/questions/78497/design-patterns-or-best-practices-for-shell-scripts)
 - [Bash Pitfalls](http://mywiki.wooledge.org/BashPitfalls)
-- [Why is printf better than echo?](http://unix.stackexchange.com/questions/65803/why-is-printf-better-than-echo)
-- [How to check if a variable is set in Bash?](http://stackoverflow.com/questions/3601515/how-to-check-if-a-variable-is-set-in-bash)
 
 ### Bash Criticism
 
 - [Bash Weaknesses](http://mywiki.wooledge.org/BashWeaknesses)
+
+### Special Topics
+
+- [Why is printf better than echo?](http://unix.stackexchange.com/questions/65803/why-is-printf-better-than-echo)
+- [How to check if a variable is set in Bash?](http://stackoverflow.com/questions/3601515/how-to-check-if-a-variable-is-set-in-bash)
 
 ### Collections of scripts
 
