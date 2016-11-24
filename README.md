@@ -199,6 +199,8 @@ TODO
 
 - [Why is printf better than echo?](http://unix.stackexchange.com/questions/65803/why-is-printf-better-than-echo)
 - [How to check if a variable is set in Bash?](http://stackoverflow.com/questions/3601515/how-to-check-if-a-variable-is-set-in-bash)
+- [Temporary `IFS`](http://stackoverflow.com/questions/19190967/shell-temp-ifs-as-newline-only-why-doesnt-this-work-ifs-echo-e-n)
+- [`readarray` (aka `mapfile`) issue](http://unix.stackexchange.com/questions/136206/readarray-or-pipe-issue)
 
 ### Collections of scripts
 
