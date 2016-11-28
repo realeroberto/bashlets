@@ -1,0 +1,1774 @@
+#!/bin/bash
+
+################################################################################
+#
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#
+# Bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2014-5 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+_bashlets_lcal_init()
+{
+# SCRIPT: lcal
+# AUTHOR: Luciano D. Cecere
+# DATE: 10/17/2016-03:09:16 PM
+########################################################################
+#
+# lcal - Display a calendar
+# Copyright (C) 2016 Luciano D. Cecere <ldante86@aol.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+########################################################################
+
+PROGRAM=lcal
+AUTHOR="Luciano D. Cecere"
+SCRIPT_YEAR="2014-2016"
+VERSION="0.0.1"
+EMAIL=ldante86@aol.com
+
+DAY_NAMES_LONG=(Sunday Monday Tuesday Wednesday Thursday Friday Saturday)
+#DAY_NAMES_SHORT=(Sun Mon Tue Wed Thu Fri Sat)
+NCAL_DAY_NAMES=(Su Mo Tu We Th Fr Sa)
+
+GREGORIAN_HEADER="Su Mo Tu We Th Fr Sa"
+JULIAN_HEADER="Sun Mon Tue Wed Thu Fri Sat"
+
+MONTH_NAMES_LONG=(UNUSED January February March April May June July
+	          August September October November December)
+#MONTH_NAMES_SHORT=(UNUSED Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec)
+
+#STTY=$(stty -g)
+
+MONTH=$(date +%_m)
+DAY=$(date +%_d)
+YEAR=$(date +%Y)
+
+BOLD=$(tput smso)
+UNBOLD=$(tput rmso)
+
+INFO="\
+$PROGRAM - $VERSION
+(c) $SCRIPT_YEAR $AUTHOR
+$EMAIL"
+
+USAGE="\
+$PROGRAM $VERSION - display a calendar
+
+Usage: $PROGRAM [option] [[[MM] DD] YYYY]
+
+Options:
+	-d  --day-of-week 		return day of week for date
+	-e  --easter			show the date for Easter (Western)
+	-h  --no-highlight		disable highlighting
+	-j  --julian			show Julian calendar
+	-m  --month			show calendar for month (and year)
+	-n  --next			show next month's calendar
+	-o  --orthodox			show the date for Easter (Orthodox)
+	-p  --previous			show last month's calendar
+	-w  --week-number		show week-number
+	-x  --date-diff			show time between two dates -
+					  MM DD YYYY MM DD YYYY or MM DD YYYY
+	-y  --year			show yearly calendar
+	-D  --discordian		show Discordian date
+	-G  --gregorian-to-jdn		convert Gregorian date to Julian day number
+	-H  --html			generate an html calendar for date
+	-J  --jdn-to-gregorian		convert Julian day number to Gregorian date
+	-N  --ncal			show calendar in ncal mode
+	-O  --orthodox-julian		show the date for Orthodox Easter as Julian date
+	-V  --version			show version information and exit
+	-W  --show-week-number		show week numbers next to calendar
+	-1  --one			show only the current month. Default
+	-3  --three			show last, current and next month
+	    --help			show this usage and exit
+
+Notes:
+A date string can be taken as an argument for most flags.
+Months can be numbers or jan, feb, etc.
+
+License: (c) $SCRIPT_YEAR ${AUTHOR} <${EMAIL}>
+"
+}
+
+
+### FUNCTIONS ##########################################################
+
+#%% usage: _bashlets_lcal_parse_commandline flags parameters
+#%  purpose: This function is the starting point of lcal. It processes
+#%  all values and flags passed on the command-line and forwards them
+#%  to the appropriate function calls.
+_bashlets_lcal_parse_commandline()
+{
+	unset REQUEST_NO_HIGHLIGHT
+	unset REQUEST_EASTER
+	unset REQUEST_DATE_LOOKUP
+	unset REQUEST_JULIAN
+	unset REQUEST_MONTH
+	unset REQUEST_NEXT_MONTH
+	unset REQUEST_ORTHODOX_EASTER
+	unset REQUEST_VERSION
+	unset REQUEST_PREVIOUS_MONTH
+	unset REQUEST_YEARLY
+	unset REQUEST_bashlets_lcal_week_number
+	unset REQUEST_bashlets_lcal_week_number_CALENDAR
+	unset REQUEST_bashlets_lcal_date_diff
+	unset REQUEST_DISCORDIAN
+	unset REQUEST_GREGORIAN_TO_JDN
+	unset REQUEST_HTML
+	unset REQUEST_JDN_TO_GREGORIAN
+	unset REQUEST_NCAL
+	unset REQUEST_THREE
+	unset REQUEST_HELP
+
+	while [ $# -ge 0 ]; do
+	        case $1 in
+			-h|--no-highlight)
+				shift
+				REQUEST_NO_HIGHLIGHT=1
+				;;
+			-d|--day-of-week)
+				shift
+				REQUEST_DATE_LOOKUP=1
+				break
+				;;
+			-e|--easter)
+				shift
+				REQUEST_EASTER=1
+				break
+				;;
+			-j|--julian)
+				shift
+				REQUEST_JULIAN=1
+				;;
+			-m|--month)
+				shift
+				REQUEST_MONTH=1
+				break
+				;;
+			-n|--next)
+				REQUEST_NEXT_MONTH=1
+				break
+				;;
+			-o|--orthodox)
+				shift
+				REQUEST_ORTHODOX_EASTER=1
+				break
+				;;
+			-p|--previous)
+				shift
+				REQUEST_PREVIOUS_MONTH=1
+				break
+				;;
+			-y|--year)
+				shift
+				REQUEST_YEARLY=1
+				break
+				;;
+			-w|--week-number)
+				shift
+				REQUEST_bashlets_lcal_week_number=1
+				break
+				;;
+			-x|--date-diff)
+				shift
+				REQUEST_bashlets_lcal_date_diff=1
+				break
+				;;
+			-D|--discordian)
+				shift
+				REQUEST_DISCORDIAN=1
+				break
+				;;
+			-G|--gregorian-to-jdn)
+				shift
+				REQUEST_GREGORIAN_TO_JDN=1
+				break
+				;;
+			-H|--html)
+				shift
+				REQUEST_HTML=1
+				break
+				;;
+			-J|--jdn-to-gregorian)
+				shift
+				REQUEST_JDN_TO_GREGORIAN=1
+				break
+				;;
+			-N|--ncal)
+				shift
+				REQUEST_NCAL=1
+				;;
+			-O|--orthodox-julian)
+				shift
+				REQUEST_ORTHODOX_EASTER=1
+				REQUEST_JULIAN=1
+				break
+				;;
+			-V|--version)
+				REQUEST_VERSION=1
+				break
+				;;
+			-W|--show-week-numbers)
+				shift
+				REQUEST_bashlets_lcal_week_number_CALENDAR=1
+				;;
+			--help)
+				REQUEST_HELP=1
+				break
+				;;
+			-3|--three)
+				REQUEST_THREE=1
+				break
+				;;
+			-1|--one)
+				shift $# # Shift out of all remaining parameters.
+				break
+				;;
+			-*)
+				echo "$PROGRAM: invalid flag. Use --help for information."
+				_bashlets_lcal_exit 1
+				;;
+			*)
+				# Date strings pass through.
+				break
+				;;
+	        esac
+	done
+
+	# --help
+	if [ $REQUEST_HELP ]; then
+		echo "$USAGE"
+		_bashlets_lcal_exit 0
+	fi
+
+	# -V --version
+	if [ $REQUEST_VERSION ]; then
+		echo "$INFO"
+		_bashlets_lcal_exit 0
+	fi
+
+	# -o --orthodox -O --orthodox-julian
+	if [ $REQUEST_ORTHODOX_EASTER ]; then
+		_bashlets_lcal_show_orthodox_easter ${1:-$YEAR} || _bashlets_lcal_exit 1
+		_bashlets_lcal_exit 0
+	fi
+
+	# -e --easter
+	if [ $REQUEST_EASTER ]; then
+		_bashlets_lcal_show_western_easter ${1:-$YEAR} || _bashlets_lcal_exit 1
+		_bashlets_lcal_exit 0
+	fi
+
+	# -m --month
+	if [ $REQUEST_MONTH ]; then
+		if [ $1 ]; then
+			_bashlets_lcal_parse_month $1
+			ex=$?
+			case $ex in
+				255)
+					echo "$PROGRAM: invalid date"
+					_bashlets_lcal_exit 1
+					;;
+			esac
+			MONTH=$ex
+			REQUEST_NO_HIGHLIGHT=1
+		fi
+		if [ $2 ]; then
+			_bashlets_lcal_is_year_valid $2 && {
+				YEAR="$2"
+				DAY=1
+			} || _bashlets_lcal_exit 1
+		fi
+		shift $#
+	fi
+
+	# -J --jdn-to-gregorian
+	if [ $REQUEST_JDN_TO_GREGORIAN ];then
+		if [ $1 ]; then
+			_bashlets_lcal_jdn_to_gregorian_date $1
+			_bashlets_lcal_exit 0
+		else
+			echo "$PROGRAM: missing Julian day number"
+			_bashlets_lcal_exit 1
+		fi
+	fi
+
+	# -3 --three
+	if [ $REQUEST_THREE ]; then
+		_bashlets_lcal_print_gregorian_three_months
+		_bashlets_lcal_exit 0
+	fi
+
+	# -n --next
+	if [ $REQUEST_NEXT_MONTH ]; then
+		_bashlets_lcal_shift_month_forward $MONTH $YEAR
+		_bashlets_lcal_print_gregorian_monthly $MONTH $DAY $YEAR
+		_bashlets_lcal_exit 0
+	fi
+
+	# -p --previous
+	if [ $REQUEST_PREVIOUS_MONTH ]; then
+		_bashlets_lcal_shift_month_backward $MONTH $YEAR
+		_bashlets_lcal_print_gregorian_monthly $MONTH $DAY $YEAR
+		_bashlets_lcal_exit 0
+	fi
+
+	# -x --date-diff
+	if [ $REQUEST_bashlets_lcal_date_diff ];then
+		_bashlets_lcal_date_diff "$@"
+		_bashlets_lcal_exit 1
+	fi
+
+	# -y --year
+	if [ $REQUEST_YEARLY ]; then
+		if [ $1 ]; then
+			_bashlets_lcal_is_year_valid $1 && {
+				_bashlets_lcal_print_gregorian_yearly $1
+				_bashlets_lcal_exit 0
+			} || _bashlets_lcal_exit 1
+		else
+			_bashlets_lcal_print_gregorian_yearly $YEAR
+			_bashlets_lcal_exit 0
+		fi
+	fi
+
+	# -d --day-of-week
+	if [ $REQUEST_DATE_LOOKUP ]; then
+		if [ $# -eq 0 ]; then
+			echo ${DAY_NAMES_LONG[$(_bashlets_lcal_day_of_week $MONTH $DAY $YEAR)]}
+			_bashlets_lcal_exit 0
+		elif [ $# -ne 3 ]; then
+			echo "$PROGRAM: --day-of-week usage: MM DD YYYY"
+			_bashlets_lcal_exit 1
+		fi
+		_bashlets_lcal_is_date_valid "$@" || _bashlets_lcal_exit 1
+		echo ${DAY_NAMES_LONG[$(_bashlets_lcal_day_of_week $ARGS)]}
+		_bashlets_lcal_exit 0
+	fi
+
+	# -w --week-number
+	if [ $REQUEST_bashlets_lcal_week_number ]; then
+		if [ $# -eq 0 ]; then
+			_bashlets_lcal_week_number 12 31 $((YEAR - 1))
+			total=$?
+			_bashlets_lcal_week_number $MONTH $DAY $YEAR
+			echo ${?}/$total
+			_bashlets_lcal_exit 0
+		elif [ $# -ne 3 ]; then
+			echo "$PROGRAM: --week-number usage: MM DD YYYY"
+			_bashlets_lcal_exit 1
+		else
+			_bashlets_lcal_is_date_valid "$@" || _bashlets_lcal_exit 1
+			_bashlets_lcal_week_number 12 31 $(($3 - 1))
+			total=$?
+			_bashlets_lcal_week_number $ARGS
+			echo ${?}/$total
+			_bashlets_lcal_exit 0
+		fi
+	fi
+
+	ARGS="$@"
+
+	_bashlets_lcal_is_date_valid $ARGS || _bashlets_lcal_exit 1
+
+	# -W --show-week-numbers
+	if [ $REQUEST_bashlets_lcal_week_number_CALENDAR ]; then
+		_bashlets_lcal_show_bashlets_lcal_week_numbers $ARGS
+		_bashlets_lcal_exit 0
+	fi
+
+	# YYYY
+	if [ $REQUEST_YEARLY ];then
+		_bashlets_lcal_print_gregorian_yearly $ARGS
+		_bashlets_lcal_exit 0
+	fi
+
+	# -H --html
+	if [ $REQUEST_HTML ]; then
+		_bashlets_lcal_show_html_calendar $ARGS
+		_bashlets_lcal_exit 0
+	fi
+
+	# -G --gregorian-to-jdn
+	if [ $REQUEST_GREGORIAN_TO_JDN ]; then
+		_bashlets_lcal_gregorian_date_to_jdn $ARGS
+		_bashlets_lcal_exit 0
+	fi
+
+	# -D --discordian
+	if [ $REQUEST_DISCORDIAN ]; then
+		_bashlets_lcal_show_discordian_date $ARGS
+		_bashlets_lcal_exit 0
+	fi
+
+	# --ncal -j
+	if [ $REQUEST_NCAL ] && [ $REQUEST_JULIAN ]; then
+		_bashlets_lcal_ncal_julian $ARGS
+		_bashlets_lcal_exit 0
+	fi
+
+	# -j --julian
+	if [ $REQUEST_JULIAN ]; then
+	        _bashlets_lcal__print_julian_monthly $ARGS
+		_bashlets_lcal_exit 0
+	fi
+
+	# -N --ncal
+	if [ $REQUEST_NCAL ]; then
+		_bashlets_lcal_print_ncal_gregorian $ARGS
+		_bashlets_lcal_exit 0
+	fi
+
+	# If this point is reached, the user probably wanted the
+	# default calendar. `-h` gets us here.
+	_bashlets_lcal_print_gregorian_monthly $ARGS
+	_bashlets_lcal_exit 0
+}
+
+#%% usage: _bashlets_lcal_is_year_valid year
+#%  purpose: return 1 if year is not in range.
+_bashlets_lcal_is_year_valid()
+{
+	case $1 in
+		0*|*[a-zA-Z]*)
+        	echo "$PROGRAM: year out of range [1753-9999]"
+                return 1
+	esac
+
+	if [ $1 -lt 1753 ] || [ $1 -gt 9999 ]; then
+        	echo "$PROGRAM: year out of range [1753-9999]"
+                return 1
+	fi
+}
+
+#%% usage: _bashlets_lcal_is_month_valid month
+#%  purpose: return 1 if month is not in range.
+_bashlets_lcal_is_month_valid()
+{
+	if [ $1 -gt 12 ] || [ $1 -lt 1 ]; then
+		 echo "$PROGRAM: month out of range [1-12]"
+		return 1
+	fi
+}
+
+#%% usage: _bashlets_lcal_is_day_valid month day year
+#%  purpose: return 1 if day is not in range of month
+#%  in the specified year.
+_bashlets_lcal_is_day_valid()
+{
+	local l=$(_bashlets_lcal_month_len $1 $3)
+	if [ $2 -gt $l ] || [ $2 -le 0 ]; then
+		echo "$PROGRAM: day out of range of month [1-${l}]"
+		return 1
+	fi
+}
+
+#%% usage: _bashlets_lcal_is_date_valid month day year
+#%  purpose: This function should be called before any other.
+#%  It checks if months, days or years are within valid limits -
+#%  i.e. 13 1 2000, etc. Return 1 if date is invalid. If no
+#%  date is passed to this function, skip it; the default date
+#%  is used.
+_bashlets_lcal_is_date_valid()
+{
+	local m d y ex
+
+	case $1 in
+		*[!0-9]*)
+			_bashlets_lcal_parse_month $1
+                        ex=$?
+                        case $ex in
+                        	255)
+                                	echo "$PROGRAM: invalid date"
+                                        _bashlets_lcal_exit 1
+                                        ;;
+				*)
+					shift
+					;;
+                                esac
+	esac
+
+	for i
+	do
+		case $i in
+			0*|*[!0-9]*)
+				echo "$PROGRAM: invalid date"
+				_bashlets_lcal_exit 1
+				;;
+		esac
+	done
+
+	set -- $ex $@
+	ARGS="$@"
+
+	if [ $# -eq 0 ]; then
+		ARGS="$MONTH $DAY $YEAR"
+		return 0
+	elif [ $# -eq 1 ]; then
+		m=$1
+		if [ ${#m} -eq 4 ]; then
+			_bashlets_lcal_is_year_valid $m && {
+				REQUEST_YEARLY=1
+				ARGS=$m
+				return 0
+			} || _bashlets_lcal_exit 1
+		fi
+		_bashlets_lcal_is_month_valid $m && {
+			ARGS="$m 0 $YEAR"
+			REQUEST_NO_HIGHLIGHT=1
+		} || _bashlets_lcal_exit 1
+	elif [ $# -eq 2 ]; then
+		m=$1 y=$2
+		_bashlets_lcal_is_month_valid $m || _bashlets_lcal_exit 1
+		_bashlets_lcal_is_year_valid $y && {
+			ARGS="$m 0 $y"
+			REQUEST_NO_HIGHLIGHT=1
+		} || _bashlets_lcal_exit 1
+	elif [ $# -ge 3 ]; then
+                m=$1 d=$2 y=$3
+		_bashlets_lcal_is_month_valid $m || _bashlets_lcal_exit 1
+		_bashlets_lcal_is_day_valid $m $d $y || _bashlets_lcal_exit 1
+		_bashlets_lcal_is_year_valid $y && AGRS="$m $d $y" || _bashlets_lcal_exit 1
+	fi
+}
+
+#%% usage: _bashlets_lcal_parse_month month
+#%  purpose: return month number [1-12] if month was
+#%  typed as a name. Stop reading after third character.
+#%  Return 255 if not found.
+_bashlets_lcal_parse_month()
+{
+        declare -l y=$1
+        case $y in
+                1|jan* )   return 1 ;;
+                2|feb* )   return 2 ;;
+                3|mar* )   return 3 ;;
+                4|apr* )   return 4 ;;
+                5|may* )   return 5 ;;
+                6|jun* )   return 6 ;;
+                7|jul* )   return 7 ;;
+                8|aug* )   return 8 ;;
+                9|sep* )   return 9 ;;
+                10|oct*)   return 10 ;;
+                11|nov*)   return 11 ;;
+                12|dec*)   return 12 ;;
+                      *)   return 255 ;;
+        esac
+}
+
+#%% usage: _bashlets_lcal_month_len month year
+#%  purpose: Print the length of the month. Calls
+#%  _isleap in the case of February.
+_bashlets_lcal_month_len()
+{
+	local m=$1 y=$2
+	case $m in
+		4|6|9|11)
+			echo 30
+			;;
+		1|3|5|7|8|10|12)
+			echo 31
+			;;
+		2)
+			_bashlets_lcal_is_leap $y
+			if [ $LEAP ] ; then
+				echo 29
+			else
+				echo 28
+			fi
+			;;
+	esac
+}
+
+#%% usage: _bashlets_lcal_is_leap year
+#%  purpose: Loads the LEAP variable if year is a leap year.
+_bashlets_lcal_is_leap()
+{
+	local y=$1
+	unset LEAP
+	if [ $((y % 4)) -eq 0 ] && 
+	   [ $((y % 100)) -ne 0 ] || 
+	   [ $((y % 400)) -eq 0 ]; then
+		LEAP=1
+	fi
+}
+
+#%% usage: _bashlets_lcal_day_of_week month day year
+#%  purpose: Print the day number for date. 0 = Sunday, etc.
+_bashlets_lcal_day_of_week()
+{
+        local m=$1 d=$2 y=$3
+
+        local mcodes=(UNUSED 6 2 2 5 0 3 5 1 4 6 2 4)
+        local w=$(( ((y / 4) - (y / 100)) + (y / 400) + d + y + ${mcodes[m]} ))
+
+        _bashlets_lcal_is_leap $y
+        if [ $LEAP ] && [ $m -lt 3 ]; then
+                ((w--))
+        fi
+
+        echo $((w % 7))
+}
+
+#%% usage: _bashlets_lcal_gregorian_array month year
+#%  purpose: Loads the CALENDAR_DATA array with correctly
+#%  spaced numbers for later printing.
+_bashlets_lcal_gregorian_array()
+{
+	CALENDAR_DATA=()
+	local m=$1 y=$2
+	first_day_number_of_month=$(_bashlets_lcal_day_of_week $m 1 $y)
+	local len=$(_bashlets_lcal_month_len $m $y)
+
+	for ((i=1 ; i<=first_day_number_of_month; i++)); do
+		if [ $first_day_number_of_month -eq 0 ]; then
+			break
+		fi
+		CALENDAR_DATA+=("   ")
+	done
+
+	for ((i=1; i<=$((42 - first_day_number_of_month)); i++)); do
+		if [ $i -lt 10 ]; then
+			CALENDAR_DATA+=(" $i ")
+		elif [ $i -gt $len ]; then
+			CALENDAR_DATA+=("   ")
+		else
+			CALENDAR_DATA+=("$i ")
+		fi
+	done
+}
+
+#%% usage: _bashlets_lcal_print_gregorian_monthly month day year
+#%  purpose: Print the Gregorian calendar for date.
+#%  To prevent highlighting, set the day value to 0.
+_bashlets_lcal_print_gregorian_monthly()
+{
+	local m=$1 d=$2 y=$3
+
+	_bashlets_lcal_gregorian_array $m $y
+
+	if [ $REQUEST_NO_HIGHLIGHT ]; then
+		d=0
+	fi
+
+	_bashlets_lcal_center 21 "${MONTH_NAMES_LONG[m]} $y"
+
+	echo "$GREGORIAN_HEADER"
+
+	for ((i=0; i<${#CALENDAR_DATA[@]}; i++)); do
+		if [ $((i % 7)) -eq 0 ] && [ $i -ne 0 ]; then
+			echo
+		fi
+		if [ $(( i - (first_day_number_of_month - 1) )) -eq $d ] &&
+		   [ $(( i - (first_day_number_of_month - 1) )) -lt 10 ] &&
+		   [ $d -gt 0 ]; then
+			echo -n "${BOLD} ${d}${UNBOLD} "
+		elif [ $(( i - (first_day_number_of_month - 1) )) -eq $d ] &&
+                   [ $(( i - (first_day_number_of_month - 1) )) -gt 9 ] &&
+                   [ $d -gt 0 ]; then
+			echo -n "${BOLD}${d}${UNBOLD} "
+		else
+			echo -n "${CALENDAR_DATA[i]}"
+		fi
+	done
+	echo
+}
+
+#%% usage: _bashlets_lcal_bashlets_lcal_bashlets_lcal__print_julian_monthly month day year
+#%  purpose: Loads the CALENDAR_DATA array with correctly
+#%  spaced numbers for later printing.
+_bashlets_lcal_bashlets_lcal_bashlets_lcal__print_julian_monthly()
+{
+        CALENDAR_DATA=()
+        local m=$1 d=$2 y=$3
+        first_day_number_of_month=$(_bashlets_lcal_day_of_week $m 1 $y)
+        local len=$(_bashlets_lcal_month_len $m $y)
+	local dnum=$(( $(_bashlets_lcal_day_in_year $m $d $y) - (d - 1) ))
+
+        for ((i=1 ; i<=first_day_number_of_month; i++)); do
+                if [ $first_day_number_of_month -eq 0 ]; then
+                        break
+                fi
+                CALENDAR_DATA+=("    ")
+        done
+
+	local x=0
+        for ((i=dnum; i<=$(( dnum + len - 1)); i++)); do
+		((x++))
+                if [ $i -lt 10 ]; then
+                        CALENDAR_DATA+=("  $i ")
+                elif [ $x -gt $len ]; then
+                        CALENDAR_DATA+=("    ")
+		elif [ $i -lt 100 ] && [ $i -gt 9 ]; then
+			CALENDAR_DATA+=(" $i ")
+                else
+                        CALENDAR_DATA+=("$i ")
+                fi
+        done
+}
+
+#%% usage: _bashlets_lcal__print_julian_monthly month day year
+#%  purpose: Print the Julian calendar for date.
+#%  To prevent highlighting, set the day value to 0.
+_bashlets_lcal__print_julian_monthly()
+{
+        local m=$1 d=$2 y=$3
+	local jd=$(_bashlets_lcal_day_in_year $m $d $y)
+
+        _bashlets_lcal_bashlets_lcal_bashlets_lcal__print_julian_monthly $m $d $y
+
+        if [ $REQUEST_NO_HIGHLIGHT ]; then
+                d=0
+        fi
+
+        _bashlets_lcal_center 27 "${MONTH_NAMES_LONG[m]} $y"
+
+        echo "$JULIAN_HEADER"
+
+        for ((i=0; i<${#CALENDAR_DATA[@]}; i++)); do
+                if [ $((i % 7)) -eq 0 ] && [ $i -ne 0 ]; then
+                        echo
+                fi
+                if [ $(( i - (first_day_number_of_month - 1) )) -eq $d ] &&
+                   [ $jd -lt 10 ] && [ $jd -gt 0 ]; then
+                        echo -n "${BOLD}  ${jd}${UNBOLD} "
+                elif [ $(( i - (first_day_number_of_month - 1) )) -eq $d ] &&
+                   [ $jd -gt 9 ] && [ $jd -lt 100 ] && [ $d -gt 0 ]; then
+                        echo -n "${BOLD} ${jd}${UNBOLD} "
+                elif [ $(( i - (first_day_number_of_month - 1) )) -eq $d ] &&
+                   [ $jd -gt 99 ] && [ $d -gt 0 ]; then
+                        echo -n "${BOLD}${jd}${UNBOLD} "
+                else
+                        echo -n "${CALENDAR_DATA[i]}"
+                fi
+        done
+        echo
+}
+
+#%% usage: _bashlets_lcal_center length "string"
+#%  purpose: Center a line of text in a specified width.
+#%  The string must be quoted.
+_bashlets_lcal_center()
+{
+	printf "%*s\n" $(( (${1} + ${#2}) / 2)) "$2"
+}
+
+#%% usage: _bashlets_lcal_ncenterr length "string"
+#%  purpose: Center a line of text in a specified width.
+#%  No new line is added at the end. The string must be quoted.
+_bashlets_lcal_ncenterr()
+{
+	printf "%*s" $(( (${1} + ${#2}) / 2)) "$2"
+}
+
+
+#%% usage: _bashlets_lcal_shift_month_forward month year
+#%  purpose: Moves the month number up by one, or back to one
+#%  if the current month is December.
+_bashlets_lcal_shift_month_forward()
+{
+	local m=$1 y=$2
+	if [ $m -eq 12 ]; then
+		MONTH=1
+		((YEAR++))
+	else
+		((MONTH++))
+	fi
+	DAY=0
+}
+
+#%% usage: _bashlets_lcal_shift_month_backward month year
+#%  purpose: Moves the month number back by one, or up to twelve
+#%  if the current month is January.
+_bashlets_lcal_shift_month_backward()
+{
+	local m=$1 y=$2
+	if [ $m -eq 1 ]; then
+		MONTH=12
+		((YEAR--))
+	else
+		((MONTH--))
+	fi
+	DAY=0
+}
+
+#%% usage: _bashlets_lcal_day_in_year day month year
+#%  purpose: Get the one-based number for date. Day 1 starts
+#%  on January 1, day 365 is December 31.
+_bashlets_lcal_day_in_year()
+{
+	local m=$1 d=$2 y=$3 i
+
+	for ((i=1; i<=((m-1)); i++)); do
+		((d+=$(_bashlets_lcal_month_len $i $y)))
+	done
+	echo $d
+}
+
+#%% usage: _bashlets_lcal_jdn_to_gregorian_date jdn
+#%  purpose: Convert a Julian day number into month, day and
+#%  year in Gregorian notation. gday, gmonth, gyear are loaded.
+_bashlets_lcal_jdn_to_gregorian_date()
+{
+	local l n i j l jdn=$1 gday gmonth gyear
+
+	l=$((jdn + 68569))
+	n=$(bc <<< "(4 * $l) / 146097")
+	l=$(bc <<< "$l - (146097 * $n + 3) / 4")
+	i=$(bc <<< "(4000 * ($l + 1)) / 1461001")
+	l=$(bc <<< "$l - (1461 * $i) / 4 + 31")
+	j=$(bc <<< "(80 * $l) / 2447")
+	gday=$(bc <<< "$l - (2447 * $j) / 80")
+	l=$(bc <<< "$j / 11")
+	gmonth=$((j + 2 - (12 * l)))
+	gyear=$((100 * (n - 49) + i + l))
+
+	echo $gmonth $gday $gyear
+}
+
+#%% usage: _bashlets_lcal_gregorian_date_to_jdn month day year
+#%  purpose: Convert Gregorian month, day and year into the
+#%  Julian day number.
+_bashlets_lcal_gregorian_date_to_jdn()
+{
+	local a y yy t m=$1 d=$2 y=$3
+
+	a=$(( (14 - m) / 12 ))
+	yy=$(( y + 4800 - a ))
+	t=$(( m + 12 * a - 3 ))
+
+	echo $(( d + (153 * t + 2) / 5 + 365 * yy + yy / 4 - yy / 100 + yy / 400 - 32045 ))
+}
+
+#%% usage: _bashlets_lcal_print_ncal_gregorian month day year
+#%  purpose: Print the Gregorian calendar for date in ncal
+#%  format. To prevent highlighting, set the day value to 0.
+_bashlets_lcal_print_ncal_gregorian()
+{
+	local m=$1 d=$2 y=$3
+
+	_bashlets_lcal_ncal_array $m $d $y
+
+        if [ $REQUEST_NO_HIGHLIGHT ]; then
+                d=0
+        fi
+
+	_bashlets_lcal_center 20 "${MONTH_NAMES_LONG[m]} $y"
+
+	local t=0
+	for ((i=0; i<${#NCAL[@]}; i++)); do
+		if [ $i -eq 0 ]; then
+			echo -n "${NCAL_DAY_NAMES[t++]} "
+		elif [ $((i % 6)) -eq 0 ]; then
+			echo
+			echo -n "${NCAL_DAY_NAMES[t++]} "
+		fi
+		if [ "${NCAL[i]}" = "   " ]; then
+			echo -n "${NCAL[i]}"
+			continue
+		fi
+		if [ ${NCAL[i]} -eq $d ] &&
+		   [ ${NCAL[i]} -lt 10 ] && [ $d -gt 0 ]; then
+			echo -n "${BOLD} ${d}${UNBOLD} "
+		elif [ ${NCAL[i]} -eq $d ] &&
+		     [ ${NCAL[i]} -gt 9 ] && [ $d -gt 0 ]; then
+			echo -n "${BOLD}${d}${UNBOLD} "
+		else
+			echo -n "${NCAL[i]}"
+		fi
+	done
+	echo
+}
+
+#%% usage: _bashlets_lcal_ncal_array month day year
+#%  purpose: Loads the NCAL array with correctly
+#%  spaced numbers for printing the Julian calendar
+#%  in the ncal format.
+_bashlets_lcal_ncal_array()
+{
+        local m=$1 d=$2 y=$3
+
+        if [ $REQUEST_JULIAN ]; then
+            _bashlets_lcal_bashlets_lcal_bashlets_lcal__print_julian_monthly $m $d $y
+        else
+            _bashlets_lcal_gregorian_array $m $y
+        fi
+
+        NCAL=(
+	        "${CALENDAR_DATA[0]}" "${CALENDAR_DATA[7]}" "${CALENDAR_DATA[14]}"
+	        "${CALENDAR_DATA[21]}" "${CALENDAR_DATA[28]}" "${CALENDAR_DATA[35]}"
+	        "${CALENDAR_DATA[1]}" "${CALENDAR_DATA[8]}" "${CALENDAR_DATA[15]}"
+	        "${CALENDAR_DATA[22]}" "${CALENDAR_DATA[29]}" "${CALENDAR_DATA[36]}"
+	        "${CALENDAR_DATA[2]}" "${CALENDAR_DATA[9]}" "${CALENDAR_DATA[16]}"
+	        "${CALENDAR_DATA[23]}" "${CALENDAR_DATA[30]}" "${CALENDAR_DATA[37]}"
+	        "${CALENDAR_DATA[3]}" "${CALENDAR_DATA[10]}" "${CALENDAR_DATA[17]}"
+	        "${CALENDAR_DATA[24]}" "${CALENDAR_DATA[31]}" "${CALENDAR_DATA[38]}"
+	        "${CALENDAR_DATA[4]}" "${CALENDAR_DATA[11]}" "${CALENDAR_DATA[18]}"
+	        "${CALENDAR_DATA[25]}" "${CALENDAR_DATA[32]}" "${CALENDAR_DATA[39]}"
+	        "${CALENDAR_DATA[5]}" "${CALENDAR_DATA[12]}" "${CALENDAR_DATA[19]}"
+	        "${CALENDAR_DATA[26]}" "${CALENDAR_DATA[33]}" "${CALENDAR_DATA[40]}"
+	        "${CALENDAR_DATA[6]}" "${CALENDAR_DATA[13]}" "${CALENDAR_DATA[20]}"
+	        "${CALENDAR_DATA[27]}" "${CALENDAR_DATA[34]}" "${CALENDAR_DATA[41]}"
+	)
+}
+
+#%% usage: _bashlets_lcal_ncal_julian month day year
+#%  purpose: Print the Julian calendar for date in ncal
+#%  format. To prevent highlighting, set the day value to 0.
+_bashlets_lcal_ncal_julian()
+{
+        local m=$1 d=$2 y=$3
+	local jd=$(_bashlets_lcal_day_in_year $m $d $y)
+
+        _bashlets_lcal_ncal_array $m $d $y
+
+        if [ $REQUEST_NO_HIGHLIGHT ]; then
+                jd=0
+        fi
+
+        _bashlets_lcal_center 20 "${MONTH_NAMES_LONG[m]} $y"
+
+        local t=0
+        for ((i=0; i<${#NCAL[@]}; i++)); do
+
+                if [ $i -eq 0 ]; then
+                        echo -n "${NCAL_DAY_NAMES[t++]} "
+                elif [ $((i % 6)) -eq 0 ]; then
+                        echo
+                        echo -n "${NCAL_DAY_NAMES[t++]} "
+                fi
+                if [ "${NCAL[i]}" = "    " ] || [ "x${NCAL[i]}" = "x" ]; then
+                        echo -n "${NCAL[i]}"
+                        continue
+                fi
+                if [ ${NCAL[i]} -eq $jd ] && [ ${NCAL[i]} -lt 10 ] &&
+		   [ $jd -gt 0 ]; then
+                        echo -n "${BOLD}  ${jd}${UNBOLD} "
+                elif [ ${NCAL[i]} -eq $jd ] && [ ${NCAL[i]} -gt 9 ] &&
+		     [ ${NCAL[i]} -lt 100 ] && [ $jd -gt 0 ]; then
+                        echo -n "${BOLD} ${jd}${UNBOLD} "
+                elif [ ${NCAL[i]} -eq $jd ] &&  [ ${NCAL[i]} -gt 99 ] &&
+		     [ $jd -gt 0 ]; then
+                        echo -n "${BOLD}${jd}${UNBOLD} "
+                else
+                        echo -n "${NCAL[i]}"
+                fi
+        done
+        echo
+}
+
+#%% usage: _bashlets_lcal_show_bashlets_lcal_week_numbers month day year
+#%  purpose: print week numbers next to the Gregorian calendar.
+_bashlets_lcal_show_bashlets_lcal_week_numbers()
+{
+	local m=$1 d=$2 y=$3 wn
+
+	case $m in
+		1)
+			_bashlets_lcal_week_number $m 1 $y
+			wn=$?
+			if [ $wn -eq 0 ]; then
+				_bashlets_lcal_week_number 12 31 $((y - 1))
+				wn=$?
+			fi
+			;;
+		*)
+			_bashlets_lcal_week_number $m 1 $y
+			wn=$?
+			;;
+	esac
+
+        _bashlets_lcal_gregorian_array $m $y
+
+        if [ $REQUEST_NO_HIGHLIGHT ]; then
+                d=0
+        fi
+
+        _bashlets_lcal_center 21 "${MONTH_NAMES_LONG[m]} $y"
+
+        echo "$GREGORIAN_HEADER"
+
+        for ((i=0; i<${#CALENDAR_DATA[@]}; i++)); do
+                if [ $((i % 7)) -eq 0 ] && [ $i -ne 0 ]; then
+                        printf "\t%s\n" "$wn"
+			if [ $m -eq 1 ] && [ ${#wn} -gt 1 ]; then
+				wn=1
+			else
+				((++wn))
+			fi
+                fi
+                if [ $(( i - (first_day_number_of_month - 1) )) -eq $d ] &&
+                   [ $(( i - (first_day_number_of_month - 1) )) -lt 10 ] &&
+                   [ $d -gt 0 ]; then
+                        echo -n "${BOLD} ${d}${UNBOLD} "
+                elif [ $(( i - (first_day_number_of_month - 1) )) -eq $d ] &&
+                   [ $(( i - (first_day_number_of_month - 1) )) -gt 9 ] &&
+                   [ $d -gt 0 ]; then
+                        echo -n "${BOLD}${d}${UNBOLD} "
+                else
+                        echo -n "${CALENDAR_DATA[i]}"
+                fi
+        done
+        echo
+}
+
+#%% usage: _bashlets_lcal_ordinal number
+#%  purpose: Print the ordinal of a number: 1st, 2nd, 3rd, etc.
+_bashlets_lcal_ordinal()
+{
+	case ${1:$((${#1}-2)):2} in
+		[2-9][1]|1  )  echo ${1}st ;;
+		[2-9][2]|2  )  echo ${1}nd ;;
+		[2-9][3]    )  echo ${1}rd ;;
+		[1][1-9]|*  )  echo ${1}th ;;
+	esac
+}
+
+#%% usage: _bashlets_lcal_show_discordian_date month day year
+#%  purpose: Print a date according to the Discordian calendar.
+#%  Feb 29th of a leap year is St. Tibbs day, which is a day
+#%  that doesn't exist!
+_bashlets_lcal_show_discordian_date()
+{
+        local m=$1 d=$2 y=$3 seasonday season dow
+
+	local WEEKDAY=(Sweetmorn Boomtime Pungenday Prickle-Prickle "Setting Orange")
+	local APOSTLE=(Mungday Mojoday Syaday Zaraday Maladay)
+	local HOLYDAY=(Chaoflux Discoflux Confuflux Bureflux Afflux)
+	local SEASONS=(Chaos Discord Confusion Bureaucracy "The Aftermath")
+
+	_bashlets_lcal_is_leap $y
+	((y+=1166))
+
+	if [ $LEAP ] && [ $m -eq 2 ] && [ $d -eq 29 ]; then
+		echo "St. Tib's Day, $y YOLD"
+		_bashlets_lcal_exit 1
+	fi
+
+	_bashlets_lcal_is_leap $y
+	local d=$(_bashlets_lcal_day_in_year $m $d $y)
+
+	if [ $LEAP ] && [ $d -ge 60 ]; then
+		((d--))
+	fi
+
+	seasonday=$(( d % 73 ))
+	if [ $seasonday -eq 0 ]; then
+		seasonday=73
+	fi
+
+	case $seasonday in
+		5)
+			echo Today is "${APOSTLE[$((d / 73))]}", in the YOLD $y
+			_bashlets_lcal_exit 0
+			;;
+		50)
+			echo Today is "${HOLYDAY[$((d / 73))]}", in the YOLD $y
+			_bashlets_lcal_exit 0
+			;;
+		*)
+			case $d in
+				73|146|219|291|365)
+					season="${SEASONS[$((d / 73))-1]}"
+				        ;;
+				*)
+					season="${SEASONS[$((d / 73))]}"
+				        ;;
+			esac
+			;;
+	esac
+
+	dow="${WEEKDAY[$(( (d-1) % 5 ))]}"
+
+	echo -n "Today is $dow, the $(_bashlets_lcal_ordinal $seasonday) "
+	echo "day of $season in the YOLD $y"
+}
+
+#%% usage: _bashlets_lcal_print_gregorian_yearly year
+#%  purpose: Print the formatted yearly calendar for year.
+_bashlets_lcal_print_gregorian_yearly()
+{
+
+	local y=$1 ROW m=0
+
+	ROW[1]="       January               February                March"
+	ROW[2]="        April                   May                  June"
+	ROW[3]="        July                  August               September"
+	ROW[4]="       October               November              December"
+
+	echo
+	_bashlets_lcal_center 66 "$y"
+	echo
+
+	for i in {1..4}; do
+		((++m))
+		echo "${ROW[i]}"
+		_bashlets_lcal_gregorian_array $m $y
+		c1_row1="${CALENDAR_DATA[0]}${CALENDAR_DATA[1]}${CALENDAR_DATA[2]}${CALENDAR_DATA[3]}${CALENDAR_DATA[4]}${CALENDAR_DATA[5]}${CALENDAR_DATA[6]}"
+		c1_row2="${CALENDAR_DATA[7]}${CALENDAR_DATA[8]}${CALENDAR_DATA[9]}${CALENDAR_DATA[10]}${CALENDAR_DATA[11]}${CALENDAR_DATA[12]}${CALENDAR_DATA[13]}"
+		c1_row3="${CALENDAR_DATA[14]}${CALENDAR_DATA[15]}${CALENDAR_DATA[16]}${CALENDAR_DATA[17]}${CALENDAR_DATA[18]}${CALENDAR_DATA[19]}${CALENDAR_DATA[20]}"
+		c1_row4="${CALENDAR_DATA[21]}${CALENDAR_DATA[22]}${CALENDAR_DATA[23]}${CALENDAR_DATA[24]}${CALENDAR_DATA[25]}${CALENDAR_DATA[26]}${CALENDAR_DATA[27]}"
+		c1_row5="${CALENDAR_DATA[28]}${CALENDAR_DATA[29]}${CALENDAR_DATA[30]}${CALENDAR_DATA[31]}${CALENDAR_DATA[32]}${CALENDAR_DATA[33]}${CALENDAR_DATA[34]}"
+		c1_row6="${CALENDAR_DATA[35]}${CALENDAR_DATA[36]}${CALENDAR_DATA[37]}${CALENDAR_DATA[38]}${CALENDAR_DATA[39]}${CALENDAR_DATA[40]}${CALENDAR_DATA[41]}"
+
+		((++m))
+		_bashlets_lcal_gregorian_array $m $y
+		c2_row1="${CALENDAR_DATA[0]}${CALENDAR_DATA[1]}${CALENDAR_DATA[2]}${CALENDAR_DATA[3]}${CALENDAR_DATA[4]}${CALENDAR_DATA[5]}${CALENDAR_DATA[6]}"
+		c2_row2="${CALENDAR_DATA[7]}${CALENDAR_DATA[8]}${CALENDAR_DATA[9]}${CALENDAR_DATA[10]}${CALENDAR_DATA[11]}${CALENDAR_DATA[12]}${CALENDAR_DATA[13]}"
+		c2_row3="${CALENDAR_DATA[14]}${CALENDAR_DATA[15]}${CALENDAR_DATA[16]}${CALENDAR_DATA[17]}${CALENDAR_DATA[18]}${CALENDAR_DATA[19]}${CALENDAR_DATA[20]}"
+		c2_row4="${CALENDAR_DATA[21]}${CALENDAR_DATA[22]}${CALENDAR_DATA[23]}${CALENDAR_DATA[24]}${CALENDAR_DATA[25]}${CALENDAR_DATA[26]}${CALENDAR_DATA[27]}"
+		c2_row5="${CALENDAR_DATA[28]}${CALENDAR_DATA[29]}${CALENDAR_DATA[30]}${CALENDAR_DATA[31]}${CALENDAR_DATA[32]}${CALENDAR_DATA[33]}${CALENDAR_DATA[34]}"
+		c2_row6="${CALENDAR_DATA[35]}${CALENDAR_DATA[36]}${CALENDAR_DATA[37]}${CALENDAR_DATA[38]}${CALENDAR_DATA[39]}${CALENDAR_DATA[40]}${CALENDAR_DATA[41]}"
+
+		((++m))
+		_bashlets_lcal_gregorian_array $m $y
+		c3_row1="${CALENDAR_DATA[0]}${CALENDAR_DATA[1]}${CALENDAR_DATA[2]}${CALENDAR_DATA[3]}${CALENDAR_DATA[4]}${CALENDAR_DATA[5]}${CALENDAR_DATA[6]}"
+		c3_row2="${CALENDAR_DATA[7]}${CALENDAR_DATA[8]}${CALENDAR_DATA[9]}${CALENDAR_DATA[10]}${CALENDAR_DATA[11]}${CALENDAR_DATA[12]}${CALENDAR_DATA[13]}"
+		c3_row3="${CALENDAR_DATA[14]}${CALENDAR_DATA[15]}${CALENDAR_DATA[16]}${CALENDAR_DATA[17]}${CALENDAR_DATA[18]}${CALENDAR_DATA[19]}${CALENDAR_DATA[20]}"
+		c3_row4="${CALENDAR_DATA[21]}${CALENDAR_DATA[22]}${CALENDAR_DATA[23]}${CALENDAR_DATA[24]}${CALENDAR_DATA[25]}${CALENDAR_DATA[26]}${CALENDAR_DATA[27]}"
+		c3_row5="${CALENDAR_DATA[28]}${CALENDAR_DATA[29]}${CALENDAR_DATA[30]}${CALENDAR_DATA[31]}${CALENDAR_DATA[32]}${CALENDAR_DATA[33]}${CALENDAR_DATA[34]}"
+		c3_row6="${CALENDAR_DATA[35]}${CALENDAR_DATA[36]}${CALENDAR_DATA[37]}${CALENDAR_DATA[38]}${CALENDAR_DATA[39]}${CALENDAR_DATA[40]}${CALENDAR_DATA[41]}"
+
+		echo "$GREGORIAN_HEADER   $GREGORIAN_HEADER   $GREGORIAN_HEADER"
+
+		echo "$c1_row1  $c2_row1  $c3_row1"
+		echo "$c1_row2  $c2_row2  $c3_row2"
+		echo "$c1_row3  $c2_row3  $c3_row3"
+		echo "$c1_row4  $c2_row4  $c3_row4"
+		echo "$c1_row5  $c2_row5  $c3_row5"
+		echo "$c1_row6  $c2_row6  $c3_row6"
+	done
+}
+
+#%% usage: _bashlets_lcal_print_gregorian_three_months
+#%  purpose: Print last, current and next month on one row.
+_bashlets_lcal_print_gregorian_three_months()
+{
+	local y=$YEAR m=$MONTH ROW row
+
+	_bashlets_lcal_shift_month_backward $m $y
+	_bashlets_lcal_ncenterr 21 "${MONTH_NAMES_LONG[MONTH]} $YEAR"
+   	_bashlets_lcal_gregorian_array $MONTH $YEAR
+	c1_row1="${CALENDAR_DATA[0]}${CALENDAR_DATA[1]}${CALENDAR_DATA[2]}${CALENDAR_DATA[3]}${CALENDAR_DATA[4]}${CALENDAR_DATA[5]}${CALENDAR_DATA[6]}"
+	c1_row2="${CALENDAR_DATA[7]}${CALENDAR_DATA[8]}${CALENDAR_DATA[9]}${CALENDAR_DATA[10]}${CALENDAR_DATA[11]}${CALENDAR_DATA[12]}${CALENDAR_DATA[13]}"
+	c1_row3="${CALENDAR_DATA[14]}${CALENDAR_DATA[15]}${CALENDAR_DATA[16]}${CALENDAR_DATA[17]}${CALENDAR_DATA[18]}${CALENDAR_DATA[19]}${CALENDAR_DATA[20]}"
+	c1_row4="${CALENDAR_DATA[21]}${CALENDAR_DATA[22]}${CALENDAR_DATA[23]}${CALENDAR_DATA[24]}${CALENDAR_DATA[25]}${CALENDAR_DATA[26]}${CALENDAR_DATA[27]}"
+	c1_row5="${CALENDAR_DATA[28]}${CALENDAR_DATA[29]}${CALENDAR_DATA[30]}${CALENDAR_DATA[31]}${CALENDAR_DATA[32]}${CALENDAR_DATA[33]}${CALENDAR_DATA[34]}"
+	c1_row6="${CALENDAR_DATA[35]}${CALENDAR_DATA[36]}${CALENDAR_DATA[37]}${CALENDAR_DATA[38]}${CALENDAR_DATA[39]}${CALENDAR_DATA[40]}${CALENDAR_DATA[41]}"
+
+	_bashlets_lcal_shift_month_forward $m $y
+	_bashlets_lcal_ncenterr 32 "${MONTH_NAMES_LONG[MONTH]} $YEAR"
+   	_bashlets_lcal_gregorian_array $MONTH $YEAR
+	c2_row1="${CALENDAR_DATA[0]}${CALENDAR_DATA[1]}${CALENDAR_DATA[2]}${CALENDAR_DATA[3]}${CALENDAR_DATA[4]}${CALENDAR_DATA[5]}${CALENDAR_DATA[6]}"
+	c2_row2="${CALENDAR_DATA[7]}${CALENDAR_DATA[8]}${CALENDAR_DATA[9]}${CALENDAR_DATA[10]}${CALENDAR_DATA[11]}${CALENDAR_DATA[12]}${CALENDAR_DATA[13]}"
+	c2_row3="${CALENDAR_DATA[14]}${CALENDAR_DATA[15]}${CALENDAR_DATA[16]}${CALENDAR_DATA[17]}${CALENDAR_DATA[18]}${CALENDAR_DATA[19]}${CALENDAR_DATA[20]}"
+	c2_row4="${CALENDAR_DATA[21]}${CALENDAR_DATA[22]}${CALENDAR_DATA[23]}${CALENDAR_DATA[24]}${CALENDAR_DATA[25]}${CALENDAR_DATA[26]}${CALENDAR_DATA[27]}"
+	c2_row5="${CALENDAR_DATA[28]}${CALENDAR_DATA[29]}${CALENDAR_DATA[30]}${CALENDAR_DATA[31]}${CALENDAR_DATA[32]}${CALENDAR_DATA[33]}${CALENDAR_DATA[34]}"
+	c2_row6="${CALENDAR_DATA[35]}${CALENDAR_DATA[36]}${CALENDAR_DATA[37]}${CALENDAR_DATA[38]}${CALENDAR_DATA[39]}${CALENDAR_DATA[40]}${CALENDAR_DATA[41]}"
+
+	_bashlets_lcal_shift_month_forward $m $y
+	_bashlets_lcal_center 34 "${MONTH_NAMES_LONG[MONTH]} $YEAR"
+   	_bashlets_lcal_gregorian_array $MONTH $YEAR
+	c3_row1="${CALENDAR_DATA[0]}${CALENDAR_DATA[1]}${CALENDAR_DATA[2]}${CALENDAR_DATA[3]}${CALENDAR_DATA[4]}${CALENDAR_DATA[5]}${CALENDAR_DATA[6]}"
+	c3_row2="${CALENDAR_DATA[7]}${CALENDAR_DATA[8]}${CALENDAR_DATA[9]}${CALENDAR_DATA[10]}${CALENDAR_DATA[11]}${CALENDAR_DATA[12]}${CALENDAR_DATA[13]}"
+	c3_row3="${CALENDAR_DATA[14]}${CALENDAR_DATA[15]}${CALENDAR_DATA[16]}${CALENDAR_DATA[17]}${CALENDAR_DATA[18]}${CALENDAR_DATA[19]}${CALENDAR_DATA[20]}"
+	c3_row4="${CALENDAR_DATA[21]}${CALENDAR_DATA[22]}${CALENDAR_DATA[23]}${CALENDAR_DATA[24]}${CALENDAR_DATA[25]}${CALENDAR_DATA[26]}${CALENDAR_DATA[27]}"
+	c3_row5="${CALENDAR_DATA[28]}${CALENDAR_DATA[29]}${CALENDAR_DATA[30]}${CALENDAR_DATA[31]}${CALENDAR_DATA[32]}${CALENDAR_DATA[33]}${CALENDAR_DATA[34]}"
+	c3_row6="${CALENDAR_DATA[35]}${CALENDAR_DATA[36]}${CALENDAR_DATA[37]}${CALENDAR_DATA[38]}${CALENDAR_DATA[39]}${CALENDAR_DATA[40]}${CALENDAR_DATA[41]}"
+
+	echo "$GREGORIAN_HEADER   $GREGORIAN_HEADER   $GREGORIAN_HEADER"
+
+	echo "$c1_row1  $c2_row1  $c3_row1"
+	echo "$c1_row2  $c2_row2  $c3_row2"
+	echo "$c1_row3  $c2_row3  $c3_row3"
+	echo "$c1_row4  $c2_row4  $c3_row4"
+	echo "$c1_row5  $c2_row5  $c3_row5"
+	echo "$c1_row6  $c2_row6  $c3_row6"
+}
+
+#%% usage: _bashlets_lcal_week_number month day year
+#%  purpose: Return week-number of date. If the week-number
+#%  is 0, return the last week-number of last year.
+_bashlets_lcal_week_number()
+{
+        local m=$1 d=$2 y=$3
+        local wn
+        local dow=$(_bashlets_lcal_day_of_week $m $d $y)
+        local diy=$(_bashlets_lcal_day_in_year $m $d $y)
+
+        if [ $dow -eq 0 ]; then
+                dow=7
+        fi
+
+        _bashlets_lcal_is_leap $y
+
+        if [ $LEAP ] && [ $m -gt 2 ]; then
+                if [ $dow -eq 7 ]; then
+                        wn=$((  ((((diy + 1) - dow) + 10)) / 7 ))
+                else
+                        wn=$((  ((((diy + 1 ) - dow) + 10)) / 7 - 1 ))
+                fi
+        else 
+                if [ $dow -eq 7 ]; then
+                        wn=$((  (((diy - dow) + 10)) / 7 + 1 ))
+                else
+                        wn=$((  (((diy - dow) + 10)) / 7 ))
+                fi
+        fi
+
+        if [ $wn -eq 0 ]; then
+		# Hey, a subshell!
+                ( _bashlets_lcal_week_number 12 31 $((y - 1)) )
+        else
+                return $wn
+        fi
+}
+
+#%% usage: _bashlets_lcal_western_pfm_date year
+#%  purpose: Find the day number and month of the Paschal Full Moon.
+_bashlets_lcal_western_pfm_date()
+{
+	local y=$1
+	local golden_number=$(bc <<< "scale=3; $y/19")
+
+	case ${golden_number##*.} in
+		000)  echo 14; pm=A ;;
+		052)  echo 3; pm=A ;;
+		105)  echo 23; pm=M ;;
+		157)  echo 11; pm=A ;;
+		210)  echo 31; pm=M ;;
+		263)  echo 18; pm=A ;;
+		315)  echo 8; pm=A ;;
+		368)  echo 28; pm=M ;;
+		421)  echo 16; pm=A ;;
+		473)  echo 5; pm=A ;;
+		526)  echo 25; pm=M ;;
+		578)  echo 13; pm=A ;;
+		631)  echo 2; pm=A ;;
+		684)  echo 22; pm=M ;;
+		736)  echo 10; pm=A ;;
+		789)  echo 30; pm=M ;;
+		842)  echo 17; pm=A ;;
+		894)  echo 7; pm=A ;;
+		947)  echo 27; pm=M;;
+	esac
+}
+
+#%% usage: _bashlets_lcal_orthodox_pfm_date_2 year
+#%  purpose: Find the day number and month of the Paschal Full Moon.
+#%  This is the second chart.
+_bashlets_lcal_western_pfm_date_2()
+{
+	local y=$1
+	case $(_bashlets_lcal_western_pfm_date $y) in
+		26|2|9|16     )  echo 0 ;;
+		27|3|10|17    )  echo 1 ;;
+		21|28|4|11|18 )  echo 2 ;;
+		22|29|5|12    )  echo 3 ;;
+		23|30|6|13    )  echo 4 ;;
+		24|31|7|14    )  echo 5 ;;
+		25|1|8|15     )  echo 6 ;;
+	esac
+}
+
+#%% usage: _bashlets_lcal_western_first_2 year
+#%  purpose: Use the first two digits of year to
+#%  find the cooresponding number on the chart.
+_bashlets_lcal_western_first_2()
+{
+	local y=$1
+	case ${y:0:2} in
+		06|13                      )  echo 6 ;;
+		07|14|17|21|25|29|33|37    )  echo 5 ;;
+		08|15                      )  echo 4 ;;
+		09|18|22|26|30|34|38       )  echo 3 ;;
+		03|10                      )  echo 2 ;;
+		04|11|15|19|23|27|31|35|39 )  echo 1 ;;
+		05|12|16|20|24|28|32|36|40 )  echo 0 ;;
+	esac
+}
+
+#%% usage: _bashlets_lcal_orthodox_western_last_2 year
+#%  purpose: Use the last two digits of year to
+#%  find the cooresponding number on the chart.
+_bashlets_lcal_orthodox_western_last_2()
+{
+	local y=$1
+	case ${y:2:2} in
+		00|06|17|23|28|34|45|51|56|62|73|79|84|90    )  echo 0 ;;
+		01|07|12|18|29|35|40|46|57|62|68|74|85|91|96 )  echo 1 ;;
+		02|13|19|24|30|41|47|52|58|69|75|80|86|97    )  echo 2 ;;
+		03|08|14|25|31|36|42|53|59|64|70|81|87|92|98 )  echo 3 ;;
+		09|15|20|26|37|43|48|54|65|71|76|82|93|99    )  echo 4 ;;
+		04|10|21|27|32|38|49|55|60|66|77|83|88|94    )  echo 5 ;;
+		05|11|16|22|33|39|44|50|61|67|72|78|89|95    )  echo 6 ;;
+	esac
+}
+
+#%% usage: _bashlets_lcal_show_western_easter year
+#%  purpose: Find the date of Easter according to the Gregorian calendar.
+_bashlets_lcal_show_western_easter()
+{
+	local y=$1 add w w2 ow d m pfm
+	_bashlets_lcal_is_year_valid $y || _bashlets_lcal_exit 1
+	if [ $y -lt 1900 ] || [ $y -gt 2199 ]; then
+		echo "$PROGRAM: year out of range for Western Easter"
+		return 1
+	fi
+
+	pfm=$(_bashlets_lcal_western_pfm_date $y)
+	w=$(_bashlets_lcal_western_pfm_date_2 $y)
+	w2=$(_bashlets_lcal_western_first_2 $y)
+	ow=$(_bashlets_lcal_orthodox_western_last_2 $y)
+
+	case $(( w + w2 + ow )) in
+		0|7|14   )  add=7 ;;
+		1|8|15   )  add=6 ;;
+		2|9|16   )  add=5 ;;
+		3|10|17  )  add=4 ;;
+		4|11|18  )  add=3 ;;
+		5|12     )  add=2 ;;
+		6|13     )  add=1 ;;
+	esac
+
+	((d=pfm + add))
+
+	_bashlets_lcal_western_pfm_date $y >/dev/null
+
+	case $pm in
+		A)  m="April" ;;
+		M)  m="March" ;;
+	esac
+
+	if [ $d -gt 31 ]; then
+		((d-=31))
+		m="April"
+	fi
+
+	echo $m $d $y
+}
+
+#%% usage: _bashlets_lcal_orthodox_first_2 year
+#%  purpose: Use the first two digits of year to
+#%  find the cooresponding number on the chart.
+_bashlets_lcal_orthodox_first_2()
+{
+	local y=$1
+	case ${y:0:2} in
+		13|20|27    )  echo 6 ;;
+		14|21|28    )  echo 5 ;;
+		15|22|29    )  echo 4 ;;
+		16|23|30    )  echo 3 ;;
+		10|17|24|31 )  echo 2 ;;
+		11|18|25|32 )  echo 1 ;;
+		12|19|26|33 )  echo 0 ;;
+	esac
+}
+
+#%% usage: _bashlets_lcal_orthodox_pfm_date year
+#%  purpose: Find the day number and month of the Paschal Full Moon.
+_bashlets_lcal_orthodox_pfm_date()
+{
+	local y=$1
+	local golden_number=$(bc <<< "scale=3; $y/19")
+
+	case ${golden_number##*.} in
+		000)  echo 5; pm=A ;;
+		052)  echo 25; pm=M ;;
+		105)  echo 13; pm=A ;;
+		157)  echo 2; pm=A ;;
+		210)  echo 22; pm=M ;;
+		263)  echo 10; pm=A ;;
+		315)  echo 30; pm=M ;;
+		368)  echo 10; pm=A ;;
+		421)  echo 7; pm=A ;;
+		473)  echo 27; pm=M ;;
+		526)  echo 15; pm=A ;;
+		578)  echo 4; pm=A ;;
+		631)  echo 24; pm=M ;;
+		684)  echo 12; pm=A ;;
+		736)  echo 1; pm=A ;;
+		789)  echo 21; pm=M ;;
+		842)  echo 9; pm=A ;;
+		894)  echo 29; pm=M ;;
+		947)  echo 17; pm=A ;;
+	esac
+}
+
+#%% usage: _bashlets_lcal_orthodox_pfm_date_2 year
+#%  purpose: Find the day number and month of the Paschal Full Moon.
+#%  This is the second chart.
+_bashlets_lcal_orthodox_pfm_date_2()
+{
+	local y=$1
+	case $(_bashlets_lcal_orthodox_pfm_date $y) in
+		26|2|9|16     )  echo 0 ;;
+		27|3|10|17    )  echo 1 ;;
+		21|28|4|11|18 )  echo 2 ;;
+		22|29|5|12    )  echo 3 ;;
+		23|30|6|13    )  echo 4 ;;
+		24|31|7|14    )  echo 5 ;;
+		25|1|8|15     )  echo 6 ;;
+	esac
+}
+
+#%% usage: _bashlets_lcal_convert_to_gregorian year
+#%  purpose: convert a Julian year to a Gregorian year.
+#%  This corrects the Julian "drift."
+_bashlets_lcal_convert_to_gregorian()
+{
+        local y=$1
+        if [ $y -gt 1583 ] && [ $y -lt 1699 ]; then echo 10
+        elif [ $y -gt 1700 ] && [ $y -lt 1799 ]; then echo 11
+        elif [ $y -gt 1800 ] && [ $y -lt 1899 ]; then echo 12
+        elif [ $y -gt 1900 ] && [ $y -lt 2099 ]; then echo 13
+        elif [ $y -gt 2100 ] && [ $y -lt 2199 ]; then echo 14
+        elif [ $y -gt 2200 ] && [ $y -lt 2299 ]; then echo 15
+        elif [ $y -gt 2300 ] && [ $y -lt 2499 ]; then echo 16
+        elif [ $y -gt 2500 ] && [ $y -lt 2599 ]; then echo 17
+        elif [ $y -gt 2600 ] && [ $y -lt 2699 ]; then echo 18
+        elif [ $y -gt 2700 ] && [ $y -lt 2899 ]; then echo 19
+        elif [ $y -gt 2900 ] && [ $y -lt 2999 ]; then echo 20
+        elif [ $y -gt 3000 ] && [ $y -lt 3099 ]; then echo 21
+        elif [ $y -gt 3100 ] && [ $y -lt 3299 ]; then echo 22
+        elif [ $y -gt 3300 ] && [ $y -lt 3399 ]; then echo 23
+        fi
+}
+
+#%% usage: _bashlets_lcal_show_orthodox_easter year
+#%  purpose: Find the date of Easter according to the Eastern Orthodox calendar.
+#%  if REQUEST_JULIAN is set, the date is converted to the Julian date.
+_bashlets_lcal_show_orthodox_easter()
+{
+	local y=$1 pfm w w2 ow m n add c d len
+	_bashlets_lcal_is_year_valid $y || _bashlets_lcal_exit 1
+	if [ $y -lt 1584 ] || [ $y -gt 3398 ]; then
+		echo "$PROGRAM: year out of range for Orthodox Easter"
+		return 1
+	fi
+
+	pfm=$(_bashlets_lcal_orthodox_pfm_date $y)
+	w=$(_bashlets_lcal_orthodox_pfm_date_2 $y)
+	w2=$(_bashlets_lcal_orthodox_first_2 $y)
+	ow=$(_bashlets_lcal_orthodox_western_last_2 $y)
+
+	case $(( w + w2 + ow )) in
+		0|7|14   )  add=7 ;;
+		1|8|15   )  add=6 ;;
+		2|9|16   )  add=5 ;;
+		3|10|17  )  add=4 ;;
+		4|11|18  )  add=3 ;;
+		5|12     )  add=2 ;;
+		6|13     )  add=1 ;;
+	esac
+
+	c=$(_bashlets_lcal_convert_to_gregorian $y)
+
+	if [ $REQUEST_JULIAN ]; then
+		((d=pfm + add))
+	else
+		((d=pfm + add + c))
+	fi
+
+	_bashlets_lcal_orthodox_pfm_date $y >/dev/null
+
+        case $pm in
+                A)  m="April" n=4 ;;
+                M)  m="March" n=3 ;;
+        esac
+
+	len=$(_bashlets_lcal_month_len $n $y)
+
+	if [ $d -gt $len ]; then
+		((d-=len))
+		case $m in
+			April)  m="May" ;;
+			March)  m="April" ;;
+		esac
+	fi
+
+	echo $m $d $y
+}
+
+
+#%% usage: _bashlets_lcal_show_html_calendar month day year
+#%  purpose: Generate raw html of the specified calendar. A CSS
+#%  script is loaded into the css variable. Styling should be
+#%  changed from there.
+_bashlets_lcal_show_html_calendar()
+{
+	local m=$1 d=$2 y=$3 wbar top css bottom pr
+
+	_bashlets_lcal_gregorian_array $m $y
+
+	if [ $REQUEST_NO_HIGHLIGHT ]; then
+		d=0
+	fi
+
+top="\
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>${MONTH_NAMES_LONG[m]} $y</title>
+<style type=\"text/css\">
+"
+
+wbar="\
+</style>
+</head>
+<body>
+<table class="center">
+	<tr> <td class="month" colspan="7">${MONTH_NAMES_LONG[m]} $y</td> </tr>
+	<tr> <td class="weekbar">Sun</td>
+	     <td class="weekbar">Mon</td>
+	     <td class="weekbar">Tue</td>
+	     <td class="weekbar">Wed</td>
+	     <td class="weekbar">Thu</td>
+	     <td class="weekbar">Fri</td>
+	     <td class="weekbar">Sat</td> </tr>
+
+"
+
+css="\
+/*
+ * This file is a part of $PROGRAM.
+ * Written by $AUTHOR
+ */
+
+body { background: #808080; }
+
+table {
+	background: #000000;
+	border: 2px solid #000000; }
+
+table.center {
+        margin-left:auto;
+        margin-right:auto; }
+
+.month {
+	font-size: 50px;
+	word-spacing: 0.5em;
+	color: #FFFFFF;
+	font-weight: bold; }
+
+td {
+	font-family: Arial;
+	text-align: center;
+	font-size: 25px;
+	width: 82px;    
+	height: 82px;
+	padding: 0px;
+	font-weight: bold; }
+
+.weekbar {
+	height: 10px;
+	background: #232323;
+	color: #FFFFFF; }
+
+.sunday {
+	background-color: #606060;
+	color: #FFFFFF;
+	font-style: italic; }
+
+.weekday {
+	background-color: #C0C0C0; }
+
+.today {
+	background-color: #FF0000;
+	font-size: 35px;
+	color: #FFFFFF; }
+	
+.today:hover {
+	background-color: #000000;
+	color: #FF0000; }
+
+/*
+ *  Printer-friendly format.
+ *  No Grids.
+ */
+@media only print
+{
+        body {
+                background: white;
+                color: black; }
+        .sunday { font-size: 30px; }
+        .weekday {
+                font-size: 30px;
+                font-weight: normal; }
+        .today { text-decoration: underline; }
+}
+"
+
+bottom="\
+</table>
+</body>
+</html>"
+
+	# pr is how many rows (weeks) to print. This prevents the printing of extra
+	# rows.
+	if [ "${CALENDAR_DATA[29]}" = "   " ]; then
+		pr=4
+	elif [ "${CALENDAR_DATA[35]}" = "   " ]; then
+		pr=5
+	else
+		pr=6
+	fi
+
+	local su=0 mo=1 tu=2 we=3 th=4 fr=5 sa=6
+	local row=0 # week counter
+
+	echo "$top"
+	echo "$css"
+	echo "$wbar"
+
+	until [ $row -eq $pr ]; do
+		case "${CALENDAR_DATA[su]}" in
+			" $d "|"$d ")  printf "\t    <tr> <td class=\"today\">${CALENDAR_DATA[su]} </td> <!--today-->\n" ;;
+			*)  printf "\t    <tr> <td class=\"sunday\">${CALENDAR_DATA[su]} </td>\n"
+		esac
+		case "${CALENDAR_DATA[mo]}" in
+			" $d "|"$d ")  printf "\t\t <td class=\"today\">${CALENDAR_DATA[mo]} </td> <!--today-->\n" ;;
+			*)  printf "\t\t <td class=\"weekday\">${CALENDAR_DATA[mo]} </td>\n"
+		esac
+		case "${CALENDAR_DATA[tu]}" in
+			" $d "|"$d ")  printf "\t\t <td class=\"today\">${CALENDAR_DATA[tu]} </td> <!--today-->\n" ;;
+			*)  printf "\t\t <td class=\"weekday\">${CALENDAR_DATA[tu]} </td>\n"
+		esac
+		case "${CALENDAR_DATA[we]}" in 
+			" $d "|"$d ")  printf "\t\t <td class=\"today\">${CALENDAR_DATA[we]} </td> <!--today-->\n" ;;
+			*)  printf "\t\t <td class=\"weekday\">${CALENDAR_DATA[we]} </td>\n"
+		esac
+		case "${CALENDAR_DATA[th]}" in 
+			" $d "|"$d ")  printf "\t\t <td class=\"today\">${CALENDAR_DATA[th]} </td> <!--today-->\n" ;;
+			*)  printf "\t\t <td class=\"weekday\">${CALENDAR_DATA[th]} </td>\n"
+		esac
+		case "${CALENDAR_DATA[fr]}" in 
+			" $d "|"$d ")  printf "\t\t <td class=\"today\">${CALENDAR_DATA[fr]} </td> <!--today-->\n" ;;
+			*)  printf "\t\t <td class=\"weekday\">${CALENDAR_DATA[fr]} </td>\n"
+		esac
+		case "${CALENDAR_DATA[sa]}" in 
+			" $d "|"$d ")  printf "\t\t <td class=\"today\">${CALENDAR_DATA[sa]} </td> </tr> <!--today-->\n" ;;
+			*)  printf "\t\t <td class=\"weekday\">${CALENDAR_DATA[sa]} </td> </tr>\n"
+		esac
+		echo
+
+		((su+=7))
+		((mo+=7))
+		((tu+=7))
+		((we+=7))
+		((th+=7))
+		((fr+=7))
+		((sa+=7))
+
+		# next week
+		((row+=1))
+	done
+
+	echo "$bottom"
+}
+
+#%% usage: _bashlets_lcal_date_diff month day year month day year
+#%  purpose: Show the time difference between two dates.
+#%  3 parameters: compute today's date against specified date.
+#%  6 parameters: computer one date against the other.
+_bashlets_lcal_date_diff()
+{
+	local m1 d1 y1 m2 d2 y2 len1 len2 jdn1 jdn2 jdn
+
+        case $# in
+                [0-2]|[4-5])
+                        echo "$PROGRAM: --date-diff usage: MM DD YYYY MM DD YYYY -or- MM DD YYYY"
+                        _bashlets_lcal_exit 1
+                        ;;
+                3)
+                        m1=$1 d1=$2 y1=$3
+			_bashlets_lcal_is_date_valid $m1 $d1 $y1 || _bashlets_lcal_exit 1
+			_bashlets_lcal_parse_month $m1 
+			m1=$?
+
+                        m2=$MONTH d2=$DAY y2=$YEAR
+                        ;;
+                *)
+                        m1=$1 d1=$2 y1=$3
+			_bashlets_lcal_is_date_valid $m1 $d1 $y1 || _bashlets_lcal_exit 1
+			_bashlets_lcal_parse_month $m1 
+			m1=$?
+
+                        m2=$4 d2=$5 y2=$6
+			_bashlets_lcal_is_date_valid $m2 $d2 $y2 || _bashlets_lcal_exit 1
+			_bashlets_lcal_parse_month $m2
+			m2=$?
+                        ;;
+        esac
+
+        len1=$(_bashlets_lcal_month_len $m1 $y1)
+        len2=$(_bashlets_lcal_month_len $m2 $y2)
+
+        if [ $d1 -gt $len1 ] || [ $d2 -gt $len2 ]; then
+                echo "$PROGRAM: day out of range"
+                _bashlets_lcal_exit 1
+        fi
+
+        jdn1=$(_bashlets_lcal_gregorian_date_to_jdn $m1 $d1 $y1)
+        jdn2=$(_bashlets_lcal_gregorian_date_to_jdn $m2 $d2 $y2)
+
+        jdn=$(( jdn2 - jdn1 ))
+
+        echo "$jdn days"
+	echo "$(bc <<< "scale=2; $jdn / 365") years"
+}
+
+#%% usage: _bashlets_lcal_exit exit-status
+#%  purpose: Clean up the terminal and exit according
+#%  to an exit status. If invalid flags or parameters
+#%  were passed, use `_bashlets_lcal_exit 1`, otherwise use `_bashlets_lcal_exit 0`.
+_bashlets_lcal_exit()
+{
+#    stty $STTY
+#    printf "\e[?12l\e[?25h"
+    exit $1
+}
+
+_bashlets_lcal_lcal()
+{
+	_bashlets_lcal_init
+	_bashlets_lcal_parse_commandline "$@"
+}
