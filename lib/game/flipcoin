@@ -39,13 +39,13 @@
 # (inspired by an exercise from the Advanced Bash-Scripting Guide)
 
 #@method
-function bashlets_games_flipcoin_flip()
+function bashlets_game_flipcoin_flip()
 {
     local maxthrows=${1:-1000}
     local throw=0  # throw count
     local heads=0 tails=0
 
-    function __bashlets_games_flipcoin_update_count()
+    function __bashlets_game_flipcoin_update_count()
     {
         case "$1" in
             0) let "heads += 1";;
@@ -59,11 +59,11 @@ function bashlets_games_flipcoin_flip()
     while [ "$throw" -lt "$maxthrows" ]
     do
         let "coin = RANDOM % 2"
-        __bashlets_games_flipcoin_update_count $coin
+        __bashlets_game_flipcoin_update_count $coin
         let "throw += 1"
     done
 
-    unset __bashlets_games_flipcoin_update_count
+    unset __bashlets_game_flipcoin_update_count
 
     echo $heads
 }
