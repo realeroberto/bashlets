@@ -33,6 +33,8 @@
 #
 ################################################################################
 
+BASHLETS_PARSER_JSON_BACKEND=native
+
 
 ################################################################################
 #
@@ -73,13 +75,13 @@
 
 
 #@method
-function bashlets_parser_json_throw()
+function __bashlets_parser_json_throw()
 {
    BASHLETS_PARSER_JSON_ERROR_RING="$*"
 }
 
 #@method
-function bashlets_parser_json_tokenize()
+function __bashlets_parser_json_tokenize()
 {
     local GREP
     local ESCAPE
@@ -127,7 +129,7 @@ function bashlets_parser_json_tokenize()
 }
 
 #@method
-function bashlets_parser_json_parse_array()
+function __bashlets_parser_json_parse_array()
 {
     local index=0
     local ary=''
@@ -139,14 +141,14 @@ function bashlets_parser_json_parse_array()
         *)
             while :
             do
-                bashlets_parser_json_parse_value "$1" "$index"
+                __bashlets_parser_json_parse_value "$1" "$index"
                 index=$((index+1))
                 ary="$ary""$value" 
                 read -r token
                 case "$token" in
                     ']') break ;;
                     ',') ary="$ary," ;;
-                    *) bashlets_parser_json_throw "EXPECTED , or ] GOT ${token:-EOF}" ; return 1 ;;
+                    *) __bashlets_parser_json_throw "EXPECTED , or ] GOT ${token:-EOF}" ; return 1 ;;
                 esac
                 read -r token
             done
@@ -157,7 +159,7 @@ function bashlets_parser_json_parse_array()
 }
 
 #@method
-function bashlets_parser_json_parse_object()
+function __bashlets_parser_json_parse_object()
 {
     local key
     local obj=''
@@ -171,21 +173,21 @@ function bashlets_parser_json_parse_object()
             do
                 case "$token" in
                     '"'*'"') key=$token ;;
-                    *) bashlets_parser_json_throw "EXPECTED string GOT ${token:-EOF}" ; exit 1 ;;
+                    *) __bashlets_parser_json_throw "EXPECTED string GOT ${token:-EOF}" ; exit 1 ;;
                 esac
                 read -r token
                 case "$token" in
                     ':') ;;
-                    *) bashlets_parser_json_throw "EXPECTED : GOT ${token:-EOF}" ; exit 1 ;;
+                    *) __bashlets_parser_json_throw "EXPECTED : GOT ${token:-EOF}" ; exit 1 ;;
                 esac
                 read -r token
-                bashlets_parser_json_parse_value "$1" "$key"
+                __bashlets_parser_json_parse_value "$1" "$key"
                 obj="$obj$key:$value"        
                 read -r token
                 case "$token" in
                     '}') break ;;
                     ',') obj="$obj," ;;
-                    *) bashlets_parser_json_throw "EXPECTED , or } GOT ${token:-EOF}" ; exit 1 ;;
+                    *) __bashlets_parser_json_throw "EXPECTED , or } GOT ${token:-EOF}" ; exit 1 ;;
                 esac
                 read -r token
             done
@@ -196,17 +198,17 @@ function bashlets_parser_json_parse_object()
 }
 
 #@method
-function bashlets_parser_json_parse_value()
+function __bashlets_parser_json_parse_value()
 {
     local jpath="${1:+$1/}$2" isleaf=0 isempty=0 print=0
     case "$token" in
         '{')
-            bashlets_parser_json_parse_object "$jpath" ;;
+            __bashlets_parser_json_parse_object "$jpath" ;;
         '[')
-            bashlets_parser_json_parse_array  "$jpath" ;;
+            __bashlets_parser_json_parse_array  "$jpath" ;;
         # At this point, the only valid single-character tokens are digits.
         ''|[!0-9])
-            bashlets_parser_json_throw "EXPECTED value GOT ${token:-EOF}" ; return 1;;
+            __bashlets_parser_json_throw "EXPECTED value GOT ${token:-EOF}" ; return 1;;
         *)
             value=$token
             # if asked, replace solidus ("\/") in json strings with normalized value: "/"
@@ -231,19 +233,25 @@ function bashlets_parser_json_parse_value()
 #@method
 function bashlets_parser_json_parse()
 {
-    read -r token
-    bashlets_parser_json_parse_value
-    read -r token
-    case "$token" in
-        '') ;;
-        *) bashlets_parser_json_throw "EXPECTED EOF GOT $token" ; return 1 ;;
-    esac
+    if [[ $BASHLETS_PARSER_JSON_BACKEND == native ]]
+    then
+        read -r token
+        __bashlets_parser_json_parse_value
+        read -r token
+        case "$token" in
+            '') ;;
+            *) __bashlets_parser_json_throw "EXPECTED EOF GOT $token" ; return 1 ;;
+        esac
+    fi
 }
 
 #@method
 function bashlets_parser_json_to_charstream()
 {
-    bashlets_parser_json_tokenize | bashlets_parser_json_parse
+    if [[ $BASHLETS_PARSER_JSON_BACKEND == native ]]
+    then
+        __bashlets_parser_json_tokenize | bashlets_parser_json_parse
+    fi
 }
 
 #@method
