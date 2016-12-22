@@ -43,7 +43,7 @@ source bashlet datatype/keyvalues
 #
 
 #@method
-function bashlets_parsers_yaml_to_keyvalues()
+function bashlets_parser_yaml_to_keyvalues()
 {
     local file="$1"
     local prefix="$2"
@@ -72,33 +72,33 @@ function bashlets_parsers_yaml_to_keyvalues()
 
 
 #@method
-function bashlets_parsers_yaml_list_keys()
+function bashlets_parser_yaml_list_keys()
 {
     local file="$1"
     local prefix="$2"
 
-    bashlets_parsers_yaml_to_keyvalues "$file" "$prefix"                    \
+    bashlets_parser_yaml_to_keyvalues "$file" "$prefix"                    \
         | $BASHLETS_NAMESPACE keyvalues list_keys
 }
 
 #@method
-function bashlets_parsers_yaml_list_values()
+function bashlets_parser_yaml_list_values()
 {
     local file="$1"
     local prefix="$2"
 
-    bashlets_parsers_yaml_to_keyvalues "$file" "$prefix"                    \
+    bashlets_parser_yaml_to_keyvalues "$file" "$prefix"                    \
         | $BASHLETS_NAMESPACE keyvalues list_values
 }
 
 #@method
-function bashlets_parsers_yaml_get_by_key()
+function bashlets_parser_yaml_get_by_key()
 {
     local file="$1"
     local key="$2"
     local prefix="$3"
 
-    bashlets_parsers_yaml_to_keyvalues "$file" "$prefix"                    \
+    bashlets_parser_yaml_to_keyvalues "$file" "$prefix"                    \
         | $BASHLETS_NAMESPACE keyvalues get_by_key "$key"
 }
 

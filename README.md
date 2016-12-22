@@ -140,7 +140,7 @@ That's all!
 	    code: |-
 	      foo = bar
 
-	$ source bashlet parsers/yaml
+	$ source bashlet parser/yaml
 
 	$ bash$$ yaml get_by_key sample.yaml Stack__line
 	23

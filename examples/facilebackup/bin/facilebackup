@@ -62,7 +62,7 @@ source bashlet basic/myself
 source bashlet datatype/integer
 source bashlet datatype/string
 source bashlet datatype/uuid
-source bashlet parsers/yaml
+source bashlet parser/yaml
 source bashlet client/webdav
 source bashlet ux/repl
 
