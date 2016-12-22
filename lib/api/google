@@ -35,8 +35,10 @@
 
 
 source bashlet datatype/string
+source bashlet client/https
 
 BASHLETS_API_GOOGLE_URL="https://www.google.com/search?hl=\${lang}#q="
+BASHLETS_API_GOOGLE_FINANCE_URL="https://www.google.com/finance?q="
 
 
 #@method
@@ -58,6 +60,29 @@ function bashlets_api_google_get_search_url()
     query="$($BASHLETS_NAMESPACE string urlencode "$@")"
 
     echo "${url}${query}"
+}
+
+
+#@method
+function bashlets_api_google_get_exchange_rate()
+{
+    ########################################################################
+    #
+    # Code inspired by:
+    #
+    # http://www.shell-fu.org/lister.php?id=821
+    #
+    # TODO: remove dependency from sed
+    #
+    ########################################################################
+
+    local from=${1:-EUR} to=${2:-USD}
+    local query rate
+
+    query="$BASHLETS_API_GOOGLE_FINANCE_URL$from$to"
+
+    $BASHLETS_NAMESPACE https get "$query"                            \
+        | sed -n "s/.*1 $from = [^0-9.]*\\([0-9.]\\+\\) $to.*/\1/p"
 }
 
 
