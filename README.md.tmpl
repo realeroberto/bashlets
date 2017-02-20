@@ -187,13 +187,16 @@ TODO
 ### Bash Hacking
 
 - [Advanced Bash-Scripting Guide](http://www.tldp.org/LDP/abs/html/index.html)
+- [BashGuide](http://mywiki.wooledge.org/BashGuide)
 - [The Bash Hackers Wiki](http://wiki.bash-hackers.org/)
 - [Bash Design Patterns](http://stackoverflow.com/questions/78497/design-patterns-or-best-practices-for-shell-scripts)
+- [BASH Frequently Asked Questions](http://mywiki.wooledge.org/BashFAQ)
 - [Bash Pitfalls](http://mywiki.wooledge.org/BashPitfalls)
 
 ### Bash Criticism
 
 - [Bash Weaknesses](http://mywiki.wooledge.org/BashWeaknesses)
+- [Bash utility script library](http://stackoverflow.com/questions/11369522/bash-utility-script-library)
 
 ### Special Topics
 
@@ -201,6 +204,11 @@ TODO
 - [How to check if a variable is set in Bash?](http://stackoverflow.com/questions/3601515/how-to-check-if-a-variable-is-set-in-bash)
 - [Setting `IFS` for a single statement](http://unix.stackexchange.com/questions/92187/setting-ifs-for-a-single-statement)
 - [`readarray` (aka `mapfile`) issue](http://unix.stackexchange.com/questions/136206/readarray-or-pipe-issue)
+
+### Tools
+
+- [Match command-line arguments to their help text](http://explainshell.com/)
+- [Bash/Tcsh Comparison Table](http://joelinoff.com/blog/?page_id=235)
 
 ### Collections of scripts
 
