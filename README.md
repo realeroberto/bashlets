@@ -2,13 +2,37 @@
 
 [![Read the Docs](https://readthedocs.org/projects/bashlets/badge/?version=latest)](http://bashlets.readthedocs.io/en/latest/?badge=latest)
 
-1. [Introduction](#introduction)
-1. [Installing](#installing)
-3. [Examples](#examples)
-4. [Design Notes](#design-notes)
-5. [Style Guide](#style-guide)
-6. [Bibliography](#bibliography)
+<!-- toc -->
 
+- [Introduction](#introduction)
+- [Installing](#installing)
+- [Examples](#examples)
+  * [Basic interaction](#basic-interaction)
+  * [Data types: generating a random printable string of arbitrary length](#data-types-generating-a-random-printable-string-of-arbitrary-length)
+  * [Data types: generating and validating UUIDs](#data-types-generating-and-validating-uuids)
+  * [Data types: handling intervals of timestamps](#data-types-handling-intervals-of-timestamps)
+  * [Data types: comparing version strings](#data-types-comparing-version-strings)
+  * [Cache: passing data around](#cache-passing-data-around)
+  * [Character streams: converting formats without external tools](#character-streams-converting-formats-without-external-tools)
+  * [Math: manipulating complex numbers](#math-manipulating-complex-numbers)
+  * [Math: calculating basic constants to (almost) arbitrary precision](#math-calculating-basic-constants-to-almost-arbitrary-precision)
+  * [Parsers: interpreting YAML documents in na(t)ive Bash code](#parsers-interpreting-yaml-documents-in-native-bash-code)
+  * [User eXperience: enjoying a basic REPL cycle](#user-experience-enjoying-a-basic-repl-cycle)
+  * [API: describing a sequence of integers](#api-describing-a-sequence-of-integers)
+- [Design Notes](#design-notes)
+- [Style Guide](#style-guide)
+- [Community](#community)
+- [Bibliography](#bibliography)
+  * [Reference Works](#reference-works)
+  * [Bash Hacking](#bash-hacking)
+  * [Bash Criticism](#bash-criticism)
+  * [Special Topics](#special-topics)
+  * [Tools](#tools)
+  * [Collections of scripts](#collections-of-scripts)
+  * [Frameworks](#frameworks)
+  * [Special-purpose libraries](#special-purpose-libraries)
+
+<!-- tocstop -->
 
 ## Introduction
 
@@ -175,6 +199,13 @@ TODO
 ## Style Guide
 
 TODO
+
+
+## Community
+
+* Twitter channel: https://twitter.com/bashlets
+* Facebook page: https://www.facebook.com/bashlets
+* Telegram bot: 
 
 
 ## Bibliography
