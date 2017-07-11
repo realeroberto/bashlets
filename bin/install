@@ -12,7 +12,7 @@
 #
 # Installation script
 #
-# Copyright (c) 2014-6 Roberto Reale
+# Copyright (c) 2014-7 Roberto Reale
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -39,11 +39,14 @@
 # global variables
 ################################################################################
 
-BASHLETS_BASE=~/.bashlets
+BASHLETS_BASE=~
 BASHLETS_LOADER_1ST_STAGE_DESTINATIONS=~/.local/bin:/usr/local/bin
 
 # which Git branch are we interested in?
 branch=master
+
+# are we installing the core library?
+unset is_core_library
 
 # install the first stage loader
 unset install_1st_stage_loader
@@ -65,7 +68,7 @@ function usage()
 
 		Options:
 
-		   -1      install the first-stage loader
+           -1      install the first-stage loader (only valid for the core library)
 		   -D      set the current installation as the default one
 		   -B      switch to another Git branch
 		   -?      display this help and exit
@@ -130,8 +133,19 @@ shift $((OPTIND-1))
     exit 1
 }
 
+# save the name of the repository
+repo_name=$(basename $(git rev-parse --show-toplevel))
+install_base="$BASHLETS_BASE/.$repo_name"
+
 # save the current branch, in case we need to switch branch
 current_branch=$(git rev-parse --abbrev-ref HEAD)
+
+# the user can only ask for installation of the first-stage loader if this is
+# the core library
+[[ -z $is_core_library && -n $install_1st_stage_loader  ]] && {
+    echo "ERROR: installing the first-stage loader is only possible for the core library!" >&2
+    exit 1
+}
 
 
 #
@@ -142,7 +156,7 @@ current_branch=$(git rev-parse --abbrev-ref HEAD)
 rev="${1:-$(git rev-parse $branch)}"
 
 # installation folder
-install_path="$BASHLETS_BASE/$rev"
+install_path="$install_base/$rev"
 
 # check if the installation folder does exist or create it
 [[ -d $install_path ]] || mkdir -p "$install_path"
@@ -165,9 +179,9 @@ git archive $rev | tar -x -C "$install_path" || {
 }
 
 # if required set the current installation as the default one
-# ($BASHLETS_BASE can contain multiple installations)
-[[ ! -e $BASHLETS_BASE/DEFAULT || -n $set_as_default ]] && {
-    rm -f "$BASHLETS_BASE/DEFAULT" && ln -s $rev "$BASHLETS_BASE/DEFAULT"
+# ($install_base can contain multiple installations)
+[[ ! -e $install_base/DEFAULT || -n $set_as_default ]] && {
+    rm -f "$install_base/DEFAULT" && ln -s $rev "$install_base/DEFAULT"
 }
 
 
