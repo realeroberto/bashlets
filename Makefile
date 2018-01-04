@@ -15,7 +15,7 @@ README.md: README.md.tmpl
 	markdown-toc -i README.md
 
 install:
-	bin/install
+	bin/bashlets-install
 
 clean:
 	rm -f README.md
