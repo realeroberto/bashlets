@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 
 ################################################################################
 #                                         
@@ -39,7 +40,8 @@
 # global variables
 ################################################################################
 
-BASHLETS_BASE=~
+BASHLETS_BASE=~/.bashlets
+BASHLETS_REMOTE_BASE=https://github.com/bashlets
 BASHLETS_LOADER_1ST_STAGE_DESTINATIONS=~/.local/bin:/usr/local/bin
 
 # which Git branch are we interested in?
@@ -54,6 +56,9 @@ unset install_1st_stage_loader
 # set the current installation as the default one
 unset set_as_default
 
+# verbose output
+verbose=:
+
 
 #
 # utilities
@@ -64,13 +69,14 @@ function usage()
     cat <<-EOF
 		Usage:
 
-		    bin/install [ -1 ] [ -D ] [ -B <branch> ]
+		    bashlets-install [ -1 ] [ -D ] [ -B <branch> ] [ <module> ... ]
 
 		Options:
 
            -1      install the first-stage loader (only valid for the core library)
 		   -D      set the current installation as the default one
 		   -B      switch to another Git branch
+		   -v      verbose output
 		   -?      display this help and exit
 		   -V      output version information and exit
 
@@ -80,23 +86,126 @@ function usage()
 function version()
 {
     cat <<-EOF
-		bin/install 0.1
+		bashlets-install 0.1
 	EOF
 } 
+
+function verbose()
+{
+    $verbose "$@"
+}
+
+function make_tempdir()
+{
+    mktemp -d
+}
+
+function erase_tempdir()
+{
+#    [[ -n $tempdir ]] && rm -fr $tempdir
+:
+}
 
 function cleanup()
 {
     [[ -n $current_branch ]] && git checkout -q $current_branch
+    erase_tempdir
 }
 
 trap cleanup EXIT
 
 
 #
+# core logic
+################################################################################
+
+function install_local()
+{
+    local module="$1"
+    local path=lib
+    local rev
+
+    #
+    # some sanity checks
+    ################################################################################
+
+    # check if we are at the repository's apex
+    [[ $(pwd) == $(git rev-parse --show-toplevel) ]] || {
+        echo "ERROR: bin/install must be executed from the root of this Git repository!" >&2
+        exit 1
+    }
+
+    # save the name of the repository
+    repo_name=$(basename $(git rev-parse --show-toplevel))
+    install_base="$BASHLETS_BASE/$path/$module"
+
+    # save the current branch, in case we need to switch branch
+    current_branch=$(git rev-parse --abbrev-ref HEAD)
+
+    # the user can only ask for installation of the first-stage loader if this is
+    # the core library
+#    [[ -z $is_core_library && -n $install_1st_stage_loader  ]] && {
+#        echo "ERROR: installing the first-stage loader is only possible for the core library!" >&2
+#        exit 1
+#    }
+
+
+    #
+    # determine (and create it if needed) the installation folder
+    ################################################################################
+
+    # revision can be given (optionally) on command line
+    rev="${rev:-$(git rev-parse $branch)}"
+
+    # installation folder
+    install_path="$install_base/$rev"
+
+    # check if the installation folder does exist or create it
+    [[ -d $install_path ]] || mkdir -p "$install_path"
+
+    #
+    # install the codebase
+    ################################################################################
+
+    # switch to the given branch
+    git checkout -q $branch || {
+        echo "ERROR: could not switch to $branch branch!" >&2
+        exit 1
+    }
+
+    # export the codebase into the installation folder
+    git archive $rev $path | tar -x -C "$install_path" || {
+        echo "ERROR: could not install the first-stage loader!" >&2
+        exit 1
+    }
+
+    # if required set the current installation as the default one
+    # ($install_base can contain multiple installations)
+    [[ ! -e $install_base/DEFAULT || -n $set_as_default ]] && {
+        rm -f "$install_base/DEFAULT" && ln -s $rev "$install_base/DEFAULT"
+    }
+}
+
+function install_module()
+{
+    local module="${1:-core}"
+    local remote="$BASHLETS_REMOTE_BASE/bashlets.${module}.git"
+
+    tempdir=$(make_tempdir) && (
+        cd $tempdir
+        git clone $remote
+        cd bashlets.$module
+        install_local $module
+        erase_tempdir
+    )
+}
+
+
+#
 # parse command line options
 ################################################################################
 
-while getopts "1DB:?V" OPTION
+while getopts "1DB:v?V" OPTION
 do
     case $OPTION in
 		1)
@@ -107,6 +216,9 @@ do
 			;;
 		B)
 			branch=$OPTARG
+			;;
+		v)
+			verbose=echo
 			;;
 		?)
 			echo ; version
@@ -122,67 +234,17 @@ done
 
 shift $((OPTIND-1))
 
+while [[ $# -gt 0 ]]
+do
+    install_module "$1"
+    shift
+done
 
-#
-# some sanity checks
-################################################################################
+install_local
 
-# check if we are at the repository's apex
-[[ $(pwd) == $(git rev-parse --show-toplevel) ]] || {
-    echo "ERROR: bin/install must be executed from the root of this Git repository!" >&2
-    exit 1
-}
-
-# save the name of the repository
-repo_name=$(basename $(git rev-parse --show-toplevel))
-install_base="$BASHLETS_BASE/.$repo_name"
-
-# save the current branch, in case we need to switch branch
-current_branch=$(git rev-parse --abbrev-ref HEAD)
-
-# the user can only ask for installation of the first-stage loader if this is
-# the core library
-[[ -z $is_core_library && -n $install_1st_stage_loader  ]] && {
-    echo "ERROR: installing the first-stage loader is only possible for the core library!" >&2
-    exit 1
-}
+exit
 
 
-#
-# determine (and create it if needed) the installation folder
-################################################################################
-
-# revision can be given (optionally) on command line
-rev="${1:-$(git rev-parse $branch)}"
-
-# installation folder
-install_path="$install_base/$rev"
-
-# check if the installation folder does exist or create it
-[[ -d $install_path ]] || mkdir -p "$install_path"
-
-
-#
-# install the codebase
-################################################################################
-
-# switch to the given branch
-git checkout -q $branch || {
-    echo "ERROR: could not switch to $branch branch!" >&2
-    exit 1
-}
-
-# export the codebase into the installation folder
-git archive $rev | tar -x -C "$install_path" || {
-    echo "ERROR: could not install the first-stage loader!" >&2
-    exit 1
-}
-
-# if required set the current installation as the default one
-# ($install_base can contain multiple installations)
-[[ ! -e $install_base/DEFAULT || -n $set_as_default ]] && {
-    rm -f "$install_base/DEFAULT" && ln -s $rev "$install_base/DEFAULT"
-}
 
 
 #
