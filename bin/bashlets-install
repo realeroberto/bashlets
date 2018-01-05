@@ -137,7 +137,9 @@ function install_local()
 
     # save the name of the repository
     repo_name=$(basename $(git rev-parse --show-toplevel))
-    install_base="$BASHLETS_BASE/$path/$module"
+
+    # calculate install base folder
+    install_base="$BASHLETS_BASE/$path/$(tr . / <<<$module)"
 
     # save the current branch, in case we need to switch branch
     current_branch=$(git rev-parse --abbrev-ref HEAD)
@@ -175,7 +177,7 @@ function install_local()
 
     # export the codebase into the installation folder
     git archive $rev $path | tar -x -C "$install_path" || {
-        echo "ERROR: could not install the first-stage loader!" >&2
+        # echo "ERROR: could not install the first-stage loader!" >&2 XXX
         exit 1
     }
 
