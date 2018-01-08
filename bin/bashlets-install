@@ -1,5 +1,4 @@
 #!/bin/bash
-set -x
 
 ################################################################################
 #                                         
@@ -121,8 +120,8 @@ trap cleanup EXIT
 
 function install_local()
 {
-    local module="$1"
-    local path=lib
+    local module="${1:-core}"
+    local path
     local rev
 
     #
@@ -139,7 +138,7 @@ function install_local()
     repo_name=$(basename $(git rev-parse --show-toplevel))
 
     # calculate install base folder
-    install_base="$BASHLETS_BASE/$path/$(tr . / <<<$module)"
+    install_base="$BASHLETS_BASE/$(tr . / <<<$module)"
 
     # save the current branch, in case we need to switch branch
     current_branch=$(git rev-parse --abbrev-ref HEAD)
@@ -176,10 +175,13 @@ function install_local()
     }
 
     # export the codebase into the installation folder
-    git archive $rev $path | tar -x -C "$install_path" || {
-        # echo "ERROR: could not install the first-stage loader!" >&2 XXX
-        exit 1
-    }
+    for path in lib bin
+    do
+        git archive $rev $path | tar -x -C "$install_path" || {
+            # echo "ERROR: could not install the first-stage loader!" >&2 XXX
+            exit 1
+        }
+    done
 
     # if required set the current installation as the default one
     # ($install_base can contain multiple installations)
