@@ -53,7 +53,7 @@ function bashlet2_import_lazy()
             bashlet2_import_lazy "library/loader"
     }
 
-    file="$BASHLETS_BASE/${BASHLETS_REV:-DEFAULT}/lib/$bashlet"
+    file="$BASHLETS_BASE/core/${BASHLETS_REV:-DEFAULT}/lib/$bashlet"
 
     source "$file"
 }

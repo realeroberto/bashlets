@@ -54,7 +54,7 @@ function __bashlets_library_loader_bashlet_to_file()
 {
     local bashlet="$1"
 
-    echo "$BASHLETS_BASE/${BASHLETS_REV:-DEFAULT}/lib/$bashlet"
+    echo "$BASHLETS_BASE/core/${BASHLETS_REV:-DEFAULT}/lib/$bashlet"
 }
 
 function __bashlets_library_loader_list_all_methods()
