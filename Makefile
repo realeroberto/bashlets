@@ -10,8 +10,8 @@
 # should always be the "all" rule, so that "make" and "make all" are identical.
 all: README.md
 
-README.md: README.md.tmpl
-	bin/build README.md.tmpl README.md
+README.md: install README.md.tmpl
+	scripts/build README.md.tmpl README.md
 	markdown-toc -i README.md
 
 install:
