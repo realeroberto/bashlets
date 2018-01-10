@@ -123,6 +123,7 @@ function install_local()
     local module="${1:-core}"
     local path
     local rev
+    local destinations
 
     #
     # some sanity checks
@@ -188,6 +189,51 @@ function install_local()
     [[ ! -e $install_base/DEFAULT || -n $set_as_default ]] && {
         rm -f "$install_base/DEFAULT" && ln -s $rev "$install_base/DEFAULT"
     }
+
+    #
+    # install the first-stage loader if needed
+    ################################################################################
+
+    unset _1st_stage_loader_installed
+
+    local d f
+
+    # cycle possible destinations to install the 1st stage loader
+    IFS=: read -r -a destinations <<< "$BASHLETS_LOADER_1ST_STAGE_DESTINATIONS"
+    for d in ${destinations[@]}
+    do
+        for f in $(ls $install_path/bin)
+        do 
+            #_1st_stage_loader="$d/bashlet"
+
+            # if the loader does already exist AND the user did not require
+            # anything, we are done
+            #[[ -e $file_name && -z $install_1st_stage_loader ]] && break
+
+            {
+                # try and create the directory
+                mkdir -p "$d"
+                # install the 1st stage loader
+                cp -p $install_path/bin/$f $d
+                
+                # we are done
+                #_1st_stage_loader_installed=1
+                #break
+            } 2> /dev/null || continue
+        done
+
+    done
+
+
+    #
+    # ex-post checks
+    ################################################################################
+
+    # check that everything was ok
+    [[ -z $install_1st_stage_loader || -n $_1st_stage_loader_installed ]] || {
+        echo "ERROR: could not install the first-stage loader!" >&2
+        exit 1
+    }
 }
 
 function install_module()
@@ -244,51 +290,9 @@ do
     shift
 done
 
+
 install_local
 
-exit
-
-
-
-
-#
-# install the first-stage loader if needed
-################################################################################
-
-unset _1st_stage_loader_installed
-
-# cycle possible destinations to install the 1st stage loader
-IFS=: read -r -a destinations <<< "$BASHLETS_LOADER_1ST_STAGE_DESTINATIONS"
-for d in ${destinations[@]}
-do
-    _1st_stage_loader="$d/bashlet"
-
-    # if the loader does already exist AND the user did not require
-    # anything, we are done
-    [[ -e $file_name && -z $install_1st_stage_loader ]] && break
-
-    {
-        # try and create the directory
-        mkdir -p "$d"
-        # install the 1st stage loader
-        cp "$install_path/bin/bashlet" "$_1st_stage_loader"
-        # we are done
-        _1st_stage_loader_installed=1
-        break
-    } 2> /dev/null || continue
-
-done
-
-
-#
-# ex-post checks
-################################################################################
-
-# check that everything was ok
-[[ -z $install_1st_stage_loader || -n $_1st_stage_loader_installed ]] || {
-    echo "ERROR: could not install the first-stage loader!" >&2
-    exit 1
-}
 
 # Local variables:
 # mode: shell-script
