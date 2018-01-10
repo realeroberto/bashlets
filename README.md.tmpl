@@ -7,12 +7,27 @@
 
 ## Introduction
 
-Bashlets is a modular extensible toolbox for Bash.
+Bashlets is a new modular extensible toolbox for Bash, written in Bash.
 
-A reasonably sane GNU/Linux environment is assumed to be at hand; support for FreeBSD and Cygwin is available (in _homeopathic dilution_), yet highly experimental.
+The project is still in its early days, yet it is quite usable and the core features are already there: smart loading of modules, integration with git, partial OO support, and more.
+
+The project has a threefold aim:
+
+* bringing together the largest possible corpus of useful pieces of reusable Bash code, with everything organized in as neat a fashion as we can think of
+* shielding the user from some of the Bash technicalities and idiosyncrasies
+* writing a consistent and portable API (well, kind of) towards the operating system
+
+I want to stress the fact that this is not a generically-compliant POSIX shell project; on the contrary, the aim of the project is to write code that will run on (and require) Bash. As to the rest of the environment, however, the long-term goal is to get rid of dependencies on external tools as far as it is possible (or reasonable) to do so, even though at present the code does assume a reasonably standard GNU/Linux system.
+
+
+## Conributing
+
+Of course there is so much work to do, and I'd be delighted if somebody is willing to step in with code, enhancements, suggestions, and of course test cases and bug reports!
 
 
 ## Installing
+
+A reasonably sane GNU/Linux environment is assumed to be at hand; support for FreeBSD and Cygwin is available (in _homeopathic dilution_), yet highly experimental.
 
 	$ git clone https://github.com/bashlets/bashlets.git
 	$ cd bashlets
