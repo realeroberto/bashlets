@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 ################################################################################
 #                                         
 # |              |    |         |         
@@ -53,9 +52,16 @@ function bashlet2_import_lazy()
             bashlet2_import_lazy "library/loader"
     }
 
-    file="$BASHLETS_BASE/core/${BASHLETS_REV:-DEFAULT}/lib/$bashlet"
-
-    source "$file"
+    # search the core library first (cf. lib/library/loader)
+    # e.g., if bashlet is A/B/.../X, then try core/.../lib/A/B/.../X first
+    # and then A/B/.../lib/X
+    for file in                                        \
+        "core/${BASHLETS_REV:-DEFAULT}/lib/$bashlet"   \
+        "$(dirname "$bashlet")/${BASHLETS_REV:-DEFAULT}/lib/$(basename "$bashlet")"
+    do
+        file="$BASHLETS_BASE/$file"
+        [[ -e $file ]] && source $file && return
+    done
 }
 
 function bashlet2_import()

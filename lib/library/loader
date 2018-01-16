@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -x
 
 ################################################################################
 #                                         
@@ -52,9 +52,18 @@ function __bashlets_library_loader_bashlet_to_path()
 
 function __bashlets_library_loader_bashlet_to_file()
 {
-    local bashlet="$1"
+    local bashlet="$1" file
 
-    echo "$BASHLETS_BASE/core/${BASHLETS_REV:-DEFAULT}/lib/$bashlet"
+    # search the core library first (cf. bin/bashlet2)
+    # e.g., if bashlet is A/B/.../X, then try core/.../lib/A/B/.../X first
+    # and then A/B/.../lib/X
+    for file in                                        \
+        "core/${BASHLETS_REV:-DEFAULT}/lib/$bashlet"   \
+        "$(dirname "$bashlet")/${BASHLETS_REV:-DEFAULT}/lib/$(basename "$bashlet")"
+    do
+        file="$BASHLETS_BASE/$file"
+        [[ -e $file ]] && echo $file && return
+    done
 }
 
 function __bashlets_library_loader_list_all_methods()
