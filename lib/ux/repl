@@ -126,7 +126,7 @@ function bashlets_ux_repl_start()
 
     $BASHLETS_NAMESPACE term is_tty || prompt=
 
-    while $(true)
+    while true
     do
         read -p "$prompt " -a argv
         verb=${argv[0]}
