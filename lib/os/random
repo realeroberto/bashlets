@@ -37,7 +37,7 @@
 source bashlet datatype/unsigned
 
 # generate a random stream of length $SIZE, including only character in $FILTER
-# a /dev/urandom device à la Linux is required
+# a /dev/urandom device a la Linux is required
 
 #@method
 function bashlets_os_random_get_stream()
