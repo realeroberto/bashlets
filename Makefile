@@ -14,6 +14,9 @@ README.md: install README.md.tmpl
 	scripts/build README.md.tmpl README.md
 	markdown-toc -i README.md
 
+check:
+	scripts/shellcheck
+
 install:
 	bin/bashlets-install
 

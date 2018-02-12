@@ -65,6 +65,10 @@ A reasonably sane GNU/Linux environment is assumed to be at hand; support for Fr
 
 That's all!
 
+If you want to check for proper programming, install [ShellCheck](https://www.shellcheck.net/) and do
+
+        $ make check
+
 
 ## Examples
 
