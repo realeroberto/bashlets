@@ -65,6 +65,10 @@ A reasonably sane GNU/Linux environment is assumed to be at hand; support for Fr
 
 That's all!
 
+To run the test unit, you need Sam Stephenson's [Bash Automated Testing System](https://github.com/sstephenson/bats). Then run:
+
+        $ make test
+
 If you want to check for proper programming, install [ShellCheck](https://www.shellcheck.net/) and do
 
         $ make check
