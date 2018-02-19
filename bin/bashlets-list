@@ -1,0 +1,133 @@
+#!/bin/bash
+
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# bashlets -- A modular extensible toolbox for Bash
+#
+# List installed modules
+#
+# Copyright (c) 2014-8 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+#
+# global variables
+################################################################################
+
+BASHLETS_BASE=~/.bashlets
+
+# verbose output
+verbose=:
+
+
+#
+# utilities
+################################################################################
+
+function usage()
+{
+    cat <<-EOF
+		Usage:
+
+		    bashlets-list
+
+		Options:
+
+		   -?      display this help and exit
+		   -V      output version information and exit
+
+	EOF
+} 
+
+function version()
+{
+    cat <<-EOF
+		bashlets-list 0.1
+	EOF
+} 
+
+function verbose()
+{
+    $verbose "$@"
+}
+
+function is_sha1()
+{
+    [[ $1 =~ [0-9a-f]{40} ]]
+}
+
+
+#
+# core logic
+################################################################################
+
+function list()
+{
+    local base="$1"
+    local indent="${2:-}"
+    for item in $(ls $base)
+    do
+        test -d "$base/$item" || continue
+        [[ $item != "DEFAULT" ]] || continue
+        echo "$indent$item"
+        is_sha1 "$item" || list "$base/$item" ". $indent"
+    done
+}
+
+
+#
+# parse command line options
+################################################################################
+
+while getopts "?V" OPTION
+do
+    case $OPTION in
+		?)
+			echo ; version
+			echo ; usage
+			exit 0
+			;;
+		V)
+			version
+			exit 0
+			;;
+    esac
+done
+
+shift $((OPTIND-1))
+
+list "$BASHLETS_BASE"
+
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh
