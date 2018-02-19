@@ -11,14 +11,14 @@
 all: README.md
 
 README.md: install README.md.tmpl
-	script/build README.md.tmpl README.md
+	scripts/build README.md.tmpl README.md
 	markdown-toc -i README.md
 
 test:
 	bats tests/test.sh
 
 check:
-	script/shellcheck
+	scripts/shellcheck
 
 install:
 	bin/bashlets-install
