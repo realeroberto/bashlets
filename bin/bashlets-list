@@ -41,6 +41,8 @@
 
 BASHLETS_BASE=~/.bashlets
 
+unset show_default
+
 # verbose output
 verbose=:
 
@@ -58,6 +60,7 @@ function usage()
 
 		Options:
 
+		   -D      show the default branch for each component
 		   -?      display this help and exit
 		   -V      output version information and exit
 
@@ -76,6 +79,11 @@ function verbose()
     $verbose "$@"
 }
 
+function normalize_path()
+{
+    echo "${1//.//}"
+}
+
 function is_sha1()
 {
     [[ $1 =~ [0-9a-f]{40} ]]
@@ -90,11 +98,14 @@ function list()
 {
     local base="$1"
     local indent="${2:-}"
-    for item in $(ls $base)
+    local default="$(readlink $base/DEFAULT)"
+    for item in $(ls $base 2> /dev/null)
     do
+        local is_default=
         test -d "$base/$item" || continue
         [[ $item != "DEFAULT" ]] || continue
-        echo "$indent$item"
+        [[ -n $show_default && $item == $default ]] && is_default=" (*)"
+        echo "${indent}${item}${is_default}"
         is_sha1 "$item" || list "$base/$item" ". $indent"
     done
 }
@@ -104,9 +115,12 @@ function list()
 # parse command line options
 ################################################################################
 
-while getopts "?V" OPTION
+while getopts "D?V" OPTION
 do
     case $OPTION in
+		D)
+			show_default=1
+			;;
 		?)
 			echo ; version
 			echo ; usage
@@ -121,7 +135,7 @@ done
 
 shift $((OPTIND-1))
 
-list "$BASHLETS_BASE"
+list "$BASHLETS_BASE/$(normalize_path $1)"
 
 
 # Local variables:
