@@ -185,10 +185,11 @@ function install_local()
     }
 
     # install dependencies
-    local dep
+    local dep dep_options
+    [[ -n set_as_default ]] && dep_options="$dep_options -D"
     [[ -f deps ]] && for dep in $(cat deps)
     do
-        bashlets-install $dep
+        bashlets-install $dep_options $dep
     done
 
     # export the codebase into the installation folder
