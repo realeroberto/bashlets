@@ -40,7 +40,9 @@
 ################################################################################
 
 BASHLETS_BASE=~/.bashlets
+GITHUB_API_URL=https://api.github.com/users/bashlets/repos
 
+unset list_all
 unset show_default
 
 # verbose output
@@ -56,10 +58,11 @@ function usage()
     cat <<-EOF
 		Usage:
 
-		    bashlets-list [ -D ]
+		    bashlets-list [ -A | -D ]
 
 		Options:
 
+		   -A      list all available packages
 		   -D      show the default branch for each component
 		   -?      display this help and exit
 		   -V      output version information and exit
@@ -94,7 +97,7 @@ function is_sha1()
 # core logic
 ################################################################################
 
-function list()
+function list_installed()
 {
     local base="$1"
     local indent="${2:-}"
@@ -106,18 +109,33 @@ function list()
         [[ $item != "DEFAULT" ]] || continue
         [[ -n $show_default && $item == $default ]] && is_default=" (*)"
         echo "${indent}${item}${is_default}"
-        is_sha1 "$item" || list "$base/$item" ". $indent"
+        is_sha1 "$item" || list_installed "$base/$item" ". $indent"
     done
 }
 
+
+function list_all()
+{
+    curl -s $GITHUB_API_URL             \
+        | jq '.[].name'                 \
+        | grep 'bashlets\.'             \
+        | grep -v bashlets.github.io    \
+        | while read package
+    do
+        echo $package
+    done
+}
 
 #
 # parse command line options
 ################################################################################
 
-while getopts "D?V" OPTION
+while getopts "AD?V" OPTION
 do
     case $OPTION in
+		A)
+			list_all=1
+			;;
 		D)
 			show_default=1
 			;;
@@ -135,7 +153,7 @@ done
 
 shift $((OPTIND-1))
 
-list "$BASHLETS_BASE/$(normalize_path $1)"
+[[ -n $list_all ]] && list_all || list_installed "$BASHLETS_BASE/$(normalize_path $1)"
 
 
 # Local variables:

@@ -59,6 +59,8 @@ Of course there is so much work to do, and I'd be delighted if somebody is willi
 
 A reasonably sane GNU/Linux environment is assumed to be at hand; support for FreeBSD and Cygwin is available (in _homeopathic dilution_), yet highly experimental.
 
+Moreover, the [jq](https://stedolan.github.io/jq/) command-line JSON processor is needed in order to communicate with the Github API.
+
 	$ git clone https://github.com/bashlets/bashlets.git
 	$ cd bashlets
 	$ make install
