@@ -40,7 +40,7 @@
 ################################################################################
 
 BASHLETS_BASE=~/.bashlets
-BASHLETS_REMOTE_BASE=https://github.com/bashlets
+BASHLETS_REMOTE_BASE=https://github.com/robertoreale
 BASHLETS_LOADER_1ST_STAGE_DESTINATIONS=~/.local/bin:/usr/local/bin
 
 # which Git branch are we interested in?

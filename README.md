@@ -61,7 +61,7 @@ A reasonably sane GNU/Linux environment is assumed to be at hand; support for Fr
 
 Moreover, the [jq](https://stedolan.github.io/jq/) command-line JSON processor is needed in order to communicate with the Github API.
 
-	$ git clone https://github.com/bashlets/bashlets.git
+	$ git clone https://github.com/robertoreale/bashlets.git
 	$ cd bashlets
 	$ make install
 
