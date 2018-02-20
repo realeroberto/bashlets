@@ -40,7 +40,8 @@
 ################################################################################
 
 BASHLETS_BASE=~/.bashlets
-BASHLETS_REMOTE_BASE=https://github.com/robertoreale
+BASHLETS_REMOTE_CORE=https://github.com/robertoreale
+BASHLETS_REMOTE_PACKAGES=https://github.com/bashlets
 BASHLETS_LOADER_1ST_STAGE_DESTINATIONS=~/.local/bin:/usr/local/bin
 
 # which Git branch are we interested in?
@@ -239,7 +240,14 @@ function install_local()
 function install_module()
 {
     local module="${1:-core}"
-    local remote="$BASHLETS_REMOTE_BASE/bashlets.${module}.git"
+    local remote
+    
+    if [[ $module == core ]]
+    then
+        remote="$BASHLETS_REMOTE_CORE/bashlets.git"
+    else
+        remote="$BASHLETS_REMOTE_PACKAGES/bashlets.${module}.git"
+    fi
 
     tempdir=$(make_tempdir) && (
         cd $tempdir
