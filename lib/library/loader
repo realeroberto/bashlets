@@ -46,7 +46,7 @@ function __bashlets_library_loader_bashlet_to_name()
 
 function __bashlets_library_loader_bashlet_to_path()
 {
-    dirname "$1"
+    dirname "$1" | tr / _
 }
 
 function __bashlets_library_loader_bashlet_to_file()
