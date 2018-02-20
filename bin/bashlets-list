@@ -97,7 +97,7 @@ function is_sha1()
 # core logic
 ################################################################################
 
-function list_installed()
+function __list_installed()
 {
     local base="$1"
     local indent="${2:-}"
@@ -109,8 +109,14 @@ function list_installed()
         [[ $item != "DEFAULT" ]] || continue
         [[ -n $show_default && $item == $default ]] && is_default=" (*)"
         echo "${indent}${item}${is_default}"
-        is_sha1 "$item" || list_installed "$base/$item" ". $indent"
+        is_sha1 "$item" || __list_installed "$base/$item" ". $indent"
     done
+}
+
+
+function list_installed()
+{
+    __list_installed "$BASHLETS_BASE/$(normalize_path $1)"
 }
 
 
@@ -153,7 +159,7 @@ done
 
 shift $((OPTIND-1))
 
-[[ -n $list_all ]] && list_all || list_installed "$BASHLETS_BASE/$(normalize_path $1)"
+[[ -n $list_all ]] && list_all || list_installed
 
 
 # Local variables:
