@@ -126,10 +126,7 @@ function list_all()
         | jq '.[].name'                 \
         | grep 'bashlets\.'             \
         | grep -v bashlets.github.io    \
-        | while read package
-    do
-        echo $package
-    done
+        | sort
 }
 
 #
