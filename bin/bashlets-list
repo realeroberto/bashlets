@@ -56,7 +56,7 @@ function usage()
     cat <<-EOF
 		Usage:
 
-		    bashlets-list
+		    bashlets-list [ -D ]
 
 		Options:
 
