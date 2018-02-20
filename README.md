@@ -19,7 +19,6 @@
   * [Math: calculating basic constants to (almost) arbitrary precision](#math-calculating-basic-constants-to-almost-arbitrary-precision)
   * [Parsers: interpreting YAML documents in na(t)ive Bash code](#parsers-interpreting-yaml-documents-in-native-bash-code)
   * [User eXperience: enjoying a basic REPL cycle](#user-experience-enjoying-a-basic-repl-cycle)
-  * [API: describing a sequence of integers](#api-describing-a-sequence-of-integers)
 - [Design Notes](#design-notes)
 - [Style Guide](#style-guide)
 - [Community](#community)
@@ -203,18 +202,6 @@ If you want to check for proper programming, install [ShellCheck](https://www.sh
 	$ bash$$ repl start
 	> quit
 	$
-
-### API: describing a sequence of integers
-
-	$ source bashlet api/oeis
-
-	$ bash$$ oeis describe_sequences_by_points 1 1 2 3 5
-	Fibonacci numbers: F(n) = F(n-1) + F(n-2) with F(0) = 0 and F(1) = 1.
-	a(n) = number of partitions of n (the partition numbers).
-	Triangle read by rows in which row n lists A000041(n-1) 1's followed by the list of juxtaposed lexicographically ordered partitions of n that do not contain 1 as a part.
-	Floor(3^n/2^n).
-	List of all finite permutations in reversed colexicographic ordering.
-	...
 
 
 ## Design Notes
