@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 ################################################################################
 #                                         
 # |              |    |         |         
@@ -56,6 +57,8 @@ unset install_1st_stage_loader
 # set the current installation as the default one
 unset set_as_default
 
+unset install_from_local_repo
+
 # verbose output
 verbose=:
 
@@ -69,13 +72,14 @@ function usage()
     cat <<-EOF
 		Usage:
 
-		    bashlets-install [ -1 ] [ -D ] [ -B <branch> ] [ <module> ... ]
+		    bashlets-install [ -1 ] [ -D ] [ -B <branch> ] [ -L ] [ <module> ... ]
 
 		Options:
 
            -1      install the first-stage loader (only valid for the core library)
 		   -D      set the current installation as the default one
 		   -B      switch to another Git branch
+           -L      install from a local Git repository
 		   -v      verbose output
 		   -?      display this help and exit
 		   -V      output version information and exit
@@ -97,13 +101,17 @@ function verbose()
 
 function make_tempdir()
 {
-    mktemp -d
+    BASHLETS_TEMPDIR=$(mktemp -d)
 }
 
 function erase_tempdir()
 {
-#    [[ -n $tempdir ]] && rm -fr $tempdir
-:
+    [[ -n $BASHLETS_TEMPDIR ]] && rm -fr $BASHLETS_TEMPDIR
+}
+
+function cd_tempdir()
+{
+    cd $BASHLETS_TEMPDIR
 }
 
 function cleanup()
@@ -249,13 +257,12 @@ function install_module()
         remote="$BASHLETS_REMOTE_PACKAGES/bashlets.${module}.git"
     fi
 
-    tempdir=$(make_tempdir) && (
-        cd $tempdir
+    make_tempdir && (
+        cd_tempdir
         git clone $remote
         cd bashlets.$module
         install_local $module
-        erase_tempdir
-    )
+    ) && erase_tempdir
 }
 
 
@@ -263,7 +270,7 @@ function install_module()
 # parse command line options
 ################################################################################
 
-while getopts "1DB:v?V" OPTION
+while getopts "1DB:Lv?V" OPTION
 do
     case $OPTION in
 		1)
@@ -274,6 +281,9 @@ do
 			;;
 		B)
 			branch=$OPTARG
+			;;
+		L)
+			install_from_local_repo=1
 			;;
 		v)
 			verbose=echo
@@ -292,14 +302,13 @@ done
 
 shift $((OPTIND-1))
 
+[[ -n $install_from_local_repo ]] && install_local "$1"
+
 while [[ $# -gt 0 ]]
 do
     install_module "$1"
     shift
 done
-
-
-install_local
 
 
 # Local variables:
