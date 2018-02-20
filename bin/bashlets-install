@@ -184,6 +184,13 @@ function install_local()
         exit 1
     }
 
+    # install dependencies
+    local dep
+    [[ -f deps ]] && for dep in $(cat deps)
+    do
+        bashlets-install $dep
+    done
+
     # export the codebase into the installation folder
     for path in lib bin
     do
