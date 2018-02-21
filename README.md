@@ -7,6 +7,7 @@
 - [Introduction](#introduction)
 - [Contributing](#contributing)
 - [Installing](#installing)
+- [Extensions](#extensions)
 - [Examples](#examples)
   * [Basic interaction](#basic-interaction)
   * [Data types: generating a random printable string of arbitrary length](#data-types-generating-a-random-printable-string-of-arbitrary-length)
@@ -72,6 +73,13 @@ To run the test unit, you need Sam Stephenson's [Bash Automated Testing System](
 If you want to check for proper programming, install [ShellCheck](https://www.shellcheck.net/) and do
 
         $ make check
+
+
+## Extensions
+
+There is a growing corpus of additional packages available at [Bashlet Packages](https://github.com/bashlets). To install package `package` just do
+
+        $ bashlets install -D package
 
 
 ## Examples
