@@ -125,6 +125,7 @@ function list_all()
     curl -s $GITHUB_API_URL             \
         | jq '.[].name'                 \
         | grep 'bashlets\.'             \
+        | grep -v bashlets.github.io    \
         | sort
 }
 
