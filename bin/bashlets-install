@@ -41,7 +41,7 @@
 ################################################################################
 
 BASHLETS_BASE=~/.bashlets
-BASHLETS_REMOTE_CORE=https://github.com/robertoreale
+BASHLETS_REMOTE_CORE=https://github.com/bashlets
 BASHLETS_REMOTE_PACKAGES=https://github.com/bashlets
 BASHLETS_LOADER_1ST_STAGE_DESTINATIONS=~/.local/bin:/usr/local/bin
 
