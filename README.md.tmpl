@@ -135,13 +135,6 @@ If you want to check for proper programming, install [ShellCheck](https://www.sh
 	$ @printf "$BASHLETS_NAMESPACE_QUOTED"@ icomplex to_real $(@printf "$BASHLETS_NAMESPACE_QUOTED"@ icomplex square $i)
 	-1
 
-### Math: calculating basic constants to (almost) arbitrary precision
-
-	$ source bashlet math/constants
-
-	$ @printf "$BASHLETS_NAMESPACE_QUOTED"@ constants calculate phi 60
-	1.618033988749894848204586834365638117720309179805762862135448
-
 ### Parsers: interpreting YAML documents in na(t)ive Bash code
 
 	$ # from http://yaml.org/spec/1.2/spec.html

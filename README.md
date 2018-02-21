@@ -16,7 +16,6 @@
   * [Cache: passing data around](#cache-passing-data-around)
   * [Character streams: converting formats without external tools](#character-streams-converting-formats-without-external-tools)
   * [Math: manipulating complex numbers](#math-manipulating-complex-numbers)
-  * [Math: calculating basic constants to (almost) arbitrary precision](#math-calculating-basic-constants-to-almost-arbitrary-precision)
   * [Parsers: interpreting YAML documents in na(t)ive Bash code](#parsers-interpreting-yaml-documents-in-native-bash-code)
   * [User eXperience: enjoying a basic REPL cycle](#user-experience-enjoying-a-basic-repl-cycle)
 - [Design Notes](#design-notes)
@@ -163,13 +162,6 @@ If you want to check for proper programming, install [ShellCheck](https://www.sh
 	$ i=$(bash$$ icomplex create 0 1)
 	$ bash$$ icomplex to_real $(bash$$ icomplex square $i)
 	-1
-
-### Math: calculating basic constants to (almost) arbitrary precision
-
-	$ source bashlet math/constants
-
-	$ bash$$ constants calculate phi 60
-	1.618033988749894848204586834365638117720309179805762862135448
 
 ### Parsers: interpreting YAML documents in na(t)ive Bash code
 
