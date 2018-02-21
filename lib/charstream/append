@@ -50,7 +50,7 @@ function bashlets_charstream_append_generic()
 
     cat "$tempfile"
 
-    tempfile destroy "$tempfile"
+    $BASHLETS_NAMESPACE tempfile destroy "$tempfile"
 }
 
 #@method
