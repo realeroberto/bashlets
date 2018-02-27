@@ -15,7 +15,7 @@ README.md: install README.md.tmpl
 	markdown-toc -i README.md
 
 tests:
-	bats tests/test.sh
+	bats tests/tests.sh
 
 check:
 	scripts/shellcheck
