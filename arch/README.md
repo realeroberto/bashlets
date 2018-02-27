@@ -1,3 +1,0 @@
-# bashlets
-
-## Architecture-dependent Modules
