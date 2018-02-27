@@ -41,7 +41,7 @@ function bashlets_os_mounts_get_mount_point_by_device()
     local device="$1"
 
     test -n "$device" || return
-    cat /proc/mounts | awk "\$1 == \"$device\" {print \$2}"
+    awk "\$1 == \"$device\" {print \$2}" /proc/mounts
 }
 
 #@method
@@ -50,7 +50,7 @@ function bashlets_os_mounts_get_mount_point_by_type()
     local type="$1"
 
     test -n "$type" || return
-    cat /proc/mounts | awk "\$3 == \"$type\" {print \$2}"
+    awk "\$3 == \"$type\" {print \$2}" /proc/mounts
 }
 
 #@method
