@@ -102,6 +102,18 @@ function bashlets_library_loader_list_methods_new()
 }
 
 #@method
+function bashlets_library_loader_list_methods()
+{
+    if [[ $BASHLETS_LIB_LIBRARY_LOADER_STYLE == new ]]; then
+        bashlets_library_loader_list_methods_new "$@"
+    elif [[ $BASHLETS_LIB_LIBRARY_LOADER_STYLE == old ]]; then
+        bashlets_library_loader_list_methods_old "$@"
+    else
+        return 1
+    fi
+}
+
+#@method
 function bashlets_library_loader_search_methods()
 {
     local bashlet_name="$1"
@@ -126,7 +138,6 @@ function bashlets_library_loader_import()
 {
     local bashlet="$1"
     local bashlet_name bashlet_path file_name
-    local bashlets_library_loader_list_methods
     local loader_def
     local container_name container_def container_def_0 method_prefix
     local method method_full
@@ -181,16 +192,8 @@ function bashlets_library_loader_import()
 
     # new methods
 
-    if [[ $BASHLETS_LIB_LIBRARY_LOADER_STYLE == new ]]; then
-        bashlets_library_loader_list_methods=bashlets_library_loader_list_methods_new
-    elif [[ $BASHLETS_LIB_LIBRARY_LOADER_STYLE == old ]]; then
-        bashlets_library_loader_list_methods=bashlets_library_loader_list_methods_old
-    else
-        return 1
-    fi
-
     for method in $(
-        $bashlets_library_loader_list_methods "$bashlet" |  \
+        bashlets_library_loader_list_methods "$bashlet" |  \
             sed "s/${method_prefix}_//"
     )
     do
