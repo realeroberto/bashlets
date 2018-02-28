@@ -92,7 +92,14 @@ function bashlets_library_loader_list_methods_new()
 {
     local file="$(__bashlets_library_loader_bashlet_to_file "$1")"
 
-    grep -A 1 '^#@method' < "$file" | sed -n 's/function \(.*\)()/\1/p'
+    # public methods must be explicitly marked, because using something along
+    # the lines of
+    #   egrep -o '[A-Za-z0-9_]+[(]+[)]' $file
+    # would match also ``closures'', such as baz() in the following example
+    #   function foo() { local bar='function baz() { : }' ; }
+    # or $BASHLETS_NAMESPACE() in bashlets_library_loader_import() below
+
+    grep -A 1 '^#\+@method' "$file" | sed -n 's/function \(.*\)()/\1/p'
 }
 
 #@method
