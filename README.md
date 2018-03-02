@@ -1,2 +1,1 @@
-# bashlets.skeleton
-bashlets.skeleton
+# bashlets.utils.skeleton
