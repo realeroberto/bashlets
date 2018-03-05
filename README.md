@@ -30,14 +30,21 @@ Of course there is so much work to do, and I'd be delighted if somebody is willi
 
 ## Requirements
 
-TODO
+A reasonably sane GNU environment is assumed to be at hand. More specifically, you need:
+
+* Bash
+* Git
+* GNU Coreutils
+* the [jq](https://stedolan.github.io/jq/) command-line JSON processor
+
+To run the test suite, you need Sam Stephenson's [Bash Automated Testing System](https://github.com/sstephenson/bats).
+
+To check for proper programming, you need [ShellCheck](https://www.shellcheck.net/).
+
+Extension packages may have additional requirements.
 
 
 ## Installing
-
-A reasonably sane GNU/Linux environment is assumed to be at hand; support for FreeBSD and Cygwin is available (in _homeopathic dilution_), yet highly experimental.
-
-Moreover, the [jq](https://stedolan.github.io/jq/) command-line JSON processor is needed in order to communicate with the Github API.
 
 	$ git clone https://github.com/bashlets/bashlets.git
 	$ cd bashlets
@@ -45,11 +52,11 @@ Moreover, the [jq](https://stedolan.github.io/jq/) command-line JSON processor i
 
 That's all!
 
-To run the test unit, you need Sam Stephenson's [Bash Automated Testing System](https://github.com/sstephenson/bats). Then run:
+To run the test suite:
 
         $ make test
 
-If you want to check for proper programming, install [ShellCheck](https://www.shellcheck.net/) and do
+If you want to check for proper programming:
 
         $ make check
 
