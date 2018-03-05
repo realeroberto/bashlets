@@ -2,37 +2,6 @@
 
 [![Read the Docs](https://readthedocs.org/projects/bashlets/badge/?version=latest)](http://bashlets.readthedocs.io/en/latest/?badge=latest)
 
-<!-- toc -->
-
-- [Introduction](#introduction)
-- [Contributing](#contributing)
-- [Installing](#installing)
-- [Extensions](#extensions)
-- [Examples](#examples)
-  * [Basic interaction](#basic-interaction)
-  * [Data types: generating a random printable string of arbitrary length](#data-types-generating-a-random-printable-string-of-arbitrary-length)
-  * [Data types: generating and validating UUIDs](#data-types-generating-and-validating-uuids)
-  * [Data types: handling intervals of timestamps](#data-types-handling-intervals-of-timestamps)
-  * [Data types: comparing version strings](#data-types-comparing-version-strings)
-  * [Cache: passing data around](#cache-passing-data-around)
-  * [Character streams: converting formats without external tools](#character-streams-converting-formats-without-external-tools)
-  * [Math: manipulating complex numbers](#math-manipulating-complex-numbers)
-  * [Parsers: interpreting YAML documents in na(t)ive Bash code](#parsers-interpreting-yaml-documents-in-native-bash-code)
-  * [User eXperience: enjoying a basic REPL cycle](#user-experience-enjoying-a-basic-repl-cycle)
-- [Design Notes](#design-notes)
-- [Style Guide](#style-guide)
-- [Community](#community)
-- [Bibliography](#bibliography)
-  * [Reference Works](#reference-works)
-  * [Bash Hacking](#bash-hacking)
-  * [Bash Criticism](#bash-criticism)
-  * [Special Topics](#special-topics)
-  * [Tools](#tools)
-  * [Collections of scripts](#collections-of-scripts)
-  * [Frameworks](#frameworks)
-  * [Special-purpose libraries](#special-purpose-libraries)
-
-<!-- tocstop -->
 
 ## Introduction
 

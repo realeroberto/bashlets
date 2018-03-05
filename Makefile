@@ -8,11 +8,7 @@
 
 # The first rule in a Makefile is the one executed by default ("make"). It
 # should always be the "all" rule, so that "make" and "make all" are identical.
-all: README.md
-
-README.md: install README.md.tmpl
-	scripts/build README.md.tmpl README.md
-	markdown-toc -i README.md
+all:
 
 tests:
 	bats tests/*
