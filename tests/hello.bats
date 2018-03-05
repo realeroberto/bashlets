@@ -1,8 +1,8 @@
 #!/usr/bin/env bats
 
-source bashlet utils/skeleton/hello
+source bashlet util/skeleton/hello
 
-@test "utils/skeleton/hello: say hello" {
+@test "util/skeleton/hello: say hello" {
   result=$(bash$$ hello say_hello)
   expected="hello, world"
   [[ $result == $expected ]]

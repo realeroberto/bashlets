@@ -34,7 +34,7 @@
 ################################################################################
 
 #@method
-function bashlets_utils_skeleton_hello_say_hello()
+function bashlets_util_skeleton_hello_say_hello()
 {
     echo "hello, world"
 }
