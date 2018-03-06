@@ -35,7 +35,7 @@ A reasonably sane GNU environment is assumed to be at hand. More specifically, y
 * Bash
 * Git
 * GNU Coreutils
-* GNU sed
+* GNU sed & awk
 * curl
 * the [jq](https://stedolan.github.io/jq/) command-line JSON processor
 
