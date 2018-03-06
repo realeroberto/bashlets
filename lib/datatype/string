@@ -104,14 +104,6 @@ function bashlets_datatype_string_to_bool()
 }
 
 #@method
-function bashlets_datatype_string_urlencode()
-{
-    # TODO requires perl
-    # cf. https://www.if-not-true-then-false.com/2009/google-search-from-linux-and-unix-command-line/
-    echo -n $@ | perl -pe's/([^-_.~A-Za-z0-9])/sprintf("%%%02X", ord($1))/seg'
-}
-
-#@method
 function bashlets_datatype_string_bin_to_dec()
 {
     ########################################################################
@@ -166,66 +158,6 @@ function bashlets_datatype_string_dec_to_hex()
 	done
 
 	echo $hex
-}
-
-
-BASHLETS_DATATYPE_STRING_ENCODE_BASE64_NEWLINE=0
-
-#@method
-function bashlets_datatype_string_encode_base64()
-{
-    ########################################################################
-    #
-    # Code borrowed from: text_convert.sh by Luciano D. Cerere
-    #
-    # cf. https://gist.github.com/ldante86/679c2240acd7cc838e1d6fcac97dc4d3
-    #
-    ########################################################################
-
-    declare -a base64=( {A..Z} {a..z} {0..9} + / )
-
-	local str i block lastblock
-
-	str=$(bashlets_datatype_string_ascii_to_bin "$@")
-	[ -z "$str" ] && return 1
-
-	for (( i=0; i<${#str}; ((i+=6)) ))
-	do
-		block="${str:i:6}"
-		if (( ${#block} < 5 ))
-		then
-			lastblock=${#block}
-		fi
-
-		while (( ${#block} < 6 ))
-		do
-			block="${block}0"
-		done
-
-		echo -n "${base64[ $(bashlets_datatype_string_bin_to_dec ${block}) ]}"
-	done
-
-	case $lastblock in
-		4)	((lastblock -= 2)) ;;
-		*)	((lastblock -= 1)) ;;
-	esac
-
-	case $BASHLETS_DATATYPE_STRING_ENCODE_BASE64_NEWLINE in
-		0)
-			case $lastblock in
-				1)	echo "o=" ;;
-				2)	echo "K" ;;
-				*)	echo "Cg==" ;;
-			esac
-			;;
-		1)
-			case $lastblock in
-				1)	echo "==" ;;
-				2)	echo "=" ;;
-				*)	echo  ;;
-			esac
-			;;
-	esac
 }
 
 #@method
