@@ -84,7 +84,7 @@ function bashlets_datatype_string_lower()
 #@method
 function bashlets_datatype_string_to_integer()
 {
-    printf "%d\n" "$1"  # removes leading zero's
+    printf "%d\n" "$1" 2> /dev/null
 }
 
 #@method
