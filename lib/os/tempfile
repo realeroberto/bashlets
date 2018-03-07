@@ -37,7 +37,7 @@
 #@method
 function bashlets_os_tempfile_create()
 {
-	echo $(mktemp)
+	mktemp
 }
 
 #@method

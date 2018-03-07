@@ -108,7 +108,7 @@ function bashlets_os_term_flasher()
     while true
     do
         printf "\e[?5h"
-        sleep $delay
+        sleep "$delay"
         printf "\e[?5l"
         read -s -n1 -t1 && break
     done

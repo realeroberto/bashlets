@@ -38,14 +38,14 @@
 function bashlets_os_uptime_get_total()
 {
     IFS=' ' read total idle < /proc/uptime
-    echo $total
+    echo "$total"
 }
 
 #@method
 function bashlets_os_uptime_get_idle()
 {
     IFS=' ' read total idle < /proc/uptime
-    echo $idle
+    echo "$idle"
 }
 
 # Local variables:

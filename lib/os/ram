@@ -39,7 +39,7 @@ function bashlets_os_ram_get_total()
 {
     # https://gist.github.com/ldante86/a9460cffa7333e74f1fec573c6cf3469
 
-    cat /proc/meminfo | grep MemTotal | tr -d "a-zA-Z: \t"
+    grep MemTotal /proc/meminfo | tr -d "a-zA-Z: \t"
 }
 
 #@method
@@ -47,7 +47,7 @@ function bashlets_os_ram_get_free()
 {
     # https://gist.github.com/ldante86/a9460cffa7333e74f1fec573c6cf3469
 
-    cat /proc/meminfo | grep MemFree  | tr -d "a-zA-Z: \t"
+    grep MemFree /proc/meminfo | tr -d "a-zA-Z: \t"
 }
 
 #@method

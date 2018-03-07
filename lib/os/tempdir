@@ -38,7 +38,7 @@
 function bashlets_os_tempdir_create()
 {
     local base="${1:-/tmp}"
-    echo $(mktemp -p "$base" -d)
+    mktemp -p "$base" -d
 }
 
 #@method
