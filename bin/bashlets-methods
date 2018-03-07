@@ -34,6 +34,8 @@
 #
 ################################################################################
 
+source bashlet library/loader
+
 
 #
 # global variables
@@ -54,7 +56,7 @@ function usage()
     cat <<-EOF
 		Usage:
 
-		    bashlets-methods
+		    bashlets-methods <bashlet>
 
 		Options:
 
@@ -84,10 +86,7 @@ function verbose()
 function list_methods()
 {
     local bashlet="$1"
-    (
-        source bashlet library/loader
-        bash$$ loader list_methods "$bashlet" | sort
-    )
+    $BASHLETS_NAMESPACE loader list_methods "$bashlet"
 }
 
 
