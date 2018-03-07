@@ -35,7 +35,8 @@
 ################################################################################
 
 
-source bashlet api/github 2> /dev/null || source ../lib/api/github
+source bashlet library/origin
+source bashlet library/local
 
 #
 # global variables
@@ -43,8 +44,7 @@ source bashlet api/github 2> /dev/null || source ../lib/api/github
 
 BASHLETS_BASE=~/.bashlets
 
-unset list_all
-unset show_default
+list_mode=local
 
 # verbose output
 verbose=:
@@ -59,12 +59,12 @@ function usage()
     cat <<-EOF
 		Usage:
 
-		    bashlets-list [ -A | -D ]
+		    bashlets-list [ -L ] [ base ] | [ -O ]
 
 		Options:
 
-		   -A      list all available packages
-		   -D      show the default branch for each component
+           -L      list installed packages (default)
+           -O      list available packages on remote repository (origin)
 		   -?      display this help and exit
 		   -V      output version information and exit
 
@@ -88,59 +88,36 @@ function normalize_path()
     echo "${1//.//}"
 }
 
-function is_sha1()
-{
-    [[ $1 =~ [0-9a-f]{40} ]]
-}
-
 
 #
 # core logic
 ################################################################################
 
-function __list_installed()
+function list_local()
 {
-    local base="$1"
-    local indent="${2:-}"
-    local default="$(readlink $base/DEFAULT)"
-    for item in $(ls $base 2> /dev/null)
-    do
-        local is_default=
-        test -d "$base/$item" || continue
-        [[ $item != "DEFAULT" ]] || continue
-        [[ -n $show_default && $item == $default ]] && is_default=" (*)"
-        echo "${indent}${item}${is_default}"
-        is_sha1 "$item" || __list_installed "$base/$item" ". $indent"
-    done
+    local base="$BASHLETS_BASE/$(normalize_path $1)"
+    $BASHLETS_NAMESPACE local list_packages_tree "$base"
 }
 
 
-function list_installed()
+function list_origin()
 {
-    __list_installed "$BASHLETS_BASE/$(normalize_path $1)"
+    $BASHLETS_NAMESPACE origin list_packages | sort
 }
 
-
-function list_all()
-{
-    bashlets_api_github_list_repos_by_user   \
-        | grep 'bashlets\.'                  \
-        | grep -v bashlets.github.io         \
-        | sort
-}
 
 #
 # parse command line options
 ################################################################################
 
-while getopts "AD?V" OPTION
+while getopts "LO?V" OPTION
 do
     case $OPTION in
-		A)
-			list_all=1
+		L)
+			list_mode=local
 			;;
-		D)
-			show_default=1
+		O)
+			list_mode=origin
 			;;
 		?)
 			echo ; version
@@ -155,8 +132,9 @@ do
 done
 
 shift $((OPTIND-1))
+base="$1"
 
-[[ -n $list_all ]] && list_all || list_installed
+list_$list_mode "$base"
 
 
 # Local variables:
