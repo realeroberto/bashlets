@@ -106,26 +106,8 @@ function bashlets_datatype_string_to_bool()
 #@method
 function bashlets_datatype_string_bin_to_dec()
 {
-    ########################################################################
-    #
-    # Code borrowed from: text_convert.sh by Luciano D. Cerere
-    #
-    # cf. https://gist.github.com/ldante86/679c2240acd7cc838e1d6fcac97dc4d3
-    #
-    ########################################################################
-
-	local bin=$1
-	local i jump=1 dec=0
-
-	for ((i=${#bin}; i>0; i--))
-	do
-		case ${bin:i-1:1} in
-			1) ((dec+=jump)) ;;
-		esac
-		((jump*=2))
-	done
-
-	echo $dec
+    local bin="$1"
+    echo $((2#$bin))  # TODO: check for errors
 }
 
 
