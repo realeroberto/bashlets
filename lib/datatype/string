@@ -123,6 +123,13 @@ function bashlets_datatype_string_dec_to_bin()
 }
 
 #@method
+function bashlets_datatype_string_hex_to_dec()
+{
+    local hex="$1"
+    echo $((16#$hex))  # TODO: check for errors
+}
+
+#@method
 function bashlets_datatype_string_dec_to_hex()
 {
     ########################################################################
