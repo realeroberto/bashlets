@@ -35,12 +35,13 @@
 ################################################################################
 
 
+source bashlet api/github 2> /dev/null || source ../lib/api/github
+
 #
 # global variables
 ################################################################################
 
 BASHLETS_BASE=~/.bashlets
-GITHUB_API_URL=https://api.github.com/users/bashlets/repos
 
 unset list_all
 unset show_default
@@ -122,10 +123,9 @@ function list_installed()
 
 function list_all()
 {
-    curl -s $GITHUB_API_URL             \
-        | jq '.[].name'                 \
-        | grep 'bashlets\.'             \
-        | grep -v bashlets.github.io    \
+    bashlets_api_github_list_repos_by_user   \
+        | grep 'bashlets\.'                  \
+        | grep -v bashlets.github.io         \
         | sort
 }
 
