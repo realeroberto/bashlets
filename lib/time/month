@@ -41,9 +41,11 @@ source bashlet time/year
 #@method
 function bashlets_time_month_count_days()
 {
+    declare -i month="${1#0}"
+    declare -i year="${2:-$(date +%Y)}"
     declare -i days_in_month
 
-    case ${1#0}
+    case $month
     in
         9|4|6|11)
             days_in_month=30 ;;
@@ -53,8 +55,8 @@ function bashlets_time_month_count_days()
             #               February alone
             # Which has but twenty-eight
             # Or twenty-nine each leap year
-            $BASHLETS_NAMESPACE year is_leap ${2:-`date +%Y`}  \
-                && days_in_month=29                            \
+            $BASHLETS_NAMESPACE year is_leap "$year"  \
+                && days_in_month=29                   \
                 || days_in_month=28 ;;
         *)
             return 5 ;;
