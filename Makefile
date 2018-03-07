@@ -7,3 +7,6 @@ install:
 
 tests:
 	bats tests/*
+
+lint:
+	shellcheck $$(grep -rl '^#![[:blank:]]*/bin/bash')
