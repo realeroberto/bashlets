@@ -59,7 +59,7 @@ function __bashlets_library_loader_bashlet_to_file()
         "$(dirname "$bashlet")/${BASHLETS_REV:-DEFAULT}/lib/$(basename "$bashlet")"
     do
         file="$BASHLETS_BASE/$file"
-        [[ -e $file ]] && echo $file && return
+        [[ -e $file ]] && echo "$file" && return
     done
 }
 
