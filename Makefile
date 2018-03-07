@@ -13,8 +13,8 @@ all:
 tests:
 	bats $$(find tests -type f -name '*.bats')
 
-check:
-	scripts/shellcheck
+lint:
+	shellcheck $$(grep -rl '^#![[:blank:]]*/bin/bash')
 
 install:
 	bin/bashlets-install -L

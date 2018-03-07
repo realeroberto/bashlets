@@ -61,7 +61,7 @@ To run the test suite:
 
 If you want to check for proper programming:
 
-        $ make check
+        $ make lint
 
 
 ## Extensions
