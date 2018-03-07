@@ -82,6 +82,20 @@ function bashlets_math_icomplex_to_s()
 }
 
 #@method
+function bashlets_math_icomplex_compare()
+{
+	declare w="$1" z="$2"
+	declare -i w_real w_img z_real z_img
+
+	w_real="$(bashlets_math_icomplex_to_real "$w")"
+	w_img="$(bashlets_math_icomplex_to_img "$w")"
+	z_real="$(bashlets_math_icomplex_to_real "$z")"
+	z_img="$(bashlets_math_icomplex_to_img "$z")"
+
+	[[ $w_real -eq $z_real && $w_img -eq $z_img ]]
+}
+
+#@method
 function bashlets_math_icomplex_is_zero()
 {
 	declare w="$1"
