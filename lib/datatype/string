@@ -128,6 +128,18 @@ function bashlets_datatype_string_bin_to_dec()
 	echo $dec
 }
 
+
+#@method
+function bashlets_datatype_string_dec_to_bin()
+{
+    # TODO check extreme cases (dec < 0, dec > 255)
+    declare -i dec="$1"
+    # https://stackoverflow.com/questions/44738494/
+    declare -a D2B=({0..1}{0..1}{0..1}{0..1}{0..1}{0..1}{0..1}{0..1})
+
+    echo ${D2B[$dec]}
+}
+
 #@method
 function bashlets_datatype_string_dec_to_hex()
 {
