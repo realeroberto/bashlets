@@ -52,6 +52,18 @@ source bashlet datatype/string
   [[ $result == $expected ]]
 }
 
+@test "datatype/string: convert from decimal to binary representation" {
+  result="$(bash$$ string dec_to_bin 255)"
+  expected="11111111"
+  [[ $result == $expected ]]
+}
+
+@test "datatype/string: convert from hex to decimal representation" {
+  result="$(bash$$ string hex_to_dec FF)"
+  expected="255"
+  [[ $result == $expected ]]
+}
+
 @test "datatype/string: convert from decimal to hex representation" {
   result="$(bash$$ string dec_to_hex 255)"
   expected="FF"
