@@ -19,3 +19,9 @@ source bashlet math/integer
   expected="6 2"
   [[ $result =~ $expected ]]
 }
+
+@test "math/integer: calculate the modular power of an integer" {
+  result="$(bash$$ integer modular_pow 7 256 13)"
+  expected=9
+  [[ $result -eq $expected ]]
+}
