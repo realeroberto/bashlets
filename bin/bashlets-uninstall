@@ -84,7 +84,7 @@ function uninstall()
 
     rm -fr $BASHLETS_BASE
 
-    # cycle possible destinations to install the 1st stage loader
+    # cycle possible binary targets to remove
     IFS=: read -r -a destinations <<< "$BASHLETS_BIN_TARGETS"
     for d in ${destinations[@]}
     do
