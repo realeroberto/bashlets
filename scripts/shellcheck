@@ -37,9 +37,9 @@
 
 
 # wrapper for shellcheck
-dir=$1
+dir="$1"
 
-find $dir -type f | xargs -n 1 file | awk -F: '/Bourne-Again shell script/ {print $1}' | xargs -n 1 shellcheck
+find -print0 "$dir" -type f | xargs -0 -n 1 file | awk -F: '/Bourne-Again shell script/ {print $1}' | xargs -n 1 shellcheck
 
 # Local variables:
 # mode: shell-script
