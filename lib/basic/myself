@@ -85,19 +85,20 @@ function bashlets_basic_myself_get_path_effective()
 function bashlets_basic_myself_get_ppid()
 {
     # echo it just to get rid of leading/trailing spaces
-    echo $(ps -o ppid= -p $$)
+    # shellcheck disable=SC2005
+    echo "$(ps -o ppid= -p $$)"
 }
 
 #@method
 function bashlets_basic_myself_get_parent_name()
 {
-    ps -o comm= -p $(bashlets_basic_myself_get_ppid)
+    ps -o comm= -p "$(bashlets_basic_myself_get_ppid)"
 }
 
 #@method
 function bashlets_basic_myself_require_user()
 {
-    test $(whoami) = "$1"
+    test "$(whoami)" = "$1"
 }
 
 

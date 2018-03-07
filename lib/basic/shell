@@ -39,19 +39,22 @@ source bashlet datatype/version
 #@method
 function bashlets_basic_shell_get_full_version()
 {
-    echo $BASH_VERSION
+    echo "$BASH_VERSION"
 }
 
 #@method
 function bashlets_basic_shell_get_short_version()
 {
-    echo $BASH_VERSION | sed 's/^\([0-9.]\+\).*/\1/'
+    # shellcheck disable=SC2001
+    echo "$BASH_VERSION" | sed 's/^\([0-9.]\+\).*/\1/'
 }
 
 #@method
 function bashlets_basic_shell_has_feature()
 {
     local feature="$1"
+
+    # TODO
 
     case "$feature" in
         "associative-arrays")
