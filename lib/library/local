@@ -1,0 +1,119 @@
+#!/bin/bash
+
+
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2014-8 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+source bashlet datatype/sha1
+BASHLETS_BASE=~/.bashlets
+
+
+function __bashlets_library_local_list_packages_callback_path()
+{
+    local item="$1"
+    local parent="$2"
+
+    $BASHLETS_NAMESPACE sha1 validate "$item" || echo "${parent}/${item}"
+}
+
+function __bashlets_library_local_list_packages_callback_tree_norevs()
+{
+    local item="$1" ; shift
+    local indent="$2"
+
+    $BASHLETS_NAMESPACE sha1 validate "$item" || echo "${indent}${item}"
+}
+
+function __bashlets_library_local_list_packages_callback_tree()
+{
+    local item="$1" parent="${2}" indent="${3:-}"
+    echo "${indent}${item}"
+}
+
+function __bashlets_library_local_list_packages()
+{
+    local base="$1" callback="$2" parent="$3" indent="$4"
+    local item baseitem parentitem
+
+    for item in $base/*
+    do
+        test -d "$item" || continue
+
+        baseitem="$(basename "$item")"
+        [[ $baseitem != "DEFAULT" ]] || continue
+
+        $callback "$baseitem" "$parent" "$indent"
+
+        # tail recursion
+        $BASHLETS_NAMESPACE sha1 validate "$baseitem"   \
+            || $FUNCNAME "$item" "$callback" "$parent/$baseitem" ". $indent"
+    done
+}
+
+#@method
+function bashlets_library_local_list_packages_path()
+{
+    local base="$1"
+    local callback=__bashlets_library_local_list_packages_callback_path
+
+    [[ -z $base ]] && base="$BASHLETS_BASE"
+    __bashlets_library_local_list_packages "$base" "$callback"
+}
+
+#@method
+function bashlets_library_local_list_packages_tree()
+{
+    local base="$1"
+    local callback=__bashlets_library_local_list_packages_callback_tree
+
+    [[ -z $base ]] && base="$BASHLETS_BASE"
+    __bashlets_library_local_list_packages "$base" "$callback"
+}
+
+#@method
+function bashlets_library_local_list_packages_tree_norevs()
+{
+    local base="$1"
+    local callback=__bashlets_library_local_list_packages_callback_tree_norevs
+
+    [[ -z $base ]] && base="$BASHLETS_BASE"
+    __bashlets_library_local_list_packages "$base" "$callback"
+}
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh
