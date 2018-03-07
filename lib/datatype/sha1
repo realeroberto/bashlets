@@ -37,7 +37,7 @@
 #@method
 function bashlets_datatype_sha1_validate()
 {
-    [[ $1 =~ [0-9a-f]{40} ]]
+    [[ $1 =~ [0-9a-fA-F]{40} ]]
 }
 
 
