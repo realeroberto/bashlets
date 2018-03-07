@@ -87,6 +87,48 @@ function bashlets_math_integer_get_unique_factors()
     ) | xargs -n 1 echo | uniq -c
 }
 
+
+#
+# fast modular exponentiation
+#
+#   see http://en.wikipedia.org/wiki/Modular_exponentiation
+#
+
+#@method
+function bashlets_math_integer_modular_pow()
+{
+    local base=$1 expon=$2 mod=$3
+
+    $BASHLETS_NAMESPACE number validate_as_integer  $base  || return 1
+    $BASHLETS_NAMESPACE number validate_as_integer  $expon || return 1
+    $BASHLETS_NAMESPACE number validate_as_unsigned $mod   || return 1
+
+    ((mod > 0)) || return 1
+
+    awk -v base=$base -v expon=$expon -v mod=$mod -e '
+        function modular_pow(base, expon, mod) {
+            result = 1
+
+            while (expon > 0) {
+                if (and(expon, 1) == 1) {
+                    result = (result * base) % mod
+                }
+
+                expon = rshift(expon, 1)
+                base = (base * base) % mod
+            }
+
+            return result
+        }
+
+        BEGIN {
+            print modular_pow(base, expon, mod)
+            exit
+        }
+    '
+}
+
+
 # Local variables:
 # mode: shell-script
 # sh-basic-offset: 4
