@@ -11,7 +11,7 @@
 all:
 
 tests:
-	bats tests/*.bats
+	bats $$(find tests -type f -name '*.bats')
 
 check:
 	scripts/shellcheck
