@@ -40,7 +40,7 @@
 ################################################################################
 
 BASHLETS_BASE=~/.bashlets
-BASHLETS_LOADER_1ST_STAGE_DESTINATIONS=~/.local/bin:/usr/local/bin
+BASHLETS_BIN_TARGETS=~/.local/bin:/usr/local/bin
 
 #
 # utilities
@@ -85,7 +85,7 @@ function uninstall()
     rm -fr $BASHLETS_BASE
 
     # cycle possible destinations to install the 1st stage loader
-    IFS=: read -r -a destinations <<< "$BASHLETS_LOADER_1ST_STAGE_DESTINATIONS"
+    IFS=: read -r -a destinations <<< "$BASHLETS_BIN_TARGETS"
     for d in ${destinations[@]}
     do
         rm -f $d/bashlet*
