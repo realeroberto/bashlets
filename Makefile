@@ -11,7 +11,7 @@
 all:
 
 tests:
-	bats tests/*
+	bats tests/*.bats
 
 check:
 	scripts/shellcheck
