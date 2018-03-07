@@ -36,7 +36,6 @@
 
 BASHLETS_LIB_LIBRARY_LOADER_STYLE=new   # old/new
 BASHLETS_NAMESPACE=bash$$
-BASHLETS_NAMESPACE_QUOTED=bash\$\$
 
 function __bashlets_library_loader_bashlet_to_name()
 {
