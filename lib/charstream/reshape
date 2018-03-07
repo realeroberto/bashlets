@@ -37,10 +37,10 @@
 #@method
 function bashlets_charstream_reshape_join_lines()
 {
-    local del="$1"
+    local del="$1"  # delimiter
 
-    # use GNU head(1) to remove the last newline in the input
-    head -c -1 | ([[ -n "$del" ]] && tr "\n" "$del" || tr -d "\n")
+    # https://stackoverflow.com/questions/1251999/
+    sed ":a;N;\$!ba;s/[\n\r]\+/$del/g"
 }
 
 #@method

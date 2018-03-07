@@ -47,16 +47,16 @@ function __bashlets_charstream_interpolate_callback_plain()
 
     [[ -e $input ]] || return 1
 
-    sedexp=$(cat "$input" | while read key
+    sedexp=$(while read key
         do
-            key2="$(echo $key | tr @ $)"
+            key2="$(echo "$key" | tr @ $)"
             # get a value for VAR from the environment
             value="$(eval echo "$key2")"
             # escape path for sed
             value="${value//\//\\/}"
             # construct a list of sed substitutions
             [[ -n $key && -n $value ]] && echo "-e s/$key/$value/g"
-        done | sed 'N; s/\n/ /')
+        done < "$input" | sed 'N; s/\n/ /')
 
     echo "$sedexp"
 }
@@ -70,9 +70,9 @@ function __bashlets_charstream_interpolate_callback_uneval()
 
     [[ -e $input && -n $context_handler ]] || return 1
 
-    sedexp=$(cat "$input" | while read key
+    sedexp=$(while read key
         do
-            key2="$(echo $key | tr -d @)"
+            key2="$(echo "$key" | tr -d @)"
             # get a value for VAR from the context
             value="$(
                 $BASHLETS_NAMESPACE uneval get_by_key "$context_handler" "$key2"
@@ -81,7 +81,7 @@ function __bashlets_charstream_interpolate_callback_uneval()
             value="${value//\//\\/}"
             # construct a list of sed substitutions
             [[ -n $key && -n $value ]] && echo "-e s/$key/$value/g"
-        done | sed 'N; s/\n/ /')
+        done < "$input"| sed 'N; s/\n/ /')
 
     echo "$sedexp"
 }
@@ -108,8 +108,8 @@ function bashlets_charstream_interpolate_eval()
     # build a list of @var's
 
     (test -e "$input" && cat "$input" || cat)             \
-        | tee -a "$stage1"                      $note1    \
-        | sed "s/$regexp/&\n/g"                 $note2    \
+        | tee -a "$stage1"                      "$note1"  \
+        | sed "s/$regexp/&\n/g"                 "$note2"  \
         | sed -n "s/.*\($regexp\).*/\1/p"                 \
             > "$stage2"
 
@@ -136,7 +136,7 @@ function bashlets_charstream_interpolate_eval()
     sedexp="$("$callback" "$stage2" "$context_handler")" || return 1
 
     # apply substitutions (no quotes around $sedexp!)
-    [[ -n $sedexp ]] && sed $sedexp < "$stage1"         \
+    [[ -n $sedexp ]] && sed "$sedexp" < "$stage1"         \
         | (test -n "$output" && cat > "$output" || cat)
 
     # cleanup
