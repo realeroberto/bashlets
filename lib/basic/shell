@@ -49,26 +49,6 @@ function bashlets_basic_shell_get_short_version()
     echo "$BASH_VERSION" | sed 's/^\([0-9.]\+\).*/\1/'
 }
 
-#@method
-function bashlets_basic_shell_has_feature()
-{
-    local feature="$1"
-
-    # TODO
-
-    case "$feature" in
-        "associative-arrays")
-            $BASHLETS_NAMESPACE version greater_than         \
-                "$(bashlets_basic_shell_get_short_version)"  \
-                4
-            ;;
-        *)
-            echo "Feature unknown!"
-            return 1
-            ;;
-    esac
-}
-
 
 # Local variables:
 # mode: shell-script
