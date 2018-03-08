@@ -38,9 +38,8 @@
 #@method
 function bashlets_os_kernel_get_version()
 {
-    local target="$1"
     local full_version="$(uname -r)"
-    echo ${full_version%-*}
+    echo "${full_version%-*}"
 }
 
 

@@ -49,9 +49,9 @@ function bashlets_os_block_get_signature()
     local target="$1"
     local major="$(stat -c '%t' "$target")"  # major device type in HEX
     local minor="$(stat -c '%T' "$target")"  # minor device type in HEX
-    local signature="$(printf "%d:%d" 0x$major 0x$minor)"  # convert to decimal
+    local signature="$(printf "%d:%d" "0x$major" "0x$minor")"  # convert to decimal
 
-    echo $signature
+    echo "$signature"
 }
 
 #@method
@@ -59,7 +59,7 @@ function bashlets_os_block_validate_device()
 {
     local target="$1"
 
-    stat -c %F "$target" 2> /dev/null | grep 'block special file' > /dev/null
+    LC_ALL=C stat -c %F "$target" 2> /dev/null | grep 'block special file' > /dev/null
 }
 
 #@method
@@ -82,7 +82,8 @@ function __bashlets_os_block_canonicalise_pre_2_6_27()
     # TODO: add explanation
 
     dirname "$(  \
-        find "$sysfs/block" -name dev | xargs -r grep -l ^$signature$)"
+        find "$sysfs/block" -name dev -print0 | xargs -0 -r grep -l "^$signature$"
+    )"
 }
 
 function __bashlets_os_block_canonicalise_post_2_6_27()
@@ -111,9 +112,12 @@ function bashlets_os_block_canonicalise()
 
     local kernel_version=$($BASHLETS_NAMESPACE kernel get_version)
 
-    $BASHLETS_NAMESPACE version greater_than $kernel_version 2.6.27  \
-        && __bashlets_os_block_canonicalise_post_2_6_27 "$target"    \
-        || __bashlets_os_block_canonicalise_pre_2_6_27 "$target"
+    if $BASHLETS_NAMESPACE version greater_than "$kernel_version" 2.6.27
+    then
+        __bashlets_os_block_canonicalise_post_2_6_27 "$target"
+    else
+        __bashlets_os_block_canonicalise_pre_2_6_27 "$target"
+    fi
 }
 
 #@method
@@ -126,6 +130,7 @@ function bashlets_os_block_canonicalise_parent()
     test -n "$device" || return 1
 
     # TODO: add explanation
+    # TODO: only valid for kernel > 2.6.27
 
     parent_device="$(dirname "$device")"
     test -f "$parent_device/dev" || return 1

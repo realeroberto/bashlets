@@ -37,9 +37,13 @@
 #@method
 function bashlets_os_fs_dir_is_empty()
 {
+    local dir="$1"
     # cf. http://superuser.com/questions/352289/
 
-    test -e "$1/"* 2>/dev/null
+    test -d "$dir" || return 2
+
+    # shellcheck disable=SC2065
+    2> /dev/null test -e "$1/"*
 
     case $? in
         1)   return 0 ;;
