@@ -1,12 +1,12 @@
-.PHONY: all install tests
+.PHONY: all install tests lint
 
-all: install
+all: ;
 
 install:
-	bashlets install -L
+	bashlets install -DL
 
 tests:
-	bats tests/*
+	bats $$(find tests -type f -name '*.bats')
 
 lint:
 	shellcheck $$(grep -rl '^#![[:blank:]]*/bin/bash')
