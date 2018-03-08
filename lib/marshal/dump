@@ -34,7 +34,7 @@
 ################################################################################
 
 
-source bashlet util/object
+source bashlet datatype/object
 
 
 #@method

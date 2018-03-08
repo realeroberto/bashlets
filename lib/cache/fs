@@ -36,7 +36,7 @@
 
 source bashlet marshal/dump
 source bashlet os/tempdir
-source bashlet util/object
+source bashlet datatype/object
 
 
 function __bashlets_cache_fs_cache_to_path()
