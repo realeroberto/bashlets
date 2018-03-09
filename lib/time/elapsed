@@ -51,7 +51,7 @@ function bashlets_time_elapsed_seconds_to_formatted()
 
     [[ -n $elapsed ]] || return
 
-    $BASHLETS_NAMESPACE number validate_as_unsigned_float $elapsed || return 1
+    $BASHLETS_NAMESPACE number validate_as_unsigned_float "$elapsed" || return 1
 
        days=$((elapsed / SECONDS_IN_DAY))
     SECONDS=$((elapsed % SECONDS_IN_DAY))
@@ -78,7 +78,7 @@ function bashlets_time_elapsed_seconds_to_description()
 
     [[ -n $elapsed ]] || return
 
-    $BASHLETS_NAMESPACE number validate_as_unsigned_float $elapsed || return 1
+    $BASHLETS_NAMESPACE number validate_as_unsigned_float "$elapsed" || return 1
 
        days=$((elapsed / SECONDS_IN_DAY))
     SECONDS=$((elapsed % SECONDS_IN_DAY))
@@ -87,7 +87,7 @@ function bashlets_time_elapsed_seconds_to_description()
     minutes=$(((SECONDS / SECONDS_IN_MINUTE) % MINUTES_IN_HOUR))
     seconds=$(((SECONDS % SECONDS_IN_MINUTE)))
 
-    printf "$days days, $hours hours, $minutes minutes, $seconds seconds\n"
+    echo "$days day(s), $hours hour(s), $minutes minute(s), $seconds second(s)"
 }
 
 # Local variables:

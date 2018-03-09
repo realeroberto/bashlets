@@ -39,7 +39,7 @@
 #@method
 function bashlets_time_year_is_leap()
 {
-    local year=$1
+    local year="$1"
     local gregorian=1752
 
     [[ -z $year ]] && printf -v year '%(%Y)T'

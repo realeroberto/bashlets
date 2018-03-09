@@ -43,14 +43,14 @@ source bashlet time/month
 function bashlets_time_date_get_random()
 {
     local first=${1:-1752} last=${2:-2100}
-    local year month day days_in_month date
+    local year month day days_in_month
 
     year=$((RANDOM % (last - first) + first))
     month=$((RANDOM % 12 + 1))
     days_in_month="$($BASHLETS_NAMESPACE month count_days "$month" "$year")"
     day=$((RANDOM % days_in_month + 1))
-    printf -v date "%d-%02d-%02d" "$year" "$month" "$day"
-    echo "$date"
+
+    printf "%d-%02d-%02d\n" "$year" "$month" "$day"
 }
 
 # Local variables:
