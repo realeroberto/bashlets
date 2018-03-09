@@ -40,8 +40,8 @@ function bashlets_ipc_flock_acquire()
 {
     local lockfile="$1"
     exec 9> "$lockfile"
-    flock -n 9 || echo "cannot acquire lock"
-    [[ -f $lockfile ]] && echo "lock acquired" >&2
+    flock -n 9 || { echo "cannot acquire lock"; return 1; }
+    [[ -f $lockfile ]]
 }
 
 #@method
@@ -55,7 +55,7 @@ function bashlets_ipc_flock_release()
 function bashlets_ipc_flock_exists()
 {
     local lockfile="$1"
-    return [[ -e $lockfile ]]
+    [[ -e $lockfile ]]
 }
 
 

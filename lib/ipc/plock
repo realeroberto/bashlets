@@ -33,7 +33,9 @@
 #
 ################################################################################
 
-#
+# TODO: remove dependency on bc
+# TODO: fix trap clause
+
 # the maximum lifetime of a lock file, in seconds; when expired, the lock
 # is assumed to be a stale one
 #
@@ -100,17 +102,17 @@ function bashlets_ipc_plock_acquire()
             # we record in the lock file itself our pid, our name
             # and the timestamp
             #
-            echo "$$:`basename $0`:`date +%s`" > "$lockfile" )
+            echo "$$:$(basename "$0"):$(date +%s)" > "$lockfile" )
         then
             #
             # if we fail, the lock must be already held by another process;
             # let us look at its contents, however
             #
-            lock_contents=`cat $lockfile 2>/dev/null`
-            pid=`echo $lock_contents | sed 's/^\([0-9]*\):.*/\1/'`
-            cmd=`echo $lock_contents | cut -d':' -f2`
-            timestamp=`echo $lock_contents | sed 's/^.*:.*:\([0-9]*\)$/\1/'`
-            now=`date +%s`
+            lock_contents=$(cat "$lockfile" 2>/dev/null)
+            pid=$(echo $lock_contents | sed 's/^\([0-9]*\):.*/\1/')
+            cmd=$(echo $lock_contents | cut -d':' -f2)
+            timestamp=$(echo $lock_contents | sed 's/^.*:.*:\([0-9]*\)$/\1/')
+            now=$(date +%s)
             #
             # the pid and name recorded must correspond to a running
             # process; moreover, the timestamp must not be too
@@ -120,8 +122,8 @@ function bashlets_ipc_plock_acquire()
             # that the lock is a stale one
             #
             if [[ -z $pid || -z $cmd || -z $timestamp ||
-                -z `ps -C $cmd -o pid= | grep $pid` ||
-                `echo $now - $timestamp | bc` -ge $__bashlets_ipc_plock_max_lifetime ]]
+                -z $(ps -C $cmd -o pid= | grep $pid) ||
+                $(echo $now - $timestamp | bc) -ge $__bashlets_ipc_plock_max_lifetime ]]
         then
             rm -f $lockfile
             may_start=1
