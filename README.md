@@ -42,6 +42,7 @@ A reasonably sane GNU environment is assumed to be at hand. More specifically, y
 * GNU grep, sed, awk
 * curl
 * the [jq](https://stedolan.github.io/jq/) command-line JSON processor
+* Make
 
 To run the test suite, you need Sam Stephenson's [Bash Automated Testing System](https://github.com/sstephenson/bats).
 
