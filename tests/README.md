@@ -8,6 +8,7 @@
 
 ### `datatype` 
 
+* `sha1`: 100%
 * `string`: 100%
 
 ### `library`
