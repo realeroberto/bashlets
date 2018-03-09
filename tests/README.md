@@ -2,6 +2,10 @@
 
 ## Coverage
 
+### `api`
+
+* `github`: 100%
+
 ### `datatype` 
 
 * `string`: 100%
