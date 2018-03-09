@@ -93,14 +93,14 @@ function normalize_path()
 # core logic
 ################################################################################
 
-function list_local()
+function list_packages_local()
 {
     local base="$BASHLETS_BASE/$(normalize_path $1)"
     $BASHLETS_NAMESPACE local list_packages_tree "$base"
 }
 
 
-function list_origin()
+function list_packages_origin()
 {
     $BASHLETS_NAMESPACE origin list_packages | sort
 }
@@ -134,7 +134,7 @@ done
 shift $((OPTIND-1))
 base="$1"
 
-list_$list_mode "$base"
+list_packages_$list_mode "$base"
 
 
 # Local variables:
