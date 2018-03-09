@@ -5,7 +5,7 @@
 
 > /'baʃlɪt/
 > 
-> *noun: A tiny piece of shell code code.*
+> *noun: A tiny piece of shell code.*
 
 ## Introduction
 
