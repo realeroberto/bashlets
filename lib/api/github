@@ -42,7 +42,7 @@ function bashlets_api_github_list_repos_by_user()
     local user="${1:-bashlets}"
 
     curl -s "$BASHLETS_API_GITHUB_API/users/$user/repos"  \
-        | jq -M '.[].name'
+        | jq -r '.[].name'
 }
 
 
