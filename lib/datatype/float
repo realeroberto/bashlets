@@ -37,13 +37,13 @@
 source bashlet datatype/number
 
 #@method
-function bashlets_datatype_float_validate()
+function bashlets::datatype::float::validate()
 {
     $BASHLETS_NAMESPACE number validate_as_float "$1"
 }
 
 #@method
-function bashlets_datatype_float_diff()
+function bashlets::datatype::float::diff()
 {
     local x="$1"
     local y="$2"

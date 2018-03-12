@@ -34,7 +34,7 @@
 ################################################################################
 
 
-function __bashlets_os_user_get_gecos()
+function __bashlets::os::user::get_gecos()
 {
     # cf. https://en.wikipedia.org/wiki/Gecos_field
     local username="${1:-$(whoami)}"
@@ -42,27 +42,27 @@ function __bashlets_os_user_get_gecos()
 }
 
 #@method
-function bashlets_os_user_get_full_name()
+function bashlets::os::user::get_full_name()
 {
-    __bashlets_os_user_get_gecos "$1" | cut -d , -f 1
+    __bashlets::os::user::get_gecos "$1" | cut -d , -f 1
 }
 
 #@method
-function bashlets_os_user_get_office()
+function bashlets::os::user::get_office()
 {
-    __bashlets_os_user_get_gecos "$1" | cut -d , -f 2
+    __bashlets::os::user::get_gecos "$1" | cut -d , -f 2
 }
 
 #@method
-function bashlets_os_user_get_office_phone()
+function bashlets::os::user::get_office_phone()
 {
-    __bashlets_os_user_get_gecos "$1" | cut -d , -f 3
+    __bashlets::os::user::get_gecos "$1" | cut -d , -f 3
 }
 
 #@method
-function bashlets_os_user_get_home_phone()
+function bashlets::os::user::get_home_phone()
 {
-    __bashlets_os_user_get_gecos "$1" | cut -d , -f 5
+    __bashlets::os::user::get_gecos "$1" | cut -d , -f 5
 }
 
 

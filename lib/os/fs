@@ -35,7 +35,7 @@
 
 
 #@method
-function bashlets_os_fs_dir_is_empty()
+function bashlets::os::fs::dir_is_empty()
 {
     local dir="$1"
     # cf. http://superuser.com/questions/352289/
@@ -53,28 +53,28 @@ function bashlets_os_fs_dir_is_empty()
 
 
 #@method
-function bashlets_os_fs_walk()
+function bashlets::os::fs::walk()
 {
     local base="$1"
-    local callback="${2:-__bashlets_os_fs_walk_echo}"
+    local callback="${2:-__bashlets::os::fs::walk_echo}"
 
-    function __bashlets_os_fs_walk_echo()
+    function __bashlets::os::fs::walk_echo()
     {
         echo "$@"
     }
 
-    function __bashlets_os_fs_walk()
+    function __bashlets::os::fs::walk()
     {
         local name
 
-        bashlets_os_fs_dir_is_empty "$(pwd)" && return
+        bashlets::os::fs::dir_is_empty "$(pwd)" && return
 
         for name in *
         do
             $callback "$name"
             test -d "$name" && {
                 cd "$name" || continue  # skip on permission denied
-                __bashlets_os_fs_walk
+                __bashlets::os::fs::walk
                 cd ..
             }
         done
@@ -84,11 +84,11 @@ function bashlets_os_fs_walk()
         shopt -s dotglob  # include hidden files
 
         cd "$base"
-        __bashlets_os_fs_walk
+        __bashlets::os::fs::walk
     )
 
-    unset __bashlets_os_fs_walk
-    unset __bashlets_os_fs_walk_echo
+    unset __bashlets::os::fs::walk
+    unset __bashlets::os::fs::walk_echo
 }
 
 

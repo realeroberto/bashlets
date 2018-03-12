@@ -38,7 +38,7 @@ source bashlet datatype/string
 
 
 #@method
-function bashlets_charstream_convert_dos2unix()
+function bashlets::charstream::convert::dos2unix()
 {
     local input="$1"
     local output="$2"
@@ -56,7 +56,7 @@ function bashlets_charstream_convert_dos2unix()
 }
 
 #@method
-function bashlets_charstream_convert_unix2dos()
+function bashlets::charstream::convert::unix2dos()
 {
     local input="$1"
     local output="$2"
@@ -74,7 +74,7 @@ function bashlets_charstream_convert_unix2dos()
 }
 
 #@method
-function bashlets_charstream_convert_rotate()
+function bashlets::charstream::convert::rotate()
 {
     while read
     do
@@ -83,7 +83,7 @@ function bashlets_charstream_convert_rotate()
 }
 
 #@method
-function bashlets_charstream_convert_rot13()
+function bashlets::charstream::convert::rot13()
 {
     while read
     do
@@ -92,7 +92,7 @@ function bashlets_charstream_convert_rot13()
 }
 
 #@method
-function bashlets_charstream_convert_punch()
+function bashlets::charstream::convert::punch()
 {
     while read
     do
@@ -101,7 +101,7 @@ function bashlets_charstream_convert_punch()
 }
 
 #@method
-function bashlets_charstream_convert_to_piglatin()
+function bashlets::charstream::convert::to_piglatin()
 {
     while read
     do

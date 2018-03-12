@@ -37,20 +37,20 @@ source bashlet os/tempfile
 
 
 #@method
-function bashlets_datatype_counter_create()
+function bashlets::datatype::counter::create()
 {
     $BASHLETS_NAMESPACE tempfile create
 }
 
 #@method
-function bashlets_datatype_counter_destroy()
+function bashlets::datatype::counter::destroy()
 {
     local counter="$1"
     $BASHLETS_NAMESPACE tempfile destroy "$counter"
 }
 
 #@method
-function bashlets_datatype_counter_set()
+function bashlets::datatype::counter::set()
 {
     local counter="$1"
     local value="$2"
@@ -58,21 +58,21 @@ function bashlets_datatype_counter_set()
 }
 
 #@method
-function bashlets_datatype_counter_get()
+function bashlets::datatype::counter::get()
 {
     local counter="$1"
     echo "$(cat "$counter")"
 }
 
 #@method
-function bashlets_datatype_counter_increase()
+function bashlets::datatype::counter::increase()
 {
     local counter="$1"
     echo $(($(<"$counter")+1)) > "$counter"
 }
 
 #@method
-function bashlets_datatype_counter_decrease()
+function bashlets::datatype::counter::decrease()
 {
     local counter="$1"
     echo $(($(<"$counter")-1)) > "$counter"

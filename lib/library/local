@@ -38,7 +38,7 @@ source bashlet datatype/sha1
 BASHLETS_BASE=~/.bashlets
 
 
-function __bashlets_library_local_list_packages_callback_path()
+function __bashlets::library::local::list_packages_callback_path()
 {
     local item="$1"
     local parent="$2"
@@ -46,7 +46,7 @@ function __bashlets_library_local_list_packages_callback_path()
     $BASHLETS_NAMESPACE sha1 validate "$item" || echo "${parent}/${item}"
 }
 
-function __bashlets_library_local_list_packages_callback_tree_norevs()
+function __bashlets::library::local::list_packages_callback_tree_norevs()
 {
     local item="$1" ; shift
     local indent="$2"
@@ -54,13 +54,13 @@ function __bashlets_library_local_list_packages_callback_tree_norevs()
     $BASHLETS_NAMESPACE sha1 validate "$item" || echo "${indent}${item}"
 }
 
-function __bashlets_library_local_list_packages_callback_tree()
+function __bashlets::library::local::list_packages_callback_tree()
 {
     local item="$1" parent="${2}" indent="${3:-}"
     echo "${indent}${item}"
 }
 
-function __bashlets_library_local_list_packages()
+function __bashlets::library::local::list_packages()
 {
     local base="$1" callback="$2" parent="$3" indent="$4"
     local item baseitem parentitem
@@ -81,33 +81,33 @@ function __bashlets_library_local_list_packages()
 }
 
 #@method
-function bashlets_library_local_list_packages_path()
+function bashlets::library::local::list_packages_path()
 {
     local base="$1"
-    local callback=__bashlets_library_local_list_packages_callback_path
+    local callback=__bashlets::library::local::list_packages_callback_path
 
     [[ -z $base ]] && base="$BASHLETS_BASE"
-    __bashlets_library_local_list_packages "$base" "$callback"
+    __bashlets::library::local::list_packages "$base" "$callback"
 }
 
 #@method
-function bashlets_library_local_list_packages_tree()
+function bashlets::library::local::list_packages_tree()
 {
     local base="$1"
-    local callback=__bashlets_library_local_list_packages_callback_tree
+    local callback=__bashlets::library::local::list_packages_callback_tree
 
     [[ -z $base ]] && base="$BASHLETS_BASE"
-    __bashlets_library_local_list_packages "$base" "$callback"
+    __bashlets::library::local::list_packages "$base" "$callback"
 }
 
 #@method
-function bashlets_library_local_list_packages_tree_norevs()
+function bashlets::library::local::list_packages_tree_norevs()
 {
     local base="$1"
-    local callback=__bashlets_library_local_list_packages_callback_tree_norevs
+    local callback=__bashlets::library::local::list_packages_callback_tree_norevs
 
     [[ -z $base ]] && base="$BASHLETS_BASE"
-    __bashlets_library_local_list_packages "$base" "$callback"
+    __bashlets::library::local::list_packages "$base" "$callback"
 }
 
 # Local variables:

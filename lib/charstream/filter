@@ -35,13 +35,13 @@
 
 
 #@method
-function bashlets_charstream_filter_till_pattern()
+function bashlets::charstream::filter::till_pattern()
 {
     awk "1;/$1/{exit}"
 }
 
 #@method
-function bashlets_charstream_filter_after_pattern()
+function bashlets::charstream::filter::after_pattern()
 {
     # cf. http://stackoverflow.com/questions/17283567/
     awk "f;/$1/{f=1}"

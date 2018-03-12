@@ -40,7 +40,7 @@ source bashlet time/month
 
 
 #@method
-function bashlets_time_date_get_random()
+function bashlets::time::date::get_random()
 {
     local first=${1:-1752} last=${2:-2100}
     local year month day days_in_month

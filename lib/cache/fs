@@ -39,14 +39,14 @@ source bashlet os/tempdir
 source bashlet datatype/object
 
 
-function __bashlets_cache_fs_cache_to_path()
+function __bashlets::cache::fs::cache_to_path()
 {
     local cache="$1"
 
     echo "$cache"
 }
 
-function __bashlets_cache_fs_get_key_path()
+function __bashlets::cache::fs::get_key_path()
 {
     local path="$1"
     local key="$2"
@@ -55,10 +55,10 @@ function __bashlets_cache_fs_get_key_path()
 }
 
 #@method
-function bashlets_cache_fs_count_keys()
+function bashlets::cache::fs::count_keys()
 {
     local cache="$1"
-    local path="$(__bashlets_cache_fs_cache_to_path "$cache")"
+    local path="$(__bashlets::cache::fs::cache_to_path "$cache")"
     local count
 
     [[ -d "$path" ]] || return 1
@@ -70,19 +70,19 @@ function bashlets_cache_fs_count_keys()
 }
 
 #@method
-function bashlets_cache_fs_create()
+function bashlets::cache::fs::create()
 {
     local __path="$($BASHLETS_NAMESPACE tempdir create)" || return 1
-    local path="$(__bashlets_cache_fs_cache_to_path "$__path")"
+    local path="$(__bashlets::cache::fs::cache_to_path "$__path")"
 
     echo "$path"
 }
 
 #@method
-function bashlets_cache_fs_destroy()
+function bashlets::cache::fs::destroy()
 {
     local cache="$1"
-    local path="$(__bashlets_cache_fs_cache_to_path "$cache")"
+    local path="$(__bashlets::cache::fs::cache_to_path "$cache")"
 
     [[ -d "$path" ]] || return 1
 
@@ -90,12 +90,12 @@ function bashlets_cache_fs_destroy()
 }
 
 #@method
-function bashlets_cache_fs_exists()
+function bashlets::cache::fs::exists()
 {
     local cache="$1"
     local key="$2"
-    local path="$(__bashlets_cache_fs_cache_to_path "$cache")"
-    local key_path="$(__bashlets_cache_fs_get_key_path "$path" "$key")"
+    local path="$(__bashlets::cache::fs::cache_to_path "$cache")"
+    local key_path="$(__bashlets::cache::fs::get_key_path "$path" "$key")"
 
     [[ -d "$path" ]] || return 1
 
@@ -103,10 +103,10 @@ function bashlets_cache_fs_exists()
 }
 
 #@method
-function bashlets_cache_fs_list_keys()
+function bashlets::cache::fs::list_keys()
 {
     local cache="$1"
-    local path="$(__bashlets_cache_fs_cache_to_path "$cache")"
+    local path="$(__bashlets::cache::fs::cache_to_path "$cache")"
 
     [[ -d "$path" ]] || return 1
 
@@ -114,12 +114,12 @@ function bashlets_cache_fs_list_keys()
 }
 
 #@method
-function bashlets_cache_fs_get()
+function bashlets::cache::fs::get()
 {
     local cache="$1"
     local key="$2"
-    local path="$(__bashlets_cache_fs_cache_to_path "$cache")"
-    local key_path="$(__bashlets_cache_fs_get_key_path "$path" "$key")"
+    local path="$(__bashlets::cache::fs::cache_to_path "$cache")"
+    local key_path="$(__bashlets::cache::fs::get_key_path "$path" "$key")"
 
     [[ -d "$path" ]]     || return 1
     [[ -e "$key_path" ]] || return 2
@@ -141,12 +141,12 @@ function bashlets_cache_fs_get()
 }
 
 #@method
-function bashlets_cache_fs_get_type()
+function bashlets::cache::fs::get_type()
 {
     local cache="$1"
     local key="$2"
-    local path="$(__bashlets_cache_fs_cache_to_path "$cache")"
-    local key_path="$(__bashlets_cache_fs_get_key_path "$path" "$key")"
+    local path="$(__bashlets::cache::fs::cache_to_path "$cache")"
+    local key_path="$(__bashlets::cache::fs::get_key_path "$path" "$key")"
 
     [[ -d "$path" ]]     || return 1
     [[ -e "$key_path" ]] || return 2
@@ -155,14 +155,14 @@ function bashlets_cache_fs_get_type()
 }
 
 #@method
-function bashlets_cache_fs_set()
+function bashlets::cache::fs::set()
 {
     local cache="$1"
     local key="$2"
     shift 2
     local value="$@"
-    local path="$(__bashlets_cache_fs_cache_to_path "$cache")"
-    local key_path="$(__bashlets_cache_fs_get_key_path "$path" "$key")"
+    local path="$(__bashlets::cache::fs::cache_to_path "$cache")"
+    local key_path="$(__bashlets::cache::fs::get_key_path "$path" "$key")"
 
     [[ -d "$path" ]] || return 1
 
@@ -170,14 +170,14 @@ function bashlets_cache_fs_set()
 }
 
 #@method
-function bashlets_cache_fs_set_array()
+function bashlets::cache::fs::set_array()
 {
     # TODO: associative arrays
 
     local cache="$1"
     local key="$2"
-    local path="$(__bashlets_cache_fs_cache_to_path "$cache")"
-    local key_path="$(__bashlets_cache_fs_get_key_path "$path" "$key")"
+    local path="$(__bashlets::cache::fs::cache_to_path "$cache")"
+    local key_path="$(__bashlets::cache::fs::get_key_path "$path" "$key")"
 
     # try not to mess with the global namespace here
     local array_size array_name=__array__${RANDOM}__
@@ -202,12 +202,12 @@ function bashlets_cache_fs_set_array()
 }
 
 #@method
-function bashlets_cache_fs_unset()
+function bashlets::cache::fs::unset()
 {
     local cache="$1"
     local key="$2"
-    local path="$(__bashlets_cache_fs_cache_to_path "$cache")"
-    local key_path="$(__bashlets_cache_fs_get_key_path "$path" "$key")"
+    local path="$(__bashlets::cache::fs::cache_to_path "$cache")"
+    local key_path="$(__bashlets::cache::fs::get_key_path "$path" "$key")"
 
     [[ -d "$path" ]]     || return 1
     [[ -e "$key_path" ]] || return

@@ -37,7 +37,7 @@
 source bashlet datatype/number
 
 #@method
-function bashlets_datatype_byte_validate()
+function bashlets::datatype::byte::validate()
 {
     $BASHLETS_NAMESPACE number validate_as_byte "$1"
 }

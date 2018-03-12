@@ -34,7 +34,7 @@
 ################################################################################
 
 
-function __bashlets_datatype_version_naive_sort()
+function __bashlets::datatype::version::naive_sort()
 {
     # naive Bash implementation
     # cf. http://stackoverflow.com/questions/16989598/
@@ -47,42 +47,42 @@ function __bashlets_datatype_version_naive_sort()
 }
 
 #@method
-function bashlets_datatype_version_sort()
+function bashlets::datatype::version::sort()
 {
     (
         echo "$@" | xargs -n 1 | sort --version-sort
 
-    ) 2> /dev/null || __bashlets_datatype_version_naive_sort "$@"
+    ) 2> /dev/null || __bashlets::datatype::version::naive_sort "$@"
 }
 
 #@method
-function bashlets_datatype_version_less_than()
+function bashlets::datatype::version::less_than()
 {
     local min
     # GNU sort is needed here
-    min="$(bashlets_datatype_version_sort "$@" | head -1)"
+    min="$(bashlets::datatype::version::sort "$@" | head -1)"
     [[ $min == $1 ]]
 }
 
 #@method
-function bashlets_datatype_version_greater_than()
+function bashlets::datatype::version::greater_than()
 {
     local max
     # GNU sort is needed here
-    max="$(bashlets_datatype_version_sort "$@" | tail -1)"
+    max="$(bashlets::datatype::version::sort "$@" | tail -1)"
     [[ $max == $1 ]]
 }
 
 #@method
-function bashlets_datatype_version_min()
+function bashlets::datatype::version::min()
 {
-    bashlets_datatype_version_sort "$@" | head -1
+    bashlets::datatype::version::sort "$@" | head -1
 }
 
 #@method
-function bashlets_datatype_version_max()
+function bashlets::datatype::version::max()
 {
-    bashlets_datatype_version_sort "$@" | tail -1
+    bashlets::datatype::version::sort "$@" | tail -1
 }
 
 # Local variables:

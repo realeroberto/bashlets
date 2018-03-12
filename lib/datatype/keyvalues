@@ -35,7 +35,7 @@
 
 
 #@method
-function bashlets_datatype_keyvalues_list_keys()
+function bashlets::datatype::keyvalues::list_keys()
 {
 	local fs="$1"
     test -n "$fs" || fs=$(echo -en "\034")
@@ -43,7 +43,7 @@ function bashlets_datatype_keyvalues_list_keys()
 }
 
 #@method
-function bashlets_datatype_keyvalues_list_values()
+function bashlets::datatype::keyvalues::list_values()
 {
 	local fs="$2"
     test -n "$fs" || fs=$(echo -en "\034")
@@ -51,7 +51,7 @@ function bashlets_datatype_keyvalues_list_values()
 }
 
 #@method
-function bashlets_datatype_keyvalues_get_by_key()
+function bashlets::datatype::keyvalues::get_by_key()
 {
     local key="$1"
 	local fs="$2"
@@ -60,7 +60,7 @@ function bashlets_datatype_keyvalues_get_by_key()
 }
 
 #@method
-function bashlets_datatype_keyvalues_get_by_value()
+function bashlets::datatype::keyvalues::get_by_value()
 {
     local value="$1"
 	local fs="$2"

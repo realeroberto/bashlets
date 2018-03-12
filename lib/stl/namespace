@@ -37,43 +37,43 @@
 source bashlet stl/stack 
 
 #@method
-function bashlets_stl_namespace_exists()
+function bashlets::stl::namespace::exists()
 {
     $BASHLETS_NAMESPACE stack exists __namespaces
 }
 
 #@method
-function bashlets_stl_namespace_create()
+function bashlets::stl::namespace::create()
 {
-    bashlets_stl_namespace_exists && return 1
+    bashlets::stl::namespace::exists && return 1
     $BASHLETS_NAMESPACE stack create __namespaces
 }
 
 #@method
-function bashlets_stl_namespace_destroy()
+function bashlets::stl::namespace::destroy()
 {
-    bashlets_stl_namespace_exists && return
+    bashlets::stl::namespace::exists && return
     $BASHLETS_NAMESPACE stack destroy __namespaces
 }
 
 #@method
-function bashlets_stl_namespace_push()
+function bashlets::stl::namespace::push()
 {
-    bashlets_stl_namespace_exists && return 1
+    bashlets::stl::namespace::exists && return 1
     $BASHLETS_NAMESPACE stack push __namespaces "$1"
 }
 
 #@method
-function bashlets_core_namespace_pop()
+function bashlets::core::namespace::pop()
 {
-    bashlets_stl_namespace_exists && return 1
+    bashlets::stl::namespace::exists && return 1
     $BASHLETS_NAMESPACE stack pop __namespace
 }
 
 #@method
-function bashlets_core_namespace_list()
+function bashlets::core::namespace::list()
 {
-    bashlets_stl_namespace_exists && return 1
+    bashlets::stl::namespace::exists && return 1
     $BASHLETS_NAMESPACE stack list __namespaces
 }
 

@@ -35,7 +35,7 @@
 
 
 #@method
-function bashlets_datatype_char_ascii2decimal()
+function bashlets::datatype::char::ascii2decimal()
 {
     ########################################################################
     #
@@ -92,7 +92,7 @@ function bashlets_datatype_char_ascii2decimal()
 }
 
 #@method
-function bashlets_datatype_char_decimal2ascii()
+function bashlets::datatype::char::decimal2ascii()
 {
     ########################################################################
     #

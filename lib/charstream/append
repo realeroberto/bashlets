@@ -38,7 +38,7 @@ source bashlet charstream/filter
 source bashlet os/tempfile
 
 #@method
-function bashlets_charstream_append_generic()
+function bashlets::charstream::append::generic()
 {
     local filename="$1"
     local tempfile="$($BASHLETS_NAMESPACE tempfile create)"
@@ -54,13 +54,13 @@ function bashlets_charstream_append_generic()
 }
 
 #@method
-function bashlets_charstream_append_after_pattern()
+function bashlets::charstream::append::after_pattern()
 {
     local filename="$1" ; shift
     local pattern="$@"
 
     $BASHLETS_NAMESPACE filter till_pattern "$pattern"  \
-        | bashlets_charstream_append_generic "$filename"
+        | bashlets::charstream::append::generic "$filename"
 }
 
 

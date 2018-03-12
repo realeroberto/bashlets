@@ -37,7 +37,7 @@
 # based on http://cfajohnson.com/shell/date-functions/?is_leap_year
 
 #@method
-function bashlets_time_year_is_leap()
+function bashlets::time::year::is_leap()
 {
     local year="$1"
     local gregorian=1752

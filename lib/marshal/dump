@@ -38,7 +38,7 @@ source bashlet datatype/object
 
 
 #@method
-function bashlets_marshal_dump_objects()
+function bashlets::marshal::dump::objects()
 {
     while test $# -gt 0
     do
@@ -51,7 +51,7 @@ function bashlets_marshal_dump_objects()
 }
 
 #@method
-function bashlets_marshal_dump_rename()
+function bashlets::marshal::dump::rename()
 {
     local new="$1"
     shift
@@ -60,7 +60,7 @@ function bashlets_marshal_dump_rename()
 }
 
 #@method
-function bashlets_marshal_dump_get_by_name()
+function bashlets::marshal::dump::get_by_name()
 {
     local object="$1"
     shift

@@ -35,7 +35,7 @@
 
 
 #@method
-function bashlets_datatype_binary_from_hex()
+function bashlets::datatype::binary::from_hex()
 {
     # write hexadecimal values as binary stream
 

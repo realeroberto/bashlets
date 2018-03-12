@@ -39,7 +39,7 @@
 # inspired by http://rosettacode.org/wiki/Arithmetic/Complex#UNIX_Shell
 
 #@method
-function bashlets_math_icomplex_create()
+function bashlets::math::icomplex::create()
 {
 	declare -i real="$1"
 	declare -i img="$2"
@@ -48,7 +48,7 @@ function bashlets_math_icomplex_create()
 }
 
 #@method
-function bashlets_math_icomplex_to_real()
+function bashlets::math::icomplex::to_real()
 {
 	declare w="$1"
 	(
@@ -59,7 +59,7 @@ function bashlets_math_icomplex_to_real()
 }
 
 #@method
-function bashlets_math_icomplex_to_img()
+function bashlets::math::icomplex::to_img()
 {
 	declare w="$1"
 	(
@@ -70,81 +70,81 @@ function bashlets_math_icomplex_to_img()
 }
 
 #@method
-function bashlets_math_icomplex_to_s()
+function bashlets::math::icomplex::to_s()
 {
 	declare w="$1"
 	declare -i real img
 
-	real="$(bashlets_math_icomplex_to_real "$w")"
-	img="$(bashlets_math_icomplex_to_img "$w")"
+	real="$(bashlets::math::icomplex::to_real "$w")"
+	img="$(bashlets::math::icomplex::to_img "$w")"
 
 	echo "$real + ${img}i"
 }
 
 #@method
-function bashlets_math_icomplex_compare()
+function bashlets::math::icomplex::compare()
 {
 	declare w="$1" z="$2"
 	declare -i w_real w_img z_real z_img
 
-	w_real="$(bashlets_math_icomplex_to_real "$w")"
-	w_img="$(bashlets_math_icomplex_to_img "$w")"
-	z_real="$(bashlets_math_icomplex_to_real "$z")"
-	z_img="$(bashlets_math_icomplex_to_img "$z")"
+	w_real="$(bashlets::math::icomplex::to_real "$w")"
+	w_img="$(bashlets::math::icomplex::to_img "$w")"
+	z_real="$(bashlets::math::icomplex::to_real "$z")"
+	z_img="$(bashlets::math::icomplex::to_img "$z")"
 
 	[[ $w_real -eq $z_real && $w_img -eq $z_img ]]
 }
 
 #@method
-function bashlets_math_icomplex_is_zero()
+function bashlets::math::icomplex::is_zero()
 {
 	declare w="$1"
 	declare -i real img
 
-	real="$(bashlets_math_icomplex_to_real "$w")"
-	img="$(bashlets_math_icomplex_to_img "$w")"
+	real="$(bashlets::math::icomplex::to_real "$w")"
+	img="$(bashlets::math::icomplex::to_img "$w")"
 
 	[[ "$real" -eq 0 && "$img" -eq 0 ]]
 }
 
 #@method
-function bashlets_math_icomplex_negate()
+function bashlets::math::icomplex::negate()
 {
 	declare w="$1"
 	declare -i real img
 
-	real="$((-1 * $(bashlets_math_icomplex_to_real "$w")))"
-	img="$((-1 * $(bashlets_math_icomplex_to_img "$w")))"
+	real="$((-1 * $(bashlets::math::icomplex::to_real "$w")))"
+	img="$((-1 * $(bashlets::math::icomplex::to_img "$w")))"
 
-	bashlets_math_icomplex_create "$real" "$img"
+	bashlets::math::icomplex::create "$real" "$img"
 }
 
 #@method
-function bashlets_math_icomplex_conjugate()
+function bashlets::math::icomplex::conjugate()
 {
 	declare w="$1"
 	declare -i real img
 
-	real="$(bashlets_math_icomplex_to_real "$w")"
-	img="$((-1 * $(bashlets_math_icomplex_to_img "$w")))"
+	real="$(bashlets::math::icomplex::to_real "$w")"
+	img="$((-1 * $(bashlets::math::icomplex::to_img "$w")))"
 
-	bashlets_math_icomplex_create "$real" "$img"
+	bashlets::math::icomplex::create "$real" "$img"
 }
 
 #@method
-function bashlets_math_icomplex_norm2()
+function bashlets::math::icomplex::norm2()
 {
 	declare w="$1"
 	declare -i real img
 
-	real="$(bashlets_math_icomplex_to_real "$w")"
-	img="$(bashlets_math_icomplex_to_img "$w")"
+	real="$(bashlets::math::icomplex::to_real "$w")"
+	img="$(bashlets::math::icomplex::to_img "$w")"
 
 	echo "$((real**2 + img**2))"
 }
 
 #@method
-function bashlets_math_icomplex_add()
+function bashlets::math::icomplex::add()
 {
 	declare w="$1"
 	declare z="$2"
@@ -152,28 +152,28 @@ function bashlets_math_icomplex_add()
 	declare -i realz imgz
 	declare -i real img
 
-	realw="$(bashlets_math_icomplex_to_real "$w")"
-	realz="$(bashlets_math_icomplex_to_real "$z")"
-	imgw="$(bashlets_math_icomplex_to_img "$w")"
-	imgz="$(bashlets_math_icomplex_to_img "$z")"
+	realw="$(bashlets::math::icomplex::to_real "$w")"
+	realz="$(bashlets::math::icomplex::to_real "$z")"
+	imgw="$(bashlets::math::icomplex::to_img "$w")"
+	imgz="$(bashlets::math::icomplex::to_img "$z")"
 
 	real="$((realw + realz))"
 	img="$((imgw + imgz))"
 
-	bashlets_math_icomplex_create "$real" "$img"
+	bashlets::math::icomplex::create "$real" "$img"
 }
 
 #@method
-function bashlets_math_icomplex_subtract()
+function bashlets::math::icomplex::subtract()
 {
 	declare w="$1"
 	declare z="$2"
 
-	bashlets_math_icomplex_add "$w" "$(bashlets_math_icomplex_negate "$z")"
+	bashlets::math::icomplex::add "$w" "$(bashlets_math_icomplex_negate "$z")"
 }
 
 #@method
-function bashlets_math_icomplex_multiply()
+function bashlets::math::icomplex::multiply()
 {
 	declare w="$1"
 	declare z="$2"
@@ -181,23 +181,23 @@ function bashlets_math_icomplex_multiply()
 	declare -i realz imgz
 	declare -i real img
 
-	realw="$(bashlets_math_icomplex_to_real "$w")"
-	realz="$(bashlets_math_icomplex_to_real "$z")"
-	imgw="$(bashlets_math_icomplex_to_img "$w")"
-	imgz="$(bashlets_math_icomplex_to_img "$z")"
+	realw="$(bashlets::math::icomplex::to_real "$w")"
+	realz="$(bashlets::math::icomplex::to_real "$z")"
+	imgw="$(bashlets::math::icomplex::to_img "$w")"
+	imgz="$(bashlets::math::icomplex::to_img "$z")"
 
 	real=$((realw*realz - imgw*imgz))
 	img=$((imgw*realz + realw*imgz))
 
-	bashlets_math_icomplex_create "$real" "$img"
+	bashlets::math::icomplex::create "$real" "$img"
 }
 
 #@method
-function bashlets_math_icomplex_square()
+function bashlets::math::icomplex::square()
 {
 	declare w="$1"
 
-	bashlets_math_icomplex_multiply "$w" "$w"
+	bashlets::math::icomplex::multiply "$w" "$w"
 }
 
 # Local variables:

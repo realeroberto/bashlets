@@ -37,35 +37,35 @@
 source bashlet datatype/number
 
 #@method
-function bashlets_datatype_unsigned_validate()
+function bashlets::datatype::unsigned::validate()
 {
     $BASHLETS_NAMESPACE number validate_as_unsigned "$1"
 }
 
 #@method
-function bashlets_datatype_unsigned_is_even()
+function bashlets::datatype::unsigned::is_even()
 {
     $BASHLETS_NAMESPACE number validate_as_unsigned "$1" || return 1
     (($1 % 2 == 0))
 }
 
 #@method
-function bashlets_datatype_unsigned_is_odd()
+function bashlets::datatype::unsigned::is_odd()
 {
     $BASHLETS_NAMESPACE number validate_as_unsigned "$1" || return 1
     (($1 % 2 == 1))
 }
 
 #@method
-function bashlets_datatype_unsigned_bin_to_dec()
+function bashlets::datatype::unsigned::bin_to_dec()
 {
     eval echo "$((2#$1))"
 }
 
 #@method
-function bashlets_datatype_unsigned_bin_to_hex()
+function bashlets::datatype::unsigned::bin_to_hex()
 {
-    printf "%x\n" $(bashlets_datatype_unsigned_bin_to_dec $1)
+    printf "%x\n" $(bashlets::datatype::unsigned::bin_to_dec $1)
 }
 
 # Local variables:

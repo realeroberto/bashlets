@@ -37,17 +37,17 @@
 BASHLETS_LIB_LIBRARY_LOADER_STYLE=new   # old/new
 BASHLETS_NAMESPACE=bash$$
 
-function __bashlets_library_loader_bashlet_to_name()
+function __bashlets::library::loader::bashlet_to_name()
 {
     basename "$1"
 }
 
-function __bashlets_library_loader_bashlet_to_path()
+function __bashlets::library::loader::bashlet_to_path()
 {
     dirname "$1" | tr / _
 }
 
-function __bashlets_library_loader_bashlet_to_file()
+function __bashlets::library::loader::bashlet_to_file()
 {
     local bashlet="$1" file
 
@@ -63,64 +63,64 @@ function __bashlets_library_loader_bashlet_to_file()
     done
 }
 
-function __bashlets_library_loader_list_all_methods()
+function __bashlets::library::loader::list_all_methods()
 {
     declare -F | sed 's/declare -f //' | grep -v "^$FUNCNAME$"
 }
 
 #@method
-function bashlets_library_loader_list_methods_old()
+function bashlets::library::loader::list_methods_old()
 {
-    local file="$(__bashlets_library_loader_bashlet_to_file "$1")"
+    local file="$(__bashlets::library::loader::bashlet_to_file "$1")"
 
     (
-        for method in $(__bashlets_library_loader_list_all_methods)
+        for method in $(__bashlets::library::loader::list_all_methods)
         do
             unset -f -- "$method"
         done
 
         source "$file"
 
-        __bashlets_library_loader_list_all_methods
+        __bashlets::library::loader::list_all_methods
     )
 }
 
 #@method
-function bashlets_library_loader_list_methods_new()
+function bashlets::library::loader::list_methods_new()
 {
-    local file="$(__bashlets_library_loader_bashlet_to_file "$1")"
+    local file="$(__bashlets::library::loader::bashlet_to_file "$1")"
 
     # public methods must be explicitly marked, because using something along
     # the lines of
     #   egrep -o '[A-Za-z0-9_]+[(]+[)]' $file
     # would match also ``closures'', such as baz() in the following example
     #   function foo() { local bar='function baz() { : }' ; }
-    # or $BASHLETS_NAMESPACE() in bashlets_library_loader_import() below
+    # or $BASHLETS_NAMESPACE() in bashlets::library::loader::import() below
 
     grep -A 1 '^#\+@method' "$file" | sed -n 's/function \(.*\)()/\1/p'
 }
 
 #@method
-function bashlets_library_loader_list_methods()
+function bashlets::library::loader::list_methods()
 {
     if [[ $BASHLETS_LIB_LIBRARY_LOADER_STYLE == new ]]; then
-        bashlets_library_loader_list_methods_new "$@"
+        bashlets::library::loader::list_methods_new "$@"
     elif [[ $BASHLETS_LIB_LIBRARY_LOADER_STYLE == old ]]; then
-        bashlets_library_loader_list_methods_old "$@"
+        bashlets::library::loader::list_methods_old "$@"
     else
         return 1
     fi
 }
 
 #@method
-function bashlets_library_loader_search_methods()
+function bashlets::library::loader::search_methods()
 {
     local bashlet_name="$1"
     local method_fullname method_name pattern bashlet_path
 
-    for method_fullname in $(__bashlets_library_loader_list_all_methods)
+    for method_fullname in $(__bashlets::library::loader::list_all_methods)
     do
-        pattern="^bashlets_([^_]+)_${bashlet_name}_(.+)"
+        pattern="^bashlets::([^::]+)::${bashlet_name}_(.+)"
 
         if [[ $method_fullname =~ $pattern ]]
         then
@@ -133,7 +133,7 @@ function bashlets_library_loader_search_methods()
 }
 
 #@method
-function bashlets_library_loader_import()
+function bashlets::library::loader::import()
 {
     local bashlet="$1"
     local bashlet_name bashlet_path file_name
@@ -141,14 +141,14 @@ function bashlets_library_loader_import()
     local container_name container_def container_def_0 method_prefix
     local method method_full
 
-    bashlet_name="$(__bashlets_library_loader_bashlet_to_name "$bashlet")"
-    bashlet_path="$(__bashlets_library_loader_bashlet_to_path "$bashlet")"
-       file_name="$(__bashlets_library_loader_bashlet_to_file "$bashlet")"
+    bashlet_name="$(__bashlets::library::loader::bashlet_to_name "$bashlet")"
+    bashlet_path="$(__bashlets::library::loader::bashlet_to_path "$bashlet")"
+       file_name="$(__bashlets::library::loader::bashlet_to_file "$bashlet")"
 
     source "$file_name" || return 1
 
     container_name="$bashlet_name"
-    method_prefix="bashlets_${bashlet_path}_${bashlet_name}"
+    method_prefix="bashlets::${bashlet::path}::${bashlet_name}"
 
     # loader
 
@@ -173,14 +173,14 @@ function bashlets_library_loader_import()
     # inherited methods (to be added afterwards)
 
     for method_full in $(
-        bashlets_library_loader_search_methods "$bashlet_name"
+        bashlets::library::loader::search_methods "$bashlet_name"
     )
     do
         local v bashlet_name_0 bashlet_path_0 method_prefix_0
 
         IFS=: read -r bashlet_path_0 bashlet_name_0 method <<<"$method_full"
 
-        method_prefix_0="bashlets_${bashlet_path_0}_${bashlet_name_0}"
+        method_prefix_0="bashlets::${bashlet::path::0}_${bashlet_name_0}"
 
         container_def_0="$container_def_0
             $method)
@@ -192,7 +192,7 @@ function bashlets_library_loader_import()
     # new methods
 
     for method in $(
-        bashlets_library_loader_list_methods "$bashlet" |  \
+        bashlets::library::loader::list_methods "$bashlet" |  \
             sed "s/${method_prefix}_//"
     )
     do

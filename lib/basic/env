@@ -35,7 +35,7 @@
 
 
 #@method
-function bashlets_basic_env_list()
+function bashlets::basic::env::list()
 {
     env                                                            \
         | grep -o '^[_[:alpha:]][_[:alnum:]]*'                     \
@@ -44,7 +44,7 @@ function bashlets_basic_env_list()
 
 
 #@method
-function bashlets_basic_env_list_full()
+function bashlets::basic::env::list_full()
 {
     env                                                            \
         | grep -o '^[_[:alpha:]][_[:alnum:]]*'
@@ -52,7 +52,7 @@ function bashlets_basic_env_list_full()
 
 
 #@method
-function bashlets_basic_env_list_variables()
+function bashlets::basic::env::list_variables()
 {
     # by enabling ``posix'' mode we tell ``set'' not to print function names
     (
@@ -65,7 +65,7 @@ function bashlets_basic_env_list_variables()
 
 
 #@method
-function bashlets_basic_env_list_variables_full()
+function bashlets::basic::env::list_variables_full()
 {
     # by enabling ``posix'' mode we tell ``set'' not to print function names
     (

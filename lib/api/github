@@ -37,7 +37,7 @@
 BASHLETS_API_GITHUB_API="${BASHLETS_API_GITHUB_API:-https://api.github.com}"
 
 #@method
-function bashlets_api_github_list_repos_by_user()
+function bashlets::api::github::list_repos_by_user()
 {
     local user="${1:-bashlets}"
 

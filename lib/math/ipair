@@ -49,7 +49,7 @@ source bashlet glue/awklibrary
 #
 
 #@method
-function bashlets_awk_math_extended_gcd()
+function bashlets::awk::math::extended_gcd()
 {
     local a="${1:-0}" b="${2:-0}"
 

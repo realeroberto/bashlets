@@ -37,7 +37,7 @@
 source bashlet api/github
 
 #@method
-function bashlets_library_origin_list_packages()
+function bashlets::library::origin::list_packages()
 {
     $BASHLETS_NAMESPACE github list_repos_by_user   \
         | grep 'bashlets\.'                         \

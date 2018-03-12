@@ -40,7 +40,7 @@ source bashlet os/term
 BASHLETS_UX_REPL_ERR_INVALID_ARG=2
 
 #@method
-function bashlets_ux_repl_get_verb()
+function bashlets::ux::repl::get_verb()
 {
     local repl="$1"
     local verb="$2"
@@ -48,7 +48,7 @@ function bashlets_ux_repl_get_verb()
 }
 
 #@method
-function bashlets_ux_repl_set_verb()
+function bashlets::ux::repl::set_verb()
 {
     local repl="$1"
     local verb="$2"
@@ -57,7 +57,7 @@ function bashlets_ux_repl_set_verb()
 }
 
 #@method
-function bashlets_ux_repl_get_help_for_verb()
+function bashlets::ux::repl::get_help_for_verb()
 {
     local repl="$1"
     local verb="$2"
@@ -65,7 +65,7 @@ function bashlets_ux_repl_get_help_for_verb()
 }
 
 #@method
-function bashlets_ux_repl_set_help_for_verb()
+function bashlets::ux::repl::set_help_for_verb()
 {
     local repl="$1"
     local verb="$2"
@@ -74,20 +74,20 @@ function bashlets_ux_repl_set_help_for_verb()
 }
 
 #@method
-function bashlets_ux_repl_list_verbs()
+function bashlets::ux::repl::list_verbs()
 {
     local repl="$1"
     $BASHLETS_NAMESPACE fs list_keys "$repl" | grep -v "#help$"
 }
 
 #@method
-function bashlets_ux_repl_exec_verb()
+function bashlets::ux::repl::exec_verb()
 {
     local repl="$1"
     shift
     local argv="${!1}"
     local verb="${argv[0]}"
-    local command=$(bashlets_ux_repl_get_verb "$repl" $verb)
+    local command=$(bashlets::ux::repl::get_verb "$repl" $verb)
 
     test "$(type -t "$command")" = function || {
         echo "callback invalid!" >&2
@@ -98,27 +98,27 @@ function bashlets_ux_repl_exec_verb()
 }
 
 #@method
-function bashlets_ux_repl_help()
+function bashlets::ux::repl::help()
 {
     local repl="$1"
     local verb="$2"
-    echo "$verb: $(bashlets_ux_repl_get_help_for_verb "$repl" "$verb")"
+    echo "$verb: $(bashlets::ux::repl::get_help_for_verb "$repl" "$verb")"
 }
 
 #@method
-function bashlets_ux_repl_create()
+function bashlets::ux::repl::create()
 {
     $BASHLETS_NAMESPACE fs create
 }
 
 #@method
-function bashlets_ux_repl_destroy()
+function bashlets::ux::repl::destroy()
 {
     $BASHLETS_NAMESPACE fs destroy "$1"
 }
 
 #@method
-function bashlets_ux_repl_start()
+function bashlets::ux::repl::start()
 {
     local repl="$1"
     local prompt="${2:->}"
@@ -136,19 +136,19 @@ function bashlets_ux_repl_start()
             verb=${argv[1]}
             if [[ -n $verb ]]
             then
-                bashlets_ux_repl_help "$repl" $verb
+                bashlets::ux::repl::help "$repl" $verb
             else
                 echo -e "Available commands:\n"
-                bashlets_ux_repl_list_verbs "$repl"
+                bashlets::ux::repl::list_verbs "$repl"
             fi
         elif [[ $verb == quit || $verb == exit ]]
         then
             return 127
         else
-            command=$(bashlets_ux_repl_get_verb "$repl" $verb)
+            command=$(bashlets::ux::repl::get_verb "$repl" $verb)
             if [[ -n $command ]]
             then
-                bashlets_ux_repl_exec_verb "$repl" argv[@]
+                bashlets::ux::repl::exec_verb "$repl" argv[@]
                 if [[ $? -eq $BASHLETS_UX_REPL_ERR_INVALID_ARG ]]
                 then
                     echo "Invalid or missing argument!"

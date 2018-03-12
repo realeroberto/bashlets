@@ -35,14 +35,14 @@
 
 
 #@method
-function bashlets_datatype_object_is_array()
+function bashlets::datatype::object::is_array()
 {
     local obj="$1"
     declare -p "$obj" 2> /dev/null | grep -q '^declare \-A'
 }
 
 #@method
-function bashlets_datatype_object_is_function()
+function bashlets::datatype::object::is_function()
 {
     local obj="$1"
     [ -n "$(type -t "$obj")" ] && [ "$(type -t "$obj")" = function ]

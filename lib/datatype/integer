@@ -37,13 +37,13 @@ source bashlet datatype/number
 
 
 #@method
-function bashlets_datatype_integer_validate()
+function bashlets::datatype::integer::validate()
 {
     $BASHLETS_NAMESPACE number validate_as_integer "$1"
 }
 
 #@method
-function bashlets_datatype_integer_to_string()
+function bashlets::datatype::integer::to_string()
 {
     # Converts a number into a string of the form 00..nnn, with just enough
     # zero's to hold a given "format".
@@ -56,7 +56,7 @@ function bashlets_datatype_integer_to_string()
 }
 
 #@method
-function bashlets_datatype_integer_select_bit()
+function bashlets::datatype::integer::select_bit()
 {
     ########################################################################
     #

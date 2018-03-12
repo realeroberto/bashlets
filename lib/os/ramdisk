@@ -37,7 +37,7 @@
 source bashlet os/tempdir
 
 #@method
-function bashlets_os_ramdisk_create()
+function bashlets::os::ramdisk::create()
 {
     local size="${1:-10m}"
     local fs_type=${2:-tmpfs}
@@ -55,7 +55,7 @@ function bashlets_os_ramdisk_create()
 }
 
 #@method
-function bashlets_os_ramdisk_destroy()
+function bashlets::os::ramdisk::destroy()
 {
     local path="${1}"
 

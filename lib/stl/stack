@@ -35,42 +35,42 @@
 
 
 #@method
-function bashlets_stl_stack_exists()
+function bashlets::stl::stack::exists()
 {
     # TODO
     :
 }
 
 #@method
-function bashlets_stl_stack_create()
+function bashlets::stl::stack::create()
 {
     # TODO
     return 1
 }
 
 #@method
-function bashlets_stl_stack_destroy()
+function bashlets::stl::stack::destroy()
 {
     # TODO
     return 1
 }
 
 #@method
-function bashlets_stl_stack_push()
+function bashlets::stl::stack::push()
 {
     # TODO
     return 1
 }
 
 #@method
-function bashlets_core_stack_pop()
+function bashlets::core::stack::pop()
 {
     # TODO
     return 1
 }
 
 #@method
-function bashlets_core_stack_list()
+function bashlets::core::stack::list()
 {
     # TODO
     return 1

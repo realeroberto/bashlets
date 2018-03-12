@@ -40,7 +40,7 @@ source bashlet datatype/unsigned
 # a /dev/urandom device a la Linux is required
 
 #@method
-function bashlets_os_random_get_stream()
+function bashlets::os::random::get_stream()
 {
     local size="${1:-16}"
     local filter="${2:-}"
@@ -64,7 +64,7 @@ function bashlets_os_random_get_stream()
 }
 
 #@method
-function bashlets_os_random_get_uuid()
+function bashlets::os::random::get_uuid()
 {
     # read from the /proc filesystem, if applicable
     cat /proc/sys/kernel/random/uuid 2>/dev/null

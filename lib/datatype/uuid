@@ -37,7 +37,7 @@
 source bashlet os/random
 
 
-function __bashlets_datatype_uuid_create()
+function __bashlets::datatype::uuid::create()
 {
     # cf. https://gist.github.com/JT5D/7819113
 
@@ -72,26 +72,26 @@ function __bashlets_datatype_uuid_create()
 }
 
 #@method
-function bashlets_datatype_uuid_create()
+function bashlets::datatype::uuid::create()
 {
     local UUID
 
     # try getting it from the system
     UUID="$($BASHLETS_NAMESPACE random get_uuid)"
     # should that fail, we resort to a pure Bash implementation
-    UUID="${UUID:-$(__bashlets_datatype_uuid_create)}"
+    UUID="${UUID:-$(__bashlets::datatype::uuid::create)}"
 
     test ${#UUID} -gt 0 && echo "$UUID"
 }
 
 #@method
-function bashlets_datatype_uuid_destroy()
+function bashlets::datatype::uuid::destroy()
 {
     :
 }
 
 #@method
-function bashlets_datatype_uuid_validate()
+function bashlets::datatype::uuid::validate()
 {
     local UUID="$1"
 

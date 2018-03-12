@@ -39,20 +39,20 @@ source bashlet charstream/reshape
 source bashlet os/random
 
 #@method
-function bashlets_datatype_string_chop()
+function bashlets::datatype::string::chop()
 {
     echo "$(echo "$@" | tr -d "\n")"
 }
 
 #@method
-function bashlets_datatype_string_length()
+function bashlets::datatype::string::length()
 {
     local str="$*"
     echo ${#str}
 }
 
 #@method
-function bashlets_datatype_string_index()
+function bashlets::datatype::string::index()
 {
     # cf. https://github.com/marcomaggi/mbfl/blob/master/src/modules/string.sh.m4
     local haystack="$1"
@@ -70,27 +70,27 @@ function bashlets_datatype_string_index()
 }
 
 #@method
-function bashlets_datatype_string_upper()
+function bashlets::datatype::string::upper()
 {
     echo "$*" | tr a-z A-Z
 }
 
 #@method
-function bashlets_datatype_string_lower()
+function bashlets::datatype::string::lower()
 {
     echo "$*" | tr A-Z a-z
 }
 
 #@method
-function bashlets_datatype_string_to_integer()
+function bashlets::datatype::string::to_integer()
 {
     printf "%d\n" "$1" 2> /dev/null || true  # convert 123xyz -> 123
 }
 
 #@method
-function bashlets_datatype_string_to_bool()
+function bashlets::datatype::string::to_bool()
 {
-    local value="$(bashlets_datatype_string_lower "$*")"
+    local value="$(bashlets::datatype::string::lower "$*")"
     local try
 
     [[ -n $value ]] || return 1
@@ -104,7 +104,7 @@ function bashlets_datatype_string_to_bool()
 }
 
 #@method
-function bashlets_datatype_string_bin_to_dec()
+function bashlets::datatype::string::bin_to_dec()
 {
     local bin="$1"
     echo $((2#$bin))  # TODO: check for errors
@@ -112,7 +112,7 @@ function bashlets_datatype_string_bin_to_dec()
 
 
 #@method
-function bashlets_datatype_string_dec_to_bin()
+function bashlets::datatype::string::dec_to_bin()
 {
     # TODO check extreme cases (dec < 0, dec > 255)
     declare -i dec="$1"
@@ -123,14 +123,14 @@ function bashlets_datatype_string_dec_to_bin()
 }
 
 #@method
-function bashlets_datatype_string_hex_to_dec()
+function bashlets::datatype::string::hex_to_dec()
 {
     local hex="$1"
     echo $((16#$hex))  # TODO: check for errors
 }
 
 #@method
-function bashlets_datatype_string_dec_to_hex()
+function bashlets::datatype::string::dec_to_hex()
 {
     ########################################################################
     #
@@ -162,14 +162,14 @@ function bashlets_datatype_string_dec_to_hex()
 }
 
 #@method
-function bashlets_datatype_string_to_charstream()
+function bashlets::datatype::string::to_charstream()
 {
     local chr
     echo -n "$*" | while read -r -n1 chr; do echo "$chr"; done
 }
 
 #@method
-function bashlets_datatype_string_to_matrix()
+function bashlets::datatype::string::to_matrix()
 {
     declare -i cols=${1:-1} chr
     shift
@@ -178,7 +178,7 @@ function bashlets_datatype_string_to_matrix()
 }
 
 #@method
-function bashlets_datatype_string_reverse()
+function bashlets::datatype::string::reverse()
 {
     # cf. http://stackoverflow.com/questions/11461625/
     local str="$*"
@@ -193,19 +193,19 @@ function bashlets_datatype_string_reverse()
 }
 
 #@method
-function bashlets_datatype_string_transpose()
+function bashlets::datatype::string::transpose()
 {
-    bashlets_datatype_string_to_charstream "$*"
+    bashlets::datatype::string::to_charstream "$*"
 }
 
 #@method
-function bashlets_datatype_string_shuffle()
+function bashlets::datatype::string::shuffle()
 {
     local str="$*"
 
     [[ -n $str ]] || return
 
-    bashlets_datatype_string_to_charstream "$str"    \
+    bashlets::datatype::string::to_charstream "$str"    \
         | $BASHLETS_NAMESPACE reorder shuffle        \
         | $BASHLETS_NAMESPACE reshape transpose
 }
@@ -217,7 +217,7 @@ function bashlets_datatype_string_shuffle()
 #
 
 #@method
-function bashlets_datatype_string_middle_2n()
+function bashlets::datatype::string::middle_2n()
 {
     local str="$*"
     local len=${#str}
@@ -235,7 +235,7 @@ function bashlets_datatype_string_middle_2n()
 #
 
 #@method
-function bashlets_datatype_string_lalign_n()
+function bashlets::datatype::string::lalign_n()
 {
     local n="$1"
     local pad="$2"
@@ -255,7 +255,7 @@ function bashlets_datatype_string_lalign_n()
 
 
 #@method
-function bashlets_datatype_string_generate_random()
+function bashlets::datatype::string::generate_random()
 {
     local size="${1:-16}"
 
@@ -276,7 +276,7 @@ function bashlets_datatype_string_generate_random()
 #  see http://en.wikipedia.org/wiki/Levenshtein_distance
 
 #@method
-function bashlets_datatype_string_levenshtein()
+function bashlets::datatype::string::levenshtein()
 {
     local s=$1 t=$2
 

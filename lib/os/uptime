@@ -35,14 +35,14 @@
 
 
 #@method
-function bashlets_os_uptime_get_total()
+function bashlets::os::uptime::get_total()
 {
     IFS=' ' read total idle < /proc/uptime
     echo "$total"
 }
 
 #@method
-function bashlets_os_uptime_get_idle()
+function bashlets::os::uptime::get_idle()
 {
     IFS=' ' read total idle < /proc/uptime
     echo "$idle"

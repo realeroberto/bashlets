@@ -36,7 +36,7 @@
 
 
 #@method
-function bashlets_os_kernel_get_version()
+function bashlets::os::kernel::get_version()
 {
     local full_version="$(uname -r)"
     echo "${full_version%-*}"
