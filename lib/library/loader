@@ -34,7 +34,6 @@
 
 
 
-BASHLETS_LIB_LIBRARY_LOADER_STYLE=new   # old/new
 BASHLETS_NAMESPACE=bash$$
 
 function __bashlets::library::loader::bashlet_to_name()
@@ -64,30 +63,8 @@ function __bashlets::library::loader::bashlet_to_file()
     done
 }
 
-function __bashlets::library::loader::list_all_methods()
-{
-    declare -F | sed 's/declare -f //' | grep -v "^$FUNCNAME$"
-}
-
 #@public
-function bashlets::library::loader::list_methods_old()
-{
-    local file="$(__bashlets::library::loader::bashlet_to_file "$1")"
-
-    (
-        for method in $(__bashlets::library::loader::list_all_methods)
-        do
-            unset -f -- "$method"
-        done
-
-        source "$file"
-
-        __bashlets::library::loader::list_all_methods
-    )
-}
-
-#@public
-function bashlets::library::loader::list_methods_new()
+function bashlets::library::loader::list_methods()
 {
     local file="$(__bashlets::library::loader::bashlet_to_file "$1")"
 
@@ -99,18 +76,6 @@ function bashlets::library::loader::list_methods_new()
     # or $BASHLETS_NAMESPACE() in bashlets::library::loader::import() below
 
     grep -A 1 '^#\+@public' "$file" | sed -n 's/function \([A-Za-z0-9_:]\+\)()/\1/p'
-}
-
-#@public
-function bashlets::library::loader::list_methods()
-{
-    if [[ $BASHLETS_LIB_LIBRARY_LOADER_STYLE == new ]]; then
-        bashlets::library::loader::list_methods_new "$@"
-    elif [[ $BASHLETS_LIB_LIBRARY_LOADER_STYLE == old ]]; then
-        bashlets::library::loader::list_methods_old "$@"
-    else
-        return 1
-    fi
 }
 
 #@public
