@@ -13,7 +13,8 @@
 
 ### `library`
 
-* `interact`: TODO
+* `interact`: 100%
+* `package`: 100%
 
 ### `math`
 
