@@ -180,7 +180,7 @@ function bashlets::library::loader::import()
 
         IFS=: read -r bashlet_path_0 bashlet_name_0 method <<<"$method_full"
 
-        method_prefix_0="bashlets_${bashlet_path_0}_${bashlet_name_0}"
+        method_prefix_0="bashlets::${bashlet_path_0}::${bashlet_name_0}"
 
         container_def_0="$container_def_0
             $method)
