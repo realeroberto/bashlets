@@ -42,13 +42,13 @@ BASHLETS_NAMESPACE=bash$$
 BASHLETS_ERRORS_LOADING_ERROR=1
 
 
-function bashlet2_import_lazy()
+function bashlets_import_lazy()
 {
     local bashlet="$1" file
 
     type bashlets::library::loader::import > /dev/null 2>&1 || {
         [[ $bashlet != "library/loader" ]] && 
-            bashlet2_import_lazy "library/loader"
+            bashlets_import_lazy "library/loader"
     }
 
     # search the core library first (cf. lib/library/loader)
@@ -63,11 +63,11 @@ function bashlet2_import_lazy()
     done
 }
 
-function bashlet2_import()
+function bashlets_import()
 {
     local bashlet="$1"
 
-    bashlet2_import_lazy $bashlet               \
+    bashlets_import_lazy $bashlet               \
         || return $BASHLETS_ERRORS_LOADING_ERROR
 
     bashlets::library::loader::import $bashlet  \
@@ -88,7 +88,7 @@ function bashlet2_import()
 }
 
 # library entry point
-bashlet2_import "$1" || {
+bashlets_import "$1" || {
     echo "[$BASHLETS_NAME] Generic loader error!" >&2
     return $BASHLETS_ERRORS_LOADING_ERROR
 }
