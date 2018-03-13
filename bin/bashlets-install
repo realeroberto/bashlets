@@ -183,7 +183,7 @@ function install_local()
     local dep dep_options
     [[ -n set_as_default ]] && dep_options="$dep_options -D"
     [[ -f $BASHLETS_PACKAGE_MANIFEST ]]  \
-        && for dep in $(jq -r .deps[] $BASHLETS_PACKAGE_MANIFEST)
+        && for dep in $(jq -r .deps[]? $BASHLETS_PACKAGE_MANIFEST)
     do
         bashlets-install $dep_options $dep
     done
