@@ -46,7 +46,7 @@ function __bashlets::datatype::version::naive_sort()
             | sed 's/^[0-9]\.[0-9]\.[0-9]\.\([0-9]*\)/\1/'
 }
 
-#@method
+#@public
 function bashlets::datatype::version::sort()
 {
     (
@@ -55,7 +55,7 @@ function bashlets::datatype::version::sort()
     ) 2> /dev/null || __bashlets::datatype::version::naive_sort "$@"
 }
 
-#@method
+#@public
 function bashlets::datatype::version::less_than()
 {
     local min
@@ -64,7 +64,7 @@ function bashlets::datatype::version::less_than()
     [[ $min == $1 ]]
 }
 
-#@method
+#@public
 function bashlets::datatype::version::greater_than()
 {
     local max
@@ -73,13 +73,13 @@ function bashlets::datatype::version::greater_than()
     [[ $max == $1 ]]
 }
 
-#@method
+#@public
 function bashlets::datatype::version::min()
 {
     bashlets::datatype::version::sort "$@" | head -1
 }
 
-#@method
+#@public
 function bashlets::datatype::version::max()
 {
     bashlets::datatype::version::sort "$@" | tail -1

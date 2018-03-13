@@ -39,7 +39,7 @@ source bashlet time/month
 # based on http://cfajohnson.com/shell/date-functions/?random_date
 
 
-#@method
+#@public
 function bashlets::time::date::get_random()
 {
     local first=${1:-1752} last=${2:-2100}

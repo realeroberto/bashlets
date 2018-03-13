@@ -34,14 +34,14 @@
 ################################################################################
 
 
-#@method
+#@public
 function bashlets::datatype::object::is_array()
 {
     local obj="$1"
     declare -p "$obj" 2> /dev/null | grep -q '^declare \-A'
 }
 
-#@method
+#@public
 function bashlets::datatype::object::is_function()
 {
     local obj="$1"

@@ -80,7 +80,7 @@ function __bashlets::library::local::list_packages()
     done
 }
 
-#@method
+#@public
 function bashlets::library::local::list_packages_path()
 {
     local base="$1"
@@ -90,7 +90,7 @@ function bashlets::library::local::list_packages_path()
     __bashlets::library::local::list_packages "$base" "$callback"
 }
 
-#@method
+#@public
 function bashlets::library::local::list_packages_tree()
 {
     local base="$1"
@@ -100,7 +100,7 @@ function bashlets::library::local::list_packages_tree()
     __bashlets::library::local::list_packages "$base" "$callback"
 }
 
-#@method
+#@public
 function bashlets::library::local::list_packages_tree_norevs()
 {
     local base="$1"

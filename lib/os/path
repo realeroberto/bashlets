@@ -34,20 +34,20 @@
 ################################################################################
 
 
-#@method
+#@public
 function bashlets::os::path::join()
 {
     local IFS=/
     echo "$*"
 }
 
-#@method
+#@public
 function bashlets::os::path::is_absolute()
 {
     [[ "$1" == /* ]]
 }
 
-#@method
+#@public
 function bashlets::os::path::get_absolute()
 {
     # http://stackoverflow.com/questions/59895

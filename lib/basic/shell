@@ -36,13 +36,13 @@
 
 source bashlet datatype/version
 
-#@method
+#@public
 function bashlets::basic::shell::get_full_version()
 {
     echo "$BASH_VERSION"
 }
 
-#@method
+#@public
 function bashlets::basic::shell::get_short_version()
 {
     # shellcheck disable=SC2001

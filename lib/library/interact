@@ -36,7 +36,7 @@
 
 source bashlet library/version
 
-#@method
+#@public
 function bashlets::library::interact::say_hello()
 {
     echo "Hello, this is bashlets $($BASHLETS_NAMESPACE version get) speaking!"

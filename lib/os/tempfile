@@ -34,20 +34,20 @@
 ################################################################################
 
 
-#@method
+#@public
 function bashlets::os::tempfile::create()
 {
 	mktemp
 }
 
-#@method
+#@public
 function bashlets::os::tempfile::exists()
 {
 	local tempfile="$1"
     [[ -n $tempfile && -e $tempfile ]]
 }
 
-#@method
+#@public
 function bashlets::os::tempfile::destroy()
 {
     local tempfile="$1"

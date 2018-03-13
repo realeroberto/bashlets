@@ -68,7 +68,7 @@ function __bashlets::library::loader::list_all_methods()
     declare -F | sed 's/declare -f //' | grep -v "^$FUNCNAME$"
 }
 
-#@method
+#@public
 function bashlets::library::loader::list_methods_old()
 {
     local file="$(__bashlets::library::loader::bashlet_to_file "$1")"
@@ -85,7 +85,7 @@ function bashlets::library::loader::list_methods_old()
     )
 }
 
-#@method
+#@public
 function bashlets::library::loader::list_methods_new()
 {
     local file="$(__bashlets::library::loader::bashlet_to_file "$1")"
@@ -97,10 +97,10 @@ function bashlets::library::loader::list_methods_new()
     #   function foo() { local bar='function baz() { : }' ; }
     # or $BASHLETS_NAMESPACE() in bashlets::library::loader::import() below
 
-    grep -A 1 '^#\+@method' "$file" | sed -n 's/function \(.*\)()/\1/p'
+    grep -A 1 '^#\+@public' "$file" | sed -n 's/function \(.*\)()/\1/p'
 }
 
-#@method
+#@public
 function bashlets::library::loader::list_methods()
 {
     if [[ $BASHLETS_LIB_LIBRARY_LOADER_STYLE == new ]]; then
@@ -112,7 +112,7 @@ function bashlets::library::loader::list_methods()
     fi
 }
 
-#@method
+#@public
 function bashlets::library::loader::search_methods()
 {
     local bashlet_name="$1"
@@ -132,7 +132,7 @@ function bashlets::library::loader::search_methods()
     done
 }
 
-#@method
+#@public
 function bashlets::library::loader::import()
 {
     local bashlet="$1"

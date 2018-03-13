@@ -34,7 +34,7 @@
 ################################################################################
 
 
-#@method
+#@public
 function bashlets::os::fs::dir_is_empty()
 {
     local dir="$1"
@@ -52,7 +52,7 @@ function bashlets::os::fs::dir_is_empty()
 }
 
 
-#@method
+#@public
 function bashlets::os::fs::walk()
 {
     local base="$1"

@@ -34,14 +34,14 @@
 ################################################################################
 
 
-#@method
+#@public
 function bashlets::os::uptime::get_total()
 {
     IFS=' ' read total idle < /proc/uptime
     echo "$total"
 }
 
-#@method
+#@public
 function bashlets::os::uptime::get_idle()
 {
     IFS=' ' read total idle < /proc/uptime

@@ -38,7 +38,7 @@ source bashlet time/year
 
 # based on http://cfajohnson.com/shell/date-functions/?days_in_month
 
-#@method
+#@public
 function bashlets::time::month::count_days()
 {
     declare -i month="${1#0}"

@@ -34,7 +34,7 @@
 ################################################################################
 
 
-#@method
+#@public
 function bashlets::charstream::reshape::join_lines()
 {
     local del="$1"  # delimiter
@@ -43,13 +43,13 @@ function bashlets::charstream::reshape::join_lines()
     sed ":a;N;\$!ba;s/[\n\r]\+/$del/g"
 }
 
-#@method
+#@public
 function bashlets::charstream::reshape::transpose()
 {
     bashlets::charstream::reshape::join_lines
 }
 
-#@method
+#@public
 function bashlets::charstream::reshape::as_string()
 {
     bashlets::charstream::reshape::join_lines

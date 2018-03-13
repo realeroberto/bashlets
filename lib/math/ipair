@@ -48,7 +48,7 @@ source bashlet glue/awklibrary
 # output: a string in the form "s t gcd"
 #
 
-#@method
+#@public
 function bashlets::awk::math::extended_gcd()
 {
     local a="${1:-0}" b="${2:-0}"

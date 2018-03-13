@@ -43,7 +43,7 @@ source bashlet os/mounts
 # cf. https://www.kernel.org/doc/Documentation/sysfs-rules.txt
 
 
-#@method
+#@public
 function bashlets::os::block::get_signature()
 {
     local target="$1"
@@ -54,7 +54,7 @@ function bashlets::os::block::get_signature()
     echo "$signature"
 }
 
-#@method
+#@public
 function bashlets::os::block::validate_device()
 {
     local target="$1"
@@ -62,7 +62,7 @@ function bashlets::os::block::validate_device()
     LC_ALL=C stat -c %F "$target" 2> /dev/null | grep 'block special file' > /dev/null
 }
 
-#@method
+#@public
 function bashlets::os::block::validate_signature()
 {
     local signature="$1"
@@ -97,7 +97,7 @@ function __bashlets::os::block::canonicalise_post_2_6_27()
     readlink -e "$sysfs/dev/block/$signature"
 }
 
-#@method
+#@public
 function bashlets::os::block::canonicalise()
 {
     local target="$1"
@@ -120,7 +120,7 @@ function bashlets::os::block::canonicalise()
     fi
 }
 
-#@method
+#@public
 function bashlets::os::block::canonicalise_parent()
 {
     local target="$1"

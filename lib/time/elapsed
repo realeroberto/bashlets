@@ -36,7 +36,7 @@
 
 source bashlet datatype/number
 
-#@method
+#@public
 function bashlets::time::elapsed::seconds_to_formatted()
 {
     # https://gist.github.com/ldante86/dca1822f6da1fef40efddb1f969fa056
@@ -63,7 +63,7 @@ function bashlets::time::elapsed::seconds_to_formatted()
     printf "%02d:%02d:%02d:%02d\n" "$days" "$hours" "$minutes" "$seconds"
 }
 
-#@method
+#@public
 function bashlets::time::elapsed::seconds_to_description()
 {
     # https://gist.github.com/ldante86/dca1822f6da1fef40efddb1f969fa056

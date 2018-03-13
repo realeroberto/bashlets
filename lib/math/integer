@@ -37,7 +37,7 @@
 source bashlet datatype/number
 
 
-#@method
+#@public
 function bashlets::math::integer::abs()
 {
     local value="$1"
@@ -47,7 +47,7 @@ function bashlets::math::integer::abs()
     [[ $value -ge $opposite ]] && echo "$value" || echo "$opposite"
 }
 
-#@method
+#@public
 function bashlets::math::integer::sign()
 {
     local value="$1"
@@ -58,7 +58,7 @@ function bashlets::math::integer::sign()
     [[ $value -ge $opposite ]] && echo 1 || echo -1
 }
 
-#@method
+#@public
 function bashlets::math::integer::get_unique_factors()
 {
     local pass_0
@@ -94,7 +94,7 @@ function bashlets::math::integer::get_unique_factors()
 #   see http://en.wikipedia.org/wiki/Modular_exponentiation
 #
 
-#@method
+#@public
 function bashlets::math::integer::modular_pow()
 {
     local base=$1 expon=$2 mod=$3

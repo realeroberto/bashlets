@@ -34,14 +34,14 @@
 ################################################################################
 
 
-#@method
+#@public
 function bashlets::os::tempdir::create()
 {
     local base="${1:-/tmp}"
     mktemp -p "$base" -d
 }
 
-#@method
+#@public
 function bashlets::os::tempdir::destroy()
 {
     local tempdir="$1"

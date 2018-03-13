@@ -34,42 +34,42 @@
 ################################################################################
 
 
-#@method
+#@public
 function bashlets::stl::stack::exists()
 {
     # TODO
     :
 }
 
-#@method
+#@public
 function bashlets::stl::stack::create()
 {
     # TODO
     return 1
 }
 
-#@method
+#@public
 function bashlets::stl::stack::destroy()
 {
     # TODO
     return 1
 }
 
-#@method
+#@public
 function bashlets::stl::stack::push()
 {
     # TODO
     return 1
 }
 
-#@method
+#@public
 function bashlets::core::stack::pop()
 {
     # TODO
     return 1
 }
 
-#@method
+#@public
 function bashlets::core::stack::list()
 {
     # TODO

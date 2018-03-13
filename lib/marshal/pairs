@@ -34,7 +34,7 @@
 ################################################################################
 
 
-#@method
+#@public
 function bashlets::marshal::pairs::get_by_key()
 {
     local mykey="$1"
@@ -50,7 +50,7 @@ function bashlets::marshal::pairs::get_by_key()
     done
 }
 
-#@method
+#@public
 function bashlets::marshal::pairs::set_by_key()
 {
     local mykey="$1" ; shift ; myvalue="$@"

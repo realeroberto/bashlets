@@ -39,7 +39,7 @@ source bashlet datatype/unsigned
 # generate a random stream of length $SIZE, including only character in $FILTER
 # a /dev/urandom device a la Linux is required
 
-#@method
+#@public
 function bashlets::os::random::get_stream()
 {
     local size="${1:-16}"
@@ -63,7 +63,7 @@ function bashlets::os::random::get_stream()
     done
 }
 
-#@method
+#@public
 function bashlets::os::random::get_uuid()
 {
     # read from the /proc filesystem, if applicable

@@ -35,7 +35,7 @@
 
 
 
-#@method
+#@public
 function bashlets::os::term::is_tty()
 {
     local fd=0  # stdin
@@ -44,38 +44,38 @@ function bashlets::os::term::is_tty()
     [[ -t "$fd" ]]
 }
 
-#@method
+#@public
 function bashlets::os::term::get_lines()
 {
     tput lines
 }
 
-#@method
+#@public
 function bashlets::os::term::get_cols()
 {
     tput cols
 }
 
-#@method
+#@public
 function bashlets::os::term::get_window_size()
 {
     echo "$(tput lines):$(tput cols)"
 }
 
-#@method
+#@public
 function bashlets::os::term::move_up_one_line()
 {
     printf "\033[1A"  # move cursor one line up
     printf "\033[K"   # delete till end of line
 }
 
-#@method
+#@public
 function bashlets::os::term::reset()
 {
     reset
 }
 
-#@method
+#@public
 function bashlets::os::term::color_fg()
 {
     local color="${1:normal}"
@@ -99,7 +99,7 @@ function bashlets::os::term::color_fg()
     echo -en "$escseq"
 }
 
-#@method
+#@public
 function bashlets::os::term::flasher()
 {
     # cf. https://en.wikipedia.org/wiki/ANSI_escape_code
@@ -116,7 +116,7 @@ function bashlets::os::term::flasher()
     printf "\e[?5l"
 }
 
-#@method
+#@public
 function bashlets::os::term::read_as_text()
 {
     local prompt="$*"
@@ -127,7 +127,7 @@ function bashlets::os::term::read_as_text()
     echo "$input"
 }
 
-#@method
+#@public
 function bashlets::os::term::read_as_password()
 {
     local prompt="$*"

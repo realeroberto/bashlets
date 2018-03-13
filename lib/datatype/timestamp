@@ -33,7 +33,7 @@
 #
 ################################################################################
 
-#@method
+#@public
 function bashlets::datatype::timestamp::to_path()
 {
     local timestamp="$1"

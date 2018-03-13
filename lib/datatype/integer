@@ -36,13 +36,13 @@
 source bashlet datatype/number
 
 
-#@method
+#@public
 function bashlets::datatype::integer::validate()
 {
     $BASHLETS_NAMESPACE number validate_as_integer "$1"
 }
 
-#@method
+#@public
 function bashlets::datatype::integer::to_string()
 {
     # Converts a number into a string of the form 00..nnn, with just enough
@@ -55,7 +55,7 @@ function bashlets::datatype::integer::to_string()
     env printf "%0${digits}d\n" "$n"
 }
 
-#@method
+#@public
 function bashlets::datatype::integer::select_bit()
 {
     ########################################################################

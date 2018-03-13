@@ -38,7 +38,7 @@
 #
 #   see http://en.wikipedia.org/wiki/Arithmetic-geometric_mean
  
-#@method
+#@public
 function bashlets::math::mean::agm()
 {
     local a=${1:-0} b=${2:-0}

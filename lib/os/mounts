@@ -35,7 +35,7 @@
 
 
 
-#@method
+#@public
 function bashlets::os::mounts::get_mount_point_by_device()
 {
     local device="$1"
@@ -44,7 +44,7 @@ function bashlets::os::mounts::get_mount_point_by_device()
     awk "\$1 == \"$device\" {print \$2}" /proc/mounts
 }
 
-#@method
+#@public
 function bashlets::os::mounts::get_mount_point_by_type()
 {
     local type="$1"
@@ -53,7 +53,7 @@ function bashlets::os::mounts::get_mount_point_by_type()
     awk "\$3 == \"$type\" {print \$2}" /proc/mounts
 }
 
-#@method
+#@public
 function bashlets::os::mounts::get_mount_point_of_sysfs()
 {
     # the Linux documentation says that sysfs is always at /sys and that

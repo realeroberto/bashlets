@@ -39,7 +39,7 @@ source bashlet os/term
 
 BASHLETS_UX_REPL_ERR_INVALID_ARG=2
 
-#@method
+#@public
 function bashlets::ux::repl::get_verb()
 {
     local repl="$1"
@@ -47,7 +47,7 @@ function bashlets::ux::repl::get_verb()
     $BASHLETS_NAMESPACE fs get "$repl" "$verb"
 }
 
-#@method
+#@public
 function bashlets::ux::repl::set_verb()
 {
     local repl="$1"
@@ -56,7 +56,7 @@ function bashlets::ux::repl::set_verb()
     $BASHLETS_NAMESPACE fs set "$repl" "$verb" "$command"
 }
 
-#@method
+#@public
 function bashlets::ux::repl::get_help_for_verb()
 {
     local repl="$1"
@@ -64,7 +64,7 @@ function bashlets::ux::repl::get_help_for_verb()
     $BASHLETS_NAMESPACE fs get "$repl" "$verb#help"
 }
 
-#@method
+#@public
 function bashlets::ux::repl::set_help_for_verb()
 {
     local repl="$1"
@@ -73,14 +73,14 @@ function bashlets::ux::repl::set_help_for_verb()
     $BASHLETS_NAMESPACE fs set "$repl" "$verb#help" "$help"
 }
 
-#@method
+#@public
 function bashlets::ux::repl::list_verbs()
 {
     local repl="$1"
     $BASHLETS_NAMESPACE fs list_keys "$repl" | grep -v "#help$"
 }
 
-#@method
+#@public
 function bashlets::ux::repl::exec_verb()
 {
     local repl="$1"
@@ -97,7 +97,7 @@ function bashlets::ux::repl::exec_verb()
     $command argv[@]
 }
 
-#@method
+#@public
 function bashlets::ux::repl::help()
 {
     local repl="$1"
@@ -105,19 +105,19 @@ function bashlets::ux::repl::help()
     echo "$verb: $(bashlets::ux::repl::get_help_for_verb "$repl" "$verb")"
 }
 
-#@method
+#@public
 function bashlets::ux::repl::create()
 {
     $BASHLETS_NAMESPACE fs create
 }
 
-#@method
+#@public
 function bashlets::ux::repl::destroy()
 {
     $BASHLETS_NAMESPACE fs destroy "$1"
 }
 
-#@method
+#@public
 function bashlets::ux::repl::start()
 {
     local repl="$1"

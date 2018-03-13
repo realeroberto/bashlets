@@ -34,7 +34,7 @@
 ################################################################################
 
 
-#@method
+#@public
 function bashlets::debug::trace::enable()
 {
     # cf. http://www.vctlabs.com/posts/2011/Nov/26/tracing_cheatsheet/
@@ -43,7 +43,7 @@ function bashlets::debug::trace::enable()
     set -x
 }
 
-#@method
+#@public
 function bashlets::debug::trace::disable()
 {
     # cf. http://stackoverflow.com/questions/3601515/

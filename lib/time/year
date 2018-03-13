@@ -36,7 +36,7 @@
 
 # based on http://cfajohnson.com/shell/date-functions/?is_leap_year
 
-#@method
+#@public
 function bashlets::time::year::is_leap()
 {
     local year="$1"

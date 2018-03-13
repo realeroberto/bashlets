@@ -90,7 +90,7 @@ function __bashlets::charstream::interpolate::callback_uneval()
 # safely substitute @var tokens with values from shell variables of the same
 # name (or from a marshal context, if assigned)
 
-#@method
+#@public
 function bashlets::charstream::interpolate::eval()
 {
     local context="$1"
@@ -147,7 +147,7 @@ function bashlets::charstream::interpolate::eval()
 
 # evaluates expressions inside a @,@ pair of delimiters
 
-#@method
+#@public
 function bashlets::charstream::interpolate::eval2()
 {
     # these hold the constant buffer and the buffer to be eval'ed, respect.

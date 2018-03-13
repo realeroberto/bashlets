@@ -36,13 +36,13 @@
 
 source bashlet datatype/number
 
-#@method
+#@public
 function bashlets::datatype::float::validate()
 {
     $BASHLETS_NAMESPACE number validate_as_float "$1"
 }
 
-#@method
+#@public
 function bashlets::datatype::float::diff()
 {
     local x="$1"

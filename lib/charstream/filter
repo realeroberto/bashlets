@@ -34,13 +34,13 @@
 ################################################################################
 
 
-#@method
+#@public
 function bashlets::charstream::filter::till_pattern()
 {
     awk "1;/$1/{exit}"
 }
 
-#@method
+#@public
 function bashlets::charstream::filter::after_pattern()
 {
     # cf. http://stackoverflow.com/questions/17283567/

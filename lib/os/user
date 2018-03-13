@@ -41,25 +41,25 @@ function __bashlets::os::user::get_gecos()
     getent passwd "$username" | cut -d : -f 5
 }
 
-#@method
+#@public
 function bashlets::os::user::get_full_name()
 {
     __bashlets::os::user::get_gecos "$1" | cut -d , -f 1
 }
 
-#@method
+#@public
 function bashlets::os::user::get_office()
 {
     __bashlets::os::user::get_gecos "$1" | cut -d , -f 2
 }
 
-#@method
+#@public
 function bashlets::os::user::get_office_phone()
 {
     __bashlets::os::user::get_gecos "$1" | cut -d , -f 3
 }
 
-#@method
+#@public
 function bashlets::os::user::get_home_phone()
 {
     __bashlets::os::user::get_gecos "$1" | cut -d , -f 5

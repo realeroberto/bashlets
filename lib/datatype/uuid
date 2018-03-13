@@ -71,7 +71,7 @@ function __bashlets::datatype::uuid::create()
     echo
 }
 
-#@method
+#@public
 function bashlets::datatype::uuid::create()
 {
     local UUID
@@ -84,13 +84,13 @@ function bashlets::datatype::uuid::create()
     test ${#UUID} -gt 0 && echo "$UUID"
 }
 
-#@method
+#@public
 function bashlets::datatype::uuid::destroy()
 {
     :
 }
 
-#@method
+#@public
 function bashlets::datatype::uuid::validate()
 {
     local UUID="$1"

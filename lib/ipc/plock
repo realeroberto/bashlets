@@ -54,7 +54,7 @@ __bashlets::ipc::plock::delay=2
 ##
 ###################
 
-#@method
+#@public
 function bashlets::ipc::plock::acquire()
 {
     local lockfile="$1"
@@ -141,14 +141,14 @@ function bashlets::ipc::plock::acquire()
 done
 }
 
-#@method
+#@public
 function bashlets::ipc::plock::release()
 {
     local lockfile="$1"
     rm -f "$lockfile"
 }
 
-#@method
+#@public
 function bashlets::ipc::plock::exists()
 {
     local lockfile="$1"

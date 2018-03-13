@@ -40,13 +40,13 @@ BASHLETS_VERSION=1.0
 source bashlet datatype/version
 
 
-#@method
+#@public
 function bashlets::library::version::get()
 {
     echo "$BASHLETS_VERSION"
 }
 
-#@method
+#@public
 function bashlets::library::version::require()
 {
     local required="$1" actual max

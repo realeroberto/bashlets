@@ -34,26 +34,26 @@
 ################################################################################
 
 
-#@method
+#@public
 function bashlets::charstream::strip::leading_spaces()
 {
     sed 's/^[ \t]*//g'
 }
 
-#@method
+#@public
 function bashlets::charstream::strip::nonprintable()
 {
     # cf. http://stackoverflow.com/questions/20371049/
     tr -cd '\11\12\15\40-\176'
 }
 
-#@method
+#@public
 function bashlets::charstream::strip::xml_tags()
 {
     sed 's/<[^>]\+>//g'
 }
 
-#@method
+#@public
 function bashlets::charstream::strip::xml_tags_add_space()
 {
     # Replace tags with a space so pieces of content that are next to each
@@ -64,13 +64,13 @@ function bashlets::charstream::strip::xml_tags_add_space()
     sed 's/<[^>]\+>/ /g'
 }
 
-#@method
+#@public
 function bashlets::charstream::strip::html_tags()
 {
     bashlets::charstream::strip::xml_tags
 }
 
-#@method
+#@public
 function bashlets::charstream::strip::html_tags_add_space()
 {
     bashlets::charstream::strip::xml_tags_add_space

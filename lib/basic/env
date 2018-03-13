@@ -34,7 +34,7 @@
 ################################################################################
 
 
-#@method
+#@public
 function bashlets::basic::env::list()
 {
     env                                                            \
@@ -43,7 +43,7 @@ function bashlets::basic::env::list()
 }
 
 
-#@method
+#@public
 function bashlets::basic::env::list_full()
 {
     env                                                            \
@@ -51,7 +51,7 @@ function bashlets::basic::env::list_full()
 }
 
 
-#@method
+#@public
 function bashlets::basic::env::list_variables()
 {
     # by enabling ``posix'' mode we tell ``set'' not to print function names
@@ -64,7 +64,7 @@ function bashlets::basic::env::list_variables()
 }
 
 
-#@method
+#@public
 function bashlets::basic::env::list_variables_full()
 {
     # by enabling ``posix'' mode we tell ``set'' not to print function names

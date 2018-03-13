@@ -34,7 +34,7 @@
 ################################################################################
 
 
-#@method
+#@public
 function bashlets::datatype::keyvalues::list_keys()
 {
 	local fs="$1"
@@ -42,7 +42,7 @@ function bashlets::datatype::keyvalues::list_keys()
     cut -d$fs -f1 | sort -u
 }
 
-#@method
+#@public
 function bashlets::datatype::keyvalues::list_values()
 {
 	local fs="$2"
@@ -50,7 +50,7 @@ function bashlets::datatype::keyvalues::list_values()
     cut -d$fs -f2 | sort -u
 }
 
-#@method
+#@public
 function bashlets::datatype::keyvalues::get_by_key()
 {
     local key="$1"
@@ -59,7 +59,7 @@ function bashlets::datatype::keyvalues::get_by_key()
     awk -F$fs "\$1 == \"$key\" {print \$2}"
 }
 
-#@method
+#@public
 function bashlets::datatype::keyvalues::get_by_value()
 {
     local value="$1"

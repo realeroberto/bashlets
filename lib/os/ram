@@ -34,7 +34,7 @@
 ################################################################################
 
 
-#@method
+#@public
 function bashlets::os::ram::get_total()
 {
     # https://gist.github.com/ldante86/a9460cffa7333e74f1fec573c6cf3469
@@ -42,7 +42,7 @@ function bashlets::os::ram::get_total()
     grep MemTotal /proc/meminfo | tr -d "a-zA-Z: \t"
 }
 
-#@method
+#@public
 function bashlets::os::ram::get_free()
 {
     # https://gist.github.com/ldante86/a9460cffa7333e74f1fec573c6cf3469
@@ -50,7 +50,7 @@ function bashlets::os::ram::get_free()
     grep MemFree /proc/meminfo | tr -d "a-zA-Z: \t"
 }
 
-#@method
+#@public
 function bashlets::os::ram::get_used()
 {
     # https://gist.github.com/ldante86/a9460cffa7333e74f1fec573c6cf3469

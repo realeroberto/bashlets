@@ -34,14 +34,14 @@
 ################################################################################
 
 
-#@method
+#@public
 function bashlets::marshal::uneval::create()
 {
     # emit start-marker, to be removed in future releases
     echo ':'
 }
 
-#@method
+#@public
 function bashlets::marshal::uneval::add_pair()
 {
     local payload="$1"
@@ -51,7 +51,7 @@ function bashlets::marshal::uneval::add_pair()
     printf "$payload\nlocal $key=\"%q\"\n" "$@"
 }
 
-#@method
+#@public
 function bashlets::marshal::uneval::get_by_key()
 {
     local payload="$1"

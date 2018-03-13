@@ -36,7 +36,7 @@
 
 # infer length of the indentation step
 
-#@method
+#@public
 function bashlets::charstream::infer::indent_step()
 {
 	local step="$(

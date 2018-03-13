@@ -35,7 +35,7 @@
 
 
 
-#@method
+#@public
 function bashlets::os::kernel::get_version()
 {
     local full_version="$(uname -r)"

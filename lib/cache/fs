@@ -54,7 +54,7 @@ function __bashlets::cache::fs::get_key_path()
     echo "$path/$key"
 }
 
-#@method
+#@public
 function bashlets::cache::fs::count_keys()
 {
     local cache="$1"
@@ -69,7 +69,7 @@ function bashlets::cache::fs::count_keys()
     echo "$count"
 }
 
-#@method
+#@public
 function bashlets::cache::fs::create()
 {
     local __path="$($BASHLETS_NAMESPACE tempdir create)" || return 1
@@ -78,7 +78,7 @@ function bashlets::cache::fs::create()
     echo "$path"
 }
 
-#@method
+#@public
 function bashlets::cache::fs::destroy()
 {
     local cache="$1"
@@ -89,7 +89,7 @@ function bashlets::cache::fs::destroy()
     rm -fr "$path"
 }
 
-#@method
+#@public
 function bashlets::cache::fs::exists()
 {
     local cache="$1"
@@ -102,7 +102,7 @@ function bashlets::cache::fs::exists()
     [[ -e "$key_path" ]]
 }
 
-#@method
+#@public
 function bashlets::cache::fs::list_keys()
 {
     local cache="$1"
@@ -113,7 +113,7 @@ function bashlets::cache::fs::list_keys()
     find "$path" -type f -printf "%f\n"
 }
 
-#@method
+#@public
 function bashlets::cache::fs::get()
 {
     local cache="$1"
@@ -140,7 +140,7 @@ function bashlets::cache::fs::get()
     }
 }
 
-#@method
+#@public
 function bashlets::cache::fs::get_type()
 {
     local cache="$1"
@@ -154,7 +154,7 @@ function bashlets::cache::fs::get_type()
     [[ -d "$key_path" ]] && echo array || echo scalar
 }
 
-#@method
+#@public
 function bashlets::cache::fs::set()
 {
     local cache="$1"
@@ -169,7 +169,7 @@ function bashlets::cache::fs::set()
     echo "$value" > "$key_path"
 }
 
-#@method
+#@public
 function bashlets::cache::fs::set_array()
 {
     # TODO: associative arrays
@@ -201,7 +201,7 @@ function bashlets::cache::fs::set_array()
     eval unset $array_name
 }
 
-#@method
+#@public
 function bashlets::cache::fs::unset()
 {
     local cache="$1"

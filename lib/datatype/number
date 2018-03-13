@@ -34,32 +34,32 @@
 ################################################################################
 
 
-#@method
+#@public
 function bashlets::datatype::number::validate_as_integer()
 {
     [[ $1 =~ ^[-+]?[0-9]+$ ]]
 }
 
-#@method
+#@public
 function bashlets::datatype::number::validate_as_unsigned()
 {
     [[ $1 =~ ^[0-9]+$ ]]
 }
 
-#@method
+#@public
 function bashlets::datatype::number::validate_as_byte()
 {
     bashlets::datatype::number::validate_as_unsigned "$1" || return 1
     [[ $1 -ge 0 && $1 -le 255 ]]
 }
 
-#@method
+#@public
 function bashlets::datatype::number::validate_as_float()
 {
     [[ $1 =~ ^[-+]?[0-9]*\.?[0-9]+$ ]]
 }
 
-#@method
+#@public
 function bashlets::datatype::number::validate_as_unsigned_float()
 {
     [[ $1 =~ ^\+?[0-9]*\.?[0-9]+$ ]]
