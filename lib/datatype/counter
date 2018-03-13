@@ -33,7 +33,7 @@
 #
 ################################################################################
 
-source bashlet os/tempfile
+source bashlets os/tempfile
 
 
 #@public

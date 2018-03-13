@@ -34,7 +34,7 @@
 ################################################################################
 
 
-source bashlet os/random
+source bashlets os/random
 
 
 function __bashlets::datatype::uuid::create()

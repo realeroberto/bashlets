@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-source bashlet math/integer
+source bashlets math/integer
 
 @test "math/integer: absolute value of an integer" {
   result="$(bash$$ integer abs -1)"

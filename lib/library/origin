@@ -34,7 +34,7 @@
 ################################################################################
 
 
-source bashlet api/github
+source bashlets api/github
 
 #@public
 function bashlets::library::origin::list_packages()

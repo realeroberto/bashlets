@@ -34,7 +34,7 @@
 ################################################################################
 
 
-source bashlet datatype/object
+source bashlets datatype/object
 
 
 #@public

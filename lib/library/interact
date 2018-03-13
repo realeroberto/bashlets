@@ -34,7 +34,7 @@
 ################################################################################
 
 
-source bashlet library/version
+source bashlets library/version
 
 #@public
 function bashlets::library::interact::say_hello()

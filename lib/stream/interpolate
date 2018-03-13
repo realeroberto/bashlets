@@ -34,8 +34,8 @@
 ################################################################################
 
 
-source bashlet os/tempfile
-source bashlet marshal/uneval
+source bashlets os/tempfile
+source bashlets marshal/uneval
 
 
 function __bashlets::stream::interpolate::callback_plain()

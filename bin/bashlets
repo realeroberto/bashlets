@@ -10,7 +10,7 @@
 #                                        
 # bashlets -- A modular extensible toolbox for Bash
 #
-# Library management
+# Library bootstrapping and main entry point
 #
 # Copyright (c) 2014-8 Roberto Reale
 # 

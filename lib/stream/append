@@ -34,8 +34,8 @@
 ################################################################################
 
 
-source bashlet stream/filter
-source bashlet os/tempfile
+source bashlets stream/filter
+source bashlets os/tempfile
 
 #@public
 function bashlets::stream::append::generic()

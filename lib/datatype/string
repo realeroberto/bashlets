@@ -34,9 +34,9 @@
 ################################################################################
 
 
-source bashlet stream/reorder
-source bashlet stream/reshape
-source bashlet os/random
+source bashlets stream/reorder
+source bashlets stream/reshape
+source bashlets os/random
 
 #@public
 function bashlets::datatype::string::chop()

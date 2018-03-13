@@ -34,7 +34,7 @@
 ################################################################################
 
 
-source bashlet datatype/unsigned
+source bashlets datatype/unsigned
 
 # generate a random stream of length $SIZE, including only character in $FILTER
 # a /dev/urandom device a la Linux is required

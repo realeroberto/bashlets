@@ -34,8 +34,8 @@
 ################################################################################
 
 
-source bashlet datatype/number
-source bashlet glue/awklibrary
+source bashlets datatype/number
+source bashlets glue/awklibrary
 
 #
 # extended euclidean algorithm

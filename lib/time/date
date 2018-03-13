@@ -34,7 +34,7 @@
 ################################################################################
 
 
-source bashlet time/month
+source bashlets time/month
 
 # based on http://cfajohnson.com/shell/date-functions/?random_date
 

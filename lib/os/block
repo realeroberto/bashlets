@@ -34,10 +34,10 @@
 ################################################################################
 
 
-source bashlet datatype/number
-source bashlet datatype/version
-source bashlet os/kernel
-source bashlet os/mounts
+source bashlets datatype/number
+source bashlets datatype/version
+source bashlets os/kernel
+source bashlets os/mounts
 
 
 # cf. https://www.kernel.org/doc/Documentation/sysfs-rules.txt

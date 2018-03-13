@@ -34,7 +34,7 @@
 ################################################################################
 
 
-source bashlet os/tempdir
+source bashlets os/tempdir
 
 #@public
 function bashlets::os::ramdisk::create()

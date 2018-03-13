@@ -35,8 +35,8 @@
 ################################################################################
 
 
-source bashlet library/origin
-source bashlet library/local
+source bashlets library/origin
+source bashlets library/local
 
 #
 # global variables

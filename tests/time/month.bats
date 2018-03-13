@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-source bashlet time/month
+source bashlets time/month
 
 @test "time/month: count days in month" {
   result="$(bash$$ month count_days 1)"

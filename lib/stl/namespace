@@ -34,7 +34,7 @@
 ################################################################################
 
 
-source bashlet stl/stack 
+source bashlets stl/stack 
 
 #@public
 function bashlets::stl::namespace::exists()

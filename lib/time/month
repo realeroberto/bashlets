@@ -33,7 +33,7 @@
 #
 ################################################################################
 
-source bashlet time/year
+source bashlets time/year
 
 
 # based on http://cfajohnson.com/shell/date-functions/?days_in_month

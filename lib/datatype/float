@@ -34,7 +34,7 @@
 ################################################################################
 
 
-source bashlet datatype/number
+source bashlets datatype/number
 
 #@public
 function bashlets::datatype::float::validate()

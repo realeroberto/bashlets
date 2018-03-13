@@ -33,7 +33,7 @@
 #
 ################################################################################
 
-source bashlet datatype/number
+source bashlets datatype/number
 
 
 #@public

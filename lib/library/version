@@ -37,7 +37,7 @@
 
 BASHLETS_VERSION=1.0
 
-source bashlet datatype/version
+source bashlets datatype/version
 
 
 #@public

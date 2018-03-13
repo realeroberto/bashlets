@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-source bashlet math/icomplex
+source bashlets math/icomplex
 
 w=$(bash$$ icomplex create 0 1)
 

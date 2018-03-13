@@ -34,7 +34,7 @@
 #
 ################################################################################
 
-source bashlet library/loader
+source bashlets library/loader
 
 
 #

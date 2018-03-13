@@ -34,7 +34,7 @@
 ################################################################################
 
 
-source bashlet datatype/sha1
+source bashlets datatype/sha1
 BASHLETS_BASE=~/.bashlets
 
 
