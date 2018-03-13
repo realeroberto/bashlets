@@ -222,8 +222,8 @@ function bashlets::library::loader::import()
 
             @methods)
     "
-    IFS=@ read -r -a methods <<<"$methods_list"
-    for method in "${methods[@]}"
+    sorted_methods=($(tr @ '\n' <<<"$methods_list" | sort -u))
+    for method in "${sorted_methods[@]}"
     do
         container_def="$container_def
                 echo \"$method\"
