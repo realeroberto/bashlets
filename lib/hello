@@ -33,8 +33,8 @@
 #
 ################################################################################
 
-#@method
-function bashlets_util_skeleton_hello_say_hello()
+#@public
+function bashlets::util::skeleton::hello::say_hello()
 {
     echo "hello, world"
 }
