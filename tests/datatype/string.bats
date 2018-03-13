@@ -82,8 +82,8 @@ source bashlets datatype/string
   [[ $result =~ $expected ]]
 }
 
-@test "datatype/string: convert a string into a charstream" {
-  result="$(bash$$ string to_charstream 12345 | tail -1)"
+@test "datatype/string: convert a string into a stream" {
+  result="$(bash$$ string to_stream 12345 | tail -1)"
   expected="5"
   [[ $result == $expected ]]
 }
