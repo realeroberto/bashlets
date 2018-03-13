@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-source bashlet util/skeleton/hello
+source bashlets util/skeleton/hello
 
 @test "util/skeleton/hello: say hello" {
   result=$(bash$$ hello say_hello)
