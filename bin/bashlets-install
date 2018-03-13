@@ -44,6 +44,7 @@ BASHLETS_BASE=~/.bashlets
 BASHLETS_REMOTE_CORE=https://github.com/bashlets
 BASHLETS_REMOTE_PACKAGES=https://github.com/bashlets
 BASHLETS_BIN_TARGETS=~/.local/bin:/usr/local/bin
+BASHLETS_PACKAGE_MANIFEST=bashlets.json
 
 # which Git branch are we interested in?
 branch=master
@@ -181,7 +182,8 @@ function install_local()
     # install dependencies
     local dep dep_options
     [[ -n set_as_default ]] && dep_options="$dep_options -D"
-    [[ -f deps ]] && for dep in $(cat deps)
+    [[ -f $BASHLETS_PACKAGE_MANIFEST ]]  \
+        && for dep in $(jq -r .deps[] $BASHLETS_PACKAGE_MANIFEST)
     do
         bashlets-install $dep_options $dep
     done
