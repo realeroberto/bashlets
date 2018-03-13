@@ -98,7 +98,7 @@ function bashlets::library::loader::list_methods_new()
     #   function foo() { local bar='function baz() { : }' ; }
     # or $BASHLETS_NAMESPACE() in bashlets::library::loader::import() below
 
-    grep -A 1 '^#\+@public' "$file" | sed -n 's/function \(.*\)()/\1/p'
+    grep -A 1 '^#\+@public' "$file" | sed -n 's/function \([A-Za-z0-9_::]\+\)()/\1/p'
 }
 
 #@public
