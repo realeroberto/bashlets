@@ -141,7 +141,7 @@ function bashlets::library::loader::import()
     local loader_def
     local container_name container_def container_def_0 method_prefix
     local method method_full
-    local methods_list
+    local methods_list methods_list_0
 
     bashlet_name="$(__bashlets::library::loader::bashlet_to_name "$bashlet")"
     bashlet_path="$(__bashlets::library::loader::bashlet_to_path "$bashlet")"
@@ -190,8 +190,7 @@ function bashlets::library::loader::import()
                 ;;
         "
         
-        methods_list="$methods_list@$method"
-
+        methods_list_0="$methods_list_0@$method"
     done
 
     # new methods
@@ -215,6 +214,7 @@ function bashlets::library::loader::import()
     container_def="$container_def
     $container_def_0
     "
+    methods_list="$methods_list@$methods_list_0"
 
     # introspection methods
 
