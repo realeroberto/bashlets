@@ -44,7 +44,8 @@ function __bashlets::library::loader::bashlet_to_name()
 
 function __bashlets::library::loader::bashlet_to_path()
 {
-    dirname "$1" | tr / _
+    local path="$(dirname $1)"
+    echo "${path//\//::}"
 }
 
 function __bashlets::library::loader::bashlet_to_file()
