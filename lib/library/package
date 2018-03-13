@@ -42,7 +42,7 @@ function bashlets::library::package::get_name()
 {
     local base="$1"
     local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
-    test -e "$path" && jq -r .name "$path"
+    test -e "$path" && jq -r .name? "$path"
 }
 
 #@public
@@ -50,7 +50,7 @@ function bashlets::library::package::get_description()
 {
     local base="$1"
     local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
-    test -e "$path" && jq -r .description "$path"
+    test -e "$path" && jq -r .description? "$path"
 }
 
 #@public
@@ -58,7 +58,7 @@ function bashlets::library::package::get_version()
 {
     local base="$1"
     local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
-    test -e "$path" && jq -r .version "$path"
+    test -e "$path" && jq -r .version? "$path"
 }
 
 #@public
@@ -66,7 +66,7 @@ function bashlets::library::package::get_author_name()
 {
     local base="$1"
     local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
-    test -e "$path" && jq -r .author.name "$path"
+    test -e "$path" && jq -r .author.name? "$path"
 }
 
 #@public
@@ -74,7 +74,7 @@ function bashlets::library::package::get_author_email()
 {
     local base="$1"
     local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
-    test -e "$path" && jq -r .author.email "$path"
+    test -e "$path" && jq -r .author.email? "$path"
 }
 
 #@public
@@ -82,7 +82,7 @@ function bashlets::library::package::get_license()
 {
     local base="$1"
     local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
-    test -e "$path" && jq -r .license "$path"
+    test -e "$path" && jq -r .license? "$path"
 }
 
 #@public
@@ -90,7 +90,7 @@ function bashlets::library::package::get_deps()
 {
     local base="$1"
     local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
-    test -e "$path" && jq -r .deps[] "$path"
+    test -e "$path" && jq -r .deps[]? "$path"
 }
 
 # Local variables:
