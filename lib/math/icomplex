@@ -169,7 +169,7 @@ function bashlets::math::icomplex::subtract()
 	declare w="$1"
 	declare z="$2"
 
-	bashlets::math::icomplex::add "$w" "$(bashlets_math_icomplex_negate "$z")"
+	bashlets::math::icomplex::add "$w" "$(bashlets::math::icomplex::negate "$z")"
 }
 
 #@method
