@@ -141,6 +141,7 @@ function bashlets::library::loader::import()
     local loader_def
     local container_name container_def container_def_0 method_prefix
     local method method_full
+    local methods_list
 
     bashlet_name="$(__bashlets::library::loader::bashlet_to_name "$bashlet")"
     bashlet_path="$(__bashlets::library::loader::bashlet_to_path "$bashlet")"
@@ -188,6 +189,9 @@ function bashlets::library::loader::import()
                 ${method_prefix_0}::\$method \"\$@\"
                 ;;
         "
+        
+        methods_list="$methods_list@$method"
+
     done
 
     # new methods
@@ -202,6 +206,8 @@ function bashlets::library::loader::import()
                 ${method_prefix}::\$method \"\$@\"
                 ;;
         "
+
+        methods_list="$methods_list@$method"
     done
 
     # add inherited methods
@@ -210,9 +216,27 @@ function bashlets::library::loader::import()
     $container_def_0
     "
 
+    # introspection methods
+
+    container_def="$container_def
+
+            @methods)
+    "
+    IFS=@ read -r -a methods <<<"$methods_list"
+    for method in "${methods[@]}"
+    do
+        container_def="$container_def
+                echo \"$method\"
+        "
+    done
+    container_def="$container_def
+                ;;
+    "
+
     # container footer
 
     container_def="$container_def
+
             *)
                 echo \"Method not found!\"
                 return 1
