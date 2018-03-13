@@ -120,7 +120,7 @@ function bashlets::library::loader::search_methods()
 
     for method_fullname in $(__bashlets::library::loader::list_all_methods)
     do
-        pattern="^bashlets::([^::]+)::${bashlet_name}_(.+)"
+        pattern="^bashlets::([^:]+)::${bashlet_name}::(.+)"
 
         if [[ $method_fullname =~ $pattern ]]
         then
@@ -148,7 +148,7 @@ function bashlets::library::loader::import()
     source "$file_name" || return 1
 
     container_name="$bashlet_name"
-    method_prefix="bashlets::${bashlet::path}::${bashlet_name}"
+    method_prefix="bashlets::${bashlet_path}::${bashlet_name}"
 
     # loader
 
@@ -156,14 +156,14 @@ function bashlets::library::loader::import()
     {
         local container=\"\$1\" ; shift
 
-        bashlets_\$container \"\$@\"
+        bashlets::\$container \"\$@\"
     }"
 
     eval "$loader_def"
 
     # container header
 
-    container_def="function bashlets_${container_name}()
+    container_def="function bashlets::${container_name}()
     {
         local method=\"\$1\" ; shift
 
@@ -180,11 +180,11 @@ function bashlets::library::loader::import()
 
         IFS=: read -r bashlet_path_0 bashlet_name_0 method <<<"$method_full"
 
-        method_prefix_0="bashlets::${bashlet::path::0}_${bashlet_name_0}"
+        method_prefix_0="bashlets_${bashlet_path_0}_${bashlet_name_0}"
 
         container_def_0="$container_def_0
             $method)
-                ${method_prefix_0}_\$method \"\$@\"
+                ${method_prefix_0}::\$method \"\$@\"
                 ;;
         "
     done
@@ -193,12 +193,12 @@ function bashlets::library::loader::import()
 
     for method in $(
         bashlets::library::loader::list_methods "$bashlet" |  \
-            sed "s/${method_prefix}_//"
+            sed "s/${method_prefix}:://"
     )
     do
         container_def="$container_def
             $method)
-                ${method_prefix}_\$method \"\$@\"
+                ${method_prefix}::\$method \"\$@\"
                 ;;
         "
     done
