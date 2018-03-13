@@ -35,16 +35,25 @@
 
 
 #@public
-function bashlets::charstream::filter::till_pattern()
+function bashlets::stream::reorder::shuffle()
 {
-    awk "1;/$1/{exit}"
-}
+    local hint_nr=${1:-1024}
+    
+    shuf - 2> /dev/null
+    [[ $? -eq 0 ]] && return
 
-#@public
-function bashlets::charstream::filter::after_pattern()
-{
-    # cf. http://stackoverflow.com/questions/17283567/
-    awk "f;/$1/{f=1}"
+    [[ $hint_nr -gt 0 ]] && hint_nr=1024
+
+    awk "
+        BEGIN {
+            srand()
+        }
+
+        {
+            print int(rand()*1024*$hint_nr) \"\t\" \$0
+        }
+        
+        " | sort -n | cut -f2
 }
 
 

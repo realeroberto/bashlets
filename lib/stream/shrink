@@ -34,28 +34,30 @@
 ################################################################################
 
 
+# Inspired from (but improves on) code at http://bash.cyberciti.biz/
+
 #@public
-function bashlets::charstream::reorder::shuffle()
+function bashlets::stream::shrink::remove_c_comments()
 {
-    local hint_nr=${1:-1024}
-    
-    shuf - 2> /dev/null
-    [[ $? -eq 0 ]] && return
-
-    [[ $hint_nr -gt 0 ]] && hint_nr=1024
-
-    awk "
-        BEGIN {
-            srand()
+    sed -e '
+        # if no /* get next
+        :y
+        /\/\*/!{
+        N
+        by
         }
 
-        {
-            print int(rand()*1024*$hint_nr) \"\t\" \$0
+        # here we have got an /*, append lines until get the corresponding */
+        :x
+        /\*\//!{
+        N
+        bx
         }
-        
-        " | sort -n | cut -f2
+
+        # delete /*...*/
+        s/\/\*\([^*]\|\*[^\/]\)*\**\///g
+    '
 }
-
 
 # Local variables:
 # mode: shell-script

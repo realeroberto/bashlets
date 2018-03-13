@@ -34,19 +34,25 @@
 ################################################################################
 
 
-# infer length of the indentation step
+#@public
+function bashlets::stream::reshape::join_lines()
+{
+    local del="$1"  # delimiter
+
+    # https://stackoverflow.com/questions/1251999/
+    sed ":a;N;\$!ba;s/[\n\r]\+/$del/g"
+}
 
 #@public
-function bashlets::charstream::infer::indent_step()
+function bashlets::stream::reshape::transpose()
 {
-	local step="$(
-		tr ' \t' @                                                          \
-		| sed 's/^\(@*\).*/\1/'                                             \
-		| grep -v '^$'                                                      \
-		| env sort                                                          \
-		| head -1)"
+    bashlets::stream::reshape::join_lines
+}
 
-    echo ${#step}
+#@public
+function bashlets::stream::reshape::as_string()
+{
+    bashlets::stream::reshape::join_lines
 }
 
 

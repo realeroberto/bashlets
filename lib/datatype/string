@@ -34,8 +34,8 @@
 ################################################################################
 
 
-source bashlet charstream/reorder
-source bashlet charstream/reshape
+source bashlet stream/reorder
+source bashlet stream/reshape
 source bashlet os/random
 
 #@public
@@ -162,7 +162,7 @@ function bashlets::datatype::string::dec_to_hex()
 }
 
 #@public
-function bashlets::datatype::string::to_charstream()
+function bashlets::datatype::string::to_stream()
 {
     local chr
     echo -n "$*" | while read -r -n1 chr; do echo "$chr"; done
@@ -195,7 +195,7 @@ function bashlets::datatype::string::reverse()
 #@public
 function bashlets::datatype::string::transpose()
 {
-    bashlets::datatype::string::to_charstream "$*"
+    bashlets::datatype::string::to_stream "$*"
 }
 
 #@public
@@ -205,7 +205,7 @@ function bashlets::datatype::string::shuffle()
 
     [[ -n $str ]] || return
 
-    bashlets::datatype::string::to_charstream "$str"    \
+    bashlets::datatype::string::to_stream "$str"    \
         | $BASHLETS_NAMESPACE reorder shuffle        \
         | $BASHLETS_NAMESPACE reshape transpose
 }

@@ -34,79 +34,17 @@
 ################################################################################
 
 
-source bashlet datatype/string
-
-
 #@public
-function bashlets::charstream::convert::dos2unix()
+function bashlets::stream::filter::till_pattern()
 {
-    local input="$1"
-    local output="$2"
-
-    type dos2unix > /dev/null 2>&1 && {
-        function dos2unix() { command dos2unix ; }
-    } || {
-        function dos2unix() { tr -d "\r" ; }
-    }
-    
-    (test -n "$input" && cat "$input" || cat) |  \
-        dos2unix | (test -n "$output" && cat > "$output" || cat)
-
-    unset dos2unix
+    awk "1;/$1/{exit}"
 }
 
 #@public
-function bashlets::charstream::convert::unix2dos()
+function bashlets::stream::filter::after_pattern()
 {
-    local input="$1"
-    local output="$2"
-
-    type unix2dos > /dev/null 2>&1 && {
-        function unix2dos() { command unix2dos ; }
-    } || {
-        function unix2dos() { sed "s/$/\r/" ; }
-    }
-    
-    (test -n "$input" && cat "$input" || cat) |  \
-        unix2dos | (test -n "$output" && cat > "$output" || cat)
-
-    unset unix2dos
-}
-
-#@public
-function bashlets::charstream::convert::rotate()
-{
-    while read
-    do
-        $BASHLETS_NAMESPACE string rotate "${1:-13}" "$REPLY"
-    done
-}
-
-#@public
-function bashlets::charstream::convert::rot13()
-{
-    while read
-    do
-        $BASHLETS_NAMESPACE string rot13 "$REPLY"
-    done
-}
-
-#@public
-function bashlets::charstream::convert::punch()
-{
-    while read
-    do
-        $BASHLETS_NAMESPACE string punch "$REPLY"
-    done
-}
-
-#@public
-function bashlets::charstream::convert::to_piglatin()
-{
-    while read
-    do
-        $BASHLETS_NAMESPACE string to_piglatin "$REPLY"
-    done
+    # cf. http://stackoverflow.com/questions/17283567/
+    awk "f;/$1/{f=1}"
 }
 
 

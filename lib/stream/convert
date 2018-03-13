@@ -34,30 +34,81 @@
 ################################################################################
 
 
-# Inspired from (but improves on) code at http://bash.cyberciti.biz/
+source bashlet datatype/string
+
 
 #@public
-function bashlets::charstream::shrink::remove_c_comments()
+function bashlets::stream::convert::dos2unix()
 {
-    sed -e '
-        # if no /* get next
-        :y
-        /\/\*/!{
-        N
-        by
-        }
+    local input="$1"
+    local output="$2"
 
-        # here we have got an /*, append lines until get the corresponding */
-        :x
-        /\*\//!{
-        N
-        bx
-        }
+    type dos2unix > /dev/null 2>&1 && {
+        function dos2unix() { command dos2unix ; }
+    } || {
+        function dos2unix() { tr -d "\r" ; }
+    }
+    
+    (test -n "$input" && cat "$input" || cat) |  \
+        dos2unix | (test -n "$output" && cat > "$output" || cat)
 
-        # delete /*...*/
-        s/\/\*\([^*]\|\*[^\/]\)*\**\///g
-    '
+    unset dos2unix
 }
+
+#@public
+function bashlets::stream::convert::unix2dos()
+{
+    local input="$1"
+    local output="$2"
+
+    type unix2dos > /dev/null 2>&1 && {
+        function unix2dos() { command unix2dos ; }
+    } || {
+        function unix2dos() { sed "s/$/\r/" ; }
+    }
+    
+    (test -n "$input" && cat "$input" || cat) |  \
+        unix2dos | (test -n "$output" && cat > "$output" || cat)
+
+    unset unix2dos
+}
+
+#@public
+function bashlets::stream::convert::rotate()
+{
+    while read
+    do
+        $BASHLETS_NAMESPACE string rotate "${1:-13}" "$REPLY"
+    done
+}
+
+#@public
+function bashlets::stream::convert::rot13()
+{
+    while read
+    do
+        $BASHLETS_NAMESPACE string rot13 "$REPLY"
+    done
+}
+
+#@public
+function bashlets::stream::convert::punch()
+{
+    while read
+    do
+        $BASHLETS_NAMESPACE string punch "$REPLY"
+    done
+}
+
+#@public
+function bashlets::stream::convert::to_piglatin()
+{
+    while read
+    do
+        $BASHLETS_NAMESPACE string to_piglatin "$REPLY"
+    done
+}
+
 
 # Local variables:
 # mode: shell-script
