@@ -59,7 +59,8 @@ function bashlets::datatype::unsigned::to_string()
 function bashlets::datatype::unsigned::random()
 {
     local size="${1:-16}"
-    $BASHLETS_NAMESPACE random get "$size" 0-9
+    local raw="$($BASHLETS_NAMESPACE random get $((size+1)) 0-9)"
+    echo ${raw:1:${#raw}}  # avoid leading zero!
 }
 
 #@public
