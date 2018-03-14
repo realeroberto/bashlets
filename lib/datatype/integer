@@ -33,9 +33,25 @@
 #
 ################################################################################
 
-source bashlets datatype/number
-
 source bashlets os/random
+
+#@public
+function bashlets::datatype::integer::new()
+{
+    :
+}
+
+#@public
+function bashlets::datatype::integer::destroy()
+{
+    :
+}
+
+#@public
+function bashlets::datatype::integer::to_string()
+{
+    echo "$@"
+}
 
 #@public
 function bashlets::datatype::integer::random()
@@ -54,7 +70,7 @@ function bashlets::datatype::integer::random()
 #@public
 function bashlets::datatype::integer::validate()
 {
-    $BASHLETS_NAMESPACE number validate_as_integer "$1"
+    [[ $1 =~ ^[-+]?[0-9]+$ ]]
 }
 
 #@public
