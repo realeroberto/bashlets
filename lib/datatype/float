@@ -34,25 +34,57 @@
 ################################################################################
 
 
-source bashlets datatype/number
+source bashlets os/random
+
+
+#@public
+function bashlets::datatype::float::new()
+{
+    :
+}
+
+#@public
+function bashlets::datatype::float::destroy()
+{
+    :
+}
+
+#@public
+function bashlets::datatype::float::to_string()
+{
+    echo "$@"
+}
+
+#@public
+function bashlets::datatype::float::random()
+{
+    local size="${1:-16}" scale="${2:-12}"
+    local raw x y sign output
+
+    raw="$($BASHLETS_NAMESPACE random get $((size+scale+1)) 0-9)"
+    raw="${raw:1:${#raw}}"  # avoid leading zero!
+
+    x="${raw:0:$size}"
+    y="${raw:$size:$scale}"
+
+    [[ $x -eq 0 ]] && x=    # prefer .123... over 0.123...
+    output="$x"
+
+    [[ -n $y ]] && output="${output}.${y}"
+
+    sign="$($BASHLETS_NAMESPACE random get 1 +-)"
+    [[ $sign == + ]] && sign=
+    [[ $x -eq 0 && $scale -eq 0 ]] && sign=
+
+    output="${sign}${output}"
+
+    echo "$output"
+}
 
 #@public
 function bashlets::datatype::float::validate()
 {
-    $BASHLETS_NAMESPACE number validate_as_float "$1"
-}
-
-#@public
-function bashlets::datatype::float::diff()
-{
-    local x="$1"
-    local y="$2"
-    local scale="${3:-2}"
-
-    $BASHLETS_NAMESPACE number validate_as_float "$1" || return 1
-    $BASHLETS_NAMESPACE number validate_as_float "$2" || return 1
-
-    LC_NUMERIC=C printf "%.${scale}f\n" "$(echo "$x - $y" | bc)"
+    [[ $1 =~ ^[-+]?[0-9]*\.?[0-9]+$ ]]
 }
 
 
