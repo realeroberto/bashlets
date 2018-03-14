@@ -38,43 +38,38 @@ function bashlets::datatype::timestamp::to_path()
 {
     local timestamp="$1"
     local depth="${2:-day}"
-    local timezone="${3:-UTC}"
     local fmt path
 
     [[ -n "$timestamp" ]] || return
 
-    (
-        export TZ="$timezone"
+    case "$depth" in
+        year)
+            fmt="%Y"
+            ;;
+        month)
+            fmt="%Y/%m"
+            ;;
+        day)
+            fmt="%Y/%m/%d"
+            ;;
+        hour)
+            fmt="%Y/%m/%d/%H"
+            ;;
+        minute)
+            fmt="%Y/%m/%d/%H/%M"
+            ;;
+        second)
+            fmt="%Y/%m/%d/%H/%M/%S"
+            ;;
+        *)
+            echo "Invalid depth specified!"
+            return 1
+            ;;
+    esac
 
-        case "$depth" in
-            year)
-                fmt="%Y"
-                ;;
-            month)
-                fmt="%Y/%m"
-                ;;
-            day)
-                fmt="%Y/%m/%d"
-                ;;
-            hour)
-                fmt="%Y/%m/%d/%H"
-                ;;
-            minute)
-                fmt="%Y/%m/%d/%H/%M"
-                ;;
-            second)
-                fmt="%Y/%m/%d/%H/%M/%S"
-                ;;
-            *)
-                echo "Invalid depth specified!"
-                return 1
-                ;;
-        esac
+    path="$(date -d@"$timestamp" +"$fmt")"
 
-        path="$(date -d@"$timestamp" +"$fmt")"
-
-        echo "$path"
-    )
+    echo "$path"
 }
 
 
