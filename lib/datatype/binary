@@ -34,11 +34,37 @@
 ################################################################################
 
 
+source bashlets os/random
+
+#@public
+function bashlets::datatype::binary::new()
+{
+    :
+}
+
+#@public
+function bashlets::datatype::binary::destroy()
+{
+    :
+}
+
+#@public
+function bashlets::datatype::binary::to_string()
+{
+    echo "$@"
+}
+
+#@public
+function bashlets::datatype::binary::random()
+{
+    local size="${1:-16}"
+    $BASHLETS_NAMESPACE random get "$size"
+}
+
+#@descr write hexadecimal values as binary stream
 #@public
 function bashlets::datatype::binary::from_hex()
 {
-    # write hexadecimal values as binary stream
-
     while [[ $# -gt 0 ]]
     do
         printf "\x$1"
