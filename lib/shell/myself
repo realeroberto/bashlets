@@ -34,6 +34,8 @@
 ################################################################################
 
 
+source bashlets os/path
+
 #@public
 function bashlets::shell::myself::name()
 {
@@ -73,12 +75,18 @@ function bashlets::shell::myself::effective_path()
         # if $source was a relative symlink, we need to resolve it relative to
         # the path where the symlink file was located
         [[ $source != /* ]]  \
-            && source="$(bashlets os path_join "$dir" "$source")"
+            && source="$($BASHLETS_NAMESPACE path join "$dir" "$source")"
     done
 
     dir="$(cd -P "$(dirname "$source")" && pwd)"
 
     echo "$dir"
+}
+
+#@public
+function bashlets::shell::myself::pid()
+{
+    echo $$
 }
 
 #@public
