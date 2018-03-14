@@ -34,46 +34,46 @@
 ################################################################################
 
 
-# https://semver.org/
+# Semantic versioning: https://semver.org/
 
 
 
 #@public
-function bashlets::datatype::version::new()
+function bashlets::datatype::semver::new()
 {
     :
 }
 
 #@public
-function bashlets::datatype::version::destroy()
+function bashlets::datatype::semver::destroy()
 {
     :
 }
 
 #@public
-function bashlets::datatype::version::to_string()
+function bashlets::datatype::semver::to_string()
 {
     echo "$@"
 }
 
 #@public
-function bashlets::datatype::version::random()
+function bashlets::datatype::semver::random()
 {
     :
 }
 
-function __bashlets::datatype::version::parse()
+function __bashlets::datatype::semver::parse()
 {
     # cf. https://github.com/cloudflare/semver_bash
-    local version="$1" group="${2:-0}"
+    local semver="$1" group="${2:-0}"
     local regex='^([0-9]+)(\.([0-9]*))?(\.([0-9]*))?(([0-9A-Za-z-]*))?$'
 
     case $group in
         0)
-            [[ $version =~ $regex ]] && return 0 ;;
+            [[ $semver =~ $regex ]] && return 0 ;;
         [1-4])
             [[ $group -gt 0 ]] && group=$((1 + (group - 1) * 2))
-            [[ $version =~ $regex ]] || return 1
+            [[ $semver =~ $regex ]] || return 1
             echo "${BASH_REMATCH[$group]}"
             return 0 ;;
         *)
@@ -82,36 +82,36 @@ function __bashlets::datatype::version::parse()
 }
 
 #@public
-function bashlets::datatype::version::validate()
+function bashlets::datatype::semver::validate()
 {
-    __bashlets::datatype::version::parse "$1"
+    __bashlets::datatype::semver::parse "$1"
 }
 
 #@public
-function bashlets::datatype::version::major()
+function bashlets::datatype::semver::major()
 {
-    __bashlets::datatype::version::parse "$1" 1
+    __bashlets::datatype::semver::parse "$1" 1
 }
 
 #@public
-function bashlets::datatype::version::minor()
+function bashlets::datatype::semver::minor()
 {
-    __bashlets::datatype::version::parse "$1" 2
+    __bashlets::datatype::semver::parse "$1" 2
 }
 
 #@public
-function bashlets::datatype::version::patch()
+function bashlets::datatype::semver::patch()
 {
-    __bashlets::datatype::version::parse "$1" 3
+    __bashlets::datatype::semver::parse "$1" 3
 }
 
 #@public
-function bashlets::datatype::version::special()
+function bashlets::datatype::semver::special()
 {
-    __bashlets::datatype::version::parse "$1" 4
+    __bashlets::datatype::semver::parse "$1" 4
 }
 
-function __bashlets::datatype::version::sort()
+function __bashlets::datatype::semver::sort()
 {
     # naive Bash implementation
     # cf. http://stackoverflow.com/questions/16989598/
@@ -124,60 +124,60 @@ function __bashlets::datatype::version::sort()
 }
 
 #@public
-function bashlets::datatype::version::sort()
+function bashlets::datatype::semver::sort()
 {
     (
         echo "$@" | xargs -n 1 | sort --version-sort
 
-    ) 2> /dev/null || __bashlets::datatype::version::sort "$@"
+    ) 2> /dev/null || __bashlets::datatype::semver::sort "$@"
 }
 
 #@public
-function bashlets::datatype::version::lt()
+function bashlets::datatype::semver::lt()
 {
     local min
     # GNU sort is needed here
-    min="$(bashlets::datatype::version::sort "$@" | head -1)"
+    min="$(bashlets::datatype::semver::sort "$@" | head -1)"
     [[ $1 != $2 && $min == $1 ]]
 }
 
 #@public
-function bashlets::datatype::version::gt()
+function bashlets::datatype::semver::gt()
 {
     local max
     # GNU sort is needed here
-    max="$(bashlets::datatype::version::sort "$@" | tail -1)"
+    max="$(bashlets::datatype::semver::sort "$@" | tail -1)"
     [[ $1 != $2 && $max == $1 ]]
 }
 
 #@public
-function bashlets::datatype::version::le()
+function bashlets::datatype::semver::le()
 {
     local min
     # GNU sort is needed here
-    min="$(bashlets::datatype::version::sort "$@" | head -1)"
+    min="$(bashlets::datatype::semver::sort "$@" | head -1)"
     [[ $min == $1 ]]
 }
 
 #@public
-function bashlets::datatype::version::ge()
+function bashlets::datatype::semver::ge()
 {
     local max
     # GNU sort is needed here
-    max="$(bashlets::datatype::version::sort "$@" | tail -1)"
+    max="$(bashlets::datatype::semver::sort "$@" | tail -1)"
     [[ $max == $1 ]]
 }
 
 #@public
-function bashlets::datatype::version::min()
+function bashlets::datatype::semver::min()
 {
-    bashlets::datatype::version::sort "$@" | head -1
+    bashlets::datatype::semver::sort "$@" | head -1
 }
 
 #@public
-function bashlets::datatype::version::max()
+function bashlets::datatype::semver::max()
 {
-    bashlets::datatype::version::sort "$@" | tail -1
+    bashlets::datatype::semver::sort "$@" | tail -1
 }
 
 # Local variables:

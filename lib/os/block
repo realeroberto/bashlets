@@ -35,7 +35,7 @@
 
 
 source bashlets datatype/number
-source bashlets datatype/version
+source bashlets datatype/semver
 source bashlets os/kernel
 source bashlets os/mounts
 
@@ -112,7 +112,7 @@ function bashlets::os::block::canonicalise()
 
     local kernel_version=$($BASHLETS_NAMESPACE kernel get_version)
 
-    if $BASHLETS_NAMESPACE version ge "$kernel_version" 2.6.27
+    if $BASHLETS_NAMESPACE semver ge "$kernel_version" 2.6.27
     then
         __bashlets::os::block::canonicalise_post_2_6_27 "$target"
     else
