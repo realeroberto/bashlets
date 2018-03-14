@@ -40,16 +40,6 @@ function bashlets::shell::env::globals()
     printenv
 }
 
-#@public
-function bashlets::shell::env::variables()
-{
-    # by enabling ``posix'' mode we tell ``set'' not to print function names
-    (
-        set -o posix
-        set
-    )
-}
-
 # Local variables:
 # mode: shell-script
 # sh-shell-offset: 4

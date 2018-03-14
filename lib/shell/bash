@@ -47,6 +47,15 @@ function bashlets::shell::bash::version_short()
     echo "$BASH_VERSION" | sed 's/^\([0-9.]\+\).*/\1/'
 }
 
+#@public
+function bashlets::shell::bash::variables()
+{
+    # by enabling ``posix'' mode we tell ``set'' not to print function names
+    (
+        set -o posix
+        set
+    )
+}
 
 # Local variables:
 # mode: shell-script
