@@ -37,6 +37,8 @@
 # Semantic versioning: https://semver.org/
 
 
+source bashlets datatype/unsigned
+
 
 #@public
 function bashlets::datatype::semver::new()
@@ -59,25 +61,79 @@ function bashlets::datatype::semver::to_string()
 #@public
 function bashlets::datatype::semver::random()
 {
-    :
+    local depth="${1:-3}"
+    local major minor patch prerelease build
+    local raw semver
+
+    declare -a prereleases=(
+        prealpha
+        alpha
+        beta
+        gamma
+        delta
+        nightly
+        rc
+        ga
+    )
+
+    # get a random unsigned integer of size 5
+    raw="$($BASHLETS_NAMESPACE unsigned random 5)"
+
+    major="${raw:0:1}"
+    # SemVer §9: Numeric identifiers MUST NOT include leading zeroes.
+    printf -v minor "%d" "${raw:1:2}"
+    printf -v patch "%d" "${raw:3:2}"
+
+    [[ $depth -gt 0 ]] && semver="$major"
+    [[ $depth -gt 1 ]] && semver="${semver}.${minor}"
+    [[ $depth -gt 2 ]] && semver="${semver}.${patch}"
+
+    # pre-release
+    if [[ $depth -gt 3 ]]
+    then
+        declare -i random="$($BASHLETS_NAMESPACE unsigned random)"
+        prerelease="${prereleases[$random % ${#prereleases[@]}]}"
+        semver="${semver}-${prerelease}"
+    fi
+
+    # build metadata
+    if [[ $depth -gt 4 ]]
+    then
+        build="$($BASHLETS_NAMESPACE unsigned random 10)"
+        semver="${semver}+${build}"
+    fi
+
+    echo "$semver"
 }
 
 function __bashlets::datatype::semver::parse()
 {
     # cf. https://github.com/cloudflare/semver_bash
     local semver="$1" group="${2:-0}"
-    local regex='^([0-9]+)(\.([0-9]*))?(\.([0-9]*))?(([0-9A-Za-z-]*))?$'
+    local element='(0|[1-9][0-9]*)'
+    local prerelease='([0-9A-Za-z-]+)'
+    local build='([0-9A-Za-z-]+)'
+    local regex="^($element)([.]$element*([.]$element)*)(-$prerelease([+]$build)?|[+]$build)?$"
+
+    [[ $semver =~ $regex ]] || return 1
 
     case $group in
         0)
-            [[ $semver =~ $regex ]] && return 0 ;;
-        [1-4])
-            [[ $group -gt 0 ]] && group=$((1 + (group - 1) * 2))
-            [[ $semver =~ $regex ]] || return 1
+            ;;
+        [1-3])  # elements
+            group=$((group * 2))
             echo "${BASH_REMATCH[$group]}"
-            return 0 ;;
+            ;;
+        4)      # pre-release
+            echo "${BASH_REMATCH[8]}"
+            ;;
+        5)      # build metadata
+            [[ -n "${BASH_REMATCH[10]}" ]] && echo "${BASH_REMATCH[10]}"
+            [[ -n "${BASH_REMATCH[11]}" ]] && echo "${BASH_REMATCH[11]}"
+            ;;
         *)
-            return 1 ;;
+            return 1
+            ;;
     esac
 }
 
@@ -106,9 +162,15 @@ function bashlets::datatype::semver::patch()
 }
 
 #@public
-function bashlets::datatype::semver::special()
+function bashlets::datatype::semver::prerelease()
 {
     __bashlets::datatype::semver::parse "$1" 4
+}
+
+#@public
+function bashlets::datatype::semver::build()
+{
+    __bashlets::datatype::semver::parse "$1" 5
 }
 
 function __bashlets::datatype::semver::sort()
