@@ -40,7 +40,7 @@ BASHLETS_RANDOM_SOURCE="${BASHLETS_RANDOM_SOURCE:-/dev/urandom}"
 #@descr generate a random stream of length $SIZE, including only character in
 #       $FILTER a /dev/urandom device a la Linux is required
 #@public
-function bashlets::os::random::get_stream()
+function bashlets::os::random::get()
 {
     local size="${1:-16}"
     local filter="${2:-}"
