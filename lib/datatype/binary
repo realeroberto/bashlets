@@ -55,6 +55,12 @@ function bashlets::datatype::binary::to_string()
 }
 
 #@public
+function bashlets::datatype::binary::validate()
+{
+    true
+}
+
+#@public
 function bashlets::datatype::binary::random()
 {
     local size="${1:-16}"
