@@ -35,13 +35,13 @@
 
 
 #@public
-function bashlets::shell::shell::get_full_version()
+function bashlets::shell::bash::get_full_version()
 {
     echo "$BASH_VERSION"
 }
 
 #@public
-function bashlets::shell::shell::get_short_version()
+function bashlets::shell::bash::get_short_version()
 {
     # shellcheck disable=SC2001
     echo "$BASH_VERSION" | sed 's/^\([0-9.]\+\).*/\1/'
