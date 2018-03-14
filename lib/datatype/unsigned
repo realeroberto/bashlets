@@ -62,7 +62,10 @@ function bashlets::datatype::unsigned::random()
     local raw="$($BASHLETS_NAMESPACE random get "$size" 0-9)"
 
     # avoid leading zeros, but printf "%d" has problems with arbitrary length
-    echo "${raw##0}"
+    raw="${raw##0}"
+    [[ -z $raw ]] && raw=0
+
+    echo "$raw"
 }
 
 #@public

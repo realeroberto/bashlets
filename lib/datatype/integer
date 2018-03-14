@@ -64,6 +64,7 @@ function bashlets::datatype::integer::random()
 
     # avoid leading zeros, but printf "%d" has problems with arbitrary length
     raw="${raw##0}"
+    [[ -z $raw ]] && raw=0
 
     sign="$($BASHLETS_NAMESPACE random get 1 +-)"
     [[ $sign == + || $raw -eq 0 ]] && sign=
