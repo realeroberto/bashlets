@@ -61,22 +61,32 @@ function bashlets::datatype::float::random()
     local size="${1:-16}" scale="${2:-12}"
     local raw x y sign output
 
-    raw="$($BASHLETS_NAMESPACE random get $((size+scale+1)) 0-9)"
-    raw="${raw:1:${#raw}}"  # avoid leading zero!
+    raw="$($BASHLETS_NAMESPACE random get $((size+scale)) 0-9)"
+
+    # avoid leading zeros, but printf "%d" has problems with arbitrary length
+    raw="${raw##0}"
 
     x="${raw:0:$size}"
     y="${raw:$size:$scale}"
 
-    [[ $x -eq 0 ]] && x=    # prefer .123... over 0.123...
-    output="$x"
-
-    [[ -n $y ]] && output="${output}.${y}"
-
     sign="$($BASHLETS_NAMESPACE random get 1 +-)"
     [[ $sign == + ]] && sign=
-    [[ $x -eq 0 && $scale -eq 0 ]] && sign=
 
-    output="${sign}${output}"
+    # simplify output
+    if [[ $x -eq 0 ]]
+    then
+        if [[ $scale -eq 0 ]]
+        then
+            # prefer 0 over -0
+            sign=
+        else
+            # prefer .123... over 0.123...
+            x=
+        fi
+    fi
+
+    output="${sign}${x}"
+    [[ -n $y ]] && output="${output}.${y}"
 
     echo "$output"
 }
