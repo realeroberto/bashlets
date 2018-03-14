@@ -34,6 +34,7 @@
 ################################################################################
 
 
+source bashlets datatype/string
 source bashlets os/random
 
 #@public
@@ -77,6 +78,13 @@ function bashlets::datatype::unsigned::is_even()
 function bashlets::datatype::unsigned::is_odd()
 {
     (($1 % 2 == 1))
+}
+
+#@public
+function bashlets::datatype::unsigned::is_palindrome()
+{
+    local rev="$($BASHLETS_NAMESPACE string reverse "$1")"
+    [[ $1 == $rev ]]
 }
 
 # Local variables:
