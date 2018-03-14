@@ -34,21 +34,17 @@
 ################################################################################
 
 
-source bashlets datatype/unsigned
+BASHLETS_RANDOM_SOURCE="${BASHLETS_RANDOM_SOURCE:-/dev/urandom}"
 
-# generate a random stream of length $SIZE, including only character in $FILTER
-# a /dev/urandom device a la Linux is required
 
+#@descr generate a random stream of length $SIZE, including only character in
+#       $FILTER a /dev/urandom device a la Linux is required
 #@public
 function bashlets::os::random::get_stream()
 {
     local size="${1:-16}"
     local filter="${2:-}"
-    local blk_count
-    local blk_size
-    local i
-
-    $BASHLETS_NAMESPACE unsigned validate "$size" || return 1
+    local blk_count blk_size i
 
     # let's try to overcome a limitation on the block size in dd
     blk_count="$((size/4096))"
@@ -57,7 +53,7 @@ function bashlets::os::random::get_stream()
     while (( $i <= $blk_count && $size > 0 ))
     do
         (( $size > 4096 )) && blk_size=4096 || blk_size="$size"
-        </dev/urandom tr -cd "$filter" | dd bs="$blk_size" count=1 2>/dev/null
+        <"$BASHLETS_RANDOM_SOURCE" tr -cd "$filter" | dd bs="$blk_size" count=1 2>/dev/null
         size="$((size-4096))"
         i="$((i-1))"
     done
