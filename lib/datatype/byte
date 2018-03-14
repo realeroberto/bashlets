@@ -34,12 +34,38 @@
 ################################################################################
 
 
-source bashlets datatype/number
+source bashlets datatype/unsigned
+
+#@public
+function bashlets::datatype::byte::new()
+{
+    :
+}
+
+#@public
+function bashlets::datatype::byte::destroy()
+{
+    :
+}
+
+#@public
+function bashlets::datatype::byte::to_string()
+{
+    echo "$@"
+}
+
+#@public
+function bashlets::datatype::byte::random()
+{
+    local unsigned="$($BASHLETS_NAMESPACE unsigned random)"
+
+    echo "$((unsigned % 256))"
+}
 
 #@public
 function bashlets::datatype::byte::validate()
 {
-    $BASHLETS_NAMESPACE number validate_as_byte "$1"
+    [[ $1 =~ ^[0-9]+$ ]] && [[ $1 -ge 0 && $1 -le 255 ]]
 }
 
 # Local variables:
