@@ -33,14 +33,46 @@
 #
 ################################################################################
 
+source bashlets os/random
+
+# a Unix timestamp can be negative!
+source bashlets datatype/integer
+
+#@public
+function bashlets::datatype::timestamp::new()
+{
+    :
+}
+
+#@public
+function bashlets::datatype::timestamp::destroy()
+{
+    :
+}
+
+#@public
+function bashlets::datatype::timestamp::to_string()
+{
+    echo "$@"
+}
+
+#@public
+function bashlets::datatype::timestamp::random()
+{
+    $BASHLETS_NAMESPACE integer random 11
+}
+
+#@public
+function bashlets::datatype::timestamp::validate()
+{
+    $BASHLETS_NAMESPACE integer validate "$@"
+}
+
 #@public
 function bashlets::datatype::timestamp::to_path()
 {
-    local timestamp="$1"
-    local depth="${2:-day}"
-    local fmt path
-
-    [[ -n "$timestamp" ]] || return
+    local timestamp="${1:-$(date +%s)}" depth="${2:-day}"
+    local fmt
 
     case "$depth" in
         year)
@@ -67,9 +99,7 @@ function bashlets::datatype::timestamp::to_path()
             ;;
     esac
 
-    path="$(date -d@"$timestamp" +"$fmt")"
-
-    echo "$path"
+    date -d@"$timestamp" +"$fmt"
 }
 
 
