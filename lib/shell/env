@@ -35,22 +35,49 @@
 
 
 #@public
-function bashlets::basic::shell::get_full_version()
+function bashlets::shell::env::list()
 {
-    echo "$BASH_VERSION"
+    env                                                            \
+        | grep -o '^[_[:alpha:]][_[:alnum:]]*'                     \
+        | grep -v -E '^_$|^PATH$|^PWD$|^USER$|^TERM$|^SSH_.*|^LC_.*'
 }
+
 
 #@public
-function bashlets::basic::shell::get_short_version()
+function bashlets::shell::env::list_full()
 {
-    # shellcheck disable=SC2001
-    echo "$BASH_VERSION" | sed 's/^\([0-9.]\+\).*/\1/'
+    env                                                            \
+        | grep -o '^[_[:alpha:]][_[:alnum:]]*'
 }
 
+
+#@public
+function bashlets::shell::env::list_variables()
+{
+    # by enabling ``posix'' mode we tell ``set'' not to print function names
+    (
+        set -o posix
+        set                                                         \
+            | grep -o '^[_[:alpha:]][_[:alnum:]]*'                  \
+            | grep -v -E '^_$|^PATH$|^PWD$|^USER$|^TERM$|^SSH_.*|^LC_.*'
+    )
+}
+
+
+#@public
+function bashlets::shell::env::list_variables_full()
+{
+    # by enabling ``posix'' mode we tell ``set'' not to print function names
+    (
+        set -o posix
+        set                                                         \
+            | grep -o '^[_[:alpha:]][_[:alnum:]]*'
+    )
+}
 
 # Local variables:
 # mode: shell-script
-# sh-basic-offset: 4
+# sh-shell-offset: 4
 # sh-indent-comment: t
 # indent-tabs-mode: nil
 # End:
