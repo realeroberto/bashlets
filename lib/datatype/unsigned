@@ -35,6 +35,14 @@
 
 
 source bashlets datatype/number
+source bashlets os/random
+
+#@public
+function bashlets::datatype::unsigned::random()
+{
+    local size="${1:-16}"
+    $BASHLETS_NAMESPACE random get "$size" 0-9
+}
 
 #@public
 function bashlets::datatype::unsigned::validate()
