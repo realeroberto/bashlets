@@ -63,6 +63,11 @@ function __bashlets::library::loader::bashlet_to_file()
     done
 }
 
+function __bashlets::library::loader::list_all_methods()
+{
+    declare -F | sed 's/declare -f //' | grep -v "^$FUNCNAME$"
+}
+
 #@public
 function bashlets::library::loader::list_methods()
 {
