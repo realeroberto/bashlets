@@ -34,7 +34,84 @@
 ################################################################################
 
 
-function __bashlets::datatype::version::naive_sort()
+# https://semver.org/
+
+
+
+#@public
+function bashlets::datatype::version::new()
+{
+    :
+}
+
+#@public
+function bashlets::datatype::version::destroy()
+{
+    :
+}
+
+#@public
+function bashlets::datatype::version::to_string()
+{
+    echo "$@"
+}
+
+#@public
+function bashlets::datatype::version::random()
+{
+    :
+}
+
+function __bashlets::datatype::version::parse()
+{
+    # cf. https://github.com/cloudflare/semver_bash
+    local version="$1" group="${2:-0}"
+    local regex='^([0-9]+)(\.([0-9]*))?(\.([0-9]*))?(([0-9A-Za-z-]*))?$'
+
+    case $group in
+        0)
+            [[ $version =~ $regex ]] && return 0 ;;
+        [1-4])
+            [[ $group -gt 0 ]] && group=$((1 + (group - 1) * 2))
+            [[ $version =~ $regex ]] || return 1
+            echo "${BASH_REMATCH[$group]}"
+            return 0 ;;
+        *)
+            return 1 ;;
+    esac
+}
+
+#@public
+function bashlets::datatype::version::validate()
+{
+    __bashlets::datatype::version::parse "$1"
+}
+
+#@public
+function bashlets::datatype::version::major()
+{
+    __bashlets::datatype::version::parse "$1" 1
+}
+
+#@public
+function bashlets::datatype::version::minor()
+{
+    __bashlets::datatype::version::parse "$1" 2
+}
+
+#@public
+function bashlets::datatype::version::patch()
+{
+    __bashlets::datatype::version::parse "$1" 3
+}
+
+#@public
+function bashlets::datatype::version::special()
+{
+    __bashlets::datatype::version::parse "$1" 4
+}
+
+function __bashlets::datatype::version::sort()
 {
     # naive Bash implementation
     # cf. http://stackoverflow.com/questions/16989598/
@@ -52,11 +129,29 @@ function bashlets::datatype::version::sort()
     (
         echo "$@" | xargs -n 1 | sort --version-sort
 
-    ) 2> /dev/null || __bashlets::datatype::version::naive_sort "$@"
+    ) 2> /dev/null || __bashlets::datatype::version::sort "$@"
 }
 
 #@public
-function bashlets::datatype::version::less_than()
+function bashlets::datatype::version::lt()
+{
+    local min
+    # GNU sort is needed here
+    min="$(bashlets::datatype::version::sort "$@" | head -1)"
+    [[ $1 != $2 && $min == $1 ]]
+}
+
+#@public
+function bashlets::datatype::version::gt()
+{
+    local max
+    # GNU sort is needed here
+    max="$(bashlets::datatype::version::sort "$@" | tail -1)"
+    [[ $1 != $2 && $max == $1 ]]
+}
+
+#@public
+function bashlets::datatype::version::le()
 {
     local min
     # GNU sort is needed here
@@ -65,7 +160,7 @@ function bashlets::datatype::version::less_than()
 }
 
 #@public
-function bashlets::datatype::version::greater_than()
+function bashlets::datatype::version::ge()
 {
     local max
     # GNU sort is needed here

@@ -34,8 +34,6 @@
 ################################################################################
 
 
-source bashlets datatype/version
-
 #@public
 function bashlets::basic::shell::get_full_version()
 {

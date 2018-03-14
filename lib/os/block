@@ -112,7 +112,7 @@ function bashlets::os::block::canonicalise()
 
     local kernel_version=$($BASHLETS_NAMESPACE kernel get_version)
 
-    if $BASHLETS_NAMESPACE version greater_than "$kernel_version" 2.6.27
+    if $BASHLETS_NAMESPACE version ge "$kernel_version" 2.6.27
     then
         __bashlets::os::block::canonicalise_post_2_6_27 "$target"
     else
