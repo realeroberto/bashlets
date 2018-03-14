@@ -39,6 +39,37 @@ source bashlets stream/reshape
 source bashlets os/random
 
 #@public
+function bashlets::datatype::unsigned::new()
+{
+    :
+}
+
+#@public
+function bashlets::datatype::unsigned::destroy()
+{
+    :
+}
+
+#@public
+function bashlets::datatype::unsigned::to_string()
+{
+    echo "$@"
+}
+
+#@public
+function bashlets::datatype::string::random()
+{
+    local size="${1:-16}"
+    $BASHLETS_NAMESPACE random get "$size" [[:print:]]
+}
+
+#@public
+function bashlets::datatype::string::validate()
+{
+    [[ $1 =~ ^[[:print:]]*$ ]]
+}
+
+#@public
 function bashlets::datatype::string::chop()
 {
     echo "$(echo "$@" | tr -d "\n")"
@@ -206,7 +237,7 @@ function bashlets::datatype::string::shuffle()
     [[ -n $str ]] || return
 
     bashlets::datatype::string::to_stream "$str"    \
-        | $BASHLETS_NAMESPACE reorder shuffle        \
+        | $BASHLETS_NAMESPACE reorder shuffle       \
         | $BASHLETS_NAMESPACE reshape transpose
 }
 
@@ -251,15 +282,6 @@ function bashlets::datatype::string::lalign_n()
     len="$((n*q+r))"
 
     printf "%0${len}s" "$str" | tr " " "$pad"
-}
-
-
-#@public
-function bashlets::datatype::string::generate_random()
-{
-    local size="${1:-16}"
-
-    $BASHLETS_NAMESPACE random get_stream "$size" [[:print:]]
 }
 
 
