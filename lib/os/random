@@ -37,8 +37,7 @@
 BASHLETS_RANDOM_SOURCE="${BASHLETS_RANDOM_SOURCE:-/dev/urandom}"
 
 
-#@descr generate a random stream of length $SIZE, including only character in
-#       $FILTER a /dev/urandom device a la Linux is required
+#@descr generate a random stream of length $SIZE, including only character in $FILTER
 #@public
 function bashlets::os::random::get()
 {
@@ -48,14 +47,20 @@ function bashlets::os::random::get()
 
     # let's try to overcome a limitation on the block size in dd
     blk_count="$((size/4096))"
-    i=0
 
-    while (( $i <= $blk_count && $size > 0 ))
+    i=0
+    while ((i <= blk_count && size > 0))
     do
-        (( $size > 4096 )) && blk_size=4096 || blk_size="$size"
-        <"$BASHLETS_RANDOM_SOURCE" tr -cd "$filter" | dd bs="$blk_size" count=1 2>/dev/null
+        ((size > 4096)) && blk_size=4096 || blk_size="$size"
+        if [[ -n $filter ]]
+        then
+            <"$BASHLETS_RANDOM_SOURCE" tr -cd "$filter" | dd bs="$blk_size" count=1 2>/dev/null
+        else
+            dd if="$BASHLETS_RANDOM_SOURCE" bs="$blk_size" count=1 2>/dev/null
+        fi
+
         size="$((size-4096))"
-        i="$((i-1))"
+        ((i--))
     done
 }
 
