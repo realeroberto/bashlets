@@ -35,6 +35,21 @@
 
 source bashlets datatype/number
 
+source bashlets os/random
+
+#@public
+function bashlets::datatype::integer::random()
+{
+    local size="${1:-16}" raw sign
+
+    raw="$($BASHLETS_NAMESPACE random get $((size+1)) 0-9)"
+    raw="${raw:1:${#raw}}"  # avoid leading zero!
+
+    sign="$($BASHLETS_NAMESPACE random get 1 +-)"
+    [[ $sign == + || $raw -eq 0 ]] && sign=
+
+    echo "${sign}${raw}"
+}
 
 #@public
 function bashlets::datatype::integer::validate()
