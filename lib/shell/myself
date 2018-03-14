@@ -35,28 +35,28 @@
 
 
 #@public
-function bashlets::shell::myself::get_name()
+function bashlets::shell::myself::name()
 {
     [[ "$0" == "-bash" ]] && return
     basename "$0"
 }
 
 #@public
-function bashlets::shell::myself::get_name_canonical()
+function bashlets::shell::myself::canonical_name()
 {
     [[ "$0" == "-bash" ]] && return
     basename "$(readlink -m -- "$0")"
 }
 
 #@public
-function bashlets::shell::myself::get_path_canonical()
+function bashlets::shell::myself::canonical_path()
 {
     [[ "$0" == "-bash" ]] && return
     readlink -m -- "$0"
 }
 
 #@public
-function bashlets::shell::myself::get_path_effective()
+function bashlets::shell::myself::effective_path()
 {
     # http://stackoverflow.com/questions/59895
 
@@ -82,7 +82,7 @@ function bashlets::shell::myself::get_path_effective()
 }
 
 #@public
-function bashlets::shell::myself::get_ppid()
+function bashlets::shell::myself::ppid()
 {
     # echo it just to get rid of leading/trailing spaces
     # shellcheck disable=SC2005
@@ -90,7 +90,7 @@ function bashlets::shell::myself::get_ppid()
 }
 
 #@public
-function bashlets::shell::myself::get_parent_name()
+function bashlets::shell::myself::parent_name()
 {
     ps -o comm= -p "$(bashlets::shell::myself::get_ppid)"
 }
