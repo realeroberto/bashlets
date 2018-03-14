@@ -88,6 +88,14 @@ function bashlets::datatype::unsigned::is_palindrome()
     [[ $1 == $rev ]]
 }
 
+#@public
+function bashlets::datatype::unsigned::select_bit()
+{
+    # cf. https://github.com/ldante86/punch/blob/master/punch.sh
+
+    echo $(( $1 & (1<<$2) ))
+}
+
 # Local variables:
 # mode: shell-script
 # sh-basic-offset: 4
