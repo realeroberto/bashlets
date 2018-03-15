@@ -1,3 +1,6 @@
+#!/bin/bash
+
+
 ################################################################################
 #                                         
 # |              |    |         |         
@@ -6,7 +9,7 @@
 # `---'`---^`---'`   '`---'`---'`---'`---'
 #
 #                                        
-# bashlets -- A modular extensible toolbox for Bash
+# Bashlets -- A modular extensible toolbox for Bash
 #
 # Copyright (c) 2014-8 Roberto Reale
 # 
@@ -30,5 +33,75 @@
 #
 ################################################################################
 
-FROM ubuntu
-MAINTAINER Roberto Reale
+source bashlets core/datatype/unsigned
+source bashlets core/time/year
+
+
+#@public
+function bashlets::time::month::new()
+{
+    :
+}
+
+#@public
+function bashlets::time::month::destroy()
+{
+    :
+}
+
+#@public
+function bashlets::time::month::to_string()
+{
+    echo "$@"
+}
+
+#@public
+function bashlets::time::month::random()
+{
+    local n="$($BASHLETS_NAMESPACE unsigned random)"
+    local month="$((n % 12 + 1))"
+    printf "%02d" "$month"
+}
+
+#@public
+function bashlets::time::month::validate()
+{
+    [[ $1 =~ ^(0?[1-9]|1[012])$ ]]
+}
+
+#@public
+function bashlets::time::month::days()
+{
+    # based on http://cfajohnson.com/shell/date-functions/?days_in_month
+
+    declare -i month="${1#0}"
+    declare -i year="${2:-$(date +%Y)}"
+    declare -i days_in_month
+
+    case $month
+    in
+        9|4|6|11)
+            days_in_month=30 ;;
+        1|3|5|7|8|10|12)
+            days_in_month=31 ;;
+        2)
+            #               February alone
+            # Which has but twenty-eight
+            # Or twenty-nine each leap year
+            $BASHLETS_NAMESPACE year is_leap "$year"  \
+                && days_in_month=29                   \
+                || days_in_month=28 ;;
+        *)
+            return 5 ;;
+    esac
+
+    echo $days_in_month
+}
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh

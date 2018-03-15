@@ -1,3 +1,6 @@
+#!/bin/bash
+
+
 ################################################################################
 #                                         
 # |              |    |         |         
@@ -6,7 +9,7 @@
 # `---'`---^`---'`   '`---'`---'`---'`---'
 #
 #                                        
-# bashlets -- A modular extensible toolbox for Bash
+# Bashlets -- A modular extensible toolbox for Bash
 #
 # Copyright (c) 2014-8 Roberto Reale
 # 
@@ -30,5 +33,72 @@
 #
 ################################################################################
 
-FROM ubuntu
-MAINTAINER Roberto Reale
+
+source bashlets core/time/timestamp
+
+
+#@public
+function bashlets::time::year::new()
+{
+    :
+}
+
+#@public
+function bashlets::time::year::destroy()
+{
+    :
+}
+
+#@public
+function bashlets::time::year::to_string()
+{
+    echo "$@"
+}
+
+#@public
+function bashlets::time::year::random()
+{
+    local timestamp="$($BASHLETS_NAMESPACE timestamp random)"
+    date -d @"$timestamp" +%Y
+}
+
+#@public
+function bashlets::time::year::validate()
+{
+    [[ $1 =~ ^[-+]?[0-9]{1,4}$ ]]
+}
+
+#@public
+function bashlets::time::year::is_leap()
+{
+    # based on http://cfajohnson.com/shell/date-functions/?is_leap_year
+
+    local year="$1"
+    local gregorian=1752
+
+    [[ -z $year ]] && printf -v year '%(%Y)T'
+
+    if (( year > gregorian ))
+    then
+        case $year in
+            *0[48]          |\
+            *[2468][048]    |\
+            *[13579][26]    |\
+            *[02468][048]00 |\
+            *[13579][26]00  )
+                return 0 ;;
+            *)
+                return 1
+        esac
+    else
+        (( year % 4 == 0 ))
+    fi
+}
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh

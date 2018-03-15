@@ -1,3 +1,6 @@
+#!/bin/bash
+
+
 ################################################################################
 #                                         
 # |              |    |         |         
@@ -6,7 +9,7 @@
 # `---'`---^`---'`   '`---'`---'`---'`---'
 #
 #                                        
-# bashlets -- A modular extensible toolbox for Bash
+# Bashlets -- A modular extensible toolbox for Bash
 #
 # Copyright (c) 2014-8 Roberto Reale
 # 
@@ -30,5 +33,80 @@
 #
 ################################################################################
 
-FROM ubuntu
-MAINTAINER Roberto Reale
+source bashlets core/os/random
+
+# a Unix timestamp can be negative!
+source bashlets core/datatype/integer
+
+#@public
+function bashlets::time::timestamp::new()
+{
+    :
+}
+
+#@public
+function bashlets::time::timestamp::destroy()
+{
+    :
+}
+
+#@public
+function bashlets::time::timestamp::to_string()
+{
+    echo "$@"
+}
+
+#@public
+function bashlets::time::timestamp::random()
+{
+    $BASHLETS_NAMESPACE integer random 11
+}
+
+#@public
+function bashlets::time::timestamp::validate()
+{
+    $BASHLETS_NAMESPACE integer validate "$@"
+}
+
+#@public
+function bashlets::time::timestamp::to_path()
+{
+    local timestamp="${1:-$(date +%s)}" depth="${2:-day}"
+    local fmt
+
+    case "$depth" in
+        year)
+            fmt="%Y"
+            ;;
+        month)
+            fmt="%Y/%m"
+            ;;
+        day)
+            fmt="%Y/%m/%d"
+            ;;
+        hour)
+            fmt="%Y/%m/%d/%H"
+            ;;
+        minute)
+            fmt="%Y/%m/%d/%H/%M"
+            ;;
+        second)
+            fmt="%Y/%m/%d/%H/%M/%S"
+            ;;
+        *)
+            echo "Invalid depth specified!"
+            return 1
+            ;;
+    esac
+
+    date -d@"$timestamp" +"$fmt"
+}
+
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh
