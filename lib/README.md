@@ -1,3 +1,0 @@
-# bashlets
-
-## Library Modules
