@@ -5,7 +5,7 @@
 all: ;
 
 install:
-	bin/bashlets-install -DL
+	bashlets install -DL
 
 tests:
 	bats $$(find tests -type f -name '*.bats')

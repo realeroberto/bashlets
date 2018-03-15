@@ -1,5 +1,4 @@
-#!/bin/bash
-
+#!/usr/bin/env bats
 
 ################################################################################
 #                                         
@@ -33,31 +32,12 @@
 #
 ################################################################################
 
+source bashlets core/github/user
 
-
-#@public
-function bashlets::ipc::flock::acquire()
-{
-    local lockfile="$1"
-    exec 9> "$lockfile"
-    flock -n 9 || { echo "cannot acquire lock"; return 1; }
-    [[ -f $lockfile ]]
+@test "github/user: list GitHub repositories for a given user" {
+    (bash$$ user repos | grep ^bashlets$)
+    [[ $status -eq 0 ]]
 }
-
-#@public
-function bashlets::ipc::flock::release()
-{
-    local lockfile="$1"
-    [[ -n $lockfile ]] && rm -f "$lockfile"
-}
-
-#@public
-function bashlets::ipc::flock::exists()
-{
-    local lockfile="$1"
-    [[ -e $lockfile ]]
-}
-
 
 # Local variables:
 # mode: shell-script

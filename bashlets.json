@@ -1,6 +1,6 @@
 {
-        "name": "core",
-        "description": "Core package",
+        "name": "core.github",
+        "description": "core.github",
         "version": "0.2",
         "author": {
                 "name": "Roberto Reale",
