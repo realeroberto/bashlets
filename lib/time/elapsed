@@ -34,10 +34,41 @@
 ################################################################################
 
 
-source bashlets datatype/number
+source bashlets datatype/integer
+source bashlets datatype/float
 
 #@public
-function bashlets::time::elapsed::seconds_to_formatted()
+function bashlets::time::elapsed::new()
+{
+    :
+}
+
+#@public
+function bashlets::time::elapsed::destroy()
+{
+    :
+}
+
+#@public
+function bashlets::time::elapsed::to_string()
+{
+    echo "$@"
+}
+
+#@public
+function bashlets::time::elapsed::random()
+{
+    $BASHLETS_NAMESPACE integer random 11
+}
+
+#@public
+function bashlets::time::elapsed::validate()
+{
+    $BASHLETS_NAMESPACE integer validate "$@"
+}
+
+#@public
+function bashlets::time::elapsed::to_formatted()
 {
     # https://gist.github.com/ldante86/dca1822f6da1fef40efddb1f969fa056
 
@@ -51,7 +82,7 @@ function bashlets::time::elapsed::seconds_to_formatted()
 
     [[ -n $elapsed ]] || return
 
-    $BASHLETS_NAMESPACE number validate_as_unsigned_float "$elapsed" || return 1
+    $BASHLETS_NAMESPACE float validate "$elapsed" || return 1
 
        days=$((elapsed / SECONDS_IN_DAY))
     SECONDS=$((elapsed % SECONDS_IN_DAY))
@@ -64,30 +95,21 @@ function bashlets::time::elapsed::seconds_to_formatted()
 }
 
 #@public
-function bashlets::time::elapsed::seconds_to_description()
+function bashlets::time::elapsed::describe()
 {
-    # https://gist.github.com/ldante86/dca1822f6da1fef40efddb1f969fa056
-
-    local    SECONDS_IN_DAY=86400
-    local   SECONDS_IN_HOUR=3600
-    local   MINUTES_IN_HOUR=60
-    local SECONDS_IN_MINUTE=60
-
-    local elapsed=$1 SECONDS
     local days hours minutes seconds
 
-    [[ -n $elapsed ]] || return
+    local formatted="$(bashlets::time::elapsed::to_formatted "$1")"
+    IFS=: read days hours minutes seconds <<< "$formatted"
 
-    $BASHLETS_NAMESPACE number validate_as_unsigned_float "$elapsed" || return 1
+    days=${days#0}
+    hours=${hours#0}
+    minutes=${minutes#0}
+    seconds=${seconds#0}
 
-       days=$((elapsed / SECONDS_IN_DAY))
-    SECONDS=$((elapsed % SECONDS_IN_DAY))
-    
-      hours=$(((SECONDS / SECONDS_IN_HOUR)))
-    minutes=$(((SECONDS / SECONDS_IN_MINUTE) % MINUTES_IN_HOUR))
-    seconds=$(((SECONDS % SECONDS_IN_MINUTE)))
-
-    echo "$days day(s), $hours hour(s), $minutes minute(s), $seconds second(s)"
+    printf                                                      \
+        "%d day(s), %d hour(s), %d minute(s), %d second(s)\n"   \
+        "$days" "$hours" "$minutes" "$seconds"
 }
 
 # Local variables:
