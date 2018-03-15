@@ -34,30 +34,41 @@
 ################################################################################
 
 
+source bashlets core/datatype/number
+source bashlets core/glue/awklibrary
+
+#
+# extended euclidean algorithm
+#
+#   given two arbitrary integers a, b, calculates
+#   the gcd(a, b) and the unique s, t such that s*a + t*b = gcd(a, b)
+#
+# input: a, b
+#
+# output: a string in the form "s t gcd"
+#
 
 #@public
-function bashlets::ipc::flock::acquire()
+function bashlets::awk::math::extended_gcd()
 {
-    local lockfile="$1"
-    exec 9> "$lockfile"
-    flock -n 9 || { echo "cannot acquire lock"; return 1; }
-    [[ -f $lockfile ]]
-}
+    local a="${1:-0}" b="${2:-0}"
 
-#@public
-function bashlets::ipc::flock::release()
-{
-    local lockfile="$1"
-    [[ -n $lockfile ]] && rm -f "$lockfile"
-}
+    $BASHLETS_NAMESPACE number validate_as_integer $a || return 1
+    $BASHLETS_NAMESPACE number validate_as_integer $b || return 1
 
-#@public
-function bashlets::ipc::flock::exists()
-{
-    local lockfile="$1"
-    [[ -e $lockfile ]]
-}
+    local awk_text="$($BASHLETS_NAMESPACE awklibrary load)"
 
+    awk_text="
+        $awk_text
+
+        BEGIN {
+            print extended_gcd(a, b);
+            exit;
+        }
+    "
+
+    awk -v a=$a -v b=$b "$awk_text" | tr \; " "
+}
 
 # Local variables:
 # mode: shell-script

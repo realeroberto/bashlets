@@ -1,10 +1,14 @@
 {
-        "name": "core",
-        "description": "Core package",
+        "name": "core.math",
+        "description": "core.math",
         "version": "0.2",
         "author": {
                 "name": "Roberto Reale",
                 "email": "rober.reale@gmail.com"
         },
-        "license": "MIT"
+        "license": "MIT",
+        "deps": [
+                "core.datatype",
+                "core.glue"
+        ]
 }

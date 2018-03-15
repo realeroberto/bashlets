@@ -34,7 +34,7 @@
 ################################################################################
 
 
-source bashlets datatype/number
+source bashlets core/datatype/number
 
 
 #@public
