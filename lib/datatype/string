@@ -39,19 +39,19 @@ source bashlets stream/reshape
 source bashlets os/random
 
 #@public
-function bashlets::datatype::unsigned::new()
+function bashlets::datatype::string::new()
 {
     :
 }
 
 #@public
-function bashlets::datatype::unsigned::destroy()
+function bashlets::datatype::string::destroy()
 {
     :
 }
 
 #@public
-function bashlets::datatype::unsigned::to_string()
+function bashlets::datatype::string::to_string()
 {
     echo "$@"
 }
