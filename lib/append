@@ -34,28 +34,33 @@
 ################################################################################
 
 
+source bashlets core/stream/filter
+source bashlets core/os/tempfile
 
 #@public
-function bashlets::ipc::flock::acquire()
+function bashlets::stream::append::generic()
 {
-    local lockfile="$1"
-    exec 9> "$lockfile"
-    flock -n 9 || { echo "cannot acquire lock"; return 1; }
-    [[ -f $lockfile ]]
+    local filename="$1"
+    local tempfile="$($BASHLETS_NAMESPACE tempfile create)"
+
+    # stream A
+    cat > "$tempfile"
+    # stream B
+    cat "$filename" >> "$tempfile"
+
+    cat "$tempfile"
+
+    $BASHLETS_NAMESPACE tempfile destroy "$tempfile"
 }
 
 #@public
-function bashlets::ipc::flock::release()
+function bashlets::stream::append::after_pattern()
 {
-    local lockfile="$1"
-    [[ -n $lockfile ]] && rm -f "$lockfile"
-}
+    local filename="$1" ; shift
+    local pattern="$@"
 
-#@public
-function bashlets::ipc::flock::exists()
-{
-    local lockfile="$1"
-    [[ -e $lockfile ]]
+    $BASHLETS_NAMESPACE filter till_pattern "$pattern"  \
+        | bashlets::stream::append::generic "$filename"
 }
 
 
