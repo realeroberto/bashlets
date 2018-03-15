@@ -34,9 +34,6 @@
 ################################################################################
 
 
-source bashlets datatype/string
-
-
 #@public
 function bashlets::stream::convert::dos2unix()
 {
@@ -71,42 +68,6 @@ function bashlets::stream::convert::unix2dos()
         unix2dos | (test -n "$output" && cat > "$output" || cat)
 
     unset unix2dos
-}
-
-#@public
-function bashlets::stream::convert::rotate()
-{
-    while read
-    do
-        $BASHLETS_NAMESPACE string rotate "${1:-13}" "$REPLY"
-    done
-}
-
-#@public
-function bashlets::stream::convert::rot13()
-{
-    while read
-    do
-        $BASHLETS_NAMESPACE string rot13 "$REPLY"
-    done
-}
-
-#@public
-function bashlets::stream::convert::punch()
-{
-    while read
-    do
-        $BASHLETS_NAMESPACE string punch "$REPLY"
-    done
-}
-
-#@public
-function bashlets::stream::convert::to_piglatin()
-{
-    while read
-    do
-        $BASHLETS_NAMESPACE string to_piglatin "$REPLY"
-    done
 }
 
 
