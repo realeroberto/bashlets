@@ -34,21 +34,88 @@
 ################################################################################
 
 
+source bashlets datatype/unsigned
 source bashlets time/month
-
-# based on http://cfajohnson.com/shell/date-functions/?random_date
 
 
 #@public
-function bashlets::time::date::get_random()
+function bashlets::time::date::new()
 {
+    :
+}
+
+#@public
+function bashlets::time::date::destroy()
+{
+    :
+}
+
+#@public
+function bashlets::time::date::to_string()
+{
+    echo "$@"
+}
+
+function __bashlets::time::date::sanitize()
+{
+    local year month day junk
+
+    IFS=' ' read year month day junk <<< "${@//[!0-9]/ }" 
+
+    if [[ $year =~ ^[0-9]{4}[0-1][0-9][0-3][0-9]$ ]]
+    then
+        day=${year:-2}
+        month=${year:4:2}
+        year=${year:0:4}
+    fi
+
+    printf "%d-%02d-%02d\n" "$year" "$month" "$day"
+}
+
+#@public
+function bashlets::time::date::validate()
+{
+    # based on http://cfajohnson.com/shell/date-functions/?is_date
+
+    local year month day
+    local days_in_month jgmonth=175209 ym
+
+    IFS=- read year month day <<< "$(__bashlets::time::date::sanitize "$@")"
+
+    day=${day#0}
+    month=${month#0}
+
+    # invalid month/invalid day
+    (( month < 1 )) || (( month > 12 )) ||
+        (( day < 1 )) || (( day > 31 )) && return 1
+
+    printf -v ym "%d%02d" "$year" "$month"
+
+    if (( ym == jgmonth )) && (( day > 2 )) && (( day < 14 ))
+    then
+        # invalid date (Julian to Gregorian changeover)
+        return 1
+    fi
+
+    days_in_month="$($BASHLETS_NAMESPACE month days "$month" "$year")"
+
+    (( day <= days_in_month ))
+}
+
+#@public
+function bashlets::time::date::random()
+{
+    # based on http://cfajohnson.com/shell/date-functions/?random_date
+
     local first=${1:-1752} last=${2:-2100}
     local year month day days_in_month
+    local n="$($BASHLETS_NAMESPACE integer random)"
 
-    year=$((RANDOM % (last - first) + first))
-    month=$((RANDOM % 12 + 1))
-    days_in_month="$($BASHLETS_NAMESPACE month count_days "$month" "$year")"
-    day=$((RANDOM % days_in_month + 1))
+    year=$((n % (last - first) + first))
+    month=$((n % 12 + 1))
+
+    days_in_month="$($BASHLETS_NAMESPACE month days "$month" "$year")"
+    day=$((n % days_in_month + 1))
 
     printf "%d-%02d-%02d\n" "$year" "$month" "$day"
 }
