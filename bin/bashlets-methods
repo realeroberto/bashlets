@@ -86,7 +86,7 @@ function verbose()
 function list_methods()
 {
     local bashlet="$1"
-    $BASHLETS_NAMESPACE loader list_methods "$bashlet"
+    $BASHLETS_NAMESPACE loader list_methods "$bashlet" | sort
 }
 
 
