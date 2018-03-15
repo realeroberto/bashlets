@@ -34,28 +34,39 @@
 ################################################################################
 
 
+source bashlets core/os/tempdir
 
 #@public
-function bashlets::ipc::flock::acquire()
+function bashlets::os::ramdisk::create()
 {
-    local lockfile="$1"
-    exec 9> "$lockfile"
-    flock -n 9 || { echo "cannot acquire lock"; return 1; }
-    [[ -f $lockfile ]]
+    local size="${1:-10m}"
+    local fs_type=${2:-tmpfs}
+    local path="$3"
+
+    if test $(whoami) = "root"
+    then
+        [[ -d "$path" ]] || path="$($BASHLETS_NAMESPACE tempdir create)"
+        mount -t $fs_type -o size=$size $fs_type "$path"
+    else
+        path="$($BASHLETS_NAMESPACE tempdir create /tmp/shm)"
+    fi
+
+    echo $path
 }
 
 #@public
-function bashlets::ipc::flock::release()
+function bashlets::os::ramdisk::destroy()
 {
-    local lockfile="$1"
-    [[ -n $lockfile ]] && rm -f "$lockfile"
-}
+    local path="${1}"
 
-#@public
-function bashlets::ipc::flock::exists()
-{
-    local lockfile="$1"
-    [[ -e $lockfile ]]
+    test -d "$path" || return
+
+    if test $(whoami) = "root"
+    then
+        mount | grep "$path" && umount "$path"
+    else
+        $BASHLETS_NAMESPACE tempdir destroy "$path"
+    fi
 }
 
 
