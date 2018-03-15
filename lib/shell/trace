@@ -35,7 +35,7 @@
 
 
 #@public
-function bashlets::debug::trace::enable()
+function bashlets::shell::trace::enable()
 {
     # cf. http://www.vctlabs.com/posts/2011/Nov/26/tracing_cheatsheet/
     export BASHLETS_DEBUG_TRACE_OLD_PS4="$PS4"
@@ -44,7 +44,7 @@ function bashlets::debug::trace::enable()
 }
 
 #@public
-function bashlets::debug::trace::disable()
+function bashlets::shell::trace::disable()
 {
     # cf. http://stackoverflow.com/questions/3601515/
     set +x
