@@ -34,34 +34,85 @@
 ################################################################################
 
 
+source bashlets core/os/path
 
 #@public
-function bashlets::ipc::flock::acquire()
+function bashlets::shell::myself::name()
 {
-    local lockfile="$1"
-    exec 9> "$lockfile"
-    flock -n 9 || { echo "cannot acquire lock"; return 1; }
-    [[ -f $lockfile ]]
+    [[ "$0" == "-bash" ]] && return
+    basename "$0"
 }
 
 #@public
-function bashlets::ipc::flock::release()
+function bashlets::shell::myself::canonical_name()
 {
-    local lockfile="$1"
-    [[ -n $lockfile ]] && rm -f "$lockfile"
+    [[ "$0" == "-bash" ]] && return
+    basename "$(readlink -m -- "$0")"
 }
 
 #@public
-function bashlets::ipc::flock::exists()
+function bashlets::shell::myself::canonical_path()
 {
-    local lockfile="$1"
-    [[ -e $lockfile ]]
+    [[ "$0" == "-bash" ]] && return
+    readlink -m -- "$0"
+}
+
+#@public
+function bashlets::shell::myself::effective_path()
+{
+    # http://stackoverflow.com/questions/59895
+
+    local source="${BASH_SOURCE[0]}"
+
+    [[ "$0" == "-bash" ]] && return
+
+    # resolve $source until the file is no longer a symlink
+    while [[ -h $source ]]
+    do
+        dir="$(cd -P "$(dirname "$source")" && pwd)"
+        source="$(readlink "$source")"
+
+        # if $source was a relative symlink, we need to resolve it relative to
+        # the path where the symlink file was located
+        [[ $source != /* ]]  \
+            && source="$($BASHLETS_NAMESPACE path join "$dir" "$source")"
+    done
+
+    dir="$(cd -P "$(dirname "$source")" && pwd)"
+
+    echo "$dir"
+}
+
+#@public
+function bashlets::shell::myself::pid()
+{
+    echo $$
+}
+
+#@public
+function bashlets::shell::myself::ppid()
+{
+    # echo it just to get rid of leading/trailing spaces
+    # shellcheck disable=SC2005
+    echo "$(ps -o ppid= -p $$)"
+}
+
+#@public
+function bashlets::shell::myself::parent_name()
+{
+    ps -o comm= -p "$(bashlets::shell::myself::get_ppid)"
+}
+
+#@public
+function bashlets::shell::myself::require_user()
+{
+    test "$(whoami)" = "$1"
 }
 
 
 # Local variables:
 # mode: shell-script
-# sh-basic-offset: 4
+# sh-shell-offset: 4
 # sh-indent-comment: t
 # indent-tabs-mode: nil
 # End:

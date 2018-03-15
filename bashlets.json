@@ -1,10 +1,13 @@
 {
-        "name": "core",
-        "description": "Core package",
+        "name": "core.shell",
+        "description": "core.shell",
         "version": "0.2",
         "author": {
                 "name": "Roberto Reale",
                 "email": "rober.reale@gmail.com"
         },
-        "license": "MIT"
+        "license": "MIT",
+        "deps": [
+                "core.os"
+        ]
 }
