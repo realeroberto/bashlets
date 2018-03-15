@@ -1,6 +1,6 @@
 {
-        "name": "core",
-        "description": "Core package",
+        "name": "core.ipc",
+        "description": "core.ipc",
         "version": "0.2",
         "author": {
                 "name": "Roberto Reale",
