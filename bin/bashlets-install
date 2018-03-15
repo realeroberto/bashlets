@@ -206,7 +206,7 @@ function install_local()
 
     local d f
 
-    # cycle possible destinations to install the 1st stage loader
+    # cycle possible destinations to install the executable scripts
     IFS=: read -r -a destinations <<< "$BASHLETS_BIN_TARGETS"
     for d in ${destinations[@]}
     do
