@@ -1,3 +1,6 @@
+#!/bin/bash
+
+
 ################################################################################
 #                                         
 # |              |    |         |         
@@ -6,7 +9,7 @@
 # `---'`---^`---'`   '`---'`---'`---'`---'
 #
 #                                        
-# bashlets -- A modular extensible toolbox for Bash
+# Bashlets -- A modular extensible toolbox for Bash
 #
 # Copyright (c) 2014-8 Roberto Reale
 # 
@@ -30,5 +33,66 @@
 #
 ################################################################################
 
-FROM ubuntu
-MAINTAINER Roberto Reale
+
+source bashlets core/datatype/byte
+source bashlets core/datatype/unsigned
+source bashlets core/datatype/integer
+source bashlets core/datatype/float
+
+#@public
+function bashlets::datatype::number::new()
+{
+    :
+}
+
+#@public
+function bashlets::datatype::number::destroy()
+{
+    :
+}
+
+#@public
+function bashlets::datatype::number::to_string()
+{
+    echo "$@"
+}
+
+#@public
+function bashlets::datatype::number::validate()
+{
+    $BASHLETS_NAMESPACE float validate "$@"
+}
+
+#@public
+function bashlets::datatype::number::random()
+{
+    $BASHLETS_NAMESPACE float random
+}
+
+#@public
+function bashlets::datatype::number::type()
+{
+    local input="$1"
+
+    [[ -z $input ]] && return
+
+    for type in byte unsigned integer float
+    do
+        if $BASHLETS_NAMESPACE $type validate "$input"
+        then
+            echo $type
+            return
+        fi
+    done
+
+    echo invalid
+    return 1
+}
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh

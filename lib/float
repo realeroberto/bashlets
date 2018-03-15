@@ -1,3 +1,6 @@
+#!/bin/bash
+
+
 ################################################################################
 #                                         
 # |              |    |         |         
@@ -6,7 +9,7 @@
 # `---'`---^`---'`   '`---'`---'`---'`---'
 #
 #                                        
-# bashlets -- A modular extensible toolbox for Bash
+# Bashlets -- A modular extensible toolbox for Bash
 #
 # Copyright (c) 2014-8 Roberto Reale
 # 
@@ -30,5 +33,75 @@
 #
 ################################################################################
 
-FROM ubuntu
-MAINTAINER Roberto Reale
+
+source bashlets core/os/random
+
+
+#@public
+function bashlets::datatype::float::new()
+{
+    :
+}
+
+#@public
+function bashlets::datatype::float::destroy()
+{
+    :
+}
+
+#@public
+function bashlets::datatype::float::to_string()
+{
+    echo "$@"
+}
+
+#@public
+function bashlets::datatype::float::random()
+{
+    local size="${1:-16}" scale="${2:-12}"
+    local raw x y sign output
+
+    raw="$($BASHLETS_NAMESPACE random get $((size+scale)) 0-9)"
+
+    # avoid leading zeros, but printf "%d" has problems with arbitrary length
+    raw="${raw##0}"
+
+    x="${raw:0:$size}"
+    y="${raw:$size:$scale}"
+
+    sign="$($BASHLETS_NAMESPACE random get 1 +-)"
+    [[ $sign == + ]] && sign=
+
+    # simplify output
+    if [[ $x -eq 0 ]]
+    then
+        if [[ $scale -eq 0 ]]
+        then
+            # prefer 0 over -0
+            sign=
+        else
+            # prefer .123... over 0.123...
+            x=
+        fi
+    fi
+
+    output="${sign}${x}"
+    [[ -n $y ]] && output="${output}.${y}"
+
+    echo "$output"
+}
+
+#@public
+function bashlets::datatype::float::validate()
+{
+    [[ $1 =~ ^[-+]?[0-9]*\.?[0-9]+$ ]]
+}
+
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh

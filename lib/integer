@@ -1,3 +1,6 @@
+#!/bin/bash
+
+
 ################################################################################
 #                                         
 # |              |    |         |         
@@ -6,7 +9,7 @@
 # `---'`---^`---'`   '`---'`---'`---'`---'
 #
 #                                        
-# bashlets -- A modular extensible toolbox for Bash
+# Bashlets -- A modular extensible toolbox for Bash
 #
 # Copyright (c) 2014-8 Roberto Reale
 # 
@@ -30,5 +33,63 @@
 #
 ################################################################################
 
-FROM ubuntu
-MAINTAINER Roberto Reale
+source bashlets core/os/random
+
+#@public
+function bashlets::datatype::integer::new()
+{
+    :
+}
+
+#@public
+function bashlets::datatype::integer::destroy()
+{
+    :
+}
+
+#@public
+function bashlets::datatype::integer::to_string()
+{
+    echo "$@"
+}
+
+#@public
+function bashlets::datatype::integer::random()
+{
+    local size="${1:-16}" raw sign
+
+    [[ $size -eq 0 ]] && return
+
+    raw="$($BASHLETS_NAMESPACE random get "$size" 0-9)"
+
+    # avoid leading zeros, but printf "%d" has problems with arbitrary length
+    raw="${raw##0}"
+    [[ -z $raw ]] && raw=0
+
+    sign="$($BASHLETS_NAMESPACE random get 1 +-)"
+    [[ $sign == + || $raw -eq 0 ]] && sign=
+
+    echo "${sign}${raw}"
+}
+
+#@public
+function bashlets::datatype::integer::validate()
+{
+    [[ $1 =~ ^[-+]?[0-9]+$ ]]
+}
+
+#@public
+function bashlets::datatype::integer::select_bit()
+{
+    # cf. https://github.com/ldante86/punch/blob/master/punch.sh
+
+    echo $(( $1 & (1<<$2) ))
+}
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh

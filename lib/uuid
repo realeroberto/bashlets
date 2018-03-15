@@ -1,0 +1,124 @@
+#!/bin/bash
+
+
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# Bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2014-8 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+source bashlets core/os/random
+
+
+#@public
+function bashlets::datatype::uuid::new()
+{
+    :
+}
+
+#@public
+function bashlets::datatype::uuid::destroy()
+{
+    :
+}
+
+#@public
+function bashlets::datatype::uuid::to_string()
+{
+    echo "$@"
+}
+
+function __bashlets::datatype::uuid::random()
+{
+    # cf. https://gist.github.com/JT5D/7819113
+
+    local N B T
+
+    for ((N=0; N < 16; ++N))
+    do
+        B=$((RANDOM % 255))
+
+        if ((N == 6))
+        then
+            printf '4%x' $((B % 15))
+        elif ((N == 8))
+        then
+            local C='89ab'
+            printf '%c%x' ${C:$((RANDOM % ${#C})):1} $((B % 15))
+        else
+            printf '%02x' $B
+        fi
+
+        for T in 3 5 7 9
+        do
+            if ((T == N))
+            then
+                printf '-'
+                break
+            fi
+        done
+    done
+
+    echo
+}
+
+#@public
+function bashlets::datatype::uuid::random()
+{
+    local UUID
+
+    # try getting it from the system
+    UUID="$($BASHLETS_NAMESPACE random get_uuid)"
+    # should that fail, we resort to a pure Bash implementation
+    UUID="${UUID:-$(__bashlets::datatype::uuid::create)}"
+
+    test ${#UUID} -gt 0 && echo "$UUID"
+}
+
+#@public
+function bashlets::datatype::uuid::validate()
+{
+    local UUID="$1"
+
+    # cf. RFC4122
+    local x="[0-9a-f]"
+    local regex="^$x{8}-$x{4}-[1-5]$x{3}-[89ab]$x{3}-$x{12}$"
+
+    [[ $UUID =~ $regex ]]
+}
+
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh

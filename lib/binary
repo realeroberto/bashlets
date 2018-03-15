@@ -1,3 +1,6 @@
+#!/bin/bash
+
+
 ################################################################################
 #                                         
 # |              |    |         |         
@@ -6,7 +9,7 @@
 # `---'`---^`---'`   '`---'`---'`---'`---'
 #
 #                                        
-# bashlets -- A modular extensible toolbox for Bash
+# Bashlets -- A modular extensible toolbox for Bash
 #
 # Copyright (c) 2014-8 Roberto Reale
 # 
@@ -30,5 +33,55 @@
 #
 ################################################################################
 
-FROM ubuntu
-MAINTAINER Roberto Reale
+
+source bashlets core/os/random
+
+#@public
+function bashlets::datatype::binary::new()
+{
+    :
+}
+
+#@public
+function bashlets::datatype::binary::destroy()
+{
+    :
+}
+
+#@public
+function bashlets::datatype::binary::to_string()
+{
+    echo "$@"
+}
+
+#@public
+function bashlets::datatype::binary::validate()
+{
+    true
+}
+
+#@public
+function bashlets::datatype::binary::random()
+{
+    local size="${1:-16}"
+    $BASHLETS_NAMESPACE random get "$size"
+}
+
+#@descr write hexadecimal values as binary stream
+#@public
+function bashlets::datatype::binary::from_hex()
+{
+    while [[ $# -gt 0 ]]
+    do
+        printf "\x$1"
+        shift
+    done
+}
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh

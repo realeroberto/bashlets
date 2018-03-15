@@ -1,10 +1,14 @@
 {
-        "name": "core",
-        "description": "Core package",
-        "version": "0.2",
+        "name": "core.datatype",
+        "description": "core.datatype",
+        "version": "0.1",
         "author": {
                 "name": "Roberto Reale",
                 "email": "rober.reale@gmail.com"
         },
-        "license": "MIT"
+        "license": "MIT",
+        "deps": [
+                "core.os",
+                "core.stream"
+        ]
 }

@@ -1,3 +1,6 @@
+#!/bin/bash
+
+
 ################################################################################
 #                                         
 # |              |    |         |         
@@ -6,7 +9,7 @@
 # `---'`---^`---'`   '`---'`---'`---'`---'
 #
 #                                        
-# bashlets -- A modular extensible toolbox for Bash
+# Bashlets -- A modular extensible toolbox for Bash
 #
 # Copyright (c) 2014-8 Roberto Reale
 # 
@@ -30,5 +33,45 @@
 #
 ################################################################################
 
-FROM ubuntu
-MAINTAINER Roberto Reale
+
+source bashlets core/datatype/unsigned
+
+#@public
+function bashlets::datatype::byte::new()
+{
+    :
+}
+
+#@public
+function bashlets::datatype::byte::destroy()
+{
+    :
+}
+
+#@public
+function bashlets::datatype::byte::to_string()
+{
+    echo "$@"
+}
+
+#@public
+function bashlets::datatype::byte::random()
+{
+    local unsigned="$($BASHLETS_NAMESPACE unsigned random)"
+
+    echo "$((unsigned % 256))"
+}
+
+#@public
+function bashlets::datatype::byte::validate()
+{
+    [[ $1 =~ ^[0-9]+$ ]] && [[ $1 -ge 0 && $1 -le 255 ]]
+}
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh
