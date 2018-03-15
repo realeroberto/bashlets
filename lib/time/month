@@ -33,14 +33,47 @@
 #
 ################################################################################
 
+source bashlets datatype/unsigned
 source bashlets time/year
 
 
-# based on http://cfajohnson.com/shell/date-functions/?days_in_month
+#@public
+function bashlets::time::month::new()
+{
+    :
+}
 
 #@public
-function bashlets::time::month::count_days()
+function bashlets::time::month::destroy()
 {
+    :
+}
+
+#@public
+function bashlets::time::month::to_string()
+{
+    echo "$@"
+}
+
+#@public
+function bashlets::time::month::random()
+{
+    local n="$($BASHLETS_NAMESPACE unsigned random)"
+    local month="$((n % 12 + 1))"
+    printf "%02d" "$month"
+}
+
+#@public
+function bashlets::time::month::validate()
+{
+    [[ $1 =~ ^(0?[1-9]|1[012])$ ]]
+}
+
+#@public
+function bashlets::time::month::days()
+{
+    # based on http://cfajohnson.com/shell/date-functions/?days_in_month
+
     declare -i month="${1#0}"
     declare -i year="${2:-$(date +%Y)}"
     declare -i days_in_month
