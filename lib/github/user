@@ -34,14 +34,14 @@
 ################################################################################
 
 
-BASHLETS_API_GITHUB_API="${BASHLETS_API_GITHUB_API:-https://api.github.com}"
+BASHLETS_GITHUB_ENTRY_POINT="${BASHLETS_GITHUB_ENTRY_POINT:-https://api.github.com}"
 
 #@public
-function bashlets::api::github::list_repos_by_user()
+function bashlets::github::user::repos()
 {
     local user="${1:-bashlets}"
 
-    curl -s "$BASHLETS_API_GITHUB_API/users/$user/repos"  \
+    curl -s "$BASHLETS_GITHUB_ENTRY_POINT/users/$user/repos"  \
         | jq -r '.[].name'
 }
 
