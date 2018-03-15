@@ -2,14 +2,14 @@
 
 ## Coverage
 
-### `api`
-
-* `github`: 100%
-
 ### `datatype` 
 
 * `sha1`: 100%
 * `string`: 100%
+
+### `github`
+
+* `user`: 100%
 
 ### `library`
 
