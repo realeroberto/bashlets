@@ -36,40 +36,40 @@
 source bashlets os/random
 
 # a Unix timestamp can be negative!
-source bashlets datatype/integer
+source bashlets time/integer
 
 #@public
-function bashlets::datatype::timestamp::new()
+function bashlets::time::timestamp::new()
 {
     :
 }
 
 #@public
-function bashlets::datatype::timestamp::destroy()
+function bashlets::time::timestamp::destroy()
 {
     :
 }
 
 #@public
-function bashlets::datatype::timestamp::to_string()
+function bashlets::time::timestamp::to_string()
 {
     echo "$@"
 }
 
 #@public
-function bashlets::datatype::timestamp::random()
+function bashlets::time::timestamp::random()
 {
     $BASHLETS_NAMESPACE integer random 11
 }
 
 #@public
-function bashlets::datatype::timestamp::validate()
+function bashlets::time::timestamp::validate()
 {
     $BASHLETS_NAMESPACE integer validate "$@"
 }
 
 #@public
-function bashlets::datatype::timestamp::to_path()
+function bashlets::time::timestamp::to_path()
 {
     local timestamp="${1:-$(date +%s)}" depth="${2:-day}"
     local fmt
