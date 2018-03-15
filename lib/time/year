@@ -34,11 +34,45 @@
 ################################################################################
 
 
-# based on http://cfajohnson.com/shell/date-functions/?is_leap_year
+source bashlets time/timestamp
+
+
+#@public
+function bashlets::time::year::new()
+{
+    :
+}
+
+#@public
+function bashlets::time::year::destroy()
+{
+    :
+}
+
+#@public
+function bashlets::time::year::to_string()
+{
+    echo "$@"
+}
+
+#@public
+function bashlets::time::year::random()
+{
+    local timestamp="$($BASHLETS_NAMESPACE timestamp random)"
+    date -d @"$timestamp" +%Y
+}
+
+#@public
+function bashlets::time::year::validate()
+{
+    [[ $1 =~ ^[-+]?[0-9]{1,4}$ ]]
+}
 
 #@public
 function bashlets::time::year::is_leap()
 {
+    # based on http://cfajohnson.com/shell/date-functions/?is_leap_year
+
     local year="$1"
     local gregorian=1752
 
