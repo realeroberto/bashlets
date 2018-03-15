@@ -36,7 +36,7 @@
 source bashlets os/random
 
 # a Unix timestamp can be negative!
-source bashlets time/integer
+source bashlets datatype/integer
 
 #@public
 function bashlets::time::timestamp::new()
