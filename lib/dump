@@ -9,7 +9,7 @@
 # `---'`---^`---'`   '`---'`---'`---'`---'
 #
 #                                        
-# Bashlets -- A modular extensible toolbox for Bash
+# bashlets -- A modular extensible toolbox for Bash
 #
 # Copyright (c) 2014-8 Roberto Reale
 # 
@@ -34,30 +34,45 @@
 ################################################################################
 
 
+source bashlets core/datatype/object
+
 
 #@public
-function bashlets::ipc::flock::acquire()
+function bashlets::marshal::dump::objects()
 {
-    local lockfile="$1"
-    exec 9> "$lockfile"
-    flock -n 9 || { echo "cannot acquire lock"; return 1; }
-    [[ -f $lockfile ]]
+    while test $# -gt 0
+    do
+        local object="$1"
+        $BASHLETS_NAMESPACE object is_function "$object"  \
+            && declare -f  "$object"                      \
+            || declare -p  "$object" 2> /dev/null
+        shift
+    done
 }
 
 #@public
-function bashlets::ipc::flock::release()
+function bashlets::marshal::dump::rename()
 {
-    local lockfile="$1"
-    [[ -n $lockfile ]] && rm -f "$lockfile"
+    local new="$1"
+    shift
+    echo "$@" |
+        sed "s/^declare -\\(.\\) \\([^=]\\+\\)=\\(.*\\)/declare -\\1 $new=\\3/"
 }
 
 #@public
-function bashlets::ipc::flock::exists()
+function bashlets::marshal::dump::get_by_name()
 {
-    local lockfile="$1"
-    [[ -e $lockfile ]]
-}
+    local object="$1"
+    shift
 
+    test -n "$object" || return
+    test $# -gt 0     || return
+
+    echo "$(
+        eval "$@"
+        eval echo "\$$object"
+    )"
+}
 
 # Local variables:
 # mode: shell-script
