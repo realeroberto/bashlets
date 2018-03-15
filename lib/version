@@ -9,7 +9,7 @@
 # `---'`---^`---'`   '`---'`---'`---'`---'
 #
 #                                        
-# Bashlets -- A modular extensible toolbox for Bash
+# bashlets -- A modular extensible toolbox for Bash
 #
 # Copyright (c) 2014-8 Roberto Reale
 # 
@@ -34,38 +34,33 @@
 ################################################################################
 
 
-source bashlets os/tempdir
+
+BASHLETS_VERSION=1.0
+
+source bashlets core/datatype/version
+
 
 #@public
-function bashlets::os::ramdisk::create()
+function bashlets::library::version::get()
 {
-    local size="${1:-10m}"
-    local fs_type=${2:-tmpfs}
-    local path="$3"
-
-    if test $(whoami) = "root"
-    then
-        [[ -d "$path" ]] || path="$($BASHLETS_NAMESPACE tempdir create)"
-        mount -t $fs_type -o size=$size $fs_type "$path"
-    else
-        path="$($BASHLETS_NAMESPACE tempdir create /tmp/shm)"
-    fi
-
-    echo $path
+    echo "$BASHLETS_VERSION"
 }
 
 #@public
-function bashlets::os::ramdisk::destroy()
+function bashlets::library::version::require()
 {
-    local path="${1}"
+    local required="$1" actual max
 
-    test -d "$path" || return
+    actual=$(bashlets::library::version::get)
 
-    if test $(whoami) = "root"
+    max="$($BASHLETS_NAMESPACE version max "$required" "$actual")"
+
+    [[ -n $required ]] || return
+
+    if [[ $max != $actual ]]
     then
-        mount | grep "$path" && umount "$path"
-    else
-        $BASHLETS_NAMESPACE tempdir destroy "$path"
+        echo "[FATAL] BASHLETS_VERSION is $actual (required is at least $required)."
+        return 1
     fi
 }
 

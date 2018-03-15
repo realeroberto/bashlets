@@ -9,7 +9,7 @@
 # `---'`---^`---'`   '`---'`---'`---'`---'
 #
 #                                        
-# Bashlets -- A modular extensible toolbox for Bash
+# bashlets -- A modular extensible toolbox for Bash
 #
 # Copyright (c) 2014-8 Roberto Reale
 # 
@@ -34,28 +34,14 @@
 ################################################################################
 
 
+source bashlets core/github/user
 
 #@public
-function bashlets::ipc::flock::acquire()
+function bashlets::library::origin::list_packages()
 {
-    local lockfile="$1"
-    exec 9> "$lockfile"
-    flock -n 9 || { echo "cannot acquire lock"; return 1; }
-    [[ -f $lockfile ]]
-}
-
-#@public
-function bashlets::ipc::flock::release()
-{
-    local lockfile="$1"
-    [[ -n $lockfile ]] && rm -f "$lockfile"
-}
-
-#@public
-function bashlets::ipc::flock::exists()
-{
-    local lockfile="$1"
-    [[ -e $lockfile ]]
+    $BASHLETS_NAMESPACE user repos   \
+        | grep 'bashlets\.'          \
+        | grep -v bashlets.github.io
 }
 
 
