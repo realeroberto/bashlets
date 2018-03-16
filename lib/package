@@ -38,7 +38,7 @@ BASHLETS_BASE=~/.bashlets
 BASHLETS_PACKAGE_MANIFEST=bashlets.json
 
 
-source bashlets core/library/rev
+source bashlets core/library/revision
 
 #@public
 function bashlets::library::package::name()
@@ -103,7 +103,7 @@ function bashlets::library::package::revs()
     [[ -n $package ]] || return
     for item in $(ls -1 $BASHLETS_BASE/$domain/$package)
     do
-        $BASHLETS_NAMESPACE rev validate $item && echo $item
+        $BASHLETS_NAMESPACE revision validate $item && echo $item
     done
 }
 

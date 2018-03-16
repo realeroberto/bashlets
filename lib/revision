@@ -37,7 +37,7 @@
 source bashlets core/datatype/sha1
 
 #@public
-function bashlets::library::rev::validate()
+function bashlets::library::revision::validate()
 {
     $BASHLETS_NAMESPACE sha1 validate "$@"
 }
