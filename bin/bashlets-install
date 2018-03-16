@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 ################################################################################
 #                                         
 # |              |    |         |         
@@ -196,7 +195,7 @@ function install_deps()
     [[ -f $BASHLETS_PACKAGE_MANIFEST ]]  \
         && for dep in $(package_get_deps_sorted $package)
     do
-        bashlets-install -S $dep_options $dep
+        $0 -S $dep_options $dep
     done
 }
 
@@ -206,6 +205,10 @@ function install_local()
     local path
     local rev
     local destinations
+
+
+    ## install deps
+    [[ -n $dont_install_deps ]] || install_deps $module
 
     #
     # some sanity checks
@@ -286,9 +289,6 @@ function install_local()
 
     done
 
-
-    ## install deps
-    [[ -n $dont_install_deps ]] || install_deps $module
 }
 
 function install_module()
