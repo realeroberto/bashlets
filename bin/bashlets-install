@@ -183,7 +183,8 @@ function package_get_deps_sorted()
 {
     local package="$1" rev="${2:-master}"
     # perform a topological sort on the dependency graph
-    package_get_deps_recursive $package $rev | tsort 2> /dev/null | tac
+    # the last sed removes the package itself
+    package_get_deps_recursive $package $rev | tsort 2> /dev/null | tac | sed '$d'
 }
 
 function install_deps()
@@ -195,7 +196,6 @@ function install_deps()
     [[ -f $BASHLETS_PACKAGE_MANIFEST ]]  \
         && for dep in $(package_get_deps_sorted $package)
     do
-        echo $dep
         bashlets-install -S $dep_options $dep
     done
 }
