@@ -51,16 +51,8 @@ function __bashlets::library::loader::bashlet_to_file()
 {
     local bashlet="$1" file
 
-    # search the core library first (cf. bin/bashlet2)
-    # e.g., if bashlet is A/B/.../X, then try core/.../lib/A/B/.../X first
-    # and then A/B/.../lib/X
-    for file in                                        \
-        "core/${BASHLETS_REV:-DEFAULT}/lib/$bashlet"   \
-        "$(dirname "$bashlet")/${BASHLETS_REV:-DEFAULT}/lib/$(basename "$bashlet")"
-    do
-        file="$BASHLETS_BASE/$file"
-        [[ -e $file ]] && echo "$file" && return
-    done
+    file="$BASHLETS_BASE/$(dirname "$bashlet")/${BASHLETS_REV:-DEFAULT}/lib/$(basename "$bashlet")"
+    [[ -e $file ]] && echo $file && return
 }
 
 function __bashlets::library::loader::list_all_methods()
