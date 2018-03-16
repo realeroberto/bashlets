@@ -107,6 +107,14 @@ function bashlets::library::package::revs()
     done
 }
 
+#@public
+function bashlets::library::package::modules()
+{
+    local package="$1" domain="${2:-core}" rev="${3:-DEFAULT}"
+    [[ -n $package ]] || return
+    ls -1 $BASHLETS_BASE/$domain/$package/$rev/lib
+}
+
 # Local variables:
 # mode: shell-script
 # sh-basic-offset: 4
