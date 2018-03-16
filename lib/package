@@ -34,8 +34,11 @@
 ################################################################################
 
 
+BASHLETS_BASE=~/.bashlets
 BASHLETS_PACKAGE_MANIFEST=bashlets.json
 
+
+source bashlets core/library/rev
 
 #@public
 function bashlets::library::package::name()
@@ -91,6 +94,17 @@ function bashlets::library::package::deps()
     local base="$1"
     local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
     test -e "$path" && jq -r .deps[]? "$path"
+}
+
+#@public
+function bashlets::library::package::revs()
+{
+    local package="$1" domain="${2:-core}"
+    [[ -n $package ]] || return
+    for item in $(ls -1 $BASHLETS_BASE/$domain/$package)
+    do
+        $BASHLETS_NAMESPACE rev validate $item && echo $item
+    done
 }
 
 # Local variables:
