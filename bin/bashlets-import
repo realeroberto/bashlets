@@ -47,20 +47,12 @@ function bashlets_import_lazy()
     local bashlet="$1" file
 
     type bashlets::library::loader::import > /dev/null 2>&1 || {
-        [[ $bashlet != "library/loader" ]] && 
-            bashlets_import_lazy "library/loader"
+        [[ $bashlet != "core/library/loader" ]] && 
+            bashlets_import_lazy "core/library/loader"
     }
 
-    # search the core library first (cf. lib/library/loader)
-    # e.g., if bashlet is A/B/.../X, then try core/.../lib/A/B/.../X first
-    # and then A/B/.../lib/X
-    for file in                                        \
-        "core/${BASHLETS_REV:-DEFAULT}/lib/$bashlet"   \
-        "$(dirname "$bashlet")/${BASHLETS_REV:-DEFAULT}/lib/$(basename "$bashlet")"
-    do
-        file="$BASHLETS_BASE/$file"
-        [[ -e $file ]] && source $file && return
-    done
+    file="$BASHLETS_BASE/$(dirname "$bashlet")/${BASHLETS_REV:-DEFAULT}/lib/$(basename "$bashlet")"
+    [[ -e $file ]] && source $file && return
 }
 
 function bashlets_import()
