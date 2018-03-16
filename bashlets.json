@@ -1,5 +1,5 @@
 {
-        "name": "core",
+        "name": "core.base",
         "description": "Core package",
         "version": "0.2",
         "author": {
