@@ -38,7 +38,7 @@ BASHLETS_PACKAGE_MANIFEST=bashlets.json
 
 
 #@public
-function bashlets::library::package::get_name()
+function bashlets::library::package::name()
 {
     local base="$1"
     local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
@@ -46,7 +46,7 @@ function bashlets::library::package::get_name()
 }
 
 #@public
-function bashlets::library::package::get_description()
+function bashlets::library::package::description()
 {
     local base="$1"
     local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
@@ -54,7 +54,7 @@ function bashlets::library::package::get_description()
 }
 
 #@public
-function bashlets::library::package::get_version()
+function bashlets::library::package::version()
 {
     local base="$1"
     local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
@@ -62,7 +62,7 @@ function bashlets::library::package::get_version()
 }
 
 #@public
-function bashlets::library::package::get_author_name()
+function bashlets::library::package::author_name()
 {
     local base="$1"
     local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
@@ -70,7 +70,7 @@ function bashlets::library::package::get_author_name()
 }
 
 #@public
-function bashlets::library::package::get_author_email()
+function bashlets::library::package::author_email()
 {
     local base="$1"
     local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
@@ -78,7 +78,7 @@ function bashlets::library::package::get_author_email()
 }
 
 #@public
-function bashlets::library::package::get_license()
+function bashlets::library::package::license()
 {
     local base="$1"
     local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
@@ -86,7 +86,7 @@ function bashlets::library::package::get_license()
 }
 
 #@public
-function bashlets::library::package::get_deps()
+function bashlets::library::package::deps()
 {
     local base="$1"
     local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
