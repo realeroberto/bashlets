@@ -54,7 +54,7 @@ branch=master
 unset set_as_default
 
 unset install_from_local_repo
-install_deps=1
+unset dont_install_deps
 
 # verbose output
 verbose=:
@@ -195,6 +195,7 @@ function install_deps()
     [[ -f $BASHLETS_PACKAGE_MANIFEST ]]  \
         && for dep in $(package_get_deps_sorted $package)
     do
+        echo $dep
         bashlets-install -S $dep_options $dep
     done
 }
@@ -287,15 +288,15 @@ function install_local()
 
 
     ## install deps
-    [[ -n $install_deps ]] && install_deps $module
+    [[ -n $dont_install_deps ]] || install_deps $module
 }
 
 function install_module()
 {
-    local module="${1:-core}"
+    local module="${1:-core.base}"
     local remote
     
-    if [[ $module == core ]]
+    if [[ $module == core.base ]]
     then
         remote="$BASHLETS_REMOTE_CORE/bashlets.git"
     else
@@ -305,7 +306,12 @@ function install_module()
     make_tempdir && (
         cd_tempdir
         git clone $remote
-        cd bashlets.$module
+        if [[ $module == core.base ]]
+        then
+            cd bashlets
+        else
+            cd bashlets.$module
+        fi
         install_local $module
     ) && erase_tempdir
 }
@@ -328,7 +334,7 @@ do
 			install_from_local_repo=1
 			;;
 		S)
-            install_deps=0
+            dont_install_deps=1
 			;;
 		v)
 			verbose=echo
