@@ -65,8 +65,8 @@ function usage()
 
            -L      list installed packages (default)
            -O      list available packages on remote repository (origin)
-		   -?      display this help and exit
-		   -V      output version information and exit
+           -?      display this help and exit
+           -V      output version information and exit
 
 	EOF
 } 
