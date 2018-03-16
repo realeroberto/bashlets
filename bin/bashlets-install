@@ -43,19 +43,18 @@
 BASHLETS_BASE=~/.bashlets
 BASHLETS_REMOTE_CORE=https://github.com/bashlets
 BASHLETS_REMOTE_PACKAGES=https://github.com/bashlets
+BASHLETS_REMOTE_CDN=https://raw.githubusercontent.com/bashlets
 BASHLETS_BIN_TARGETS=~/.local/bin:/usr/local/bin
 BASHLETS_PACKAGE_MANIFEST=bashlets.json
 
 # which Git branch are we interested in?
 branch=master
 
-# install the first stage loader
-unset install_1st_stage_loader
-
 # set the current installation as the default one
 unset set_as_default
 
 unset install_from_local_repo
+install_deps=1
 
 # verbose output
 verbose=:
@@ -70,17 +69,17 @@ function usage()
     cat <<-EOF
 		Usage:
 
-		    bashlets-install [ -1 ] [ -D ] [ -B <branch> ] [ -L ] [ <module> ... ]
+		    bashlets-install [ -D ] [ -B <branch> ] [ -L ] [ -S ] [ <module> ... ]
 
 		Options:
 
-           -1      install the first-stage loader (only valid for the core library)
-		   -D      set the current installation as the default one
-		   -B      switch to another Git branch
+           -D      set the current installation as the default one
+           -B      switch to another Git branch
            -L      install from a local Git repository
-		   -v      verbose output
-		   -?      display this help and exit
-		   -V      output version information and exit
+           -S      do not install dependencies
+           -v      verbose output
+           -?      display this help and exit
+           -V      output version information and exit
 
 	EOF
 } 
@@ -125,9 +124,83 @@ trap cleanup EXIT
 # core logic
 ################################################################################
 
+function package_get_name()
+{
+    jq -r .name $BASHLETS_PACKAGE_MANIFEST
+}
+
+function package_get_deps()
+{
+    jq -r .deps[]? $BASHLETS_PACKAGE_MANIFEST
+}
+
+function remote_get_deps()
+{
+    local package="$1" rev="${2:-master}"
+    
+    curl -s $BASHLETS_REMOTE_CDN/bashlets.$package/$rev/$BASHLETS_PACKAGE_MANIFEST | jq -r .deps[]?
+}
+
+declare -A VISITED=()
+
+function remote_get_deps_recursive()
+{
+    # start with remote manifest
+
+    local package="$1" rev="${2:-master}"
+    
+    # already visited
+    if [[ -z "${VISITED[$package]}" ]]
+    then
+        VISITED[$package]=1
+        for dep in $(remote_get_deps $package $rev)
+        do
+            echo $package $dep  # output graph node
+            remote_get_deps_recursive $dep $rev
+        done
+    fi
+}
+
+function package_get_deps_recursive()
+{
+    # start with local manifest
+
+    local package="$1" rev="${2:-master}"
+    
+    # already visited
+    if [[ -z "${VISITED[$package]}" ]]
+    then
+        VISITED[$package]=1
+        for dep in $(package_get_deps)
+        do
+            echo $package $dep  # output graph node
+            remote_get_deps_recursive $dep $rev
+        done
+    fi
+}
+
+function package_get_deps_sorted()
+{
+    local package="$1" rev="${2:-master}"
+    # perform a topological sort on the dependency graph
+    package_get_deps_recursive $package $rev | tsort 2> /dev/null | tac
+}
+
+function install_deps()
+{
+    # install dependencies
+    ################################################################################
+    local dep dep_options package="$1"
+    [[ -n set_as_default ]] && dep_options="$dep_options -D"
+    [[ -f $BASHLETS_PACKAGE_MANIFEST ]]  \
+        && for dep in $(package_get_deps_sorted $package)
+    do
+        bashlets-install -S $dep_options $dep
+    done
+}
+
 function install_local()
 {
-    local repo_name
     local module
     local path
     local rev
@@ -139,15 +212,12 @@ function install_local()
 
     # check if we are at the repository's apex
     [[ $(pwd) == $(git rev-parse --show-toplevel) ]] || {
-        echo "ERROR: bin/install must be executed from the root of this Git repository!" >&2
+        echo "ERROR: must be executed from the root of this Git repository!" >&2
         exit 1
     }
 
-    # save the name of the repository
-    repo_name=$(basename $(git rev-parse --show-toplevel))
-
     # extract the module name from the repository name
-    module=${repo_name#bashlets.}
+    module=$(package_get_name)
     [[ $module == bashlets ]] && module=core
 
     # calculate install base folder
@@ -179,15 +249,6 @@ function install_local()
         exit 1
     }
 
-    # install dependencies
-    local dep dep_options
-    [[ -n set_as_default ]] && dep_options="$dep_options -D"
-    [[ -f $BASHLETS_PACKAGE_MANIFEST ]]  \
-        && for dep in $(jq -r .deps[]? $BASHLETS_PACKAGE_MANIFEST)
-    do
-        bashlets-install $dep_options $dep
-    done
-
     # export the codebase into the installation folder
     for path in lib bin
     do
@@ -201,12 +262,12 @@ function install_local()
     }
 
     #
-    # install the first-stage loader if needed
+    # install the executable scripts if needed
     ################################################################################
 
     local d f
 
-    # cycle possible destinations to install the executable scripts
+    # cycle possible destinations to install into
     IFS=: read -r -a destinations <<< "$BASHLETS_BIN_TARGETS"
     for d in ${destinations[@]}
     do
@@ -225,15 +286,8 @@ function install_local()
     done
 
 
-    #
-    # ex-post checks
-    ################################################################################
-
-    # check that everything was ok
-    [[ -z $install_1st_stage_loader || -n $_1st_stage_loader_installed ]] || {
-        echo "ERROR: could not install the first-stage loader!" >&2
-        exit 1
-    }
+    ## install deps
+    [[ -n $install_deps ]] && install_deps $module
 }
 
 function install_module()
@@ -261,12 +315,9 @@ function install_module()
 # parse command line options
 ################################################################################
 
-while getopts "1DB:Lv?V" OPTION
+while getopts "DB:LSv?V" OPTION
 do
     case $OPTION in
-		1)
-			install_1st_stage_loader=1
-			;;
 		D)
 			set_as_default=1
 			;;
@@ -275,6 +326,9 @@ do
 			;;
 		L)
 			install_from_local_repo=1
+			;;
+		S)
+            install_deps=0
 			;;
 		v)
 			verbose=echo
