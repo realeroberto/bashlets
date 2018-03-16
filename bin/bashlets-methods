@@ -34,7 +34,7 @@
 #
 ################################################################################
 
-source bashlets library/loader
+source bashlets core/library/loader
 
 
 #

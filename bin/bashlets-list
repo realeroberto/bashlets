@@ -35,8 +35,8 @@
 ################################################################################
 
 
-source bashlets library/origin
-source bashlets library/local
+source bashlets core/library/origin
+source bashlets core/library/local
 
 #
 # global variables
