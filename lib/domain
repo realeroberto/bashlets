@@ -40,7 +40,7 @@ source bashlets core/github/user
 function bashlets::remote::domain::packages()
 {
     local domain="${1:-core}"
-    $BASHLETS_NAMESPACE user repos | grep "bashlets\.${domain}\."
+    $BASHLETS_NAMESPACE user repos | grep "bashlets\.${domain}\." | sort -u
 }
 
 
