@@ -34,16 +34,7 @@
 ################################################################################
 
 
-source bashlets core/github/defs
-
-#@public
-function bashlets::github::user::repos()
-{
-    local user="${1:-bashlets}"
-
-    curl -s "$BASHLETS_GITHUB_API_ENDPOINT/users/$user/repos"  \
-        | jq -r '.[].name'
-}
+BASHLETS_GITHUB_API_ENDPOINT="${BASHLETS_GITHUB_API_ENDPOINT:-https://api.github.com}"
 
 
 # Local variables:
