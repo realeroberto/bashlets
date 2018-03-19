@@ -34,19 +34,42 @@
 ################################################################################
 
 #@public
-function bashlets::core::http::response::headers()
+function bashlets::core::http::response::code()
 {
     local url="$1"
     [[ -n $url ]] || return
-    curl -sI "$url"
+    curl -s -o /dev/null -w "%{response_code}" "$url"
+}
+
+#@public
+function bashlets::core::http::response::header()
+{
+    local url="$1" key="${2:-[^:]\+}"
+    [[ -n $url ]] || return
+    curl -sI "$url" | grep "^$key: "
+}
+
+#@public
+function bashlets::core::http::response::header_value()
+{
+    local url="$1" key="${2:-[^:]\+}"
+    [[ -n $url ]] || return
+    curl -sI "$url" | sed -n "s/^$key: \(.*\)/\\1/p"
 }
 
 #@public
 function bashlets::core::http::response::rels()
 {
-    :
+    local url="$1"
+    [[ -n $url ]] || return
+    IFS=, read -a rels <<<$(
+        bashlets::core::http::response::header_value "$url" Link
+    )
+    for rel in "${rels[@]}"
+    do
+        echo $rel # TODO improve
+    done
 }
-
 
 # Local variables:
 # mode: shell-script
