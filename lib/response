@@ -60,14 +60,18 @@ function bashlets::core::http::response::header_value()
 #@public
 function bashlets::core::http::response::rels()
 {
-    local url="$1"
+    local url="$1" filter="${2:-.+}"
+    local regex="<(.+)>\;[[:space:]]rel=\"($filter)\""
     [[ -n $url ]] || return
     IFS=, read -a rels <<<$(
         bashlets::core::http::response::header_value "$url" Link
     )
     for rel in "${rels[@]}"
     do
-        echo $rel # TODO improve
+        if [[ $rel =~ $regex ]]
+        then
+            printf "%s:%s\n" ${BASH_REMATCH[2]} ${BASH_REMATCH[1]}
+        fi
     done
 }
 
