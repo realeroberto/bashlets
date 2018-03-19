@@ -34,12 +34,13 @@
 ################################################################################
 
 
-BASHLETS_BASE=~/.bashlets
+source bashlets core/github/user
 
 #@public
-function bashlets::library::domain::packages()
+function bashlets::remote::domain::packages()
 {
-    ls -1 $BASHLETS_BASE/*
+    local domain="${1:-core}"
+    $BASHLETS_NAMESPACE user repos | grep "bashlets\.${domain}\."
 }
 
 
