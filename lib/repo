@@ -37,11 +37,12 @@
 source bashlets core/github/user
 
 #@public
-function bashlets::library::origin::list_packages()
+function bashlets::remote::repo::domains()
 {
-    $BASHLETS_NAMESPACE user repos   \
-        | grep 'bashlets\.'          \
-        | grep -v bashlets.github.io
+    $BASHLETS_NAMESPACE user repos             \
+        | grep -v bashlets.github.io           \
+        | awk -F. '/^bashlets\./ { print $2 }' \
+        | sort -u
 }
 
 
