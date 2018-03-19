@@ -1,6 +1,6 @@
 {
-        "name": "util.skeleton",
-        "description": "Skeleton package",
+        "name": "core.http",
+        "description": "core.http",
         "version": "0.1",
         "author": {
                 "name": "Roberto Reale",
