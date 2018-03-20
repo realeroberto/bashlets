@@ -34,17 +34,22 @@
 ################################################################################
 
 
-source bashlets core/github/api
-source bashlets core/github/defs
-
 #@public
-function bashlets::github::user::repos()
+function bashlets::github::api::request()
 {
-    local user="${1:-bashlets}"
+    local url="$1"
 
-    $BASHLETS_NAMESPACE api request                       \
-        "$BASHLETS_GITHUB_API_ENDPOINT/users/$user/repos" \
-        | jq -r '.[].name'
+    [[ -n $url ]] || return
+
+    if [[ -n $BASHLETS_GITHUB_OAUTH_TOKEN ]]
+    then
+        curl -s                                                    \
+            -H "Authorization: token $BASHLETS_GITHUB_OAUTH_TOKEN" \
+            "$url"
+    else
+        curl -s                                                    \
+            "$url"
+    fi
 }
 
 
