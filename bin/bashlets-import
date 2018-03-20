@@ -46,7 +46,7 @@ function bashlets_import_lazy()
 {
     local bashlet="$1" file
 
-    type bashlets::library::loader::import > /dev/null 2>&1 || {
+    type bashlets::core::library::loader::import > /dev/null 2>&1 || {
         [[ $bashlet != "core/library/loader" ]] && 
             bashlets_import_lazy "core/library/loader"
     }
@@ -62,7 +62,7 @@ function bashlets_import()
     bashlets_import_lazy $bashlet               \
         || return $BASHLETS_ERRORS_LOADING_ERROR
 
-    bashlets::library::loader::import $bashlet  \
+    bashlets::core::library::loader::import $bashlet  \
         || return $BASHLETS_ERRORS_LOADING_ERROR
 }
 
