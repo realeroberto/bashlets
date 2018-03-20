@@ -37,7 +37,7 @@
 source bashlets core/github/defs
 source bashlets core/github/response
 
-function __bashlets::github::page::rel()
+function __bashlets::core::github::page::rel()
 {
     local url="$1" key="${2:-next}"
     local regex="${key}:(.*)" rel
@@ -49,24 +49,24 @@ function __bashlets::github::page::rel()
 }
 
 #@method
-function bashlets::github::page::next()
+function bashlets::core::github::page::next()
 {
     local url="$1"
-    __bashlets::github::page::rel "$url" next
+    __bashlets::core::github::page::rel "$url" next
 }
 
 #@method
-function bashlets::github::page::last()
+function bashlets::core::github::page::last()
 {
     local url="$1"
-    __bashlets::github::page::rel "$url" last
+    __bashlets::core::github::page::rel "$url" last
 }
 
 #@method
-function bashlets::github::page::count()
+function bashlets::core::github::page::count()
 {
     local url="$1" regex="page=([0-9]+)" last
-    last="$(bashlets::github::page::last "$url")"
+    last="$(bashlets::core::github::page::last "$url")"
     [[ $last =~ $regex ]] && echo "${BASH_REMATCH[1]}"
 }
 
