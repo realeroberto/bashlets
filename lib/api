@@ -35,7 +35,7 @@
 
 
 #@public
-function bashlets::github::api::request()
+function bashlets::core::github::api::request()
 {
     local url="$1"
 
@@ -49,6 +49,24 @@ function bashlets::github::api::request()
     else
         curl -s                                                    \
             "$url"
+    fi
+}
+
+#@public
+function bashlets::core::github::api::header()
+{
+    local url="$1" key="${2:-[^:]\+}"
+
+    [[ -n $url ]] || return
+
+    if [[ -n $BASHLETS_GITHUB_OAUTH_TOKEN ]]
+    then
+        curl -sI                                                   \
+            -H "Authorization: token $BASHLETS_GITHUB_OAUTH_TOKEN" \
+            "$url" | grep "^$key: "
+    else
+        curl -sI                                                   \
+            "$url" | grep "^$key: "
     fi
 }
 
