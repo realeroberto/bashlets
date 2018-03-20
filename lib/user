@@ -44,7 +44,7 @@ function bashlets::github::user::repos()
 
     $BASHLETS_NAMESPACE api request                       \
         "$BASHLETS_GITHUB_API_ENDPOINT/users/$user/repos" \
-        | jq -r '.[].name'
+        | jq -r '.[].name?'
 }
 
 
