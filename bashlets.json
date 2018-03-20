@@ -1,6 +1,6 @@
 {
-        "name": "core.library",
-        "description": "core.library",
+        "name": "core.remote",
+        "description": "core.remote",
         "version": "0.2",
         "author": {
                 "name": "Roberto Reale",
