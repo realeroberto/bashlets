@@ -33,41 +33,24 @@
 #
 ################################################################################
 
+source bashlets core/github/api
 
-source bashlets core/github/defs
-source bashlets core/github/response
-
-function __bashlets::github::page::rel()
+#@public
+function bashlets::core::github::response::rels()
 {
-    local url="$1" key="${2:-next}"
-    local regex="${key}:(.*)" rel
-
+    local url="$1" filter="${2:-.+}"
+    local regex="<(.+)>\;[[:space:]]rel=\"($filter)\""
     [[ -n $url ]] || return
-
-    rel="$($BASHLETS_NAMESPACE response rels "$url" "$key")"
-    [[ $rel =~ $regex ]] && echo "${BASH_REMATCH[1]}"
-}
-
-#@method
-function bashlets::github::page::next()
-{
-    local url="$1"
-    __bashlets::github::page::rel "$url" next
-}
-
-#@method
-function bashlets::github::page::last()
-{
-    local url="$1"
-    __bashlets::github::page::rel "$url" last
-}
-
-#@method
-function bashlets::github::page::count()
-{
-    local url="$1" regex="page=([0-9]+)" last
-    last="$(bashlets::github::page::last "$url")"
-    [[ $last =~ $regex ]] && echo "${BASH_REMATCH[1]}"
+    IFS=, read -a rels <<<$(
+        $BASHLETS_NAMESPACE api header_value "$url" Link
+    )
+    for rel in "${rels[@]}"
+    do
+        if [[ $rel =~ $regex ]]
+        then
+            printf "%s:%s\n" ${BASH_REMATCH[2]} ${BASH_REMATCH[1]}
+        fi
+    done
 }
 
 # Local variables:
