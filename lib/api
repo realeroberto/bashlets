@@ -88,6 +88,20 @@ function bashlets::core::github::api::header_value()
     fi
 }
 
+#@public
+function bashlets::core::github::api::post()
+{
+    local url="$1" data="${2:-\{\}}"
+
+    [[ -n $url || -n $BASHLETS_GITHUB_OAUTH_TOKEN ]] || return
+
+    curl -s -X POST                                            \
+        -H "Content-Type: application/json"                    \
+        --data "$data"                                         \
+        -H "Authorization: token $BASHLETS_GITHUB_OAUTH_TOKEN" \
+        "$url"
+}
+
 # Local variables:
 # mode: shell-script
 # sh-basic-offset: 4
