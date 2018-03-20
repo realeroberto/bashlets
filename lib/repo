@@ -39,7 +39,7 @@ source bashlets core/github/api
 source bashlets core/github/page
 
 #@public
-function bashlets::core::github::user::commits()
+function bashlets::core::github::repo::commits()
 {
     local user="${1:-bashlets}" repo="${2:-bashlets}"
     local limit="${3:-100}" callback="${4:-cat}"
