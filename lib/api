@@ -35,7 +35,7 @@
 
 
 #@public
-function bashlets::core::github::api::request()
+function bashlets::core::github::api::get()
 {
     local url="$1"
 

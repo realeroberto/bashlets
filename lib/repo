@@ -49,7 +49,7 @@ function bashlets::core::github::repo::commits()
     while true
     do
         local commit next
-        declare -a commits=($($BASHLETS_NAMESPACE api request "$url" | jq -r .[].sha?))
+        declare -a commits=($($BASHLETS_NAMESPACE api get "$url" | jq -r .[].sha?))
 
         for commit in "${commits[@]}"
         do
