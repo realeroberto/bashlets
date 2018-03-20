@@ -70,6 +70,23 @@ function bashlets::core::github::api::header()
     fi
 }
 
+#@public
+function bashlets::core::github::api::header_value()
+{
+    local url="$1" key="${2:-[^:]\+}"
+
+    [[ -n $url ]] || return
+
+    if [[ -n $BASHLETS_GITHUB_OAUTH_TOKEN ]]
+    then
+        curl -sI                                                   \
+            -H "Authorization: token $BASHLETS_GITHUB_OAUTH_TOKEN" \
+            "$url" | sed -n "s/^$key: \(.*\)/\\1/p"
+    else
+        curl -sI                                                   \
+            "$url" | sed -n "s/^$key: \(.*\)/\\1/p"
+    fi
+}
 
 # Local variables:
 # mode: shell-script
