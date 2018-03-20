@@ -48,6 +48,19 @@ function __bashlets::github::page::rel()
     [[ $rel =~ $regex ]] && echo "${BASH_REMATCH[2]}"
 }
 
+#@method
+function bashlets::github::page::next()
+{
+    local url="$1"
+    bashlets::github::page::rel "$url" next
+}
+
+#@method
+function bashlets::github::page::last()
+{
+    local url="$1"
+    bashlets::github::page::rel "$url" last
+}
 
 # Local variables:
 # mode: shell-script
