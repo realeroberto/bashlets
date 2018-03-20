@@ -41,17 +41,17 @@ source bashlets core/datatype/version
 
 
 #@public
-function bashlets::library::version::get()
+function bashlets::core::library::version::get()
 {
     echo "$BASHLETS_VERSION"
 }
 
 #@public
-function bashlets::library::version::require()
+function bashlets::core::library::version::require()
 {
     local required="$1" actual max
 
-    actual=$(bashlets::library::version::get)
+    actual=$(bashlets::core::library::version::get)
 
     max="$($BASHLETS_NAMESPACE version max "$required" "$actual")"
 

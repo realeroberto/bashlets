@@ -41,7 +41,7 @@ BASHLETS_PACKAGE_MANIFEST=bashlets.json
 source bashlets core/library/revision
 
 #@public
-function bashlets::library::package::name()
+function bashlets::core::library::package::name()
 {
     local base="$1"
     local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
@@ -49,7 +49,7 @@ function bashlets::library::package::name()
 }
 
 #@public
-function bashlets::library::package::description()
+function bashlets::core::library::package::description()
 {
     local base="$1"
     local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
@@ -57,7 +57,7 @@ function bashlets::library::package::description()
 }
 
 #@public
-function bashlets::library::package::version()
+function bashlets::core::library::package::version()
 {
     local base="$1"
     local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
@@ -65,7 +65,7 @@ function bashlets::library::package::version()
 }
 
 #@public
-function bashlets::library::package::author_name()
+function bashlets::core::library::package::author_name()
 {
     local base="$1"
     local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
@@ -73,7 +73,7 @@ function bashlets::library::package::author_name()
 }
 
 #@public
-function bashlets::library::package::author_email()
+function bashlets::core::library::package::author_email()
 {
     local base="$1"
     local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
@@ -81,7 +81,7 @@ function bashlets::library::package::author_email()
 }
 
 #@public
-function bashlets::library::package::license()
+function bashlets::core::library::package::license()
 {
     local base="$1"
     local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
@@ -89,7 +89,7 @@ function bashlets::library::package::license()
 }
 
 #@public
-function bashlets::library::package::deps()
+function bashlets::core::library::package::deps()
 {
     local base="$1"
     local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
@@ -97,7 +97,7 @@ function bashlets::library::package::deps()
 }
 
 #@public
-function bashlets::library::package::revs()
+function bashlets::core::library::package::revs()
 {
     local package="$1" domain="${2:-core}"
     [[ -n $package ]] || return
@@ -108,7 +108,7 @@ function bashlets::library::package::revs()
 }
 
 #@public
-function bashlets::library::package::modules()
+function bashlets::core::library::package::modules()
 {
     local package="$1" domain="${2:-core}" rev="${3:-DEFAULT}"
     [[ -n $package ]] || return

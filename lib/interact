@@ -37,7 +37,7 @@
 source bashlets core/library/version
 
 #@public
-function bashlets::library::interact::say_hello()
+function bashlets::core::library::interact::say_hello()
 {
     echo "Hello, this is bashlets $($BASHLETS_NAMESPACE version get) speaking!"
 }
