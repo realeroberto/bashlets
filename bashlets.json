@@ -6,5 +6,8 @@
                 "name": "Roberto Reale",
                 "email": "rober.reale@gmail.com"
         },
-        "license": "MIT"
+        "license": "MIT",
+        "deps": [
+                "core.http"
+        ]
 }
