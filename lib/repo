@@ -39,6 +39,16 @@ source bashlets core/github/api
 source bashlets core/github/page
 
 #@public
+function bashlets::core::github::repo::new()
+{
+    local name="$1" json
+    local url="$BASHLETS_GITHUB_API_ENDPOINT/user/repos"
+
+    json="{ \"name\": \"$name\" }"
+    $BASHLETS_NAMESPACE api post "$url" "$json"
+}
+
+#@public
 function bashlets::core::github::repo::commits()
 {
     local user="${1:-bashlets}" repo="${2:-bashlets}"
