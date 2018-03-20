@@ -37,7 +37,7 @@
 source bashlets core/github/user
 
 #@public
-function bashlets::remote::repo::domains()
+function bashlets::core::remote::repo::domains()
 {
     $BASHLETS_NAMESPACE user repos             \
         | grep -v bashlets.github.io           \

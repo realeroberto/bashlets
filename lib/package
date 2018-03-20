@@ -34,85 +34,22 @@
 ################################################################################
 
 
-BASHLETS_BASE=~/.bashlets
-BASHLETS_PACKAGE_MANIFEST=bashlets.json
-
-
-source bashlets core/library/revision
+source bashlets core/github/repo
 
 #@public
-function bashlets::library::package::name()
+function bashlets::core::remote::package::revs()
 {
-    local base="$1"
-    local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
-    test -e "$path" && jq -r .name? "$path"
-}
+    local package="${1:-base}" domain="${2:-core}" limit="${3:-100}"
+    local full_name
 
-#@public
-function bashlets::library::package::description()
-{
-    local base="$1"
-    local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
-    test -e "$path" && jq -r .description? "$path"
-}
+    if [[ $domain == core && $package == base ]]
+    then
+        full_name=bashlets
+    else
+        full_name="bashlets.${domain}.${package}"
+    fi
 
-#@public
-function bashlets::library::package::version()
-{
-    local base="$1"
-    local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
-    test -e "$path" && jq -r .version? "$path"
-}
-
-#@public
-function bashlets::library::package::author_name()
-{
-    local base="$1"
-    local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
-    test -e "$path" && jq -r .author.name? "$path"
-}
-
-#@public
-function bashlets::library::package::author_email()
-{
-    local base="$1"
-    local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
-    test -e "$path" && jq -r .author.email? "$path"
-}
-
-#@public
-function bashlets::library::package::license()
-{
-    local base="$1"
-    local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
-    test -e "$path" && jq -r .license? "$path"
-}
-
-#@public
-function bashlets::library::package::deps()
-{
-    local base="$1"
-    local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
-    test -e "$path" && jq -r .deps[]? "$path"
-}
-
-#@public
-function bashlets::library::package::revs()
-{
-    local package="$1" domain="${2:-core}"
-    [[ -n $package ]] || return
-    for item in $(ls -1 $BASHLETS_BASE/$domain/$package)
-    do
-        $BASHLETS_NAMESPACE revision validate $item && echo $item
-    done
-}
-
-#@public
-function bashlets::library::package::modules()
-{
-    local package="$1" domain="${2:-core}" rev="${3:-DEFAULT}"
-    [[ -n $package ]] || return
-    ls -1 $BASHLETS_BASE/$domain/$package/$rev/lib
+    $BASHLETS_NAMESPACE repo commits bashlets "$full_name" "$limit"
 }
 
 # Local variables:
