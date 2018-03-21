@@ -37,7 +37,7 @@
 BASHLETS_BASE=~/.bashlets
 
 #@public
-function bashlets::core::library::domain::packages()
+function bashlets::core::local::domain::packages()
 {
     ls -1 $BASHLETS_BASE/*
 }
