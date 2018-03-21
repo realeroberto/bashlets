@@ -34,6 +34,8 @@
 ################################################################################
 
 
+# TODO: add standard methods: new(), destroy(), ...
+
 #@public
 function bashlets::core::datatype::char::ascii2decimal()
 {
