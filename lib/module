@@ -40,16 +40,16 @@ source bashlets core/library/module
 #@public
 function bashlets::core::remote::module::methods()
 {
-    local module="$1" package="${2:-base}" domain="${3:-core}"
+    local module="$1" package="${2:-core.base}"
     local full_name
 
     [[ -n $module ]] || return
 
-    if [[ $domain == core && $package == base ]]
+    if [[ $package == core.base ]]
     then
         full_name=bashlets
     else
-        full_name="bashlets.${domain}.${package}"
+        full_name="bashlets.${package}"
     fi
 
     $BASHLETS_NAMESPACE path content "lib/$module" bashlets "$full_name" | \
