@@ -53,8 +53,8 @@ function bashlets::awk::math::extended_gcd()
 {
     local a="${1:-0}" b="${2:-0}"
 
-    $BASHLETS_NAMESPACE number validate_as_integer $a || return 1
-    $BASHLETS_NAMESPACE number validate_as_integer $b || return 1
+    $BASHLETS_NAMESPACE integer validate $a || return 1
+    $BASHLETS_NAMESPACE integer validate $b || return 1
 
     local awk_text="$($BASHLETS_NAMESPACE awklibrary load)"
 

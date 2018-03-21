@@ -34,36 +34,37 @@
 ################################################################################
 
 
-source bashlets core/datatype/number
+source bashlets core/datatype/integer
+source bashlets core/datatype/unsigned
 
 
 #@public
-function bashlets::math::integer::abs()
+function bashlets::core::math::integer::abs()
 {
     local value="$1"
     local opposite
-    $BASHLETS_NAMESPACE number validate_as_integer "$value" || return 1
+    $BASHLETS_NAMESPACE integer validate "$value" || return 1
     opposite="$((-1*value))"
     [[ $value -ge $opposite ]] && echo "$value" || echo "$opposite"
 }
 
 #@public
-function bashlets::math::integer::sign()
+function bashlets::core::math::integer::sign()
 {
     local value="$1"
     local opposite
-    $BASHLETS_NAMESPACE number validate_as_integer "$value" || return 1
+    $BASHLETS_NAMESPACE integer validate "$value" || return 1
     [[ $value -eq 0 ]] && { echo 0 ; return ; }
     opposite="$((-1*value))"
     [[ $value -ge $opposite ]] && echo 1 || echo -1
 }
 
 #@public
-function bashlets::math::integer::get_unique_factors()
+function bashlets::core::math::integer::get_unique_factors()
 {
     local pass_0
 
-    $BASHLETS_NAMESPACE number validate_as_integer "$1" || return 1
+    $BASHLETS_NAMESPACE integer validate "$value" || return 1
 
     declare -i n="$1"
     declare -i sign=1
@@ -95,13 +96,13 @@ function bashlets::math::integer::get_unique_factors()
 #
 
 #@public
-function bashlets::math::integer::modular_pow()
+function bashlets::core::math::integer::modular_pow()
 {
     local base=$1 expon=$2 mod=$3
 
-    $BASHLETS_NAMESPACE number validate_as_integer  $base  || return 1
-    $BASHLETS_NAMESPACE number validate_as_integer  $expon || return 1
-    $BASHLETS_NAMESPACE number validate_as_unsigned $mod   || return 1
+    $BASHLETS_NAMESPACE integer  validate $base  || return 1
+    $BASHLETS_NAMESPACE integer  validate $expon || return 1
+    $BASHLETS_NAMESPACE unsigned validate $mod   || return 1
 
     ((mod > 0)) || return 1
 
