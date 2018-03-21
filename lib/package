@@ -35,69 +35,11 @@
 
 
 BASHLETS_BASE=~/.bashlets
-BASHLETS_PACKAGE_MANIFEST=bashlets.json
-
 
 source bashlets core/library/revision
 
 #@public
-function bashlets::core::library::package::name()
-{
-    local base="$1"
-    local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
-    test -e "$path" && jq -r .name? "$path"
-}
-
-#@public
-function bashlets::core::library::package::description()
-{
-    local base="$1"
-    local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
-    test -e "$path" && jq -r .description? "$path"
-}
-
-#@public
-function bashlets::core::library::package::version()
-{
-    local base="$1"
-    local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
-    test -e "$path" && jq -r .version? "$path"
-}
-
-#@public
-function bashlets::core::library::package::author_name()
-{
-    local base="$1"
-    local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
-    test -e "$path" && jq -r .author.name? "$path"
-}
-
-#@public
-function bashlets::core::library::package::author_email()
-{
-    local base="$1"
-    local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
-    test -e "$path" && jq -r .author.email? "$path"
-}
-
-#@public
-function bashlets::core::library::package::license()
-{
-    local base="$1"
-    local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
-    test -e "$path" && jq -r .license? "$path"
-}
-
-#@public
-function bashlets::core::library::package::deps()
-{
-    local base="$1"
-    local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
-    test -e "$path" && jq -r .deps[]? "$path"
-}
-
-#@public
-function bashlets::core::library::package::revs()
+function bashlets::core::local::package::revs()
 {
     local package="$1" domain="${2:-core}"
     [[ -n $package ]] || return
@@ -108,7 +50,7 @@ function bashlets::core::library::package::revs()
 }
 
 #@public
-function bashlets::core::library::package::modules()
+function bashlets::core::local::package::modules()
 {
     local package="$1" domain="${2:-core}" rev="${3:-DEFAULT}"
     [[ -n $package ]] || return
