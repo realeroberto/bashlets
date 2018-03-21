@@ -38,7 +38,7 @@ source bashlets core/datatype/sha1
 BASHLETS_BASE=~/.bashlets
 
 
-function __bashlets::core::library::local::list_packages_callback_path()
+function __bashlets::core::local::tree::callback_path()
 {
     local item="$1"
     local parent="$2"
@@ -46,7 +46,13 @@ function __bashlets::core::library::local::list_packages_callback_path()
     $BASHLETS_NAMESPACE sha1 validate "$item" || echo "${parent}/${item}"
 }
 
-function __bashlets::core::library::local::list_packages_callback_tree_norevs()
+function __bashlets::core::local::tree::callback_revs()
+{
+    local item="$1" parent="${2}" indent="${3:-}"
+    echo "${indent}${item}"
+}
+
+function __bashlets::core::local::tree::callback_norevs()
 {
     local item="$1" ; shift
     local indent="$2"
@@ -54,13 +60,7 @@ function __bashlets::core::library::local::list_packages_callback_tree_norevs()
     $BASHLETS_NAMESPACE sha1 validate "$item" || echo "${indent}${item}"
 }
 
-function __bashlets::core::library::local::list_packages_callback_tree()
-{
-    local item="$1" parent="${2}" indent="${3:-}"
-    echo "${indent}${item}"
-}
-
-function __bashlets::core::library::local::list_packages()
+function __bashlets::core::local::tree::traverse()
 {
     local base="$1" callback="$2" parent="$3" indent="$4"
     local item baseitem parentitem
@@ -81,33 +81,33 @@ function __bashlets::core::library::local::list_packages()
 }
 
 #@public
-function bashlets::core::library::local::list_packages_path()
+function bashlets::core::local::tree::traverse_path()
 {
     local base="$1"
-    local callback=__bashlets::core::library::local::list_packages_callback_path
+    local callback=__bashlets::core::local::tree::callback_path
 
     [[ -z $base ]] && base="$BASHLETS_BASE"
-    __bashlets::core::library::local::list_packages "$base" "$callback"
+    __bashlets::core::local::tree::traverse "$base" "$callback"
 }
 
 #@public
-function bashlets::core::library::local::list_packages_tree()
+function bashlets::core::local::tree::traverse_revs()
 {
     local base="$1"
-    local callback=__bashlets::core::library::local::list_packages_callback_tree
+    local callback=__bashlets::core::local::tree::callback_revs
 
     [[ -z $base ]] && base="$BASHLETS_BASE"
-    __bashlets::core::library::local::list_packages "$base" "$callback"
+    __bashlets::core::local::tree::traverse "$base" "$callback"
 }
 
 #@public
-function bashlets::core::library::local::list_packages_tree_norevs()
+function bashlets::core::local::tree::traverse_norevs()
 {
     local base="$1"
-    local callback=__bashlets::core::library::local::list_packages_callback_tree_norevs
+    local callback=__bashlets::core::local::tree::callback_norevs
 
     [[ -z $base ]] && base="$BASHLETS_BASE"
-    __bashlets::core::library::local::list_packages "$base" "$callback"
+    __bashlets::core::local::tree::traverse "$base" "$callback"
 }
 
 # Local variables:
