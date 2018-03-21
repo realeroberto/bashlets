@@ -41,7 +41,7 @@ function bashlets::core::remote::domain::packages()
 {
     local domain="${1:-core}"
     $BASHLETS_NAMESPACE user repos                      \
-        | sed -n "s/^bashlets\.\($domain\)\..\+/\1/p"   \
+        | sed -n "s/^bashlets\.\($domain\..\+)/\1/p"   \
         | sort -u
 }
 
