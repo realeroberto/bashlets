@@ -40,14 +40,14 @@ source bashlets core/github/repo
 #@public
 function bashlets::core::remote::package::revs()
 {
-    local package="${1:-base}" domain="${2:-core}" limit="${3:-100}"
+    local package="${1:-core.base}" limit="${2:-100}"
     local full_name
 
-    if [[ $domain == core && $package == base ]]
+    if [[ $package == core.base ]]
     then
         full_name=bashlets
     else
-        full_name="bashlets.${domain}.${package}"
+        full_name="bashlets.${package}"
     fi
 
     $BASHLETS_NAMESPACE repo commits bashlets "$full_name" "$limit"
@@ -56,14 +56,14 @@ function bashlets::core::remote::package::revs()
 #@public
 function bashlets::core::remote::package::modules()
 {
-    local package="${1:-base}" domain="${2:-core}"
+    local package="${1:-core.base}" limit="${2:-100}"
     local full_name
 
-    if [[ $domain == core && $package == base ]]
+    if [[ $package == core.base ]]
     then
         full_name=bashlets
     else
-        full_name="bashlets.${domain}.${package}"
+        full_name="bashlets.${package}"
     fi
 
     $BASHLETS_NAMESPACE path ls lib bashlets "$full_name"
