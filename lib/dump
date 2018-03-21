@@ -34,7 +34,7 @@
 ################################################################################
 
 
-source bashlets core/datatype/object
+source bashlets core/shell/object
 
 
 #@public
