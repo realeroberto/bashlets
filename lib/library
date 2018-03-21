@@ -35,15 +35,25 @@
 
 
 source bashlets core/github/user
+source bashlets core/github/domain
 
 #@public
 function bashlets::core::remote::library::domains()
 {
     $BASHLETS_NAMESPACE user repos                     \
-        | sed -n "s/^\(bashlets\.[^.]\+\)\..\+/\1/p"   \
+        | sed -n "s/^bashlets\.\([^.]\+\)\..\+/\1/p"   \
         | sort -u
 }
 
+#@public
+function bashlets::core::remote::library::packages()
+{
+    local domain
+    for domain in $(bashlets::core::remote::library::domains)
+    do
+        $BASHLETS_NAMESPACE domain packages "$domain"
+    done
+}
 
 # Local variables:
 # mode: shell-script
