@@ -38,7 +38,7 @@ source bashlets core/shell/object
 
 
 #@public
-function bashlets::marshal::dump::objects()
+function bashlets::core::marshal::dump::objects()
 {
     while test $# -gt 0
     do
@@ -51,7 +51,7 @@ function bashlets::marshal::dump::objects()
 }
 
 #@public
-function bashlets::marshal::dump::rename()
+function bashlets::core::marshal::dump::rename()
 {
     local new="$1"
     shift
@@ -60,7 +60,7 @@ function bashlets::marshal::dump::rename()
 }
 
 #@public
-function bashlets::marshal::dump::get_by_name()
+function bashlets::core::marshal::dump::get_by_name()
 {
     local object="$1"
     shift
