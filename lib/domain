@@ -34,12 +34,14 @@
 ################################################################################
 
 
-BASHLETS_BASE=~/.bashlets
+source bashlets core/local/library
 
 #@public
 function bashlets::core::local::domain::packages()
 {
-    ls -1 $BASHLETS_BASE/*
+    local domain="${1:-core}"
+
+    $BASHLETS_NAMESPACE library packages | grep "^$domain\."
 }
 
 
