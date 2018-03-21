@@ -8,6 +8,7 @@
         },
         "license": "MIT",
         "deps": [
-                "core.github"
+                "core.github",
+                "core.library"
         ]
 }
