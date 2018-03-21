@@ -58,7 +58,7 @@ function usage()
     cat <<-EOF
 		Usage:
 
-		    bashlets-list [ -L | -R ] [ domains | packages | modules | methods ] [ root ]
+           bashlets-list [ -L | -R ] [ domains | packages | modules | methods ] [ root ]
 
 		Options:
 
