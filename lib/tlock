@@ -36,7 +36,7 @@
 
 
 #@public
-function bashlets::ipc::tlock::acquire()
+function bashlets::core::ipc::tlock::acquire()
 {
     local lockfile="$1"
     [[ -n $lockfile ]] && touch "$lockfile"
@@ -44,7 +44,7 @@ function bashlets::ipc::tlock::acquire()
 
 
 #@public
-function bashlets::ipc::tlock::release()
+function bashlets::core::ipc::tlock::release()
 {
     local lockfile="$1"
     [[ -n $lockfile ]] && rm -f "$lockfile"
@@ -52,7 +52,7 @@ function bashlets::ipc::tlock::release()
 
 
 #@public
-function bashlets::ipc::tlock::exists()
+function bashlets::core::ipc::tlock::exists()
 {
     local lockfile="$1"
     [[ -e $lockfile ]]

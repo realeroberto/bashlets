@@ -39,13 +39,13 @@
 # the maximum lifetime of a lock file, in seconds; when expired, the lock
 # is assumed to be a stale one
 #
-__bashlets::ipc::plock::max_lifetime=3600
+__bashlets::core::ipc::plock::max_lifetime=3600
 
 #
 # when the lock is not available, how much do we need to wait before
 # trying again?
 #
-__bashlets::ipc::plock::delay=2
+__bashlets::core::ipc::plock::delay=2
 
 
 ###################
@@ -55,13 +55,13 @@ __bashlets::ipc::plock::delay=2
 ###################
 
 #@public
-function bashlets::ipc::plock::acquire()
+function bashlets::core::ipc::plock::acquire()
 {
     local lockfile="$1"
     local may_start=0
 
     #
-    # busy-wait loop (with $__bashlets::ipc::plock::delay seconds between iterations)
+    # busy-wait loop (with $__bashlets::core::ipc::plock::delay seconds between iterations)
     #
     while [[ $may_start == 0 ]]
     do
@@ -123,18 +123,18 @@ function bashlets::ipc::plock::acquire()
             #
             if [[ -z $pid || -z $cmd || -z $timestamp ||
                 -z $(ps -C $cmd -o pid= | grep $pid) ||
-                $(echo $now - $timestamp | bc) -ge $__bashlets::ipc::plock::max_lifetime ]]
+                $(echo $now - $timestamp | bc) -ge $__bashlets::core::ipc::plock::max_lifetime ]]
         then
             rm -f $lockfile
             may_start=1
         else
-            sleep $__bashlets::ipc::plock::delay
+            sleep $__bashlets::core::ipc::plock::delay
         fi
     else
         #
         # we are done, do not forget to clean on exit
         #
-        trap "bashlets::ipc::plock::exists; exit" TERM INT EXIT  # XXX
+        trap "bashlets::core::ipc::plock::exists; exit" TERM INT EXIT  # XXX
 
         may_start=1
     fi
@@ -142,14 +142,14 @@ done
 }
 
 #@public
-function bashlets::ipc::plock::release()
+function bashlets::core::ipc::plock::release()
 {
     local lockfile="$1"
     rm -f "$lockfile"
 }
 
 #@public
-function bashlets::ipc::plock::exists()
+function bashlets::core::ipc::plock::exists()
 {
     local lockfile="$1"
     [[ -e $lockfile ]]
