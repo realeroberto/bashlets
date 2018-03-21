@@ -75,6 +75,16 @@ function bashlets::core::github::repo::commits()
     done | $callback
 }
 
+#@public
+function bashlets::core::github::repo::readme()
+{
+    local user="${1:-bashlets}" repo="${2:-bashlets}"
+    local url="$BASHLETS_GITHUB_API_ENDPOINT/repos/$user/$repo/readme"
+    local download_url
+
+    download_url="$($BASHLETS_NAMESPACE api get "$url" | jq -r .download_url?)"
+    [[ -n $download_url ]] && curl -s "$download_url"
+}
 
 # Local variables:
 # mode: shell-script
