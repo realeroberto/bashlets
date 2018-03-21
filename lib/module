@@ -36,7 +36,7 @@
 #@public
 function bashlets::core::library::module::methods()
 {
-    local path="$1"
+    local path="${1:--}"
 
     [[ -e $path ]] || return
 
