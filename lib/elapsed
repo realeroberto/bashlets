@@ -38,37 +38,37 @@ source bashlets core/datatype/integer
 source bashlets core/datatype/float
 
 #@public
-function bashlets::time::elapsed::new()
+function bashlets::core::time::elapsed::new()
 {
     :
 }
 
 #@public
-function bashlets::time::elapsed::destroy()
+function bashlets::core::time::elapsed::destroy()
 {
     :
 }
 
 #@public
-function bashlets::time::elapsed::to_string()
+function bashlets::core::time::elapsed::to_string()
 {
     echo "$@"
 }
 
 #@public
-function bashlets::time::elapsed::random()
+function bashlets::core::time::elapsed::random()
 {
     $BASHLETS_NAMESPACE integer random 11
 }
 
 #@public
-function bashlets::time::elapsed::validate()
+function bashlets::core::time::elapsed::validate()
 {
     $BASHLETS_NAMESPACE integer validate "$@"
 }
 
 #@public
-function bashlets::time::elapsed::to_formatted()
+function bashlets::core::time::elapsed::to_formatted()
 {
     # https://gist.github.com/ldante86/dca1822f6da1fef40efddb1f969fa056
 
@@ -95,11 +95,11 @@ function bashlets::time::elapsed::to_formatted()
 }
 
 #@public
-function bashlets::time::elapsed::describe()
+function bashlets::core::time::elapsed::describe()
 {
     local days hours minutes seconds
 
-    local formatted="$(bashlets::time::elapsed::to_formatted "$1")"
+    local formatted="$(bashlets::core::time::elapsed::to_formatted "$1")"
     IFS=: read days hours minutes seconds <<< "$formatted"
 
     days=${days#0}

@@ -37,25 +37,25 @@ source bashlets core/datatype/unsigned
 
 
 #@public
-function bashlets::time::day::new()
+function bashlets::core::time::day::new()
 {
     :
 }
 
 #@public
-function bashlets::time::day::destroy()
+function bashlets::core::time::day::destroy()
 {
     :
 }
 
 #@public
-function bashlets::time::day::to_string()
+function bashlets::core::time::day::to_string()
 {
     echo "$@"
 }
 
 #@public
-function bashlets::time::day::random()
+function bashlets::core::time::day::random()
 {
     local n="$($BASHLETS_NAMESPACE unsigned random)"
     local day="$((n % 31 + 1))"
@@ -63,7 +63,7 @@ function bashlets::time::day::random()
 }
 
 #@public
-function bashlets::time::day::validate()
+function bashlets::core::time::day::validate()
 {
     [[ $1 =~ ^(0?[1-9]|[12][0-9]|3[01])$ ]]
 }

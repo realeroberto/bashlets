@@ -38,25 +38,25 @@ source bashlets core/time/year
 
 
 #@public
-function bashlets::time::month::new()
+function bashlets::core::time::month::new()
 {
     :
 }
 
 #@public
-function bashlets::time::month::destroy()
+function bashlets::core::time::month::destroy()
 {
     :
 }
 
 #@public
-function bashlets::time::month::to_string()
+function bashlets::core::time::month::to_string()
 {
     echo "$@"
 }
 
 #@public
-function bashlets::time::month::random()
+function bashlets::core::time::month::random()
 {
     local n="$($BASHLETS_NAMESPACE unsigned random)"
     local month="$((n % 12 + 1))"
@@ -64,13 +64,13 @@ function bashlets::time::month::random()
 }
 
 #@public
-function bashlets::time::month::validate()
+function bashlets::core::time::month::validate()
 {
     [[ $1 =~ ^(0?[1-9]|1[012])$ ]]
 }
 
 #@public
-function bashlets::time::month::days()
+function bashlets::core::time::month::days()
 {
     # based on http://cfajohnson.com/shell/date-functions/?days_in_month
 

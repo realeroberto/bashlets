@@ -39,24 +39,24 @@ source bashlets core/time/month
 
 
 #@public
-function bashlets::time::date::new()
+function bashlets::core::time::date::new()
 {
     :
 }
 
 #@public
-function bashlets::time::date::destroy()
+function bashlets::core::time::date::destroy()
 {
     :
 }
 
 #@public
-function bashlets::time::date::to_string()
+function bashlets::core::time::date::to_string()
 {
     echo "$@"
 }
 
-function __bashlets::time::date::sanitize()
+function __bashlets::core::time::date::sanitize()
 {
     local year month day junk
 
@@ -73,14 +73,14 @@ function __bashlets::time::date::sanitize()
 }
 
 #@public
-function bashlets::time::date::validate()
+function bashlets::core::time::date::validate()
 {
     # based on http://cfajohnson.com/shell/date-functions/?is_date
 
     local year month day
     local days_in_month jgmonth=175209 ym
 
-    IFS=- read year month day <<< "$(__bashlets::time::date::sanitize "$@")"
+    IFS=- read year month day <<< "$(__bashlets::core::time::date::sanitize "$@")"
 
     day=${day#0}
     month=${month#0}
@@ -103,7 +103,7 @@ function bashlets::time::date::validate()
 }
 
 #@public
-function bashlets::time::date::random()
+function bashlets::core::time::date::random()
 {
     # based on http://cfajohnson.com/shell/date-functions/?random_date
 

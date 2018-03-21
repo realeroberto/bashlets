@@ -38,38 +38,38 @@ source bashlets core/time/timestamp
 
 
 #@public
-function bashlets::time::year::new()
+function bashlets::core::time::year::new()
 {
     :
 }
 
 #@public
-function bashlets::time::year::destroy()
+function bashlets::core::time::year::destroy()
 {
     :
 }
 
 #@public
-function bashlets::time::year::to_string()
+function bashlets::core::time::year::to_string()
 {
     echo "$@"
 }
 
 #@public
-function bashlets::time::year::random()
+function bashlets::core::time::year::random()
 {
     local timestamp="$($BASHLETS_NAMESPACE timestamp random)"
     date -d @"$timestamp" +%Y
 }
 
 #@public
-function bashlets::time::year::validate()
+function bashlets::core::time::year::validate()
 {
     [[ $1 =~ ^[-+]?[0-9]{1,4}$ ]]
 }
 
 #@public
-function bashlets::time::year::is_leap()
+function bashlets::core::time::year::is_leap()
 {
     # based on http://cfajohnson.com/shell/date-functions/?is_leap_year
 

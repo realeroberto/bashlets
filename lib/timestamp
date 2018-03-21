@@ -39,37 +39,37 @@ source bashlets core/os/random
 source bashlets core/datatype/integer
 
 #@public
-function bashlets::time::timestamp::new()
+function bashlets::core::time::timestamp::new()
 {
     :
 }
 
 #@public
-function bashlets::time::timestamp::destroy()
+function bashlets::core::time::timestamp::destroy()
 {
     :
 }
 
 #@public
-function bashlets::time::timestamp::to_string()
+function bashlets::core::time::timestamp::to_string()
 {
     echo "$@"
 }
 
 #@public
-function bashlets::time::timestamp::random()
+function bashlets::core::time::timestamp::random()
 {
     $BASHLETS_NAMESPACE integer random 11
 }
 
 #@public
-function bashlets::time::timestamp::validate()
+function bashlets::core::time::timestamp::validate()
 {
     $BASHLETS_NAMESPACE integer validate "$@"
 }
 
 #@public
-function bashlets::time::timestamp::to_path()
+function bashlets::core::time::timestamp::to_path()
 {
     local timestamp="${1:-$(date +%s)}" depth="${2:-day}"
     local fmt
