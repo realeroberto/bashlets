@@ -35,20 +35,20 @@
 
 
 #@public
-function bashlets::shell::bash::version()
+function bashlets::core::shell::bash::version()
 {
     echo "$BASH_VERSION"
 }
 
 #@public
-function bashlets::shell::bash::version_short()
+function bashlets::core::shell::bash::version_short()
 {
     # shellcheck disable=SC2001
     echo "$BASH_VERSION" | sed 's/^\([0-9.]\+\).*/\1/'
 }
 
 #@public
-function bashlets::shell::bash::variables()
+function bashlets::core::shell::bash::variables()
 {
     # by enabling ``posix'' mode we tell ``set'' not to print function names
     (

@@ -35,7 +35,7 @@
 
 
 #@public
-function bashlets::shell::env::globals()
+function bashlets::core::shell::env::globals()
 {
     printenv
 }

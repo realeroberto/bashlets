@@ -37,28 +37,28 @@
 source bashlets core/os/path
 
 #@public
-function bashlets::shell::myself::name()
+function bashlets::core::shell::myself::name()
 {
     [[ "$0" == "-bash" ]] && return
     basename "$0"
 }
 
 #@public
-function bashlets::shell::myself::canonical_name()
+function bashlets::core::shell::myself::canonical_name()
 {
     [[ "$0" == "-bash" ]] && return
     basename "$(readlink -m -- "$0")"
 }
 
 #@public
-function bashlets::shell::myself::canonical_path()
+function bashlets::core::shell::myself::canonical_path()
 {
     [[ "$0" == "-bash" ]] && return
     readlink -m -- "$0"
 }
 
 #@public
-function bashlets::shell::myself::effective_path()
+function bashlets::core::shell::myself::effective_path()
 {
     # http://stackoverflow.com/questions/59895
 
@@ -84,13 +84,13 @@ function bashlets::shell::myself::effective_path()
 }
 
 #@public
-function bashlets::shell::myself::pid()
+function bashlets::core::shell::myself::pid()
 {
     echo $$
 }
 
 #@public
-function bashlets::shell::myself::ppid()
+function bashlets::core::shell::myself::ppid()
 {
     # echo it just to get rid of leading/trailing spaces
     # shellcheck disable=SC2005
@@ -98,13 +98,13 @@ function bashlets::shell::myself::ppid()
 }
 
 #@public
-function bashlets::shell::myself::parent_name()
+function bashlets::core::shell::myself::parent_name()
 {
-    ps -o comm= -p "$(bashlets::shell::myself::get_ppid)"
+    ps -o comm= -p "$(bashlets::core::shell::myself::get_ppid)"
 }
 
 #@public
-function bashlets::shell::myself::require_user()
+function bashlets::core::shell::myself::require_user()
 {
     test "$(whoami)" = "$1"
 }
