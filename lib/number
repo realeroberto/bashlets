@@ -40,37 +40,37 @@ source bashlets core/datatype/integer
 source bashlets core/datatype/float
 
 #@public
-function bashlets::datatype::number::new()
+function bashlets::core::datatype::number::new()
 {
     :
 }
 
 #@public
-function bashlets::datatype::number::destroy()
+function bashlets::core::datatype::number::destroy()
 {
     :
 }
 
 #@public
-function bashlets::datatype::number::to_string()
+function bashlets::core::datatype::number::to_string()
 {
     echo "$@"
 }
 
 #@public
-function bashlets::datatype::number::validate()
+function bashlets::core::datatype::number::validate()
 {
     $BASHLETS_NAMESPACE float validate "$@"
 }
 
 #@public
-function bashlets::datatype::number::random()
+function bashlets::core::datatype::number::random()
 {
     $BASHLETS_NAMESPACE float random
 }
 
 #@public
-function bashlets::datatype::number::type()
+function bashlets::core::datatype::number::type()
 {
     local input="$1"
 

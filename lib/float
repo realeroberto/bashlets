@@ -38,25 +38,25 @@ source bashlets core/os/random
 
 
 #@public
-function bashlets::datatype::float::new()
+function bashlets::core::datatype::float::new()
 {
     :
 }
 
 #@public
-function bashlets::datatype::float::destroy()
+function bashlets::core::datatype::float::destroy()
 {
     :
 }
 
 #@public
-function bashlets::datatype::float::to_string()
+function bashlets::core::datatype::float::to_string()
 {
     echo "$@"
 }
 
 #@public
-function bashlets::datatype::float::random()
+function bashlets::core::datatype::float::random()
 {
     local size="${1:-16}" scale="${2:-12}"
     local raw x y sign output
@@ -92,7 +92,7 @@ function bashlets::datatype::float::random()
 }
 
 #@public
-function bashlets::datatype::float::validate()
+function bashlets::core::datatype::float::validate()
 {
     [[ $1 =~ ^[-+]?[0-9]*\.?[0-9]+$ ]]
 }

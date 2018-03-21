@@ -37,25 +37,25 @@
 source bashlets core/datatype/unsigned
 
 #@public
-function bashlets::datatype::byte::new()
+function bashlets::core::datatype::byte::new()
 {
     :
 }
 
 #@public
-function bashlets::datatype::byte::destroy()
+function bashlets::core::datatype::byte::destroy()
 {
     :
 }
 
 #@public
-function bashlets::datatype::byte::to_string()
+function bashlets::core::datatype::byte::to_string()
 {
     echo "$@"
 }
 
 #@public
-function bashlets::datatype::byte::random()
+function bashlets::core::datatype::byte::random()
 {
     local unsigned="$($BASHLETS_NAMESPACE unsigned random)"
 
@@ -63,7 +63,7 @@ function bashlets::datatype::byte::random()
 }
 
 #@public
-function bashlets::datatype::byte::validate()
+function bashlets::core::datatype::byte::validate()
 {
     [[ $1 =~ ^[0-9]+$ ]] && [[ $1 -ge 0 && $1 -le 255 ]]
 }

@@ -37,31 +37,31 @@
 source bashlets core/os/random
 
 #@public
-function bashlets::datatype::binary::new()
+function bashlets::core::datatype::binary::new()
 {
     :
 }
 
 #@public
-function bashlets::datatype::binary::destroy()
+function bashlets::core::datatype::binary::destroy()
 {
     :
 }
 
 #@public
-function bashlets::datatype::binary::to_string()
+function bashlets::core::datatype::binary::to_string()
 {
     echo "$@"
 }
 
 #@public
-function bashlets::datatype::binary::validate()
+function bashlets::core::datatype::binary::validate()
 {
     true
 }
 
 #@public
-function bashlets::datatype::binary::random()
+function bashlets::core::datatype::binary::random()
 {
     local size="${1:-16}"
     $BASHLETS_NAMESPACE random get "$size"
@@ -69,7 +69,7 @@ function bashlets::datatype::binary::random()
 
 #@descr write hexadecimal values as binary stream
 #@public
-function bashlets::datatype::binary::from_hex()
+function bashlets::core::datatype::binary::from_hex()
 {
     while [[ $# -gt 0 ]]
     do

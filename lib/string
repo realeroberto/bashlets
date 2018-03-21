@@ -39,51 +39,51 @@ source bashlets core/stream/reshape
 source bashlets core/os/random
 
 #@public
-function bashlets::datatype::string::new()
+function bashlets::core::datatype::string::new()
 {
     :
 }
 
 #@public
-function bashlets::datatype::string::destroy()
+function bashlets::core::datatype::string::destroy()
 {
     :
 }
 
 #@public
-function bashlets::datatype::string::to_string()
+function bashlets::core::datatype::string::to_string()
 {
     echo "$@"
 }
 
 #@public
-function bashlets::datatype::string::random()
+function bashlets::core::datatype::string::random()
 {
     local size="${1:-16}"
     $BASHLETS_NAMESPACE random get "$size" [[:print:]]
 }
 
 #@public
-function bashlets::datatype::string::validate()
+function bashlets::core::datatype::string::validate()
 {
     [[ $1 =~ ^[[:print:]]*$ ]]
 }
 
 #@public
-function bashlets::datatype::string::chop()
+function bashlets::core::datatype::string::chop()
 {
     echo "$(echo "$@" | tr -d "\n")"
 }
 
 #@public
-function bashlets::datatype::string::length()
+function bashlets::core::datatype::string::length()
 {
     local str="$*"
     echo ${#str}
 }
 
 #@public
-function bashlets::datatype::string::index()
+function bashlets::core::datatype::string::index()
 {
     # cf. https://github.com/marcomaggi/mbfl/blob/master/src/modules/string.sh.m4
     local haystack="$1"
@@ -101,27 +101,27 @@ function bashlets::datatype::string::index()
 }
 
 #@public
-function bashlets::datatype::string::upper()
+function bashlets::core::datatype::string::upper()
 {
     echo "$*" | tr a-z A-Z
 }
 
 #@public
-function bashlets::datatype::string::lower()
+function bashlets::core::datatype::string::lower()
 {
     echo "$*" | tr A-Z a-z
 }
 
 #@public
-function bashlets::datatype::string::to_integer()
+function bashlets::core::datatype::string::to_integer()
 {
     printf "%d\n" "$1" 2> /dev/null || true  # convert 123xyz -> 123
 }
 
 #@public
-function bashlets::datatype::string::to_bool()
+function bashlets::core::datatype::string::to_bool()
 {
-    local value="$(bashlets::datatype::string::lower "$*")"
+    local value="$(bashlets::core::datatype::string::lower "$*")"
     local try
 
     [[ -n $value ]] || return 1
@@ -135,7 +135,7 @@ function bashlets::datatype::string::to_bool()
 }
 
 #@public
-function bashlets::datatype::string::bin_to_dec()
+function bashlets::core::datatype::string::bin_to_dec()
 {
     local bin="$1"
     echo $((2#$bin))  # TODO: check for errors
@@ -143,7 +143,7 @@ function bashlets::datatype::string::bin_to_dec()
 
 
 #@public
-function bashlets::datatype::string::dec_to_bin()
+function bashlets::core::datatype::string::dec_to_bin()
 {
     # TODO check extreme cases (dec < 0, dec > 255)
     declare -i dec="$1"
@@ -154,14 +154,14 @@ function bashlets::datatype::string::dec_to_bin()
 }
 
 #@public
-function bashlets::datatype::string::hex_to_dec()
+function bashlets::core::datatype::string::hex_to_dec()
 {
     local hex="$1"
     echo $((16#$hex))  # TODO: check for errors
 }
 
 #@public
-function bashlets::datatype::string::dec_to_hex()
+function bashlets::core::datatype::string::dec_to_hex()
 {
     ########################################################################
     #
@@ -193,14 +193,14 @@ function bashlets::datatype::string::dec_to_hex()
 }
 
 #@public
-function bashlets::datatype::string::to_stream()
+function bashlets::core::datatype::string::to_stream()
 {
     local chr
     echo -n "$*" | while read -r -n1 chr; do echo "$chr"; done
 }
 
 #@public
-function bashlets::datatype::string::to_matrix()
+function bashlets::core::datatype::string::to_matrix()
 {
     declare -i cols=${1:-1} chr
     shift
@@ -209,7 +209,7 @@ function bashlets::datatype::string::to_matrix()
 }
 
 #@public
-function bashlets::datatype::string::reverse()
+function bashlets::core::datatype::string::reverse()
 {
     # cf. http://stackoverflow.com/questions/11461625/
     local str="$*"
@@ -224,19 +224,19 @@ function bashlets::datatype::string::reverse()
 }
 
 #@public
-function bashlets::datatype::string::transpose()
+function bashlets::core::datatype::string::transpose()
 {
-    bashlets::datatype::string::to_stream "$*"
+    bashlets::core::datatype::string::to_stream "$*"
 }
 
 #@public
-function bashlets::datatype::string::shuffle()
+function bashlets::core::datatype::string::shuffle()
 {
     local str="$*"
 
     [[ -n $str ]] || return
 
-    bashlets::datatype::string::to_stream "$str"    \
+    bashlets::core::datatype::string::to_stream "$str"    \
         | $BASHLETS_NAMESPACE reorder shuffle       \
         | $BASHLETS_NAMESPACE reshape transpose
 }
@@ -248,7 +248,7 @@ function bashlets::datatype::string::shuffle()
 #
 
 #@public
-function bashlets::datatype::string::middle_2n()
+function bashlets::core::datatype::string::middle_2n()
 {
     local str="$*"
     local len=${#str}
@@ -266,7 +266,7 @@ function bashlets::datatype::string::middle_2n()
 #
 
 #@public
-function bashlets::datatype::string::lalign_n()
+function bashlets::core::datatype::string::lalign_n()
 {
     local n="$1"
     local pad="$2"
@@ -298,7 +298,7 @@ function bashlets::datatype::string::lalign_n()
 #  see http://en.wikipedia.org/wiki/Levenshtein_distance
 
 #@public
-function bashlets::datatype::string::levenshtein()
+function bashlets::core::datatype::string::levenshtein()
 {
     local s=$1 t=$2
 

@@ -38,24 +38,24 @@ source bashlets core/os/random
 
 
 #@public
-function bashlets::datatype::uuid::new()
+function bashlets::core::datatype::uuid::new()
 {
     :
 }
 
 #@public
-function bashlets::datatype::uuid::destroy()
+function bashlets::core::datatype::uuid::destroy()
 {
     :
 }
 
 #@public
-function bashlets::datatype::uuid::to_string()
+function bashlets::core::datatype::uuid::to_string()
 {
     echo "$@"
 }
 
-function __bashlets::datatype::uuid::random()
+function __bashlets::core::datatype::uuid::random()
 {
     # cf. https://gist.github.com/JT5D/7819113
 
@@ -90,20 +90,20 @@ function __bashlets::datatype::uuid::random()
 }
 
 #@public
-function bashlets::datatype::uuid::random()
+function bashlets::core::datatype::uuid::random()
 {
     local UUID
 
     # try getting it from the system
     UUID="$($BASHLETS_NAMESPACE random get_uuid)"
     # should that fail, we resort to a pure Bash implementation
-    UUID="${UUID:-$(__bashlets::datatype::uuid::create)}"
+    UUID="${UUID:-$(__bashlets::core::datatype::uuid::create)}"
 
     test ${#UUID} -gt 0 && echo "$UUID"
 }
 
 #@public
-function bashlets::datatype::uuid::validate()
+function bashlets::core::datatype::uuid::validate()
 {
     local UUID="$1"
 

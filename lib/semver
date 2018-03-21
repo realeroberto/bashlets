@@ -41,25 +41,25 @@ source bashlets core/datatype/unsigned
 
 
 #@public
-function bashlets::datatype::semver::new()
+function bashlets::core::datatype::semver::new()
 {
     :
 }
 
 #@public
-function bashlets::datatype::semver::destroy()
+function bashlets::core::datatype::semver::destroy()
 {
     :
 }
 
 #@public
-function bashlets::datatype::semver::to_string()
+function bashlets::core::datatype::semver::to_string()
 {
     echo "$@"
 }
 
 #@public
-function bashlets::datatype::semver::random()
+function bashlets::core::datatype::semver::random()
 {
     local depth="${1:-3}"
     local major minor patch prerelease build
@@ -106,7 +106,7 @@ function bashlets::datatype::semver::random()
     echo "$semver"
 }
 
-function __bashlets::datatype::semver::parse()
+function __bashlets::core::datatype::semver::parse()
 {
     # cf. https://github.com/cloudflare/semver_bash
     local semver="$1" group="${2:-0}"
@@ -138,42 +138,42 @@ function __bashlets::datatype::semver::parse()
 }
 
 #@public
-function bashlets::datatype::semver::validate()
+function bashlets::core::datatype::semver::validate()
 {
-    __bashlets::datatype::semver::parse "$1"
+    __bashlets::core::datatype::semver::parse "$1"
 }
 
 #@public
-function bashlets::datatype::semver::major()
+function bashlets::core::datatype::semver::major()
 {
-    __bashlets::datatype::semver::parse "$1" 1
+    __bashlets::core::datatype::semver::parse "$1" 1
 }
 
 #@public
-function bashlets::datatype::semver::minor()
+function bashlets::core::datatype::semver::minor()
 {
-    __bashlets::datatype::semver::parse "$1" 2
+    __bashlets::core::datatype::semver::parse "$1" 2
 }
 
 #@public
-function bashlets::datatype::semver::patch()
+function bashlets::core::datatype::semver::patch()
 {
-    __bashlets::datatype::semver::parse "$1" 3
+    __bashlets::core::datatype::semver::parse "$1" 3
 }
 
 #@public
-function bashlets::datatype::semver::prerelease()
+function bashlets::core::datatype::semver::prerelease()
 {
-    __bashlets::datatype::semver::parse "$1" 4
+    __bashlets::core::datatype::semver::parse "$1" 4
 }
 
 #@public
-function bashlets::datatype::semver::build()
+function bashlets::core::datatype::semver::build()
 {
-    __bashlets::datatype::semver::parse "$1" 5
+    __bashlets::core::datatype::semver::parse "$1" 5
 }
 
-function __bashlets::datatype::semver::sort()
+function __bashlets::core::datatype::semver::sort()
 {
     # naive Bash implementation
     # cf. http://stackoverflow.com/questions/16989598/
@@ -186,60 +186,60 @@ function __bashlets::datatype::semver::sort()
 }
 
 #@public
-function bashlets::datatype::semver::sort()
+function bashlets::core::datatype::semver::sort()
 {
     (
         echo "$@" | xargs -n 1 | sort --version-sort
 
-    ) 2> /dev/null || __bashlets::datatype::semver::sort "$@"
+    ) 2> /dev/null || __bashlets::core::datatype::semver::sort "$@"
 }
 
 #@public
-function bashlets::datatype::semver::lt()
+function bashlets::core::datatype::semver::lt()
 {
     local min
     # GNU sort is needed here
-    min="$(bashlets::datatype::semver::sort "$@" | head -1)"
+    min="$(bashlets::core::datatype::semver::sort "$@" | head -1)"
     [[ $1 != $2 && $min == $1 ]]
 }
 
 #@public
-function bashlets::datatype::semver::gt()
+function bashlets::core::datatype::semver::gt()
 {
     local max
     # GNU sort is needed here
-    max="$(bashlets::datatype::semver::sort "$@" | tail -1)"
+    max="$(bashlets::core::datatype::semver::sort "$@" | tail -1)"
     [[ $1 != $2 && $max == $1 ]]
 }
 
 #@public
-function bashlets::datatype::semver::le()
+function bashlets::core::datatype::semver::le()
 {
     local min
     # GNU sort is needed here
-    min="$(bashlets::datatype::semver::sort "$@" | head -1)"
+    min="$(bashlets::core::datatype::semver::sort "$@" | head -1)"
     [[ $min == $1 ]]
 }
 
 #@public
-function bashlets::datatype::semver::ge()
+function bashlets::core::datatype::semver::ge()
 {
     local max
     # GNU sort is needed here
-    max="$(bashlets::datatype::semver::sort "$@" | tail -1)"
+    max="$(bashlets::core::datatype::semver::sort "$@" | tail -1)"
     [[ $max == $1 ]]
 }
 
 #@public
-function bashlets::datatype::semver::min()
+function bashlets::core::datatype::semver::min()
 {
-    bashlets::datatype::semver::sort "$@" | head -1
+    bashlets::core::datatype::semver::sort "$@" | head -1
 }
 
 #@public
-function bashlets::datatype::semver::max()
+function bashlets::core::datatype::semver::max()
 {
-    bashlets::datatype::semver::sort "$@" | tail -1
+    bashlets::core::datatype::semver::sort "$@" | tail -1
 }
 
 # Local variables:
