@@ -73,7 +73,7 @@ function usage()
 function version()
 {
     cat <<-EOF
-		bashlets-list 0.1
+        bashlets-list 0.1
 	EOF
 } 
 
