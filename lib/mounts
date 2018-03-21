@@ -36,7 +36,7 @@
 
 
 #@public
-function bashlets::os::mounts::get_mount_point_by_device()
+function bashlets::core::os::mounts::get_mount_point_by_device()
 {
     local device="$1"
 
@@ -45,7 +45,7 @@ function bashlets::os::mounts::get_mount_point_by_device()
 }
 
 #@public
-function bashlets::os::mounts::get_mount_point_by_type()
+function bashlets::core::os::mounts::get_mount_point_by_type()
 {
     local type="$1"
 
@@ -54,13 +54,13 @@ function bashlets::os::mounts::get_mount_point_by_type()
 }
 
 #@public
-function bashlets::os::mounts::get_mount_point_of_sysfs()
+function bashlets::core::os::mounts::get_mount_point_of_sysfs()
 {
     # the Linux documentation says that sysfs is always at /sys and that
     # parsing /proc/mounts is a waste of time
     # cf. https://www.kernel.org/doc/Documentation/sysfs-rules.txt
 
-    # bashlets::os::mounts::get_mount_point_by_type sysfs
+    # bashlets::core::os::mounts::get_mount_point_by_type sysfs
     echo /sys
 }
 

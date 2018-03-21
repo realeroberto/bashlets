@@ -35,20 +35,20 @@
 
 
 #@public
-function bashlets::os::tempfile::create()
+function bashlets::core::os::tempfile::create()
 {
 	mktemp
 }
 
 #@public
-function bashlets::os::tempfile::exists()
+function bashlets::core::os::tempfile::exists()
 {
 	local tempfile="$1"
     [[ -n $tempfile && -e $tempfile ]]
 }
 
 #@public
-function bashlets::os::tempfile::destroy()
+function bashlets::core::os::tempfile::destroy()
 {
     local tempfile="$1"
 	rm -f "$tempfile"

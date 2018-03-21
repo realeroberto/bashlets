@@ -39,7 +39,7 @@ BASHLETS_RANDOM_SOURCE="${BASHLETS_RANDOM_SOURCE:-/dev/urandom}"
 
 #@descr generate a random stream of length $SIZE, including only character in $FILTER
 #@public
-function bashlets::os::random::get()
+function bashlets::core::os::random::get()
 {
     local size="${1:-16}"
     local filter="${2:-}"
@@ -65,7 +65,7 @@ function bashlets::os::random::get()
 }
 
 #@public
-function bashlets::os::random::get_uuid()
+function bashlets::core::os::random::get_uuid()
 {
     # read from the /proc filesystem, if applicable
     cat /proc/sys/kernel/random/uuid 2>/dev/null

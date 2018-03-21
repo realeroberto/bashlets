@@ -35,20 +35,20 @@
 
 
 #@public
-function bashlets::os::path::join()
+function bashlets::core::os::path::join()
 {
     local IFS=/
     echo "$*"
 }
 
 #@public
-function bashlets::os::path::is_absolute()
+function bashlets::core::os::path::is_absolute()
 {
     [[ "$1" == /* ]]
 }
 
 #@public
-function bashlets::os::path::get_absolute()
+function bashlets::core::os::path::get_absolute()
 {
     # http://stackoverflow.com/questions/59895
 
@@ -63,7 +63,7 @@ function bashlets::os::path::get_absolute()
         # if $source was a relative symlink, we need to resolve it relative to
         # the path where the symlink file was located
         [[ $source != /* ]]  \
-            && source="$(bashlets::os::path::join "$dir" "$source")"
+            && source="$(bashlets::core::os::path::join "$dir" "$source")"
     done
 
     # TODO not sure if needed

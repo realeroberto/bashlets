@@ -35,7 +35,7 @@
 
 
 #@public
-function bashlets::os::ram::get_total()
+function bashlets::core::os::ram::get_total()
 {
     # https://gist.github.com/ldante86/a9460cffa7333e74f1fec573c6cf3469
 
@@ -43,7 +43,7 @@ function bashlets::os::ram::get_total()
 }
 
 #@public
-function bashlets::os::ram::get_free()
+function bashlets::core::os::ram::get_free()
 {
     # https://gist.github.com/ldante86/a9460cffa7333e74f1fec573c6cf3469
 
@@ -51,12 +51,12 @@ function bashlets::os::ram::get_free()
 }
 
 #@public
-function bashlets::os::ram::get_used()
+function bashlets::core::os::ram::get_used()
 {
     # https://gist.github.com/ldante86/a9460cffa7333e74f1fec573c6cf3469
 
-    local total=$(bashlets::os::ram::get_total)
-    local  free=$(bashlets::os::ram::get_free )
+    local total=$(bashlets::core::os::ram::get_total)
+    local  free=$(bashlets::core::os::ram::get_free )
 
     echo $((total - free))
 }

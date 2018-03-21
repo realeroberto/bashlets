@@ -44,7 +44,7 @@ source bashlets core/os/mounts
 
 
 #@public
-function bashlets::os::block::get_signature()
+function bashlets::core::os::block::get_signature()
 {
     local target="$1"
     local major="$(stat -c '%t' "$target")"  # major device type in HEX
@@ -55,7 +55,7 @@ function bashlets::os::block::get_signature()
 }
 
 #@public
-function bashlets::os::block::validate_device()
+function bashlets::core::os::block::validate_device()
 {
     local target="$1"
 
@@ -63,7 +63,7 @@ function bashlets::os::block::validate_device()
 }
 
 #@public
-function bashlets::os::block::validate_signature()
+function bashlets::core::os::block::validate_signature()
 {
     local signature="$1"
     local major=${signature%:*}
@@ -73,10 +73,10 @@ function bashlets::os::block::validate_signature()
     && $BASHLETS_NAMESPACE number validate_as_byte "$minor"
 }
 
-function __bashlets::os::block::canonicalise_pre_2_6_27()
+function __bashlets::core::os::block::canonicalise_pre_2_6_27()
 {
     local target="$1"
-    local signature="$(bashlets::os::block::get_signature "$target")"
+    local signature="$(bashlets::core::os::block::get_signature "$target")"
     local sysfs="$($BASHLETS_NAMESPACE mounts get_mount_point_of_sysfs)"
 
     # TODO: add explanation
@@ -86,10 +86,10 @@ function __bashlets::os::block::canonicalise_pre_2_6_27()
     )"
 }
 
-function __bashlets::os::block::canonicalise_post_2_6_27()
+function __bashlets::core::os::block::canonicalise_post_2_6_27()
 {
     local target="$1"
-    local signature="$(bashlets::os::block::get_signature "$target")"
+    local signature="$(bashlets::core::os::block::get_signature "$target")"
     local sysfs="$($BASHLETS_NAMESPACE mounts get_mount_point_of_sysfs)"
 
     # TODO: add explanation
@@ -98,11 +98,11 @@ function __bashlets::os::block::canonicalise_post_2_6_27()
 }
 
 #@public
-function bashlets::os::block::canonicalise()
+function bashlets::core::os::block::canonicalise()
 {
     local target="$1"
 
-    bashlets::os::block::validate_device "$target" || return 1  # not a block special file?
+    bashlets::core::os::block::validate_device "$target" || return 1  # not a block special file?
 
     # the /sys/dev hierachy was only added to the kernel as late as 2.6.27,
     # so we need a "branching" approach
@@ -114,17 +114,17 @@ function bashlets::os::block::canonicalise()
 
     if $BASHLETS_NAMESPACE semver ge "$kernel_version" 2.6.27
     then
-        __bashlets::os::block::canonicalise_post_2_6_27 "$target"
+        __bashlets::core::os::block::canonicalise_post_2_6_27 "$target"
     else
-        __bashlets::os::block::canonicalise_pre_2_6_27 "$target"
+        __bashlets::core::os::block::canonicalise_pre_2_6_27 "$target"
     fi
 }
 
 #@public
-function bashlets::os::block::canonicalise_parent()
+function bashlets::core::os::block::canonicalise_parent()
 {
     local target="$1"
-    local device="$(bashlets::os::block::canonicalise "$target")"
+    local device="$(bashlets::core::os::block::canonicalise "$target")"
     local parent_device parent_signature
 
     test -n "$device" || return 1
@@ -136,7 +136,7 @@ function bashlets::os::block::canonicalise_parent()
     test -f "$parent_device/dev" || return 1
 
     parent_signature="$(cat "$parent_device/dev" 2> /dev/null)"
-    bashlets::os::block::validate_signature "$parent_signature" || return 1
+    bashlets::core::os::block::validate_signature "$parent_signature" || return 1
 
     echo "$parent_device"
 }
