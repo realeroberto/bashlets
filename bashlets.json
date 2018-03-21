@@ -8,7 +8,6 @@
         },
         "license": "MIT",
         "deps": [
-                "core.datatype",
-                "core.github"
+                "core.datatype"
         ]
 }
