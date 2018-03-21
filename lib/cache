@@ -34,7 +34,7 @@
 ################################################################################
 
 
-function __bashlets::cache::declare::interface()
+function __bashlets::core::cache::declare::interface()
 {
     local verb
 
@@ -50,7 +50,7 @@ function __bashlets::cache::declare::interface()
         "set_array"   \
         "unconnect"
     do
-        eval "function bashlets::cache::cache::$verb()
+        eval "function bashlets::core::cache::cache::$verb()
             {
                 test -n \"\$BASHLETS_CACHE_MODULE\"                        \\
                     && return \"\$BASHLETS_CACHE_MODULE\" $verb \"\$@\"    \\
@@ -60,7 +60,7 @@ function __bashlets::cache::declare::interface()
 }
 
 
-__bashlets::cache::declare::interface
+__bashlets::core::cache::declare::interface
 
 # Local variables:
 # mode: shell-script
