@@ -35,7 +35,7 @@
 
 
 #@public
-function bashlets::glue::awklibrary::load()
+function bashlets::core::glue::awklibrary::load()
 {
     echo '
         #
