@@ -1,6 +1,6 @@
 {
-        "name": "core.library",
-        "description": "core.library",
+        "name": "core.local",
+        "description": "core.local",
         "version": "0.2",
         "author": {
                 "name": "Roberto Reale",
@@ -8,7 +8,6 @@
         },
         "license": "MIT",
         "deps": [
-                "core.datatype",
-                "core.github"
+                "core.library"
         ]
 }

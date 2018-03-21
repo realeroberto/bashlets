@@ -34,7 +34,7 @@
 ################################################################################
 
 
-source bashlets core/datatype/sha1
+source bashlets core/library/revision
 BASHLETS_BASE=~/.bashlets
 
 
@@ -43,7 +43,7 @@ function __bashlets::core::local::tree::callback_path()
     local item="$1"
     local parent="$2"
 
-    $BASHLETS_NAMESPACE sha1 validate "$item" || echo "${parent}/${item}"
+    $BASHLETS_NAMESPACE revision validate "$item" || echo "${parent}/${item}"
 }
 
 function __bashlets::core::local::tree::callback_revs()
@@ -57,7 +57,7 @@ function __bashlets::core::local::tree::callback_norevs()
     local item="$1" ; shift
     local indent="$2"
 
-    $BASHLETS_NAMESPACE sha1 validate "$item" || echo "${indent}${item}"
+    $BASHLETS_NAMESPACE revision validate "$item" || echo "${indent}${item}"
 }
 
 function __bashlets::core::local::tree::traverse()
@@ -75,7 +75,7 @@ function __bashlets::core::local::tree::traverse()
         $callback "$baseitem" "$parent" "$indent"
 
         # tail recursion
-        $BASHLETS_NAMESPACE sha1 validate "$baseitem"   \
+        $BASHLETS_NAMESPACE revision validate "$baseitem"   \
             || $FUNCNAME "$item" "$callback" "$parent/$baseitem" ". $indent"
     done
 }
