@@ -36,10 +36,29 @@
 
 BASHLETS_BASE=~/.bashlets
 
+function __bashlets::core::local::library::objects()
+{
+    local depth="${1:-1}"
+    (
+        cd $BASHLETS_BASE
+        find -mindepth $depth -maxdepth $depth -type d
+    )
+}
+
+#@public
+function bashlets::core::local::library::domains()
+{
+    __bashlets::core::local::library::objects 1        \
+        | sed -n "s#^./\([^/]\+\)#\1#p"                \
+        | sort -u
+}
+
 #@public
 function bashlets::core::local::library::packages()
 {
-    ls -1 $BASHLETS_BASE/*
+    __bashlets::core::local::library::objects 2        \
+        | sed -n "s#^./\([^/]\+\)/\([^/]\+\)#\1.\2#p"  \
+        | sort -u
 }
 
 
