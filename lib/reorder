@@ -35,7 +35,7 @@
 
 
 #@public
-function bashlets::stream::reorder::shuffle()
+function bashlets::core::stream::reorder::shuffle()
 {
     local hint_nr=${1:-1024}
     

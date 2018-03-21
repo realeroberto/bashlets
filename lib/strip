@@ -35,26 +35,26 @@
 
 
 #@public
-function bashlets::stream::strip::leading_spaces()
+function bashlets::core::stream::strip::leading_spaces()
 {
     sed 's/^[ \t]*//g'
 }
 
 #@public
-function bashlets::stream::strip::nonprintable()
+function bashlets::core::stream::strip::nonprintable()
 {
     # cf. http://stackoverflow.com/questions/20371049/
     tr -cd '\11\12\15\40-\176'
 }
 
 #@public
-function bashlets::stream::strip::xml_tags()
+function bashlets::core::stream::strip::xml_tags()
 {
     sed 's/<[^>]\+>//g'
 }
 
 #@public
-function bashlets::stream::strip::xml_tags_add_space()
+function bashlets::core::stream::strip::xml_tags_add_space()
 {
     # Replace tags with a space so pieces of content that are next to each
     # other don't run together
@@ -65,15 +65,15 @@ function bashlets::stream::strip::xml_tags_add_space()
 }
 
 #@public
-function bashlets::stream::strip::html_tags()
+function bashlets::core::stream::strip::html_tags()
 {
-    bashlets::stream::strip::xml_tags
+    bashlets::core::stream::strip::xml_tags
 }
 
 #@public
-function bashlets::stream::strip::html_tags_add_space()
+function bashlets::core::stream::strip::html_tags_add_space()
 {
-    bashlets::stream::strip::xml_tags_add_space
+    bashlets::core::stream::strip::xml_tags_add_space
 }
 
 # Local variables:

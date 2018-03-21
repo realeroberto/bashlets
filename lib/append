@@ -38,7 +38,7 @@ source bashlets core/stream/filter
 source bashlets core/os/tempfile
 
 #@public
-function bashlets::stream::append::generic()
+function bashlets::core::stream::append::generic()
 {
     local filename="$1"
     local tempfile="$($BASHLETS_NAMESPACE tempfile create)"
@@ -54,13 +54,13 @@ function bashlets::stream::append::generic()
 }
 
 #@public
-function bashlets::stream::append::after_pattern()
+function bashlets::core::stream::append::after_pattern()
 {
     local filename="$1" ; shift
     local pattern="$@"
 
     $BASHLETS_NAMESPACE filter till_pattern "$pattern"  \
-        | bashlets::stream::append::generic "$filename"
+        | bashlets::core::stream::append::generic "$filename"
 }
 
 

@@ -35,7 +35,7 @@
 
 
 #@public
-function bashlets::stream::reshape::join_lines()
+function bashlets::core::stream::reshape::join_lines()
 {
     local del="$1"  # delimiter
 
@@ -44,15 +44,15 @@ function bashlets::stream::reshape::join_lines()
 }
 
 #@public
-function bashlets::stream::reshape::transpose()
+function bashlets::core::stream::reshape::transpose()
 {
-    bashlets::stream::reshape::join_lines
+    bashlets::core::stream::reshape::join_lines
 }
 
 #@public
-function bashlets::stream::reshape::as_string()
+function bashlets::core::stream::reshape::as_string()
 {
-    bashlets::stream::reshape::join_lines
+    bashlets::core::stream::reshape::join_lines
 }
 
 

@@ -37,7 +37,7 @@
 # infer length of the indentation step
 
 #@public
-function bashlets::stream::infer::indent_step()
+function bashlets::core::stream::infer::indent_step()
 {
 	local step="$(
 		tr ' \t' @                                                          \

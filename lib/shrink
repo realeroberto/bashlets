@@ -37,7 +37,7 @@
 # Inspired from (but improves on) code at http://bash.cyberciti.biz/
 
 #@public
-function bashlets::stream::shrink::remove_c_comments()
+function bashlets::core::stream::shrink::remove_c_comments()
 {
     sed -e '
         # if no /* get next
