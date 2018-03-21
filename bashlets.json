@@ -8,8 +8,8 @@
         },
         "license": "MIT",
         "deps": [
-                "core.datatype",
                 "core.marshal",
-                "core.os"
+                "core.os",
+                "core.shell"
         ]
 }
