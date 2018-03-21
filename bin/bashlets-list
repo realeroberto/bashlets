@@ -35,8 +35,6 @@
 ################################################################################
 
 
-source bashlets core/library/origin
-source bashlets core/library/local
 
 #
 # global variables
@@ -45,6 +43,7 @@ source bashlets core/library/local
 BASHLETS_BASE=~/.bashlets
 
 list_mode=local
+what_to_list=domains
 
 # verbose output
 verbose=:
@@ -59,12 +58,12 @@ function usage()
     cat <<-EOF
 		Usage:
 
-		    bashlets-list [ -L ] [ base ] | [ -O ]
+		    bashlets-list [ -L | -R ] [ domains | packages | modules | methods ] [ root ]
 
 		Options:
 
            -L      list installed packages (default)
-           -O      list available packages on remote repository (origin)
+           -R      list available packages on remote repository
            -?      display this help and exit
            -V      output version information and exit
 
@@ -85,39 +84,24 @@ function verbose()
 
 function normalize_path()
 {
+    # TODO maybe remove?
     echo "${1//.//}"
 }
 
-
-#
-# core logic
-################################################################################
-
-function list_packages_local()
-{
-    local base="$BASHLETS_BASE/$(normalize_path $1)"
-    $BASHLETS_NAMESPACE local list_packages_tree "$base"
-}
-
-
-function list_packages_origin()
-{
-    $BASHLETS_NAMESPACE origin list_packages | sort
-}
 
 
 #
 # parse command line options
 ################################################################################
 
-while getopts "LO?V" OPTION
+while getopts "LR?V" OPTION
 do
     case $OPTION in
 		L)
 			list_mode=local
 			;;
-		O)
-			list_mode=origin
+		R)
+			list_mode=remote
 			;;
 		?)
 			echo ; version
@@ -132,9 +116,71 @@ do
 done
 
 shift $((OPTIND-1))
-base="$1"
 
-list_packages_$list_mode "$base"
+if [[ $# -gt 0 ]]
+then
+    what_to_list=$1
+    shift
+fi
+
+if [[ $# -gt 0 ]]
+then
+    root=$1
+    shift
+fi
+
+#
+# core logic
+################################################################################
+
+case $what_to_list in
+    domains)
+        source bashlets core/$list_mode/library
+        $BASHLETS_NAMESPACE library domains
+        ;;
+    packages)
+        if [[ -n $root ]]
+        then
+            source bashlets core/$list_mode/domain
+            $BASHLETS_NAMESPACE domain packages "$root"
+        else
+            source bashlets core/$list_mode/library
+            $BASHLETS_NAMESPACE library packages
+        fi
+        ;;
+    modules)
+        if [[ -n $root ]]
+        then
+            if [[ $list_mode == remote ]]
+            then
+                source bashlets core/$list_mode/package
+                $BASHLETS_NAMESPACE package modules "$root"
+            else
+                echo "Unimplemented feature!" >&2
+                exit 2
+            fi
+        else
+            echo "Please specify a package!" >&2
+            exit 1
+        fi
+        ;;
+    methods)
+        if [[ -n $root ]]
+        then
+            echo "Unimplemented feature!" >&2
+            exit 2
+        else
+            echo "Please specify a module!" >&2
+            exit 1
+        fi
+        ;;
+    *)
+        echo "Please specify what to list!" >&2
+        exit 1
+        ;;
+esac
+
+exit
 
 
 # Local variables:
