@@ -34,6 +34,7 @@
 ################################################################################
 
 
+source bashlets core/github/path
 source bashlets core/github/repo
 
 #@public
@@ -50,6 +51,22 @@ function bashlets::core::remote::package::revs()
     fi
 
     $BASHLETS_NAMESPACE repo commits bashlets "$full_name" "$limit"
+}
+
+#@public
+function bashlets::core::remote::package::modules()
+{
+    local package="${1:-base}" domain="${2:-core}"
+    local full_name
+
+    if [[ $domain == core && $package == base ]]
+    then
+        full_name=bashlets
+    else
+        full_name="bashlets.${domain}.${package}"
+    fi
+
+    $BASHLETS_NAMESPACE path ls lib bashlets "$full_name"
 }
 
 # Local variables:
