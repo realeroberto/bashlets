@@ -34,7 +34,7 @@
 ################################################################################
 
 
-source bashlets core/github/user
+source bashlets core::github::user
 
 #@public
 function bashlets::core::remote::domain::packages()

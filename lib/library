@@ -34,8 +34,8 @@
 ################################################################################
 
 
-source bashlets core/github/user
-source bashlets core/remote/domain
+source bashlets core::github::user
+source bashlets core::remote::domain
 
 #@public
 function bashlets::core::remote::library::domains()

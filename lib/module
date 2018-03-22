@@ -34,8 +34,8 @@
 ################################################################################
 
 
-source bashlets core/github/path
-source bashlets core/library/module
+source bashlets core::github::path
+source bashlets core::library::module
 
 #@public
 function bashlets::core::remote::module::methods()
