@@ -34,8 +34,8 @@
 ################################################################################
 
 
-source bashlets core/stream/filter
-source bashlets core/os/tempfile
+source bashlets core::stream::filter
+source bashlets core::os::tempfile
 
 #@public
 function bashlets::core::stream::append::generic()
