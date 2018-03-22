@@ -44,7 +44,7 @@ BASHLETS_REMOTE_CORE=https://github.com/bashlets
 BASHLETS_REMOTE_PACKAGES=https://github.com/bashlets
 BASHLETS_REMOTE_CDN=https://raw.githubusercontent.com/bashlets
 BASHLETS_BIN_TARGETS=~/.local/bin:/usr/local/bin
-BASHLETS_PACKAGE_MANIFEST=bashlets.json
+BASHLETS_PACKAGE_MANIFEST=package.json
 
 # which Git branch are we interested in?
 branch=master
