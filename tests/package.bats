@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-source bashlets core/library/package
+source bashlets core::library::package
 
 @test "library/package: get package name" {
   result="$(bash$$ package get_name)"

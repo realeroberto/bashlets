@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-source bashlets core/library/interact
+source bashlets core::library::interact
 
 @test "library/interact: say hello" {
   result="$(bash$$ interact say_hello)"
