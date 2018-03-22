@@ -43,7 +43,7 @@
 BASHLETS_BASE=~/.bashlets
 
 list_mode=local
-what_to_list=domains
+what_to_list=packages
 
 # verbose output
 verbose=:
