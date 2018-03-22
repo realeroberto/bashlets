@@ -34,7 +34,7 @@
 ################################################################################
 
 
-source bashlets core/os/tempdir
+source bashlets core::os::tempdir
 
 #@public
 function bashlets::core::os::ramdisk::create()

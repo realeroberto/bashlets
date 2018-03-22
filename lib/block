@@ -34,10 +34,10 @@
 ################################################################################
 
 
-source bashlets core/datatype/number
-source bashlets core/datatype/semver
-source bashlets core/os/kernel
-source bashlets core/os/mounts
+source bashlets core::datatype::number
+source bashlets core::datatype::semver
+source bashlets core::os::kernel
+source bashlets core::os::mounts
 
 
 # cf. https://www.kernel.org/doc/Documentation/sysfs-rules.txt
