@@ -35,7 +35,7 @@
 
 
 BASHLETS_BASE=~/.bashlets
-BASHLETS_PACKAGE_MANIFEST=bashlets.json
+BASHLETS_PACKAGE_MANIFEST=package.json
 
 #@public
 function bashlets::core::library::package::name()
