@@ -34,7 +34,7 @@
 ################################################################################
 
 
-source bashlets core/library/version
+source bashlets core::library::version
 
 #@public
 function bashlets::core::library::interact::say_hello()

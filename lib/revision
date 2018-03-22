@@ -34,7 +34,7 @@
 ################################################################################
 
 
-source bashlets core/datatype/sha1
+source bashlets core::datatype::sha1
 
 #@public
 function bashlets::core::library::revision::validate()

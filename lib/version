@@ -37,7 +37,7 @@
 
 BASHLETS_VERSION=1.0
 
-source bashlets core/datatype/version
+source bashlets core::datatype::version
 
 
 #@public
