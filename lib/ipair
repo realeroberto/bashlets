@@ -34,8 +34,8 @@
 ################################################################################
 
 
-source bashlets core/datatype/number
-source bashlets core/glue/awklibrary
+source bashlets core::datatype::number
+source bashlets core::glue::awklibrary
 
 #
 # extended euclidean algorithm

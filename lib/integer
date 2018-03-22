@@ -34,8 +34,8 @@
 ################################################################################
 
 
-source bashlets core/datatype/integer
-source bashlets core/datatype/unsigned
+source bashlets core::datatype::integer
+source bashlets core::datatype::unsigned
 
 
 #@public
