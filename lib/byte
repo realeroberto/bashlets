@@ -34,7 +34,7 @@
 ################################################################################
 
 
-source bashlets core/datatype/unsigned
+source bashlets core::datatype::unsigned
 
 #@public
 function bashlets::core::datatype::byte::new()

@@ -34,8 +34,8 @@
 ################################################################################
 
 
-source bashlets core/datatype/string
-source bashlets core/os/random
+source bashlets core::datatype::string
+source bashlets core::os::random
 
 #@public
 function bashlets::core::datatype::unsigned::new()

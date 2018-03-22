@@ -34,9 +34,9 @@
 ################################################################################
 
 
-source bashlets core/stream/reorder
-source bashlets core/stream/reshape
-source bashlets core/os/random
+source bashlets core::stream::reorder
+source bashlets core::stream::reshape
+source bashlets core::os::random
 
 #@public
 function bashlets::core::datatype::string::new()

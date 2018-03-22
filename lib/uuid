@@ -34,7 +34,7 @@
 ################################################################################
 
 
-source bashlets core/os/random
+source bashlets core::os::random
 
 
 #@public

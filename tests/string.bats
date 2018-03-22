@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-source bashlets core/datatype/string
+source bashlets core::datatype::string
 
 @test "datatype/string: chop a string" {
   s="foo

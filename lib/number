@@ -34,10 +34,10 @@
 ################################################################################
 
 
-source bashlets core/datatype/byte
-source bashlets core/datatype/unsigned
-source bashlets core/datatype/integer
-source bashlets core/datatype/float
+source bashlets core::datatype::byte
+source bashlets core::datatype::unsigned
+source bashlets core::datatype::integer
+source bashlets core::datatype::float
 
 #@public
 function bashlets::core::datatype::number::new()
