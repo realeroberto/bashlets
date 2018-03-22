@@ -32,7 +32,7 @@
 #
 ################################################################################
 
-source bashlets core/github/user
+source bashlets core::github::user
 
 @test "github/user: list GitHub repositories for a given user" {
     (bash$$ user repos | grep ^bashlets$)
