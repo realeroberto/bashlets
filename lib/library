@@ -41,6 +41,7 @@ source bashlets core::remote::domain
 function bashlets::core::remote::library::domains()
 {
     $BASHLETS_NAMESPACE user repos                     \
+        | grep -v bashlets.github.io                   \
         | sed -n "s/^bashlets\.\([^.]\+\)\..\+/\1/p"   \
         | sort -u
 }

@@ -41,8 +41,8 @@ function bashlets::core::remote::domain::packages()
 {
     local domain="${1:-core}"
     $BASHLETS_NAMESPACE user repos                      \
+        | grep -v bashlets.github.io                    \
         | sed -n "s/^bashlets\.\($domain\..\+\)/\1/p"   \
-        | grep -v github.io                             \
         | sort -u
 }
 
