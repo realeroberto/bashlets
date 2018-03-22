@@ -34,9 +34,9 @@
 ################################################################################
 
 
-source bashlets core/marshal/dump
-source bashlets core/os/tempdir
-source bashlets core/shell/object
+source bashlets core::marshal::dump
+source bashlets core::os::tempdir
+source bashlets core::shell::object
 
 
 function __bashlets::core::cache::fs::cache_to_path()
