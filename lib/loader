@@ -38,20 +38,24 @@ BASHLETS_NAMESPACE=bash$$
 
 function __bashlets::core::library::loader::module_to_name()
 {
-    basename "$1"
+    [[ $1 =~ (.+::)*([^:]+) ]] && echo ${BASH_REMATCH[2]}
 }
 
 function __bashlets::core::library::loader::module_to_path()
 {
-    local path="$(dirname $1)"
-    echo "${path//\//::}"
+    [[ $1 =~ (.+::)*([^:]+) ]] && echo ${BASH_REMATCH[1]}
 }
 
 function __bashlets::core::library::loader::module_to_file()
 {
-    local module="$1" file
+    local module="$1" name path file
 
-    file="$BASHLETS_BASE/$(dirname "$module")/${BASHLETS_REV:-DEFAULT}/lib/$(basename "$module")"
+    name="$(__bashlets::core::library::loader::module_to_name "$module")"
+    path="$(__bashlets::core::library::loader::module_to_path "$module")"
+
+    path="${path//::/\/}"
+
+    file="$BASHLETS_BASE/$path/${BASHLETS_REV:-DEFAULT}/lib/$name"
     [[ -e $file ]] && echo $file && return
 }
 
