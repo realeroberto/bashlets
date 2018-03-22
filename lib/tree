@@ -34,7 +34,7 @@
 ################################################################################
 
 
-source bashlets core/library/revision
+source bashlets core::library::revision
 BASHLETS_BASE=~/.bashlets
 
 

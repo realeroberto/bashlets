@@ -34,7 +34,7 @@
 ################################################################################
 
 
-source bashlets core/local/library
+source bashlets core::local::library
 
 #@public
 function bashlets::core::local::domain::packages()

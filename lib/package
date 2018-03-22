@@ -36,7 +36,7 @@
 
 BASHLETS_BASE=~/.bashlets
 
-source bashlets core/library/revision
+source bashlets core::library::revision
 
 #@public
 function bashlets::core::local::package::revs()
