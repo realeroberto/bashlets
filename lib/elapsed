@@ -34,8 +34,8 @@
 ################################################################################
 
 
-source bashlets core/datatype/integer
-source bashlets core/datatype/float
+source bashlets core::datatype::integer
+source bashlets core::datatype::float
 
 #@public
 function bashlets::core::time::elapsed::new()

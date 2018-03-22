@@ -33,10 +33,10 @@
 #
 ################################################################################
 
-source bashlets core/os/random
+source bashlets core::os::random
 
 # a Unix timestamp can be negative!
-source bashlets core/datatype/integer
+source bashlets core::datatype::integer
 
 #@public
 function bashlets::core::time::timestamp::new()

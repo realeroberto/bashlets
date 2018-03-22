@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-source bashlets core/time/elapsed
+source bashlets core::time::elapsed
 
 @test "time/elapsed: format a number of seconds" {
   result="$(bash$$ elapsed seconds_to_formatted 86400)"

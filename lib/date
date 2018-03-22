@@ -34,8 +34,8 @@
 ################################################################################
 
 
-source bashlets core/datatype/unsigned
-source bashlets core/time/month
+source bashlets core::datatype::unsigned
+source bashlets core::time::month
 
 
 #@public

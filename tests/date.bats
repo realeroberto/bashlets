@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-source bashlets core/time/date
+source bashlets core::time::date
 
 @test "time/date: get a random date" {
   result="$(bash$$ date get_random)"

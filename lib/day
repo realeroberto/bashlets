@@ -33,7 +33,7 @@
 #
 ################################################################################
 
-source bashlets core/datatype/unsigned
+source bashlets core::datatype::unsigned
 
 
 #@public

@@ -34,7 +34,7 @@
 ################################################################################
 
 
-source bashlets core/time/timestamp
+source bashlets core::time::timestamp
 
 
 #@public
