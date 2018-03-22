@@ -53,7 +53,7 @@ function __bashlets::core::library::loader::module_to_file()
     name="$(__bashlets::core::library::loader::module_to_name "$module")"
     path="$(__bashlets::core::library::loader::module_to_path "$module")"
 
-    path="${path//::/\/}"
+    path="${path//:://}"
 
     file="$BASHLETS_BASE/$path/${BASHLETS_REV:-DEFAULT}/lib/$name"
     [[ -e $file ]] && echo $file && return
