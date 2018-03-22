@@ -44,25 +44,34 @@ BASHLETS_ERRORS_LOADING_ERROR=1
 
 function bashlets_import_lazy()
 {
-    local bashlet="$1" file
+    local module="$1" name path file
+
+    if [[ $module =~ (.+::)*([^:]+) ]]
+    then
+        path="${BASH_REMATCH[1]}"
+        name="${BASH_REMATCH[2]}"
+        path="${path//::/\/}"
+    else
+        return $BASHLETS_ERRORS_LOADING_ERROR
+    fi
 
     type bashlets::core::library::loader::import > /dev/null 2>&1 || {
-        [[ $bashlet != "core/library/loader" ]] && 
-            bashlets_import_lazy "core/library/loader"
+        [[ $bashlet != "core::library::loader" ]] && 
+            bashlets_import_lazy "core::library::loader"
     }
 
-    file="$BASHLETS_BASE/$(dirname "$bashlet")/${BASHLETS_REV:-DEFAULT}/lib/$(basename "$bashlet")"
+    file="$BASHLETS_BASE/$path/${BASHLETS_REV:-DEFAULT}/lib/$name"
     [[ -e $file ]] && source $file && return
 }
 
 function bashlets_import()
 {
-    local bashlet="$1"
+    local module="$1"
 
-    bashlets_import_lazy $bashlet               \
+    bashlets_import_lazy $module                     \
         || return $BASHLETS_ERRORS_LOADING_ERROR
 
-    bashlets::core::library::loader::import $bashlet  \
+    bashlets::core::library::loader::import $module  \
         || return $BASHLETS_ERRORS_LOADING_ERROR
 }
 
