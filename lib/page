@@ -34,8 +34,8 @@
 ################################################################################
 
 
-source bashlets core/github/defs
-source bashlets core/github/response
+source bashlets core::github::defs
+source bashlets core::github::response
 
 function __bashlets::core::github::page::rel()
 {

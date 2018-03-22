@@ -34,8 +34,8 @@
 ################################################################################
 
 
-source bashlets core/github/defs
-source bashlets core/github/api
+source bashlets core::github::defs
+source bashlets core::github::api
 
 #@public
 function bashlets::core::github::path::ls()

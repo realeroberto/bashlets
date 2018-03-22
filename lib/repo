@@ -34,9 +34,9 @@
 ################################################################################
 
 
-source bashlets core/github/defs
-source bashlets core/github/api
-source bashlets core/github/page
+source bashlets core::github::defs
+source bashlets core::github::api
+source bashlets core::github::page
 
 #@public
 function bashlets::core::github::repo::new()
