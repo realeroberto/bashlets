@@ -135,16 +135,16 @@ fi
 
 case $what_to_list in
     domains)
-        source bashlets core/$list_mode/library
+        source bashlets core::$list_mode::library
         $BASHLETS_NAMESPACE library domains
         ;;
     packages)
         if [[ -n $root ]]
         then
-            source bashlets core/$list_mode/domain
+            source bashlets core::$list_mode::domain
             $BASHLETS_NAMESPACE domain packages "$root"
         else
-            source bashlets core/$list_mode/library
+            source bashlets core::$list_mode::library
             $BASHLETS_NAMESPACE library packages
         fi
         ;;
@@ -153,7 +153,7 @@ case $what_to_list in
         then
             if [[ $list_mode == remote ]]
             then
-                source bashlets core/$list_mode/package
+                source bashlets core::$list_mode::package
                 $BASHLETS_NAMESPACE package modules "$root"
             else
                 echo "Unimplemented feature!" >&2
