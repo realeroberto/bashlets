@@ -34,7 +34,7 @@
 ################################################################################
 
 
-source bashlets core/os/path
+source bashlets core::os::path
 
 #@public
 function bashlets::core::shell::myself::name()
