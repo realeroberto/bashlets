@@ -56,7 +56,7 @@ function bashlets::core::remote::package::revs()
 #@public
 function bashlets::core::remote::package::modules()
 {
-    local package="${1:-core.base}" limit="${2:-100}"
+    local package="${1:-core.base}"
     local full_name
 
     if [[ $package == core.base ]]
