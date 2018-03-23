@@ -52,9 +52,10 @@ function bashlets::core::local::package::revs()
 #@public
 function bashlets::core::local::package::modules()
 {
-    local package="${1:-base}" domain="${2:-core}" rev="${3:-DEFAULT}"
-    [[ -n $package ]] || return
-    ls -1 $BASHLETS_BASE/$domain/$package/$rev/lib 2> /dev/null | sort
+    local package="${1:-core.base}" rev="${2:-DEFAULT}"
+    local path="${package//.//}"
+
+    ls -1 $BASHLETS_BASE/$path/$rev/lib 2> /dev/null | sort
 }
 
 # Local variables:
