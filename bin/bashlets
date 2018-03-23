@@ -56,7 +56,7 @@ function usage()
     cat <<-EOF
 		Usage:
 
-		    bashlets < verb > [ arguments ]
+		    bashlets < command > [ arguments ]
 
 	EOF
 } 
@@ -96,11 +96,11 @@ else
         exit 1
     }
 
-    verb=$1
+    command=$1
     shift 1
 
-    # execute verb
-    bashlets-$verb "$@"
+    # execute command
+    bashlets-$command "$@"
 fi
 
 
