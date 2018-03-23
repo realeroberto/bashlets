@@ -58,7 +58,7 @@ function usage()
     cat <<-EOF
 		Usage:
 
-           bashlets-list [ -L | -R ] [ domains | packages | modules | methods ] [ root ]
+           bashlets-list [ -L | -R ] [ domains | packages | revs | modules | methods ] [ root ]
 
 		Options:
 
@@ -146,6 +146,16 @@ case $what_to_list in
         else
             source bashlets core::$list_mode::library
             $BASHLETS_NAMESPACE library packages
+        fi
+        ;;
+    revs)
+        if [[ -n $root ]]
+        then
+            source bashlets core::$list_mode::package
+            $BASHLETS_NAMESPACE package revs "$root"
+        else
+            echo "Please specify a package!" >&2
+            exit 1
         fi
         ;;
     modules)
