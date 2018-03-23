@@ -41,9 +41,10 @@ source bashlets core::library::revision
 #@public
 function bashlets::core::local::package::revs()
 {
-    local package="${1:-base}" domain="${2:-core}"
-    [[ -n $package ]] || return
-    for item in $(ls -1 $BASHLETS_BASE/$domain/$package)
+    local package="${1:-core.base}" rev="${2:-DEFAULT}"
+    local path="${package//.//}"
+
+    for item in $(ls -1 $BASHLETS_BASE/$path)
     do
         $BASHLETS_NAMESPACE revision validate $item && echo $item
     done
