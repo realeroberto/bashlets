@@ -151,14 +151,8 @@ case $what_to_list in
     modules)
         if [[ -n $root ]]
         then
-            if [[ $list_mode == remote ]]
-            then
-                source bashlets core::$list_mode::package
-                $BASHLETS_NAMESPACE package modules "$root"
-            else
-                echo "Unimplemented feature!" >&2
-                exit 2
-            fi
+            source bashlets core::$list_mode::package
+            $BASHLETS_NAMESPACE package modules "$root"
         else
             echo "Please specify a package!" >&2
             exit 1
