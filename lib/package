@@ -41,7 +41,7 @@ source bashlets core::library::revision
 #@public
 function bashlets::core::local::package::revs()
 {
-    local package="$1" domain="${2:-core}"
+    local package="${1:-base}" domain="${2:-core}"
     [[ -n $package ]] || return
     for item in $(ls -1 $BASHLETS_BASE/$domain/$package)
     do
@@ -52,9 +52,9 @@ function bashlets::core::local::package::revs()
 #@public
 function bashlets::core::local::package::modules()
 {
-    local package="$1" domain="${2:-core}" rev="${3:-DEFAULT}"
+    local package="${1:-base}" domain="${2:-core}" rev="${3:-DEFAULT}"
     [[ -n $package ]] || return
-    ls -1 $BASHLETS_BASE/$domain/$package/$rev/lib
+    ls -1 $BASHLETS_BASE/$domain/$package/$rev/lib 2> /dev/null | sort
 }
 
 # Local variables:
