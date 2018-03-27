@@ -35,7 +35,7 @@
 
 
 source bashlets core::github::defs
-source bashlets core::github::response
+source bashlets core::github::api
 
 function __bashlets::core::github::page::rel()
 {
@@ -44,7 +44,7 @@ function __bashlets::core::github::page::rel()
 
     [[ -n $url ]] || return
 
-    rel="$($BASHLETS_NAMESPACE response rels "$url" "$key")"
+    rel="$($BASHLETS_NAMESPACE api rels "$url" "$key")"
     [[ $rel =~ $regex ]] && echo "${BASH_REMATCH[1]}"
 }
 

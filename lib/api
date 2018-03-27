@@ -152,6 +152,24 @@ function bashlets::core::github::api::post()
         "${BASHLETS_GITHUB_API_ENDPOINT}${url}"
 }
 
+#@public
+function bashlets::core::github::api::rels()
+{
+    local url="$1" filter="${2:-.+}"
+    local regex="<(.+)>\;[[:space:]]rel=\"($filter)\""
+    [[ -n $url ]] || return
+    IFS=, read -a rels <<<$(
+        bashlets::core::github::api::header_value "$url" Link
+    )
+    for rel in "${rels[@]}"
+    do
+        if [[ $rel =~ $regex ]]
+        then
+            printf "%s:%s\n" ${BASH_REMATCH[2]} ${BASH_REMATCH[1]}
+        fi
+    done
+}
+
 # Local variables:
 # mode: shell-script
 # sh-basic-offset: 4
