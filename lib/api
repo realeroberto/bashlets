@@ -89,7 +89,11 @@ function __bashlets::core::github::api::request()
         http_code="$(sed -n '$p'             <<<"$response")"
 
         # Check HTTP code
-        if [[ $http_code != 200 ]]
+        if [[ $http_code == 000 ]]
+        then
+            $BASHLETS_ERROR "$BASHLETS_GITHUB_API_ERROR_HEADER [cURL error]"
+            return $BASHLETS_GITHUB_API_ERROR
+        elif [[ $http_code != 200 ]]
         then
             error_message="$(jq -r .message <<<"$body")"
             $BASHLETS_ERROR "$BASHLETS_GITHUB_API_ERROR_HEADER [$error_message]"
