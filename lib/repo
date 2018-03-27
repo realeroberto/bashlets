@@ -34,7 +34,6 @@
 ################################################################################
 
 
-source bashlets core::github::defs
 source bashlets core::github::page
 
 #@public
@@ -53,25 +52,8 @@ function bashlets::core::github::repo::commits()
     local user="${1:-bashlets}" repo="${2:-bashlets}"
     local limit="${3:-100}" callback="${4:-cat}"
     local url="/repos/$user/$repo/commits"
-    local count=0
-    
-    while true
-    do
-        local commit next
-        declare -a commits=($($BASHLETS_NAMESPACE api get "$url" | jq -r .[].sha?))
 
-        for commit in "${commits[@]}"
-        do
-            (( count < limit )) || break 2
-            ((count++))
-            [[ -n $commit ]] && echo "$commit"
-        done
-
-        next="$($BASHLETS_NAMESPACE page next "$url")"
-        [[ -n $next ]] || break
-        url="$next"
-
-    done | $callback
+    $BASHLETS_NAMESPACE page items "$url" sha "$limit" "$callback"
 }
 
 #@public
@@ -80,25 +62,8 @@ function bashlets::core::github::repo::tags()
     local user="${1:-bashlets}" repo="${2:-bashlets}"
     local limit="${3:-100}" callback="${4:-cat}"
     local url="/repos/$user/$repo/tags"
-    local count=0
     
-    while true
-    do
-        local tag next
-        declare -a tags=($($BASHLETS_NAMESPACE api get "$url" | jq -r .[].name?))
-
-        for tag in "${tags[@]}"
-        do
-            (( count < limit )) || break 2
-            ((count++))
-            [[ -n $tag ]] && echo "$tag"
-        done
-
-        next="$($BASHLETS_NAMESPACE page next "$url")"
-        [[ -n $next ]] || break
-        url="$next"
-
-    done | $callback
+    $BASHLETS_NAMESPACE page items "$url" sha "$limit" "$callback"
 }
 
 #@public

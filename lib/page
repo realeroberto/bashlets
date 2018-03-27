@@ -73,6 +73,34 @@ function bashlets::core::github::page::count()
     [[ $last =~ $regex ]] && echo "${BASH_REMATCH[1]}"
 }
 
+#@public
+function bashlets::core::github::page::items()
+{
+    local url="$1" key="$2"
+    local limit="${3:-100}" callback="${4:-cat}"
+    local count=0
+    
+    [[ -n $url || -n $key ]] || return
+
+    while true
+    do
+        local item next
+        declare -a items=($($BASHLETS_NAMESPACE api get "$url" | jq -r ".[].$key?"))
+
+        for item in "${items[@]}"
+        do
+            (( count < limit )) || break 2
+            ((count++))
+            [[ -n $item ]] && echo "$item"
+        done
+
+        next="$($BASHLETS_NAMESPACE page next "$url")"
+        [[ -n $next ]] || break
+        url="$next"
+
+    done | $callback
+}
+
 # Local variables:
 # mode: shell-script
 # sh-basic-offset: 4
