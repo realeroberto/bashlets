@@ -40,8 +40,8 @@ function bashlets_error()
 }
 
 BASHLETS_ERROR=bashlets_error
-BASHLETS_GITHUB_API_ERROR_HEADER="GitHub API error"
-BASHLETS_GITHUB_API_ERROR=1
+BASHLETS_CORE_GITHUB_API_ERROR_HEADER="GitHub API error"
+BASHLETS_CORE_GITHUB_API_ERROR=1
 
 
 function __bashlets::core::github::api::request()
@@ -58,14 +58,14 @@ function __bashlets::core::github::api::request()
         accept="-H 'Accept: application/vnd.github.v3+json'"
 
         # @cf https://developer.github.com/v3/#user-agent-required
-        if [[ -n $BASHLETS_GITHUB_API_USER_AGENT ]]
+        if [[ -n $BASHLETS_CORE_GITHUB_API_USER_AGENT ]]
         then
-            user_agent="-H 'User-Agent: $BASHLETS_GITHUB_API_USER_AGENT'"
+            user_agent="-H 'User-Agent: $BASHLETS_CORE_GITHUB_API_USER_AGENT'"
         fi
 
-        if [[ -n $BASHLETS_GITHUB_API_OAUTH_TOKEN ]]
+        if [[ -n $BASHLETS_CORE_GITHUB_API_OAUTH_TOKEN ]]
         then
-            oauth_token="-H 'Authorization: token $BASHLETS_GITHUB_API_OAUTH_TOKEN'"
+            oauth_token="-H 'Authorization: token $BASHLETS_CORE_GITHUB_API_OAUTH_TOKEN'"
         fi
 
         # Perform HTTP request
@@ -78,7 +78,7 @@ function __bashlets::core::github::api::request()
                 "$@"
         )"
 
-        if [[ -n $BASHLETS_GITHUB_API_DEBUG ]]
+        if [[ -n $BASHLETS_CORE_GITHUB_API_DEBUG ]]
         then
             echo "$response" >&2
         fi
@@ -91,13 +91,13 @@ function __bashlets::core::github::api::request()
         # Check HTTP code
         if [[ $http_code == 000 ]]
         then
-            $BASHLETS_ERROR "$BASHLETS_GITHUB_API_ERROR_HEADER [cURL error]"
-            return $BASHLETS_GITHUB_API_ERROR
+            $BASHLETS_ERROR "$BASHLETS_CORE_GITHUB_API_ERROR_HEADER [cURL error]"
+            return $BASHLETS_CORE_GITHUB_API_ERROR
         elif [[ $http_code != 200 ]]
         then
             error_message="$(jq -r .message <<<"$body")"
-            $BASHLETS_ERROR "$BASHLETS_GITHUB_API_ERROR_HEADER [$error_message]"
-            return $BASHLETS_GITHUB_API_ERROR
+            $BASHLETS_ERROR "$BASHLETS_CORE_GITHUB_API_ERROR_HEADER [$error_message]"
+            return $BASHLETS_CORE_GITHUB_API_ERROR
         fi
 
         # Echo headers/body
@@ -121,7 +121,7 @@ function bashlets::core::github::api::get()
     [[ -n $url ]] || return
 
     __bashlets::core::github::api::request body                \
-        "${BASHLETS_GITHUB_API_ENDPOINT}${url}"
+        "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
 }
 
 #@public
@@ -132,7 +132,7 @@ function bashlets::core::github::api::header()
     [[ -n $url ]] || return
 
     __bashlets::core::github::api::request headers             \
-        "${BASHLETS_GITHUB_API_ENDPOINT}${url}"                \
+        "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"                \
         | grep "^$key: "
 }
 
@@ -144,7 +144,7 @@ function bashlets::core::github::api::header_value()
     [[ -n $url ]] || return
 
     __bashlets::core::github::api::request headers             \
-        "${BASHLETS_GITHUB_API_ENDPOINT}${url}"                \
+        "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"                \
         | sed -n "s/^$key: \(.*\)/\\1/p"
 }
 
@@ -153,12 +153,12 @@ function bashlets::core::github::api::post()
 {
     local url="$1" data="${2:-\{\}}"
 
-    [[ -n $url || -n $BASHLETS_GITHUB_API_OAUTH_TOKEN ]] || return
+    [[ -n $url || -n $BASHLETS_CORE_GITHUB_API_OAUTH_TOKEN ]] || return
 
     __bashlets::core::github::api::request body -X POST        \
         -H "Content-Type: application/json"                    \
         --data "$data"                                         \
-        "${BASHLETS_GITHUB_API_ENDPOINT}${url}"
+        "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
 }
 
 #@public
