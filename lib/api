@@ -111,7 +111,7 @@ function bashlets::core::github::api::get()
 
     [[ -n $url ]] || return
 
-    __bashlets::core::github::api::request body                \ 
+    __bashlets::core::github::api::request body                \
         "${BASHLETS_GITHUB_API_ENDPOINT}${url}"
 }
 
