@@ -34,6 +34,8 @@
 ################################################################################
 
 
+source bashlets core::github::defs
+
 function bashlets_error()
 {
     echo "$@" >&2
@@ -132,7 +134,7 @@ function bashlets::core::github::api::header()
     [[ -n $url ]] || return
 
     __bashlets::core::github::api::request headers             \
-        "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"                \
+        "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"           \
         | grep "^$key: "
 }
 
@@ -144,7 +146,7 @@ function bashlets::core::github::api::header_value()
     [[ -n $url ]] || return
 
     __bashlets::core::github::api::request headers             \
-        "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"                \
+        "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"           \
         | sed -n "s/^$key: \(.*\)/\\1/p"
 }
 
