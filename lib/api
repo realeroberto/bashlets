@@ -78,6 +78,11 @@ function __bashlets::core::github::api::request()
                 "$@"
         )"
 
+        if [[ -n $BASHLETS_GITHUB_API_DEBUG ]]
+        then
+            echo "$response" >&2
+        fi
+
         # Extract headers, body, HTTP code
           headers="$(sed -n '1,/^\r*$/p'     <<<"$response")"
              body="$(sed    '1,/^\r*$/d; $d' <<<"$response")"
