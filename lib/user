@@ -35,7 +35,6 @@
 
 
 source bashlets core::github::api
-source bashlets core::github::defs
 
 #@public
 function bashlets::core::github::user::repos()

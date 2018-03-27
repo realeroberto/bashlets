@@ -34,7 +34,6 @@
 ################################################################################
 
 
-source bashlets core::github::defs
 source bashlets core::github::api
 
 #@public
