@@ -48,21 +48,21 @@ function __bashlets::core::github::page::rel()
     [[ $rel =~ $regex ]] && echo "${BASH_REMATCH[1]}"
 }
 
-#@method
+#@public
 function bashlets::core::github::page::next()
 {
     local url="$1"
     __bashlets::core::github::page::rel "$url" next
 }
 
-#@method
+#@public
 function bashlets::core::github::page::last()
 {
     local url="$1"
     __bashlets::core::github::page::rel "$url" last
 }
 
-#@method
+#@public
 function bashlets::core::github::page::count()
 {
     local url="$1" regex="page=([0-9]+)" last
