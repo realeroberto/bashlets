@@ -42,8 +42,7 @@ function bashlets::core::github::user::repos()
 {
     local user="${1:-bashlets}"
 
-    $BASHLETS_NAMESPACE api get                           \
-        "$BASHLETS_GITHUB_API_ENDPOINT/users/$user/repos" \
+    $BASHLETS_NAMESPACE api get "/users/$user/repos" \
         | jq -r '.[].name?'
 }
 

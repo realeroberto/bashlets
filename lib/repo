@@ -42,7 +42,7 @@ source bashlets core::github::page
 function bashlets::core::github::repo::new()
 {
     local name="$1" json
-    local url="$BASHLETS_GITHUB_API_ENDPOINT/user/repos"
+    local url="/user/repos"
 
     json="{ \"name\": \"$name\" }"
     $BASHLETS_NAMESPACE api post "$url" "$json"
@@ -53,7 +53,7 @@ function bashlets::core::github::repo::commits()
 {
     local user="${1:-bashlets}" repo="${2:-bashlets}"
     local limit="${3:-100}" callback="${4:-cat}"
-    local url="$BASHLETS_GITHUB_API_ENDPOINT/repos/$user/$repo/commits"
+    local url="/repos/$user/$repo/commits"
     local count=0
     
     while true
@@ -76,10 +76,37 @@ function bashlets::core::github::repo::commits()
 }
 
 #@public
+function bashlets::core::github::repo::tags()
+{
+    local user="${1:-bashlets}" repo="${2:-bashlets}"
+    local limit="${3:-100}" callback="${4:-cat}"
+    local url="/repos/$user/$repo/tags"
+    local count=0
+    
+    while true
+    do
+        local tag next
+        declare -a tags=($($BASHLETS_NAMESPACE api get "$url" | jq -r .[].name?))
+
+        for tag in "${tags[@]}"
+        do
+            (( count < limit )) || break 2
+            ((count++))
+            [[ -n $tag ]] && echo "$tag"
+        done
+
+        next="$($BASHLETS_NAMESPACE page next "$url")"
+        [[ -n $next ]] || break
+        url="$next"
+
+    done | $callback
+}
+
+#@public
 function bashlets::core::github::repo::readme()
 {
     local user="${1:-bashlets}" repo="${2:-bashlets}"
-    local url="$BASHLETS_GITHUB_API_ENDPOINT/repos/$user/$repo/readme"
+    local url="/repos/$user/$repo/readme"
     local download_url
 
     download_url="$($BASHLETS_NAMESPACE api get "$url" | jq -r .download_url?)"

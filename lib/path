@@ -41,7 +41,7 @@ source bashlets core::github::api
 function bashlets::core::github::path::ls()
 {
     local path="${1:-.}" user="${2:-bashlets}" repo="${3:-bashlets}" 
-    local url="$BASHLETS_GITHUB_API_ENDPOINT/repos/$user/$repo/contents/$path"
+    local url="/repos/$user/$repo/contents/$path"
 
     $BASHLETS_NAMESPACE api get "$url" | \
         jq -r 'if type=="array" then .[].name else .name end'
@@ -51,7 +51,7 @@ function bashlets::core::github::path::ls()
 function bashlets::core::github::path::type()
 {
     local path="${1:-.}" user="${2:-bashlets}" repo="${3:-bashlets}" 
-    local url="$BASHLETS_GITHUB_API_ENDPOINT/repos/$user/$repo/contents/$path"
+    local url="/repos/$user/$repo/contents/$path"
 
     $BASHLETS_NAMESPACE api get "$url" | \
         jq -r 'if type=="array" then "directory" else .type end'
@@ -61,7 +61,7 @@ function bashlets::core::github::path::type()
 function bashlets::core::github::path::content()
 {
     local path="${1:-.}" user="${2:-bashlets}" repo="${3:-bashlets}" 
-    local url="$BASHLETS_GITHUB_API_ENDPOINT/repos/$user/$repo/contents/$path"
+    local url="/repos/$user/$repo/contents/$path"
     local download_url
 
     download_url="$(
