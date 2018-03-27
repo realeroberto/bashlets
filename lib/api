@@ -34,6 +34,14 @@
 ################################################################################
 
 
+# @cf   https://developer.github.com/v3/media/#request-specific-version
+function __bashlets::core::github::api::request()
+{
+    curl -s                                                        \
+        -H "Accept: application/vnd.github.v3+json"                \
+        "$@"
+}
+
 #@public
 function bashlets::core::github::api::get()
 {
@@ -43,11 +51,11 @@ function bashlets::core::github::api::get()
 
     if [[ -n $BASHLETS_GITHUB_OAUTH_TOKEN ]]
     then
-        curl -s                                                    \
+        __bashlets::core::github::api::request                     \
             -H "Authorization: token $BASHLETS_GITHUB_OAUTH_TOKEN" \
             "$url"
     else
-        curl -s                                                    \
+        __bashlets::core::github::api::request                     \
             "$url"
     fi
 }
@@ -61,11 +69,11 @@ function bashlets::core::github::api::header()
 
     if [[ -n $BASHLETS_GITHUB_OAUTH_TOKEN ]]
     then
-        curl -sI                                                   \
+        __bashlets::core::github::api::request -I                  \
             -H "Authorization: token $BASHLETS_GITHUB_OAUTH_TOKEN" \
             "$url" | grep "^$key: "
     else
-        curl -sI                                                   \
+        __bashlets::core::github::api::request -I                  \
             "$url" | grep "^$key: "
     fi
 }
@@ -79,11 +87,11 @@ function bashlets::core::github::api::header_value()
 
     if [[ -n $BASHLETS_GITHUB_OAUTH_TOKEN ]]
     then
-        curl -sI                                                   \
+        __bashlets::core::github::api::request -I                  \
             -H "Authorization: token $BASHLETS_GITHUB_OAUTH_TOKEN" \
             "$url" | sed -n "s/^$key: \(.*\)/\\1/p"
     else
-        curl -sI                                                   \
+        __bashlets::core::github::api::request -I                  \
             "$url" | sed -n "s/^$key: \(.*\)/\\1/p"
     fi
 }
@@ -95,7 +103,7 @@ function bashlets::core::github::api::post()
 
     [[ -n $url || -n $BASHLETS_GITHUB_OAUTH_TOKEN ]] || return
 
-    curl -s -X POST                                            \
+    __bashlets::core::github::api::request -X POST             \
         -H "Content-Type: application/json"                    \
         --data "$data"                                         \
         -H "Authorization: token $BASHLETS_GITHUB_OAUTH_TOKEN" \
