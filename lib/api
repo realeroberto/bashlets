@@ -63,9 +63,9 @@ function __bashlets::core::github::api::request()
             user_agent="-H 'User-Agent: $BASHLETS_GITHUB_API_USER_AGENT'"
         fi
 
-        if [[ -n $BASHLETS_GITHUB_OAUTH_TOKEN ]]
+        if [[ -n $BASHLETS_GITHUB_API_OAUTH_TOKEN ]]
         then
-            oauth_token="-H 'Authorization: token $BASHLETS_GITHUB_OAUTH_TOKEN'"
+            oauth_token="-H 'Authorization: token $BASHLETS_GITHUB_API_OAUTH_TOKEN'"
         fi
 
         # Perform HTTP request
@@ -149,7 +149,7 @@ function bashlets::core::github::api::post()
 {
     local url="$1" data="${2:-\{\}}"
 
-    [[ -n $url || -n $BASHLETS_GITHUB_OAUTH_TOKEN ]] || return
+    [[ -n $url || -n $BASHLETS_GITHUB_API_OAUTH_TOKEN ]] || return
 
     __bashlets::core::github::api::request body -X POST        \
         -H "Content-Type: application/json"                    \
