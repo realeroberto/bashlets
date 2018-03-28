@@ -77,7 +77,7 @@ function bashlets::core::github::repo::conduct()
     )
 }
 
-#@ https://developer.github.com/v3/licenses/#get-the-contents-of-a-repositorys-license
+# @cf   https://developer.github.com/v3/licenses/#get-the-contents-of-a-repositorys-license
 #@public
 function bashlets::core::github::repo::license()
 {
