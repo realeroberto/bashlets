@@ -36,6 +36,16 @@
 
 source bashlets core::github::page
 
+# @cf   https://developer.github.com/v3/repos/#list-all-public-repositories
+#@public
+function bashlets::core::github::github::repositories()
+{
+    local limit="${1:-100}" callback="${2:-cat}"
+    local url="/repositories"
+    
+    $BASHLETS_NAMESPACE page items "$url" full_name "$limit" "$callback"
+}
+
 # @cf   https://developer.github.com/v3/users/#get-all-users
 #@public
 function bashlets::core::github::github::users()
