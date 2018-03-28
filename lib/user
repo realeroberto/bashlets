@@ -49,6 +49,8 @@ function bashlets::core::github::user::gists()
     $BASHLETS_NAMESPACE page items "$url" id "$limit" "$callback"
 }
 
+# List public repositories for the specified user.
+#
 # @cf   https://developer.github.com/v3/repos/#list-user-repositories
 #@public
 function bashlets::core::github::user::repos()
