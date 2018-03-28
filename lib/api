@@ -132,6 +132,17 @@ function bashlets::core::github::api::get()
 }
 
 #@public
+function bashlets::core::github::api::get_empty()
+{
+    local url="$1" ; shift
+
+    [[ -n $url ]] || return
+
+    __bashlets::core::github::api::request 204 body            \
+        "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
+}
+
+#@public
 function bashlets::core::github::api::header()
 {
     local url="$1" key="${2:-[^:]\+}"
