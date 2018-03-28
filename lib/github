@@ -34,8 +34,18 @@
 ################################################################################
 
 
+source bashlets core::github::api
 source bashlets core::github::defs
 source bashlets core::github::page
+
+# @cf   https://developer.github.com/v3/emojis/#emojis
+#@public
+function bashlets::core::github::github::emojis()
+{
+    local url="/emojis"
+    
+    $BASHLETS_NAMESPACE api get "$url" | jq -r keys[]
+}
 
 # @cf   https://developer.github.com/v3/gists/#list-all-public-gists
 #@public
