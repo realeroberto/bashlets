@@ -36,6 +36,8 @@
 
 source bashlets core::github::api
 
+# Get an emoji's url.
+#
 # @cf   https://developer.github.com/v3/emojis/#emojis
 #@public
 function bashlets::core::github::emoji::url()
@@ -44,7 +46,8 @@ function bashlets::core::github::emoji::url()
     local url="/emojis"
     
     # @cf https://github.com/stedolan/jq/issues/345
-    $BASHLETS_NAMESPACE api get "$url" | jq -r ".[\"$name\"]"
+    $BASHLETS_NAMESPACE api get "$url" \
+        | $BASHLETS_NAMESPACE api filter ".[\"$name\"]"
 }
 
 
