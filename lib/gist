@@ -45,6 +45,15 @@ function bashlets::core::github::gist::delete()
 }
 
 #@public
+function bashlets::core::github::gist::is_starred()
+{
+    local id="${1:?Gist id required}"
+    local url="/gists/$id/star"
+
+    $BASHLETS_NAMESPACE api get "$url"
+}
+
+#@public
 function bashlets::core::github::gist::star()
 {
     local id="${1:?Gist id required}"
