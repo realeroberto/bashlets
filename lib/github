@@ -94,6 +94,18 @@ function bashlets::core::github::github::gitignores()
     $BASHLETS_NAMESPACE api get "$url" | $BASHLETS_NAMESPACE api filter .[]
 }
 
+# List all IP addresses (in CIDR format) specifying the Git servers for
+# GitHub.com.
+#
+# @cf   https://developer.github.com/v3/meta/#meta
+#@public
+function bashlets::core::github::github::git_servers()
+{
+    local url="/meta"
+    
+    $BASHLETS_NAMESPACE api get "$url" | $BASHLETS_NAMESPACE api filter .git[]
+}
+
 # List all licenses.
 #
 # @cf   https://developer.github.com/v3/licenses/#list-all-licenses
@@ -103,6 +115,18 @@ function bashlets::core::github::github::licenses()
     local url="/licenses"
     
     $BASHLETS_NAMESPACE api get "$url" | $BASHLETS_NAMESPACE api filter .[].key
+}
+
+# List all IP addresses (in CIDR format) specifying the A records for GitHub
+# Pages.
+#
+# @cf   https://developer.github.com/v3/meta/#meta
+#@public
+function bashlets::core::github::github::pages()
+{
+    local url="/meta"
+    
+    $BASHLETS_NAMESPACE api get "$url" | $BASHLETS_NAMESPACE api filter .pages[]
 }
 
 # List all public repositories.
