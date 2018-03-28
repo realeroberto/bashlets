@@ -36,8 +36,8 @@
 
 source bashlets core::github::defs
 source bashlets core::github::page
-source bashlets core::github::api
 
+# @cf   https://developer.github.com/v3/gists/#list-a-users-gists
 #@public
 function bashlets::core::github::user::gists()
 {
@@ -49,13 +49,19 @@ function bashlets::core::github::user::gists()
     $BASHLETS_NAMESPACE page items "$url" id "$limit" "$callback"
 }
 
+# @cf   https://developer.github.com/v3/repos/#list-user-repositories
 #@public
 function bashlets::core::github::user::repos()
 {
     local user="${1:-bashlets}"
+    local type="${2:-owner}"      # all/owner/member
+    local sort="${3:-full_name}"  # created/updated/pushed/full_name
+    local direction="${4:-asc}"   # asc/desc
+    local limit="${5:-100}" callback="${6:-cat}"
 
-    $BASHLETS_NAMESPACE api get "/users/$user/repos" \
-        | jq -r '.[].name?'
+    local url="/users/$user/repos?type=$type&sort=$sort&direction=$direction"
+
+    $BASHLETS_NAMESPACE page items "$url" name "$limit" "$callback"
 }
 
 
