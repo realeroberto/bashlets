@@ -93,7 +93,7 @@ function module_methods()
     local module="$1"
     [[ -e $module ]] || return
 
-    grep -A 1 '^#\+@public' "$module"                                 \
+    grep -A 1 '^# \+@public' "$module"                                \
         | sed -n 's/function \([A-Za-z0-9_:]\+\)::\([^:]\+\)()/\2/p'  \
         | sort
 }
