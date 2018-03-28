@@ -40,7 +40,7 @@ function bashlets::core::library::module::methods()
 
     [[ $path == - || -e $path ]] || return
 
-    grep -A 1 '^#\+@public' "$path" | sed -n 's/function \([A-Za-z0-9_:]\+\)()/\1/p'
+    grep -A 1 '^# \+@public' "$path" | sed -n 's/function \([A-Za-z0-9_:]\+\)()/\1/p'
 }
 
 # Local variables:
