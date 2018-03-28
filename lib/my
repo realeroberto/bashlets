@@ -36,7 +36,7 @@
 
 source bashlets core::github::page
 
-# List all my organizations.
+# List all the organizations for the authenticated user.
 #
 # @cf   https://developer.github.com/v3/orgs/#list-your-organizations
 #@public
@@ -48,7 +48,7 @@ function bashlets::core::github::my::orgs()
     $BASHLETS_NAMESPACE page items "$url" login "$limit" "$callback"
 }
 
-# List all my repositories.
+# List all the repositories for the authenticated user.
 #
 # @cf   https://developer.github.com/v3/repos/#list-your-repositories
 #@public
