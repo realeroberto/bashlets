@@ -62,7 +62,7 @@ function bashlets::core::github::github::emojis()
 {
     local url="/emojis"
     
-    $BASHLETS_NAMESPACE api get "$url" | jq -r keys[]
+    $BASHLETS_NAMESPACE api get "$url" | $BASHLETS_NAMESPACE api filter keys[]
 }
 
 # @cf   https://developer.github.com/v3/gists/#list-all-public-gists
@@ -85,7 +85,7 @@ function bashlets::core::github::github::gitignore()
     local name="${1:?Template name required}"
     local url="/gitignore/templates/$name"
     
-    $BASHLETS_NAMESPACE api get "$url" | jq -r .source
+    $BASHLETS_NAMESPACE api get "$url" | $BASHLETS_NAMESPACE api filter .source
 }
 
 # List all .gitignore templates available to pass as an option when creating a
@@ -97,7 +97,7 @@ function bashlets::core::github::github::gitignores()
 {
     local url="/gitignore/templates"
     
-    $BASHLETS_NAMESPACE api get "$url" | jq -r .[] | sort
+    $BASHLETS_NAMESPACE api get "$url" | $BASHLETS_NAMESPACE api filter .[]
 }
 
 # @cf   https://developer.github.com/v3/licenses/#list-all-licenses
@@ -106,7 +106,7 @@ function bashlets::core::github::github::licenses()
 {
     local url="/licenses"
     
-    $BASHLETS_NAMESPACE api get "$url" | jq -r .[].key | sort
+    $BASHLETS_NAMESPACE api get "$url" | $BASHLETS_NAMESPACE api filter .[].key
 }
 
 # @cf   https://developer.github.com/v3/repos/#list-all-public-repositories
