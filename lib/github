@@ -106,6 +106,30 @@ function bashlets::core::github::github::git_servers()
     $BASHLETS_NAMESPACE api get "$url" | $BASHLETS_NAMESPACE api filter .git[]
 }
 
+# Get a list of IP addresses in CIDR format specifying the addresses that
+# incoming service hooks will originate from on GitHub.com.
+#
+# @cf   https://developer.github.com/v3/meta/#meta
+#@public
+function bashlets::core::github::github::hooks()
+{
+    local url="/meta"
+    
+    $BASHLETS_NAMESPACE api get "$url" | $BASHLETS_NAMESPACE api filter .hooks[]
+}
+
+# Get a list of IP addresses in CIDR format specifying the addresses that
+# source imports will originate from on GitHub.com.
+#
+# @cf   https://developer.github.com/v3/meta/#meta
+#@public
+function bashlets::core::github::github::importers()
+{
+    local url="/meta"
+    
+    $BASHLETS_NAMESPACE api get "$url" | $BASHLETS_NAMESPACE api filter .importers[]
+}
+
 # List all licenses.
 #
 # @cf   https://developer.github.com/v3/licenses/#list-all-licenses
