@@ -58,6 +58,15 @@ function bashlets::core::github::github::gists()
     $BASHLETS_NAMESPACE page items "$url" id "$limit" "$callback"
 }
 
+# @cf   https://developer.github.com/v3/licenses/#list-all-licenses
+#@public
+function bashlets::core::github::github::licenses()
+{
+    local url="/licenses"
+    
+    $BASHLETS_NAMESPACE api get "$url" | jq -r .[].key | sort
+}
+
 # @cf   https://developer.github.com/v3/repos/#list-all-public-repositories
 #@public
 function bashlets::core::github::github::repos()
