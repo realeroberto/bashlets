@@ -35,6 +35,20 @@
 
 
 source bashlets core::github::api
+source bashlets core::github::page
+
+# List all my organizations.
+#
+# @cf   https://developer.github.com/v3/orgs/#list-your-organizations
+#@public
+function bashlets::core::github::my::orgs()
+{
+    local user="${1:-bashlets}" repo="${2:-bashlets}"
+    local limit="${3:-100}" callback="${4:-cat}"
+    local url="/user/orgs"
+
+    $BASHLETS_NAMESPACE page items "$url" login "$limit" "$callback"
+}
 
 #@public
 function bashlets::core::github::my::repos()
