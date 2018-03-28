@@ -27,6 +27,7 @@ bashlets install core.github
 * [`api::post`](#apipost)
 * [`api::put`](#apiput)
 * [`api::rels`](#apirels)
+* [`api::status`](#apistatus)
 * [`api::version`](#apiversion)
 
 ### `conduct`
@@ -46,6 +47,7 @@ bashlets install core.github
 ### `gist`
 
 * [`gist::delete`](#gistdelete)
+* [`gist::is_starred`](#gistis_starred)
 * [`gist::star`](#giststar)
 * [`gist::unstar`](#gistunstar)
 
@@ -146,6 +148,10 @@ bashlets install core.github
 
 @public
 
+### `api::status`
+
+@public
+
 ### `api::version`
 
 Get API version.
@@ -168,15 +174,19 @@ Get an emoji's url.
 
 ### `gist::delete`
 
-@public
+Delete a gist.
+
+### `gist::is_starred`
+
+Check if a gist is starred.
 
 ### `gist::star`
 
-@public
+Star a gist.
 
 ### `gist::unstar`
 
-@public
+Unstar a gist.
 
 ### `github::conducts`
 
