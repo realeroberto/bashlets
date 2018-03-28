@@ -188,10 +188,10 @@ function bashlets::core::github::api::put()
 
     if [[ -n $data ]]
     then
-        __bashlets::core::github::api::request body 200 -X PUT  \
+        __bashlets::core::github::api::request body 204 -X PUT  \
             "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
     else
-        __bashlets::core::github::api::request body 200 -X PUT  \
+        __bashlets::core::github::api::request body 204 -X PUT  \
             -H "'Content-Length: 0'"                            \
             "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
     fi
