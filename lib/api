@@ -130,12 +130,13 @@ function bashlets::core::github::api::version()
 #@public
 function bashlets::core::github::api::get()
 {
-    local url="$1"
+    local url="$1" ; shift
 
     [[ -n $url ]] || return
 
     __bashlets::core::github::api::request body                \
-        "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
+        "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"           \
+        | bashlets::core::github::api::filter "$@"
 }
 
 #@public
