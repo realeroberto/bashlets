@@ -42,8 +42,6 @@ function bashlets_error()
 }
 
 BASHLETS_ERROR=bashlets_error
-BASHLETS_CORE_GITHUB_API_ERROR_HEADER="GitHub API error"
-BASHLETS_CORE_GITHUB_API_ERROR=1
 
 
 function __bashlets::core::github::api::request()
@@ -119,12 +117,6 @@ function bashlets::core::github::api::filter()
     else
         jq -r "$@"
     fi
-}
-
-#@public
-function bashlets::core::github::api::version()
-{
-    echo v3
 }
 
 #@public
@@ -222,6 +214,15 @@ function bashlets::core::github::api::rels()
         fi
     done
 }
+
+# Get API version.
+#
+#@public
+function bashlets::core::github::api::version()
+{
+    echo v3
+}
+
 
 # Local variables:
 # mode: shell-script
