@@ -1,25 +1,26 @@
 # bashlets::core::github
 
 A client for the [GitHub REST API v3](https://developer.github.com/v3/).
+
 ## Table of Contents
 
 ### `api`
 
-* [`api::delete`](#api::delete)
-* [`api::filter`](#api::filter)
-* [`api::get`](#api::get)
-* [`api::header`](#api::header)
-* [`api::header_value`](#api::header_value)
-* [`api::post`](#api::post)
-* [`api::put`](#api::put)
-* [`api::rels`](#api::rels)
-* [`api::version`](#api::version)
+* [`api::delete`](#apidelete)
+* [`api::filter`](#apifilter)
+* [`api::get`](#apiget)
+* [`api::header`](#apiheader)
+* [`api::header_value`](#apiheader_value)
+* [`api::post`](#apipost)
+* [`api::put`](#apiput)
+* [`api::rels`](#apirels)
+* [`api::version`](#apiversion)
 
 ### `conduct`
 
-* [`conduct::name`](#conduct::name)
-* [`conduct::text`](#conduct::text)
-* [`conduct::url`](#conduct::url)
+* [`conduct::name`](#conductname)
+* [`conduct::text`](#conducttext)
+* [`conduct::url`](#conducturl)
 
 ### `defs`
 
@@ -27,75 +28,75 @@ A client for the [GitHub REST API v3](https://developer.github.com/v3/).
 
 ### `emoji`
 
-* [`emoji::url`](#emoji::url)
+* [`emoji::url`](#emojiurl)
 
 ### `gist`
 
-* [`gist::delete`](#gist::delete)
-* [`gist::star`](#gist::star)
-* [`gist::unstar`](#gist::unstar)
+* [`gist::delete`](#gistdelete)
+* [`gist::star`](#giststar)
+* [`gist::unstar`](#gistunstar)
 
 ### `github`
 
-* [`github::conducts`](#github::conducts)
-* [`github::emojis`](#github::emojis)
-* [`github::gists`](#github::gists)
-* [`github::gitignores`](#github::gitignores)
-* [`github::git_servers`](#github::git_servers)
-* [`github::hooks`](#github::hooks)
-* [`github::importers`](#github::importers)
-* [`github::licenses`](#github::licenses)
-* [`github::pages`](#github::pages)
-* [`github::password_auth`](#github::password_auth)
-* [`github::repos`](#github::repos)
-* [`github::sha`](#github::sha)
-* [`github::users`](#github::users)
+* [`github::conducts`](#githubconducts)
+* [`github::emojis`](#githubemojis)
+* [`github::gists`](#githubgists)
+* [`github::gitignores`](#githubgitignores)
+* [`github::git_servers`](#githubgit_servers)
+* [`github::hooks`](#githubhooks)
+* [`github::importers`](#githubimporters)
+* [`github::licenses`](#githublicenses)
+* [`github::pages`](#githubpages)
+* [`github::password_auth`](#githubpassword_auth)
+* [`github::repos`](#githubrepos)
+* [`github::sha`](#githubsha)
+* [`github::users`](#githubusers)
 
 ### `gitignore`
 
-* [`gitignore::content`](#gitignore::content)
+* [`gitignore::content`](#gitignorecontent)
 
 ### `license`
 
-* [`license::describe`](#license::describe)
-* [`license::name`](#license::name)
-* [`license::text`](#license::text)
+* [`license::describe`](#licensedescribe)
+* [`license::name`](#licensename)
+* [`license::text`](#licensetext)
 
 ### `my`
 
-* [`my::orgs`](#my::orgs)
-* [`my::repos`](#my::repos)
+* [`my::orgs`](#myorgs)
+* [`my::repos`](#myrepos)
 
 ### `org`
 
-* [`org::repos`](#org::repos)
+* [`org::repos`](#orgrepos)
 
 ### `page`
 
-* [`page::count`](#page::count)
-* [`page::items`](#page::items)
-* [`page::last`](#page::last)
-* [`page::next`](#page::next)
+* [`page::count`](#pagecount)
+* [`page::items`](#pageitems)
+* [`page::last`](#pagelast)
+* [`page::next`](#pagenext)
 
 ### `path`
 
-* [`path::content`](#path::content)
-* [`path::ls`](#path::ls)
-* [`path::type`](#path::type)
+* [`path::content`](#pathcontent)
+* [`path::ls`](#pathls)
+* [`path::type`](#pathtype)
 
 ### `repo`
 
-* [`repo::commits`](#repo::commits)
-* [`repo::conduct`](#repo::conduct)
-* [`repo::license`](#repo::license)
-* [`repo::new`](#repo::new)
-* [`repo::readme`](#repo::readme)
-* [`repo::tags`](#repo::tags)
+* [`repo::commits`](#repocommits)
+* [`repo::conduct`](#repoconduct)
+* [`repo::license`](#repolicense)
+* [`repo::new`](#reponew)
+* [`repo::readme`](#reporeadme)
+* [`repo::tags`](#repotags)
 
 ### `user`
 
-* [`user::gists`](#user::gists)
-* [`user::repos`](#user::repos)
+* [`user::gists`](#usergists)
+* [`user::repos`](#userrepos)
 
 ## Methods Description
 
