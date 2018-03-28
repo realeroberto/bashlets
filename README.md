@@ -2,7 +2,7 @@
 
 A client for the [GitHub REST API v3](https://developer.github.com/v3/).
 
-## Table of Contents
+## API Reference
 
 ### `api`
 
@@ -88,8 +88,8 @@ A client for the [GitHub REST API v3](https://developer.github.com/v3/).
 
 * [`repo::commits`](#repocommits)
 * [`repo::conduct`](#repoconduct)
+* [`repo::create`](#repocreate)
 * [`repo::license`](#repolicense)
-* [`repo::new`](#reponew)
 * [`repo::readme`](#reporeadme)
 * [`repo::tags`](#repotags)
 
@@ -281,13 +281,13 @@ List public repositories for the specified user.
 
 Get a repository's code of conduct.
 
+### `repo::create`
+
+@public
+
 ### `repo::license`
 
 @cf   https://developer.github.com/v3/licenses/#get-the-contents-of-a-repositorys-license
-
-### `repo::new`
-
-@public
 
 ### `repo::readme`
 
@@ -299,7 +299,7 @@ Get a repository's code of conduct.
 
 ### `user::gists`
 
-@cf   https://developer.github.com/v3/gists/#list-a-users-gists
+List public gists for the specified user.
 
 ### `user::repos`
 
