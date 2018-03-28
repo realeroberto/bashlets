@@ -56,6 +56,8 @@ function bashlets::core::github::github::conducts()
     )
 }
 
+# List all the emojis available to use on GitHub.
+#
 # @cf   https://developer.github.com/v3/emojis/#emojis
 #@public
 function bashlets::core::github::github::emojis()
@@ -65,6 +67,8 @@ function bashlets::core::github::github::emojis()
     $BASHLETS_NAMESPACE api get "$url" | $BASHLETS_NAMESPACE api filter keys[]
 }
 
+# List all public gists.
+#
 # @cf   https://developer.github.com/v3/gists/#list-all-public-gists
 #@public
 function bashlets::core::github::github::gists()
@@ -100,6 +104,8 @@ function bashlets::core::github::github::gitignores()
     $BASHLETS_NAMESPACE api get "$url" | $BASHLETS_NAMESPACE api filter .[]
 }
 
+# List all licenses.
+#
 # @cf   https://developer.github.com/v3/licenses/#list-all-licenses
 #@public
 function bashlets::core::github::github::licenses()
@@ -109,6 +115,8 @@ function bashlets::core::github::github::licenses()
     $BASHLETS_NAMESPACE api get "$url" | $BASHLETS_NAMESPACE api filter .[].key
 }
 
+# List all public repositories.
+#
 # @cf   https://developer.github.com/v3/repos/#list-all-public-repositories
 #@public
 function bashlets::core::github::github::repos()
@@ -119,6 +127,8 @@ function bashlets::core::github::github::repos()
     $BASHLETS_NAMESPACE page items "$url" full_name "$limit" "$callback"
 }
 
+# List all users, in the order that they signed up on GitHub.
+#
 # @cf   https://developer.github.com/v3/users/#get-all-users
 #@public
 function bashlets::core::github::github::users()
