@@ -59,7 +59,7 @@ function __bashlets::core::github::conduct::value()
 # Get the name of an individual code of conduct.
 #
 # @cf   https://developer.github.com/v3/codes_of_conduct/#get-an-individual-code-of-conduct
-#@public
+# @public
 function bashlets::core::github::conduct::name()
 {
     local key="${1:-contributor_covenant}"
@@ -69,7 +69,7 @@ function bashlets::core::github::conduct::name()
 # Get the url of an individual code of conduct.
 #
 # @cf   https://developer.github.com/v3/codes_of_conduct/#get-an-individual-code-of-conduct
-#@public
+# @public
 function bashlets::core::github::conduct::url()
 {
     local key="${1:-contributor_covenant}"
@@ -79,7 +79,7 @@ function bashlets::core::github::conduct::url()
 # Get the text of an individual code of conduct.
 #
 # @cf   https://developer.github.com/v3/codes_of_conduct/#get-an-individual-code-of-conduct
-#@public
+# @public
 function bashlets::core::github::conduct::text()
 {
     local key="${1:-contributor_covenant}"

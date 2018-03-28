@@ -41,7 +41,7 @@ source bashlets core::github::page
 # List all Codes of Conduct.
 #
 # @cf   https://developer.github.com/v3/codes_of_conduct/#list-all-codes-of-conduct
-#@public
+# @public
 function bashlets::core::github::github::conducts()
 {
     local url="/codes_of_conduct"
@@ -61,7 +61,7 @@ function bashlets::core::github::github::conducts()
 # List all the emojis available to use on GitHub.
 #
 # @cf   https://developer.github.com/v3/emojis/#emojis
-#@public
+# @public
 function bashlets::core::github::github::emojis()
 {
     local url="/emojis"
@@ -72,7 +72,7 @@ function bashlets::core::github::github::emojis()
 # List all public gists.
 #
 # @cf   https://developer.github.com/v3/gists/#list-all-public-gists
-#@public
+# @public
 function bashlets::core::github::github::gists()
 {
     local since="${1:-$BASHLETS_CORE_GITHUB_API_EPOCH}"
@@ -86,7 +86,7 @@ function bashlets::core::github::github::gists()
 # repository.
 #
 # @cf   https://developer.github.com/v3/gitignore/#listing-available-templates
-#@public
+# @public
 function bashlets::core::github::github::gitignores()
 {
     local url="/gitignore/templates"
@@ -98,7 +98,7 @@ function bashlets::core::github::github::gitignores()
 # GitHub.com.
 #
 # @cf   https://developer.github.com/v3/meta/#meta
-#@public
+# @public
 function bashlets::core::github::github::git_servers()
 {
     local url="/meta"
@@ -110,7 +110,7 @@ function bashlets::core::github::github::git_servers()
 # incoming service hooks will originate from on GitHub.com.
 #
 # @cf   https://developer.github.com/v3/meta/#meta
-#@public
+# @public
 function bashlets::core::github::github::hooks()
 {
     local url="/meta"
@@ -122,7 +122,7 @@ function bashlets::core::github::github::hooks()
 # source imports will originate from on GitHub.com.
 #
 # @cf   https://developer.github.com/v3/meta/#meta
-#@public
+# @public
 function bashlets::core::github::github::importers()
 {
     local url="/meta"
@@ -133,7 +133,7 @@ function bashlets::core::github::github::importers()
 # List all licenses.
 #
 # @cf   https://developer.github.com/v3/licenses/#list-all-licenses
-#@public
+# @public
 function bashlets::core::github::github::licenses()
 {
     local url="/licenses"
@@ -145,7 +145,7 @@ function bashlets::core::github::github::licenses()
 # Pages.
 #
 # @cf   https://developer.github.com/v3/meta/#meta
-#@public
+# @public
 function bashlets::core::github::github::pages()
 {
     local url="/meta"
@@ -156,7 +156,7 @@ function bashlets::core::github::github::pages()
 # Tell whether authentication with username and password is supported.
 #
 # @cf   https://developer.github.com/v3/meta/#meta
-#@public
+# @public
 function bashlets::core::github::github::password_auth()
 {
     local url="/meta" value
@@ -167,7 +167,7 @@ function bashlets::core::github::github::password_auth()
 # List all public repositories.
 #
 # @cf   https://developer.github.com/v3/repos/#list-all-public-repositories
-#@public
+# @public
 function bashlets::core::github::github::repos()
 {
     local since="${1:-0}" limit="${2:-100}" callback="${3:-cat}"
@@ -180,7 +180,7 @@ function bashlets::core::github::github::repos()
 #
 # @cf   https://developer.github.com/v3/meta/#meta
 # @cf   https://github.com/github/github-services
-#@public
+# @public
 function bashlets::core::github::github::sha()
 {
     local url="/meta"
@@ -191,7 +191,7 @@ function bashlets::core::github::github::sha()
 # List all users, in the order that they signed up on GitHub.
 #
 # @cf   https://developer.github.com/v3/users/#get-all-users
-#@public
+# @public
 function bashlets::core::github::github::users()
 {
     local since="${1:-0}" limit="${2:-100}" callback="${3:-cat}"

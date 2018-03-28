@@ -39,7 +39,7 @@ source bashlets core::github::api
 # Get an emoji's url.
 #
 # @cf   https://developer.github.com/v3/emojis/#emojis
-#@public
+# @public
 function bashlets::core::github::emoji::url()
 {
     local name="${1:?Emoji name required}"

@@ -39,7 +39,7 @@ source bashlets core::github::api
 # Get the name of an individual license.
 #
 # @cf   https://developer.github.com/v3/licenses/#get-an-individual-license
-#@public
+# @public
 function bashlets::core::github::license::name()
 {
     local key="${1:-mit}"
@@ -51,7 +51,7 @@ function bashlets::core::github::license::name()
 # Describe an individual license.
 #
 # @cf   https://developer.github.com/v3/licenses/#get-an-individual-license
-#@public
+# @public
 function bashlets::core::github::license::describe()
 {
     local key="${1:-mit}"
@@ -63,7 +63,7 @@ function bashlets::core::github::license::describe()
 # Get the text of an individual license.
 #
 # @cf   https://developer.github.com/v3/licenses/#get-an-individual-license
-#@public
+# @public
 function bashlets::core::github::license::text()
 {
     local key="${1:-mit}"

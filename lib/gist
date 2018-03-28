@@ -39,7 +39,7 @@ source bashlets core::github::api
 # Delete a gist.
 #
 # @cf   https://developer.github.com/v3/gists/#delete-a-gist
-#@public
+# @public
 function bashlets::core::github::gist::delete()
 {
     local id="${1:?Gist id required}"
@@ -50,7 +50,7 @@ function bashlets::core::github::gist::delete()
 # Check if a gist is starred.
 #
 # @cf   https://developer.github.com/v3/gists/#check-if-a-gist-is-starred
-#@public
+# @public
 function bashlets::core::github::gist::is_starred()
 {
     local id="${1:?Gist id required}"
@@ -65,7 +65,7 @@ function bashlets::core::github::gist::is_starred()
 # Star a gist.
 #
 # @cf   https://developer.github.com/v3/gists/#star-a-gist
-#@public
+# @public
 function bashlets::core::github::gist::star()
 {
     local id="${1:?Gist id required}"
@@ -76,7 +76,7 @@ function bashlets::core::github::gist::star()
 # Unstar a gist.
 #
 # @cf   https://developer.github.com/v3/gists/#unstar-a-gist
-#@public
+# @public
 function bashlets::core::github::gist::unstar()
 {
     local id="${1:?Gist id required}"

@@ -39,7 +39,7 @@ source bashlets core::github::page
 # List commits on a repository.
 #
 # @cf   https://developer.github.com/v3/repos/commits/#list-commits-on-a-repository
-#@public
+# @public
 function bashlets::core::github::repo::commits()
 {
     local user="${1:-bashlets}" repo="${2:-bashlets}"
@@ -52,7 +52,7 @@ function bashlets::core::github::repo::commits()
 # Get a repository's code of conduct.
 #
 # @cf   https://developer.github.com/v3/codes_of_conduct/#get-the-contents-of-a-repositorys-code-of-conduct
-#@public
+# @public
 function bashlets::core::github::repo::conduct()
 {
     local user="${1:-bashlets}" repo="${2:-bashlets}"
@@ -73,7 +73,7 @@ function bashlets::core::github::repo::conduct()
 # Create a new repository for the authenticated user.
 #
 # @cf   https://developer.github.com/v3/repos/#create
-#@public
+# @public
 function bashlets::core::github::repo::create()
 {
     local name="$1" json
@@ -86,7 +86,7 @@ function bashlets::core::github::repo::create()
 # Get the contents of a repository's license.
 #
 # @cf   https://developer.github.com/v3/licenses/#get-the-contents-of-a-repositorys-license
-#@public
+# @public
 function bashlets::core::github::repo::license()
 {
     local user="${1:-bashlets}" repo="${2:-bashlets}"
@@ -99,7 +99,7 @@ function bashlets::core::github::repo::license()
 # Return the preferred README for a repository.
 #
 # @cf   https://developer.github.com/v3/repos/contents/#get-the-readme
-#@public
+# @public
 function bashlets::core::github::repo::readme()
 {
     local user="${1:-bashlets}" repo="${2:-bashlets}"
@@ -113,7 +113,7 @@ function bashlets::core::github::repo::readme()
 # List tags for a repository.
 #
 # @cf   https://developer.github.com/v3/repos/#list-tags
-#@public
+# @public
 function bashlets::core::github::repo::tags()
 {
     local user="${1:-bashlets}" repo="${2:-bashlets}"

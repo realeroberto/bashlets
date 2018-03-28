@@ -39,7 +39,7 @@ source bashlets core::github::api
 # List contents of a directory or the name of file (similar to the ls command).
 #
 # @cf   https://developer.github.com/v3/repos/contents/#get-contents
-#@public
+# @public
 function bashlets::core::github::path::ls()
 {
     local path="${1:-.}" user="${2:-bashlets}" repo="${3:-bashlets}" 
@@ -52,7 +52,7 @@ function bashlets::core::github::path::ls()
 # Return the type of a path.
 #
 # @cf   https://developer.github.com/v3/repos/contents/#get-contents
-#@public
+# @public
 function bashlets::core::github::path::type()
 {
     local path="${1:-.}" user="${2:-bashlets}" repo="${3:-bashlets}" 
@@ -65,7 +65,7 @@ function bashlets::core::github::path::type()
 # Get the content of a file.
 #
 # @cf   https://developer.github.com/v3/repos/contents/#get-contents
-#@public
+# @public
 function bashlets::core::github::path::content()
 {
     local path="${1:-.}" user="${2:-bashlets}" repo="${3:-bashlets}" 

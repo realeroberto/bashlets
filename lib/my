@@ -39,7 +39,7 @@ source bashlets core::github::page
 # List all the organizations for the authenticated user.
 #
 # @cf   https://developer.github.com/v3/orgs/#list-your-organizations
-#@public
+# @public
 function bashlets::core::github::my::orgs()
 {
     local limit="${1:-100}" callback="${2:-cat}"
@@ -51,7 +51,7 @@ function bashlets::core::github::my::orgs()
 # List all the repositories for the authenticated user.
 #
 # @cf   https://developer.github.com/v3/repos/#list-your-repositories
-#@public
+# @public
 function bashlets::core::github::my::repos()
 {
     local limit="${1:-100}" callback="${2:-cat}"

@@ -57,7 +57,7 @@ function __bashlets::core::github::page::rel()
 # Get the link relation for the next page of results.
 #
 # @cf   https://developer.github.com/v3/#pagination
-#@public
+# @public
 function bashlets::core::github::page::next()
 {
     local url="$1"
@@ -67,7 +67,7 @@ function bashlets::core::github::page::next()
 # Get the link relation for the last page of results.
 #
 # @cf   https://developer.github.com/v3/#pagination
-#@public
+# @public
 function bashlets::core::github::page::last()
 {
     local url="$1"
@@ -77,7 +77,7 @@ function bashlets::core::github::page::last()
 # Get the number of result pages.
 #
 # @cf   https://developer.github.com/v3/#pagination
-#@public
+# @public
 function bashlets::core::github::page::count()
 {
     local url="$1" regex="page=([0-9]+)" last
@@ -88,7 +88,7 @@ function bashlets::core::github::page::count()
 # Get paginated items.
 #
 # @cf   https://developer.github.com/v3/#pagination
-#@public
+# @public
 function bashlets::core::github::page::items()
 {
     local url="$1" key="$2"

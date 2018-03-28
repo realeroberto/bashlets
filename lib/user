@@ -40,7 +40,7 @@ source bashlets core::github::page
 # List public gists for the specified user.
 #
 # @cf   https://developer.github.com/v3/gists/#list-a-users-gists
-#@public
+# @public
 function bashlets::core::github::user::gists()
 {
     local user="${1:-bashlets}"
@@ -54,7 +54,7 @@ function bashlets::core::github::user::gists()
 # List the verified public keys for the specified user.
 #
 # @cf   https://developer.github.com/v3/users/keys/#list-public-keys-for-a-user
-#@public
+# @public
 function bashlets::core::github::user::keys()
 {
     local user="${1:-bashlets}"
@@ -67,7 +67,7 @@ function bashlets::core::github::user::keys()
 # List public repositories for the specified user.
 #
 # @cf   https://developer.github.com/v3/repos/#list-user-repositories
-#@public
+# @public
 function bashlets::core::github::user::repos()
 {
     local user="${1:-bashlets}"

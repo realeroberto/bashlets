@@ -39,7 +39,7 @@ source bashlets core::github::page
 # List public repositories for the specified user.
 #
 # @cf   https://developer.github.com/v3/repos/#list-organization-repositories
-#@public
+# @public
 function bashlets::core::github::org::repos()
 {
     local org="${1:-bashlets}"

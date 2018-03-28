@@ -39,7 +39,7 @@ source bashlets core::github::api
 # Fetch a .gitignore template by name.
 #
 # @cf   https://developer.github.com/v3/gitignore/#get-a-single-template
-#@public
+# @public
 function bashlets::core::github::gitignore::content()
 {
     local name="${1:?Template name required}"
