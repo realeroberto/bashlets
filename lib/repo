@@ -56,6 +56,27 @@ function bashlets::core::github::repo::commits()
     $BASHLETS_NAMESPACE page items "$url" sha "$limit" "$callback"
 }
 
+# Get a repository's code of conduct.
+#
+# @cf https://developer.github.com/v3/codes_of_conduct/#get-a-repositorys-code-of-conduct
+#@public
+function bashlets::core::github::repo::conduct()
+{
+    local user="${1:-bashlets}" repo="${2:-bashlets}"
+    local url="/repos/$user/$repo"
+
+    (
+        # The Codes of Conduct API is currently available for developers to
+        # preview. To access the API during the preview period, we must provide
+        # a custom media type in the Accept header.
+        #
+        # @cf https://developer.github.com/v3/codes_of_conduct/#codes-of-conduct
+
+        BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS="$BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS -H 'Accept: application/vnd.github.scarlet-witch-preview+json'"
+        $BASHLETS_NAMESPACE api get "$url" | $BASHLETS_NAMESPACE api filter .code_of_conduct.key
+    )
+}
+
 #@ https://developer.github.com/v3/licenses/#get-the-contents-of-a-repositorys-license
 #@public
 function bashlets::core::github::repo::license()
