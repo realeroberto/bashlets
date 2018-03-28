@@ -36,26 +36,35 @@
 
 source bashlets core::github::api
 
+# List contents of a directory or the name of file (similar to the ls command).
+#
+# @cf   https://developer.github.com/v3/repos/contents/#get-contents
 #@public
 function bashlets::core::github::path::ls()
 {
     local path="${1:-.}" user="${2:-bashlets}" repo="${3:-bashlets}" 
     local url="/repos/$user/$repo/contents/$path"
 
-    $BASHLETS_NAMESPACE api get "$url" | \
-        jq -r 'if type=="array" then .[].name else .name end'
+    $BASHLETS_NAMESPACE api get "$url" \
+        'if type=="array" then .[].name else .name end'
 }
 
+# Return the type of a path.
+#
+# @cf   https://developer.github.com/v3/repos/contents/#get-contents
 #@public
 function bashlets::core::github::path::type()
 {
     local path="${1:-.}" user="${2:-bashlets}" repo="${3:-bashlets}" 
     local url="/repos/$user/$repo/contents/$path"
 
-    $BASHLETS_NAMESPACE api get "$url" | \
-        jq -r 'if type=="array" then "directory" else .type end'
+    $BASHLETS_NAMESPACE api get "$url" \
+        'if type=="array" then "directory" else .type end'
 }
 
+# Get the content of a file.
+#
+# @cf   https://developer.github.com/v3/repos/contents/#get-contents
 #@public
 function bashlets::core::github::path::content()
 {
@@ -64,8 +73,8 @@ function bashlets::core::github::path::content()
     local download_url
 
     download_url="$(
-        $BASHLETS_NAMESPACE api get "$url" | \
-            jq -r 'if type!="array" and .type=="file" then .download_url else "" end'
+        $BASHLETS_NAMESPACE api get "$url" \
+            'if type!="array" and .type=="file" then .download_url else "" end'
     )"
 
     [[ -n $download_url ]] && curl -s "$download_url"
