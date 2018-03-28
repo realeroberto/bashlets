@@ -260,31 +260,31 @@ List public repositories for the specified user.
 
 ### `page::count`
 
-@public
+Get the number of result pages.
 
 ### `page::items`
 
-@public
+Get paginated items.
 
 ### `page::last`
 
-@public
+Get the link relation for the last page of results.
 
 ### `page::next`
 
-@public
+Get the link relation for the next page of results.
 
 ### `path::content`
 
-@public
+Get the content of a file.
 
 ### `path::ls`
 
-@public
+List contents of a directory or the name of file (similar to the ls command).
 
 ### `path::type`
 
-@public
+Return the type of a path.
 
 ### `repo::commits`
 
