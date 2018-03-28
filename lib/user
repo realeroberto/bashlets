@@ -37,6 +37,8 @@
 source bashlets core::github::defs
 source bashlets core::github::page
 
+# List public gists for the specified user.
+#
 # @cf   https://developer.github.com/v3/gists/#list-a-users-gists
 #@public
 function bashlets::core::github::user::gists()
