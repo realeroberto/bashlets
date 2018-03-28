@@ -129,6 +129,18 @@ function bashlets::core::github::github::pages()
     $BASHLETS_NAMESPACE api get "$url" | $BASHLETS_NAMESPACE api filter .pages[]
 }
 
+# Tell whether authentication with username and password is supported.
+#
+# @cf   https://developer.github.com/v3/meta/#meta
+#@public
+function bashlets::core::github::github::password_auth()
+{
+    local url="/meta" value
+    
+    $BASHLETS_NAMESPACE api get "$url" \
+        | $BASHLETS_NAMESPACE api filter '.github_services_sha == true' > /dev/null
+}
+
 # List all public repositories.
 #
 # @cf   https://developer.github.com/v3/repos/#list-all-public-repositories
@@ -139,6 +151,18 @@ function bashlets::core::github::github::repos()
     local url="/repositories?since=$since"
     
     $BASHLETS_NAMESPACE page items "$url" full_name "$limit" "$callback"
+}
+
+# Get the currently-deployed SHA of github-services.
+#
+# @cf   https://developer.github.com/v3/meta/#meta
+# @cf   https://github.com/github/github-services
+#@public
+function bashlets::core::github::github::sha()
+{
+    local url="/meta"
+    
+    $BASHLETS_NAMESPACE api get "$url" | $BASHLETS_NAMESPACE api filter .github_services_sha
 }
 
 # List all users, in the order that they signed up on GitHub.
