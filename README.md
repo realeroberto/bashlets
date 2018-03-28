@@ -236,23 +236,23 @@ Fetch a .gitignore template by name.
 
 ### `license::describe`
 
-@cf   https://developer.github.com/v3/licenses/#get-an-individual-license
+Describe an individual license.
 
 ### `license::name`
 
-@cf   https://developer.github.com/v3/licenses/#get-an-individual-license
+Get the name of an individual license.
 
 ### `license::text`
 
-@cf   https://developer.github.com/v3/licenses/#get-an-individual-license
+Get the text of an individual license.
 
 ### `my::orgs`
 
-List all my organizations.
+List all the organizations for the authenticated user.
 
 ### `my::repos`
 
-List all my repositories.
+List all the repositories for the authenticated user.
 
 ### `org::repos`
 
