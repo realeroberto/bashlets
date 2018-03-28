@@ -44,6 +44,9 @@ function bashlets::core::github::gist::delete()
     $BASHLETS_NAMESPACE api delete "/gists/$id"
 }
 
+# Check if a gist is starred.
+#
+# @cf   https://developer.github.com/v3/gists/#check-if-a-gist-is-starred
 #@public
 function bashlets::core::github::gist::is_starred()
 {
