@@ -288,7 +288,7 @@ List public repositories for the specified user.
 
 ### `repo::commits`
 
-@public
+List commits on a repository.
 
 ### `repo::conduct`
 
@@ -296,19 +296,19 @@ Get a repository's code of conduct.
 
 ### `repo::create`
 
-@public
+Create a new repository for the authenticated user.
 
 ### `repo::license`
 
-@cf   https://developer.github.com/v3/licenses/#get-the-contents-of-a-repositorys-license
+Get the contents of a repository's license.
 
 ### `repo::readme`
 
-@public
+Return the preferred README for a repository.
 
 ### `repo::tags`
 
-@public
+List tags for a repository.
 
 ### `user::gists`
 
