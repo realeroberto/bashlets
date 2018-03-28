@@ -164,6 +164,16 @@ function bashlets::core::github::api::post()
 }
 
 #@public
+function bashlets::core::github::api::delete()
+{
+    local url="$1"
+
+    [[ -n $url || -n $BASHLETS_CORE_GITHUB_API_OAUTH_TOKEN ]] || return
+
+    __bashlets::core::github::api::request body -X DELETE
+}
+
+#@public
 function bashlets::core::github::api::rels()
 {
     local url="$1" filter="${2:-.+}"
