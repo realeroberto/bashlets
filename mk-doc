@@ -1,0 +1,207 @@
+#!/bin/bash
+
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2014-8 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+function method_description()
+{
+    local module="$1" method="$2"
+    [[ -e $module && -n $method ]] || return
+
+    awk "
+        BEGIN {
+            STATE = \"none\"
+            bufferlen = 0
+        }
+
+        /^#[[:blank:]]*$/ {
+            STATE = \"comment\"
+            next
+        }
+
+        /^#/ {
+            if (STATE == \"none\") {
+                STATE = \"description\"
+                sub(/^#[[:blank:]]*/, \"\")
+                buffer[bufferlen++] = \$0
+            } else {
+                STATE = \"comment\"
+            }
+            next
+        }
+
+        /^function [A-Za-z0-9_:]+::$method()/ { 
+            STATE = \"signature\"
+            for (i in buffer)
+                print buffer[i]
+            STATE = \"none\"
+            next
+        }
+
+        {
+            delete buffer
+            bufferlen = 0
+            STATE = \"none\"
+            next
+        }
+
+        END {
+        }
+    " "$module"
+}
+
+function method_description_md()
+{
+    local module="$1" method="$2"
+    [[ -e $module && -n $method ]] || return
+
+    method_description "$module" "$method"
+}
+
+function module_methods()
+{
+    local module="$1"
+    [[ -e $module ]] || return
+
+    grep -A 1 '^#\+@public' "$module"                                 \
+        | sed -n 's/function \([A-Za-z0-9_:]\+\)::\([^:]\+\)()/\2/p'  \
+        | sort
+}
+
+function module_methods_md()
+{
+    local module="$1"
+    local name="$(basename "$module")"
+    [[ -e $module ]] || return
+
+    module_methods "$module" \
+        | xargs -n 1 -I % echo "* [\`${name}::%\`](#${name}::%)"
+}
+
+function module_methods_description_md()
+{
+    local module="$1"
+    local name="$(basename "$module")"
+    [[ -e $module ]] || return
+
+    for method in $(module_methods "$module")
+    do
+        cat <<EOF
+### \`$name::$method\`
+
+$(method_description_md "$module" "$method")
+
+EOF
+    done
+}
+
+function modules()
+{
+    local base="$1"
+    [[ -e $base ]] || return
+
+    find "$base" -type f -printf "%f\n" | sort
+}
+
+function modules_md()
+{
+    local base="$1" module
+    [[ -e $base ]] || return
+
+    for module in $(modules "$base")
+    do
+        cat <<EOF
+### \`$module\`
+
+$(module_methods_md "$base/$module")
+
+EOF
+    done
+}
+
+function modules_descriptions_md()
+{
+    local base="$1" module
+    [[ -e $base ]] || return
+
+    for module in $(modules "$base")
+    do
+        module_methods_description_md "$base/$module"
+    done
+}
+
+function toc_md()
+{
+    local base="$1"
+    [[ -e $base ]] || return
+
+    cat <<EOF
+## Table of Contents
+
+$(modules_md "$base")
+
+EOF
+}
+
+function descriptions_md()
+{
+    local base="$1"
+    [[ -e $base ]] || return
+
+    cat <<EOF
+## Methods Description
+
+$(modules_descriptions_md "$base")
+
+EOF
+}
+
+function generate_md()
+{
+    local base="$1"
+    [[ -e $base ]] || return
+
+    toc_md "$base"
+    descriptions_md "$base"
+}
+
+
+generate_md $1
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh
