@@ -34,7 +34,20 @@
 ################################################################################
 
 
+source bashlets core::github::defs
+source bashlets core::github::page
 source bashlets core::github::api
+
+#@public
+function bashlets::core::github::user::gists()
+{
+    local user="${1:-bashlets}"
+    local since="${2:-$BASHLETS_CORE_GITHUB_API_EPOCH}"
+    local limit="${3:-100}" callback="${4:-cat}"
+    local url="/users/$user/gists?since=$since"
+
+    $BASHLETS_NAMESPACE page items "$url" id "$limit" "$callback"
+}
 
 #@public
 function bashlets::core::github::user::repos()
