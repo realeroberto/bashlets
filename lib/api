@@ -138,7 +138,7 @@ function bashlets::core::github::api::status()
 
     [[ -n $url ]] || return
 
-    __bashlets::core::github::api::request http_code           \
+    __bashlets::core::github::api::request http_code 000       \
         "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
 }
 
