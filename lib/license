@@ -36,6 +36,8 @@
 
 source bashlets core::github::api
 
+# Get the name of an individual license.
+#
 # @cf   https://developer.github.com/v3/licenses/#get-an-individual-license
 #@public
 function bashlets::core::github::license::name()
@@ -46,6 +48,8 @@ function bashlets::core::github::license::name()
     $BASHLETS_NAMESPACE api get "$url" | jq -r .name
 }
 
+# Describe an individual license.
+#
 # @cf   https://developer.github.com/v3/licenses/#get-an-individual-license
 #@public
 function bashlets::core::github::license::describe()
@@ -56,6 +60,8 @@ function bashlets::core::github::license::describe()
     $BASHLETS_NAMESPACE api get "$url" | jq -r .description
 }
 
+# Get the text of an individual license.
+#
 # @cf   https://developer.github.com/v3/licenses/#get-an-individual-license
 #@public
 function bashlets::core::github::license::text()
