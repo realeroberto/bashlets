@@ -34,7 +34,6 @@
 ################################################################################
 
 
-source bashlets core::github::api
 source bashlets core::github::page
 
 # List all my organizations.
@@ -49,10 +48,16 @@ function bashlets::core::github::my::orgs()
     $BASHLETS_NAMESPACE page items "$url" login "$limit" "$callback"
 }
 
+# List all my repositories.
+#
+# @cf   https://developer.github.com/v3/repos/#list-your-repositories
 #@public
 function bashlets::core::github::my::repos()
 {
-    $BASHLETS_NAMESPACE api get "/user/repos" | jq -r '.[].name?'
+    local limit="${1:-100}" callback="${2:-cat}"
+    local url="/user/repos"
+
+    $BASHLETS_NAMESPACE page items "$url" name "$limit" "$callback"
 }
 
 
