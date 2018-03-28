@@ -37,6 +37,8 @@
 source bashlets core::github::api
 source bashlets core::github::defs
 
+# Get the link relation for the given page of results.
+#
 # @cf   https://developer.github.com/v3/#pagination
 function __bashlets::core::github::page::rel()
 {
@@ -83,6 +85,8 @@ function bashlets::core::github::page::count()
     [[ $last =~ $regex ]] && echo "${BASH_REMATCH[1]}"
 }
 
+# Get paginated items.
+#
 # @cf   https://developer.github.com/v3/#pagination
 #@public
 function bashlets::core::github::page::items()
