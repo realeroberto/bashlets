@@ -105,7 +105,7 @@ function module_methods_md()
     [[ -e $module ]] || return
 
     module_methods "$module" \
-        | xargs -n 1 -I % echo "* [\`${name}::%\`](#${name}::%)"
+        | xargs -n 1 -I % echo "* [\`${name}::%\`](#${name}%)"
 }
 
 function module_methods_description_md()
