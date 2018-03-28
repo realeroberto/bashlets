@@ -166,7 +166,7 @@ function toc_md()
     [[ -e $base ]] || return
 
     cat <<EOF
-## Table of Contents
+## API Reference
 
 $(modules_md "$base")
 
