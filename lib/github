@@ -80,18 +80,6 @@ function bashlets::core::github::github::gists()
     $BASHLETS_NAMESPACE page items "$url" id "$limit" "$callback"
 }
 
-# Fetch a .gitignore template by name.
-#
-# @cf   https://developer.github.com/v3/gitignore/#get-a-single-template
-#@public
-function bashlets::core::github::github::gitignore()
-{
-    local name="${1:?Template name required}"
-    local url="/gitignore/templates/$name"
-    
-    $BASHLETS_NAMESPACE api get "$url" | $BASHLETS_NAMESPACE api filter .source
-}
-
 # List all .gitignore templates available to pass as an option when creating a
 # repository.
 #
