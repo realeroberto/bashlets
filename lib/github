@@ -58,6 +58,8 @@ function bashlets::core::github::github::gists()
     $BASHLETS_NAMESPACE page items "$url" id "$limit" "$callback"
 }
 
+# Fetch a .gitignore template by name.
+#
 # @cf   https://developer.github.com/v3/gitignore/#get-a-single-template
 #@public
 function bashlets::core::github::github::gitignore()
@@ -68,6 +70,9 @@ function bashlets::core::github::github::gitignore()
     $BASHLETS_NAMESPACE api get "$url" | jq -r .source
 }
 
+# List all .gitignore templates available to pass as an option when creating a
+# repository.
+#
 # @cf   https://developer.github.com/v3/gitignore/#listing-available-templates
 #@public
 function bashlets::core::github::github::gitignores()
