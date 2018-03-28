@@ -99,8 +99,8 @@ function bashlets::core::github::page::items()
 
     while true
     do
-        local item next
         declare -a items=($($BASHLETS_NAMESPACE api get "$url" ".[].\"$key\""))
+        local item
 
         for item in "${items[@]}"
         do
@@ -109,9 +109,8 @@ function bashlets::core::github::page::items()
             [[ -n $item ]] && echo "$item"
         done
 
-        next="$($BASHLETS_NAMESPACE page next "$url")"
-        [[ -n $next ]] || break
-        url="$next"
+        url="$(bashlets::core::github::page::next "$url")"
+        [[ -n $url ]] || break
 
     done | $callback
 }
