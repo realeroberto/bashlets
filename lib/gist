@@ -36,6 +36,9 @@
 
 source bashlets core::github::api
 
+# Delete a gist.
+#
+# @cf   https://developer.github.com/v3/gists/#delete-a-gist
 #@public
 function bashlets::core::github::gist::delete()
 {
@@ -59,6 +62,9 @@ function bashlets::core::github::gist::is_starred()
     [[ $status == 204 ]]
 }
 
+# Star a gist.
+#
+# @cf   https://developer.github.com/v3/gists/#star-a-gist
 #@public
 function bashlets::core::github::gist::star()
 {
@@ -67,6 +73,9 @@ function bashlets::core::github::gist::star()
     $BASHLETS_NAMESPACE api put "/gists/$id/star"
 }
 
+# Unstar a gist.
+#
+# @cf   https://developer.github.com/v3/gists/#unstar-a-gist
 #@public
 function bashlets::core::github::gist::unstar()
 {
