@@ -49,8 +49,11 @@ function bashlets::core::github::gist::is_starred()
 {
     local id="${1:?Gist id required}"
     local url="/gists/$id/star"
+    local status
 
-    $BASHLETS_NAMESPACE api get "$url"
+    status="$($BASHLETS_NAMESPACE api status "$url")"
+
+    [[ $status == 204 ]]
 }
 
 #@public
