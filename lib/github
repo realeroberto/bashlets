@@ -58,6 +58,25 @@ function bashlets::core::github::github::gists()
     $BASHLETS_NAMESPACE page items "$url" id "$limit" "$callback"
 }
 
+# @cf   https://developer.github.com/v3/gitignore/#get-a-single-template
+#@public
+function bashlets::core::github::github::gitignore()
+{
+    local name="${1:?Template name required}"
+    local url="/gitignore/templates/$name"
+    
+    $BASHLETS_NAMESPACE api get "$url" | jq -r .source
+}
+
+# @cf   https://developer.github.com/v3/gitignore/#listing-available-templates
+#@public
+function bashlets::core::github::github::gitignores()
+{
+    local url="/gitignore/templates"
+    
+    $BASHLETS_NAMESPACE api get "$url" | jq -r .[] | sort
+}
+
 # @cf   https://developer.github.com/v3/licenses/#list-all-licenses
 #@public
 function bashlets::core::github::github::licenses()
