@@ -111,6 +111,7 @@ bashlets install core.github
 ### `user`
 
 * [`user::gists`](#usergists)
+* [`user::keys`](#userkeys)
 * [`user::repos`](#userrepos)
 
 ## Methods Description
@@ -323,6 +324,10 @@ List tags for a repository.
 ### `user::gists`
 
 List public gists for the specified user.
+
+### `user::keys`
+
+List the verified public keys for the specified user.
 
 ### `user::repos`
 

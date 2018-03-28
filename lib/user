@@ -51,6 +51,19 @@ function bashlets::core::github::user::gists()
     $BASHLETS_NAMESPACE page items "$url" id "$limit" "$callback"
 }
 
+# List the verified public keys for the specified user.
+#
+# @cf   https://developer.github.com/v3/users/keys/#list-public-keys-for-a-user
+#@public
+function bashlets::core::github::user::keys()
+{
+    local user="${1:-bashlets}"
+    local limit="${2:-100}" callback="${3:-cat}"
+    local url="/users/$user/keys"
+
+    $BASHLETS_NAMESPACE page items "$url" key "$limit" "$callback"
+}
+
 # List public repositories for the specified user.
 #
 # @cf   https://developer.github.com/v3/repos/#list-user-repositories
