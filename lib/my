@@ -43,8 +43,7 @@ source bashlets core::github::page
 #@public
 function bashlets::core::github::my::orgs()
 {
-    local user="${1:-bashlets}" repo="${2:-bashlets}"
-    local limit="${3:-100}" callback="${4:-cat}"
+    local limit="${1:-100}" callback="${2:-cat}"
     local url="/user/orgs"
 
     $BASHLETS_NAMESPACE page items "$url" login "$limit" "$callback"
