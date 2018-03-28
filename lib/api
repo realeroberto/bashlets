@@ -217,6 +217,7 @@ function bashlets::core::github::api::rels()
 
 # Get API version.
 #
+# @cf   https://developer.github.com/v3/versions/#versions
 #@public
 function bashlets::core::github::api::version()
 {
