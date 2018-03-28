@@ -34,7 +34,19 @@
 ################################################################################
 
 
+source bashlets core::github::defs
 source bashlets core::github::page
+
+# @cf   https://developer.github.com/v3/gists/#list-all-public-gists
+#@public
+function bashlets::core::github::github::gists()
+{
+    local since="${1:-$BASHLETS_CORE_GITHUB_API_EPOCH}"
+    limit="${2:-100}" callback="${3:-cat}"
+    local url="/gists/public?since=$since"
+    
+    $BASHLETS_NAMESPACE page items "$url" id "$limit" "$callback"
+}
 
 # @cf   https://developer.github.com/v3/repos/#list-all-public-repositories
 #@public
