@@ -40,8 +40,8 @@ source bashlets core::github::page
 #@public
 function bashlets::core::github::github::repositories()
 {
-    local limit="${1:-100}" callback="${2:-cat}"
-    local url="/repositories"
+    local since="${1:-0}" limit="${2:-100}" callback="${3:-cat}"
+    local url="/repositories?since=$since"
     
     $BASHLETS_NAMESPACE page items "$url" full_name "$limit" "$callback"
 }
@@ -50,8 +50,8 @@ function bashlets::core::github::github::repositories()
 #@public
 function bashlets::core::github::github::users()
 {
-    local limit="${1:-100}" callback="${2:-cat}"
-    local url="/users"
+    local since="${1:-0}" limit="${2:-100}" callback="${3:-cat}"
+    local url="/users?since=$since"
     
     $BASHLETS_NAMESPACE page items "$url" login "$limit" "$callback"
 }
