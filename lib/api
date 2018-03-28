@@ -170,7 +170,8 @@ function bashlets::core::github::api::delete()
 
     [[ -n $url || -n $BASHLETS_CORE_GITHUB_API_OAUTH_TOKEN ]] || return
 
-    __bashlets::core::github::api::request body -X DELETE
+    __bashlets::core::github::api::request body -X DELETE      \
+        "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
 }
 
 #@public
