@@ -1,7 +1,7 @@
 {
         "name": "core.github",
-        "description": "core.github",
-        "version": "0.2",
+        "description": "A client for the GitHub REST API v3.",
+        "version": "0.1",
         "author": {
                 "name": "Roberto Reale",
                 "email": "rober.reale@gmail.com"
