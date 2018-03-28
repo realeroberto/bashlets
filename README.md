@@ -117,40 +117,40 @@ bashlets install core.github
 
 ### `api::delete`
 
-@public
+Delete a resouce.
 
 ### `api::filter`
 
-@public
+Filter JSON content.
 
 ### `api::get`
 
-@public
+Retrieve a resource.
 
 ### `api::header`
 
-@public
-@public
+Get the HTTP headers.
+Extract a given value from the HTTP headers.
 
 ### `api::header_value`
 
-@public
+Extract a given value from the HTTP headers.
 
 ### `api::post`
 
-@public
+Create a resouce.
 
 ### `api::put`
 
-@public
+Replace a resource or a collection.
 
 ### `api::rels`
 
-@public
+Get the Link header values.
 
 ### `api::status`
 
-@public
+Get the HTTP status code.
 
 ### `api::version`
 
