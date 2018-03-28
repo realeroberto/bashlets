@@ -36,16 +36,9 @@
 
 source bashlets core::github::page
 
-#@public
-function bashlets::core::github::repo::create()
-{
-    local name="$1" json
-    local url="/user/repos"
-
-    json="{ \"name\": \"$name\" }"
-    $BASHLETS_NAMESPACE api post "$url" "$json"
-}
-
+# List commits on a repository.
+#
+# @cf   https://developer.github.com/v3/repos/commits/#list-commits-on-a-repository
 #@public
 function bashlets::core::github::repo::commits()
 {
@@ -77,6 +70,21 @@ function bashlets::core::github::repo::conduct()
     )
 }
 
+# Create a new repository for the authenticated user.
+#
+# @cf   https://developer.github.com/v3/repos/#create
+#@public
+function bashlets::core::github::repo::create()
+{
+    local name="$1" json
+    local url="/user/repos"
+
+    json="{ \"name\": \"$name\" }"
+    $BASHLETS_NAMESPACE api post "$url" "$json"
+}
+
+# Get the contents of a repository's license.
+#
 # @cf   https://developer.github.com/v3/licenses/#get-the-contents-of-a-repositorys-license
 #@public
 function bashlets::core::github::repo::license()
@@ -88,6 +96,9 @@ function bashlets::core::github::repo::license()
     [[ -n $download_url ]] && curl -s "$download_url"
 }
 
+# Return the preferred README for a repository.
+#
+# @cf   https://developer.github.com/v3/repos/contents/#get-the-readme
 #@public
 function bashlets::core::github::repo::readme()
 {
@@ -99,6 +110,9 @@ function bashlets::core::github::repo::readme()
     [[ -n $download_url ]] && curl -s "$download_url"
 }
 
+# List tags for a repository.
+#
+# @cf   https://developer.github.com/v3/repos/#list-tags
 #@public
 function bashlets::core::github::repo::tags()
 {
