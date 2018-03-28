@@ -181,7 +181,7 @@ function bashlets::core::github::api::put()
             "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
     else
         __bashlets::core::github::api::request body -X PUT      \
-            -H "Content-Length: 0"                              \
+            -H "'Content-Length: 0'"                            \
             "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
     fi
 }
