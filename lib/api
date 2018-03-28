@@ -164,6 +164,24 @@ function bashlets::core::github::api::post()
 }
 
 #@public
+function bashlets::core::github::api::put()
+{
+    local url="$1" data="$2"
+
+    [[ -n $url || -n $BASHLETS_CORE_GITHUB_API_OAUTH_TOKEN ]] || return
+
+    if [[ -n $data ]]
+    then
+        __bashlets::core::github::api::request body -X PUT      \
+            "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
+    else
+        __bashlets::core::github::api::request body -X PUT      \
+            -H "Content-Length: 0"                              \
+            "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
+    fi
+}
+
+#@public
 function bashlets::core::github::api::delete()
 {
     local url="$1"
