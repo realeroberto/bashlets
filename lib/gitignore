@@ -45,7 +45,7 @@ function bashlets::core::github::gitignore::content()
     local name="${1:?Template name required}"
     local url="/gitignore/templates/$name"
     
-    $BASHLETS_NAMESPACE api get "$url" | $BASHLETS_NAMESPACE api filter .source
+    $BASHLETS_NAMESPACE api get "$url" .source
 }
 
 

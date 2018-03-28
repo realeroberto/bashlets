@@ -73,7 +73,7 @@ function bashlets::core::github::repo::conduct()
         # @cf https://developer.github.com/v3/codes_of_conduct/#codes-of-conduct
 
         BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS="$BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS -H 'Accept: application/vnd.github.scarlet-witch-preview+json'"
-        $BASHLETS_NAMESPACE api get "$url" | $BASHLETS_NAMESPACE api filter .key
+        $BASHLETS_NAMESPACE api get "$url" .key
     )
 }
 

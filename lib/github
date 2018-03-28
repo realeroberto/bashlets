@@ -54,7 +54,7 @@ function bashlets::core::github::github::conducts()
         # @cf https://developer.github.com/v3/codes_of_conduct/#codes-of-conduct
 
         BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS="$BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS -H 'Accept: application/vnd.github.scarlet-witch-preview+json'"
-        $BASHLETS_NAMESPACE api get "$url" | $BASHLETS_NAMESPACE api filter .[].key
+        $BASHLETS_NAMESPACE api get "$url" .[].key
     )
 }
 
@@ -66,7 +66,7 @@ function bashlets::core::github::github::emojis()
 {
     local url="/emojis"
     
-    $BASHLETS_NAMESPACE api get "$url" | $BASHLETS_NAMESPACE api filter keys[]
+    $BASHLETS_NAMESPACE api get "$url" keys[]
 }
 
 # List all public gists.
@@ -91,7 +91,7 @@ function bashlets::core::github::github::gitignores()
 {
     local url="/gitignore/templates"
     
-    $BASHLETS_NAMESPACE api get "$url" | $BASHLETS_NAMESPACE api filter .[]
+    $BASHLETS_NAMESPACE api get "$url" .[]
 }
 
 # List all IP addresses (in CIDR format) specifying the Git servers for
@@ -103,7 +103,7 @@ function bashlets::core::github::github::git_servers()
 {
     local url="/meta"
     
-    $BASHLETS_NAMESPACE api get "$url" | $BASHLETS_NAMESPACE api filter .git[]
+    $BASHLETS_NAMESPACE api get "$url" .git[]
 }
 
 # Get a list of IP addresses in CIDR format specifying the addresses that
@@ -115,7 +115,7 @@ function bashlets::core::github::github::hooks()
 {
     local url="/meta"
     
-    $BASHLETS_NAMESPACE api get "$url" | $BASHLETS_NAMESPACE api filter .hooks[]
+    $BASHLETS_NAMESPACE api get "$url" .hooks[]
 }
 
 # Get a list of IP addresses in CIDR format specifying the addresses that
@@ -127,7 +127,7 @@ function bashlets::core::github::github::importers()
 {
     local url="/meta"
     
-    $BASHLETS_NAMESPACE api get "$url" | $BASHLETS_NAMESPACE api filter .importers[]
+    $BASHLETS_NAMESPACE api get "$url" .importers[]
 }
 
 # List all licenses.
@@ -138,7 +138,7 @@ function bashlets::core::github::github::licenses()
 {
     local url="/licenses"
     
-    $BASHLETS_NAMESPACE api get "$url" | $BASHLETS_NAMESPACE api filter .[].key
+    $BASHLETS_NAMESPACE api get "$url" .[].key
 }
 
 # List all IP addresses (in CIDR format) specifying the A records for GitHub
@@ -150,7 +150,7 @@ function bashlets::core::github::github::pages()
 {
     local url="/meta"
     
-    $BASHLETS_NAMESPACE api get "$url" | $BASHLETS_NAMESPACE api filter .pages[]
+    $BASHLETS_NAMESPACE api get "$url" .pages[]
 }
 
 # Tell whether authentication with username and password is supported.
@@ -161,8 +161,7 @@ function bashlets::core::github::github::password_auth()
 {
     local url="/meta" value
     
-    $BASHLETS_NAMESPACE api get "$url" \
-        | $BASHLETS_NAMESPACE api filter '.github_services_sha == true' > /dev/null
+    $BASHLETS_NAMESPACE api get "$url" '.github_services_sha == true' > /dev/null
 }
 
 # List all public repositories.
@@ -186,7 +185,7 @@ function bashlets::core::github::github::sha()
 {
     local url="/meta"
     
-    $BASHLETS_NAMESPACE api get "$url" | $BASHLETS_NAMESPACE api filter .github_services_sha
+    $BASHLETS_NAMESPACE api get "$url" .github_services_sha
 }
 
 # List all users, in the order that they signed up on GitHub.
