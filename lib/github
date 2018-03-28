@@ -38,6 +38,24 @@ source bashlets core::github::api
 source bashlets core::github::defs
 source bashlets core::github::page
 
+# List all Codes of Conduct.
+#
+# @cf   https://developer.github.com/v3/codes_of_conduct/#list-all-codes-of-conduct
+#@public
+function bashlets::core::github::github::conducts()
+{
+    local url="/codes_of_conduct"
+
+    (
+        # The Codes of Conduct API is currently available for developers to
+        # preview. To access the API during the preview period, we must provide
+        # a custom media type in the Accept header.
+
+        BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS="$BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS -H 'Accept: application/vnd.github.scarlet-witch-preview+json'"
+        $BASHLETS_NAMESPACE api get "$url" | $BASHLETS_NAMESPACE api filter .[].key
+    )
+}
+
 # @cf   https://developer.github.com/v3/emojis/#emojis
 #@public
 function bashlets::core::github::github::emojis()
