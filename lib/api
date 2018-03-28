@@ -108,6 +108,8 @@ function __bashlets::core::github::api::request()
     ____bashlets::core::github::api::request "$@"
 }
 
+# Filter JSON content.
+#
 #@public
 function bashlets::core::github::api::filter()
 {
@@ -119,6 +121,9 @@ function bashlets::core::github::api::filter()
     fi
 }
 
+# Retrieve a resource.
+#
+# @cf   https://developer.github.com/v3/#http-verbs
 #@public
 function bashlets::core::github::api::get()
 {
@@ -131,6 +136,8 @@ function bashlets::core::github::api::get()
         | bashlets::core::github::api::filter "$@"
 }
 
+# Get the HTTP status code.
+#
 #@public
 function bashlets::core::github::api::status()
 {
@@ -142,6 +149,8 @@ function bashlets::core::github::api::status()
         "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
 }
 
+# Get the HTTP headers.
+#
 #@public
 function bashlets::core::github::api::header()
 {
@@ -154,6 +163,8 @@ function bashlets::core::github::api::header()
         | grep "^$key: "
 }
 
+# Extract a given value from the HTTP headers.
+#
 #@public
 function bashlets::core::github::api::header_value()
 {
@@ -166,6 +177,9 @@ function bashlets::core::github::api::header_value()
         | sed -n "s/^$key: \(.*\)/\\1/p"
 }
 
+# Create a resouce.
+#
+# @cf   https://developer.github.com/v3/#http-verbs
 #@public
 function bashlets::core::github::api::post()
 {
@@ -179,6 +193,9 @@ function bashlets::core::github::api::post()
         "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
 }
 
+# Replace a resource or a collection.
+#
+# @cf   https://developer.github.com/v3/#http-verbs
 #@public
 function bashlets::core::github::api::put()
 {
@@ -197,6 +214,9 @@ function bashlets::core::github::api::put()
     fi
 }
 
+# Delete a resouce.
+#
+# @cf   https://developer.github.com/v3/#http-verbs
 #@public
 function bashlets::core::github::api::delete()
 {
@@ -208,6 +228,9 @@ function bashlets::core::github::api::delete()
         "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
 }
 
+# Get the Link header values.
+#
+# @cf   https://developer.github.com/v3/#pagination
 #@public
 function bashlets::core::github::api::rels()
 {
