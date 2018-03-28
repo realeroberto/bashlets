@@ -71,12 +71,9 @@ function bashlets::core::github::user::keys()
 function bashlets::core::github::user::repos()
 {
     local user="${1:-bashlets}"
-    local type="${2:-owner}"      # all/owner/member
-    local sort="${3:-full_name}"  # created/updated/pushed/full_name
-    local direction="${4:-asc}"   # asc/desc
-    local limit="${5:-100}" callback="${6:-cat}"
+    local limit="${2:-100}" callback="${3:-cat}"
 
-    local url="/users/$user/repos?type=$type&sort=$sort&direction=$direction"
+    local url="/users/$user/repos"
 
     $BASHLETS_NAMESPACE page items "$url" name "$limit" "$callback"
 }
