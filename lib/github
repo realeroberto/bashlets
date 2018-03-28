@@ -38,7 +38,7 @@ source bashlets core::github::page
 
 # @cf   https://developer.github.com/v3/repos/#list-all-public-repositories
 #@public
-function bashlets::core::github::github::repositories()
+function bashlets::core::github::github::repos()
 {
     local since="${1:-0}" limit="${2:-100}" callback="${3:-cat}"
     local url="/repositories?since=$since"
