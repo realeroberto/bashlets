@@ -94,7 +94,7 @@ function __bashlets::core::github::api::request()
         then
             $BASHLETS_ERROR "$BASHLETS_CORE_GITHUB_API_ERROR_HEADER [cURL error]"
             return $BASHLETS_CORE_GITHUB_API_ERROR
-        elif [[ $http_code != $expected ]]
+        elif [[ $what != http_code && $http_code != $expected ]]
         then
             error_message="$(jq -r .message <<<"$body")"
             $BASHLETS_ERROR "$BASHLETS_CORE_GITHUB_API_ERROR_HEADER [$error_message]"
@@ -132,13 +132,13 @@ function bashlets::core::github::api::get()
 }
 
 #@public
-function bashlets::core::github::api::get_empty()
+function bashlets::core::github::api::status()
 {
     local url="$1" ; shift
 
     [[ -n $url ]] || return
 
-    __bashlets::core::github::api::request 204 body            \
+    __bashlets::core::github::api::request http_code           \
         "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
 }
 
