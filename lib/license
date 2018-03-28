@@ -45,7 +45,7 @@ function bashlets::core::github::license::name()
     local key="${1:-mit}"
     local url="/licenses/$key"
     
-    $BASHLETS_NAMESPACE api get "$url" | jq -r .name
+    $BASHLETS_NAMESPACE api get "$url" .name
 }
 
 # Describe an individual license.
@@ -57,7 +57,7 @@ function bashlets::core::github::license::describe()
     local key="${1:-mit}"
     local url="/licenses/$key"
     
-    $BASHLETS_NAMESPACE api get "$url" | jq -r .description
+    $BASHLETS_NAMESPACE api get "$url" .description
 }
 
 # Get the text of an individual license.
@@ -66,10 +66,10 @@ function bashlets::core::github::license::describe()
 #@public
 function bashlets::core::github::license::text()
 {
-    local key="${1:-mit}" year="$2" fullname="$3"
+    local key="${1:-mit}"
     local url="/licenses/$key"
     
-    $BASHLETS_NAMESPACE api get "$url" | jq -r .body
+    $BASHLETS_NAMESPACE api get "$url" .body
 }
 
 # Local variables:
