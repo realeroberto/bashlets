@@ -76,6 +76,7 @@ function __bashlets::core::github::api::request()
                 "$accept"                                                  \
                 "$user_agent"                                              \
                 "$oauth_token"                                             \
+                "$BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS"                 \
                 --write-out "%{http_code}"                                 \
                 "$@"
         )"
