@@ -188,8 +188,8 @@ function bashlets::core::github::api::post()
     [[ -n $url || -n $BASHLETS_CORE_GITHUB_API_OAUTH_TOKEN ]] || return
 
     __bashlets::core::github::api::request body 201 -X POST    \
-        -H "Content-Type: application/json"                    \
-        --data "$data"                                         \
+        "-H 'Content-Type: application/json'"                  \
+        --data "$(printf "%q" $data)"                          \
         "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
 }
 
