@@ -113,9 +113,11 @@ function bashlets::core::github::gist::describe()
 # @public
 function bashlets::core::github::gist::download()
 {
-    local id="${1:?Gist id required}"
-    local where="${2:-.}"
+    local id="${1:?Gist id required}" rev="$2"
+    local where="${3:-.}"
     local url="/gists/$id"
+
+    [[ -n $rev ]] && url="$url/$rev"
 
     mkdir -p "$where/$id"
 
@@ -135,8 +137,10 @@ function bashlets::core::github::gist::download()
 # @public
 function bashlets::core::github::gist::files()
 {
-    local id="${1:?Gist id required}"
+    local id="${1:?Gist id required}" rev="$2"
     local url="/gists/$id"
+
+    [[ -n $rev ]] && url="$url/$rev"
 
     $BASHLETS_NAMESPACE api get "$url" '.files | keys[]'
 }
@@ -160,8 +164,10 @@ function bashlets::core::github::gist::forks()
 # @public
 function bashlets::core::github::gist::get()
 {
-    local id="${1:?Gist id required}"
+    local id="${1:?Gist id required}" rev="$2"
     local url="/gists/$id"
+
+    [[ -n $rev ]] && url="$url/$rev"
 
     $BASHLETS_NAMESPACE api get "$url" .
 }
