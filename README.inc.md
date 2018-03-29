@@ -16,6 +16,8 @@ bashlets install core.github
 
 ## Implemented Parts
 
+* Gists
+    - [Comments](https://developer.github.com/v3/gists/comments/)
 * [Miscellaneous](https://developer.github.com/v3/misc/)
     - [Emojis](https://developer.github.com/v3/emojis/)
     - [Gitignore](https://developer.github.com/v3/gitignore/)

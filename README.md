@@ -16,6 +16,8 @@ bashlets install core.github
 
 ## Implemented Parts
 
+* Gists
+    - [Comments](https://developer.github.com/v3/gists/comments/)
 * [Miscellaneous](https://developer.github.com/v3/misc/)
     - [Emojis](https://developer.github.com/v3/emojis/)
     - [Gitignore](https://developer.github.com/v3/gitignore/)
@@ -30,6 +32,7 @@ bashlets install core.github
 * [`api::get`](#apiget)
 * [`api::header`](#apiheader)
 * [`api::header_value`](#apiheader_value)
+* [`api::patch`](#apipatch)
 * [`api::post`](#apipost)
 * [`api::put`](#apiput)
 * [`api::rels`](#apirels)
@@ -52,10 +55,30 @@ bashlets install core.github
 
 ### `gist`
 
+* [`gist::clone`](#gistclone)
+* [`gist::comment`](#gistcomment)
+* [`gist::comments`](#gistcomments)
+* [`gist::commits`](#gistcommits)
+* [`gist::create`](#gistcreate)
 * [`gist::delete`](#gistdelete)
+* [`gist::describe`](#gistdescribe)
+* [`gist::download`](#gistdownload)
+* [`gist::files`](#gistfiles)
+* [`gist::forks`](#gistforks)
+* [`gist::get`](#gistget)
 * [`gist::is_starred`](#gistis_starred)
+* [`gist::owner`](#gistowner)
 * [`gist::star`](#giststar)
 * [`gist::unstar`](#gistunstar)
+
+### `gist_comment`
+
+* [`gist_comment::create`](#gist_commentcreate)
+* [`gist_comment::delete`](#gist_commentdelete)
+* [`gist_comment::edit`](#gist_commentedit)
+* [`gist_comment::get`](#gist_commentget)
+* [`gist_comment::text`](#gist_commenttext)
+* [`gist_comment::user`](#gist_commentuser)
 
 ### `github`
 
@@ -114,6 +137,14 @@ bashlets install core.github
 * [`repo::readme`](#reporeadme)
 * [`repo::tags`](#repotags)
 
+### `starred`
+
+* [`starred::gists`](#starredgists)
+
+### `t.json`
+
+
+
 ### `user`
 
 * [`user::gists`](#usergists)
@@ -143,9 +174,13 @@ Extract a given value from the HTTP headers.
 
 Extract a given value from the HTTP headers.
 
+### `api::patch`
+
+Update a resource with partial JSON data.
+
 ### `api::post`
 
-Create a resouce.
+Create a resource.
 
 ### `api::put`
 
@@ -179,13 +214,58 @@ Get the url of an individual code of conduct.
 
 Get an emoji's url.
 
+### `gist::clone`
+
+Download gist files.
+
+### `gist::comment`
+
+Get a single comment on a gist.
+List comments on a gist.
+
+### `gist::comments`
+
+List comments on a gist.
+
+### `gist::commits`
+
+List gist commits.
+
+### `gist::create`
+
+Create a gist.
+
 ### `gist::delete`
 
 Delete a gist.
 
+### `gist::describe`
+
+Describe a single gist.
+
+### `gist::download`
+
+Download gist files.
+
+### `gist::files`
+
+List gist files.
+
+### `gist::forks`
+
+List gist forks.
+
+### `gist::get`
+
+Get a single gist.
+
 ### `gist::is_starred`
 
 Check if a gist is starred.
+
+### `gist::owner`
+
+Get the a gist's owner.
 
 ### `gist::star`
 
@@ -194,6 +274,30 @@ Star a gist.
 ### `gist::unstar`
 
 Unstar a gist.
+
+### `gist_comment::create`
+
+Create a comment on a gist.
+
+### `gist_comment::delete`
+
+Delete a comment on a gist.
+
+### `gist_comment::edit`
+
+Edit a comment on a gist.
+
+### `gist_comment::get`
+
+Get a single comment on a gist.
+
+### `gist_comment::text`
+
+Get the text of a single comment on a gist.
+
+### `gist_comment::user`
+
+Get the user of a single comment on a gist.
 
 ### `github::conducts`
 
@@ -326,6 +430,10 @@ Return the preferred README for a repository.
 ### `repo::tags`
 
 List tags for a repository.
+
+### `starred::gists`
+
+List all the starred gists for the authenticated user.
 
 ### `user::gists`
 
