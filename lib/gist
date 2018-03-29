@@ -35,6 +35,20 @@
 
 
 source bashlets core::github::api
+source bashlets core::github::page
+
+# List gist commits.
+#
+# @cf   https://developer.github.com/v3/gists/#list-gist-commits
+# @public
+function bashlets::core::github::gist::commits()
+{
+    local id="${1:?Gist id required}"
+    local limit="${2:-100}" callback="${3:-cat}"
+    local url="/gists/$id/commits"
+
+    $BASHLETS_NAMESPACE page items "$url" version "$limit" "$callback"
+}
 
 # Create a gist.
 #
