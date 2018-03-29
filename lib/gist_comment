@@ -36,6 +36,46 @@
 
 source bashlets core::github::api
 
+# Create a comment on a gist.
+#
+# @cf   https://developer.github.com/v3/gists/comments/#create-a-comment
+# @public
+function bashlets::core::github::gist_comment::create()
+{
+    local id="${1:?Gist id required}"
+    local comment="${2:?Comment text required}"
+    local url="/gists/$id/comments"
+
+    $BASHLETS_NAMESPACE api post "$url" "{\"body\": \"$comment\"}" .id
+}
+
+# Delete a comment on a gist.
+#
+# @cf   https://developer.github.com/v3/gists/comments/#delete-a-comment
+# @public
+function bashlets::core::github::gist_comment::delete()
+{
+    local id="${1:?Gist id required}"
+    local comment_id="${2:?Comment id required}"
+    local url="/gists/$id/comments/$comment_id"
+
+    $BASHLETS_NAMESPACE api delete "$url"
+}
+
+# Edit a comment on a gist.
+#
+# @cf   https://developer.github.com/v3/gists/comments/#create-a-comment
+# @public
+function bashlets::core::github::gist_comment::edit()
+{
+    local id="${1:?Gist id required}"
+    local comment_id="${2:?Comment id required}"
+    local comment="${3:?Comment text required}"
+    local url="/gists/$id/comments/$comment_id"
+
+    $BASHLETS_NAMESPACE api patch "$url" "{\"body\": \"$comment\"}" .updated_at
+}
+
 # Get a single comment on a gist.
 #
 # @cf   https://developer.github.com/v3/gists/comments/#get-a-single-comment
@@ -49,7 +89,7 @@ function bashlets::core::github::gist_comment::get()
     $BASHLETS_NAMESPACE api get "$url" .
 }
 
-# Get the text a single comment on a gist.
+# Get the text of a single comment on a gist.
 #
 # @cf   https://developer.github.com/v3/gists/comments/#get-a-single-comment
 # @public
