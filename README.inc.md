@@ -14,4 +14,10 @@ bashlets install core.github
 
 * [ok.sh](https://github.com/whiteinge/ok.sh)
 
+## Implemented Parts
+
+* [Miscellaneous](https://developer.github.com/v3/misc/)
+** [Emojis](https://developer.github.com/v3/emojis/)
+** [Gitignore](https://developer.github.com/v3/gitignore/)
+** [Meta](https://developer.github.com/v3/meta/)
 
