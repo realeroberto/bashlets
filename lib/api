@@ -192,7 +192,7 @@ function bashlets::core::github::api::post()
 
     bashlets::core::github::api::request body 201 -X POST    \
         "-H 'Content-Type: application/json'"                \
-        --data "$(printf "%q" $data)"                        \
+        --data "$(printf "%q" "$data")"                      \
         "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"         \
         | bashlets::core::github::api::filter "$@"
 }
