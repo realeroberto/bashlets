@@ -72,6 +72,18 @@ function bashlets::core::github::gist::delete()
     $BASHLETS_NAMESPACE api delete "/gists/$id"
 }
 
+# Describe a single gist.
+#
+# @cf   https://developer.github.com/v3/gists/#get-a-single-gist
+# @public
+function bashlets::core::github::gist::describe()
+{
+    local id="${1:?Gist id required}"
+
+    bashlets::core::github::gist::get "$id" \
+        | $BASHLETS_NAMESPACE api filter .description
+}
+
 # List gist forks
 #
 # @cf   https://developer.github.com/v3/gists/#list-gist-forks
@@ -83,6 +95,18 @@ function bashlets::core::github::gist::forks()
     local url="/gists/$id/forks"
 
     $BASHLETS_NAMESPACE page items "$url" id "$limit" "$callback"
+}
+
+# Get a single gist.
+#
+# @cf   https://developer.github.com/v3/gists/#get-a-single-gist
+# @public
+function bashlets::core::github::gist::get()
+{
+    local id="${1:?Gist id required}"
+    local url="/gists/$id"
+
+    $BASHLETS_NAMESPACE api get "$url" .
 }
 
 # Check if a gist is starred.
