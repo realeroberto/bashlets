@@ -105,7 +105,7 @@ function bashlets::core::github::api::request()
         fi
 
         # Echo headers/body/http_code
-        eval echo "\"\$$what\""
+        [[ $what != none ]] && eval echo "\"\$$what\""
     }
 
     __bashlets::core::github::api::request "$@"
@@ -226,11 +226,11 @@ function bashlets::core::github::api::put()
 
     if [[ -n $data ]]
     then
-        bashlets::core::github::api::request body 204 -X PUT  \
+        bashlets::core::github::api::request none 204 -X PUT \
             "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
     else
-        bashlets::core::github::api::request body 204 -X PUT  \
-            -H "'Content-Length: 0'"                          \
+        bashlets::core::github::api::request none 204 -X PUT \
+            -H "'Content-Length: 0'"                         \
             "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
     fi
 }
@@ -245,7 +245,7 @@ function bashlets::core::github::api::delete()
 
     [[ -n $url || -n $BASHLETS_CORE_GITHUB_API_OAUTH_TOKEN ]] || return
 
-    bashlets::core::github::api::request empty 204 -X DELETE  \
+    bashlets::core::github::api::request none 204 -X DELETE  \
         "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
 }
 
