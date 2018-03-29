@@ -36,7 +36,6 @@
 
 source bashlets core::github::api
 source bashlets core::github::defs
-source bashlets core::github::page
 
 # Specialized POST method that expects a 200 status code.
 #
