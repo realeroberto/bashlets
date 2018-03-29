@@ -59,6 +59,19 @@ function bashlets::core::github::gist::clone()
     )
 }
 
+# List comments on a gist.
+#
+# @cf   https://developer.github.com/v3/gists/comments/#list-comments-on-a-gist
+# @public
+function bashlets::core::github::gist::comments()
+{
+    local id="${1:?Gist id required}"
+    local limit="${2:-100}" callback="${3:-cat}"
+    local url="/gists/$id/comments"
+
+    $BASHLETS_NAMESPACE page items "$url" id "$limit" "$callback"
+}
+
 # List gist commits.
 #
 # @cf   https://developer.github.com/v3/gists/#list-gist-commits
@@ -78,9 +91,7 @@ function bashlets::core::github::gist::commits()
 # @public
 function bashlets::core::github::gist::create()
 {
-    local id="${1:?Gist id required}"
-
-    $BASHLETS_NAMESPACE api create "/gists/$id"
+    echo Unimplemented >&2
 }
 
 # Delete a gist.
@@ -90,11 +101,12 @@ function bashlets::core::github::gist::create()
 function bashlets::core::github::gist::delete()
 {
     local id="${1:?Gist id required}"
+    local url="/gists/$id"
 
-    $BASHLETS_NAMESPACE api delete "/gists/$id"
+    $BASHLETS_NAMESPACE api delete "$url"
 }
 
-# Describe a single gist.
+# Describe a gist.
 #
 # @cf   https://developer.github.com/v3/gists/#get-a-single-gist
 # @public
@@ -131,6 +143,15 @@ function bashlets::core::github::gist::download()
     )
 }
 
+# Edit a gist.
+#
+# @cf   https://developer.github.com/v3/gists/#edit-a-gist
+# @public
+function bashlets::core::github::gist::edit()
+{
+    echo Unimplemented >&2
+}
+
 # List gist files.
 #
 # @cf   https://developer.github.com/v3/gists/#get-a-single-gist
@@ -143,6 +164,18 @@ function bashlets::core::github::gist::files()
     [[ -n $rev ]] && url="$url/$rev"
 
     $BASHLETS_NAMESPACE api get "$url" '.files | keys[]'
+}
+
+# Fork a gist.
+#
+# @cf   https://developer.github.com/v3/gists/#fork-a-gist
+# @public
+function bashlets::core::github::gist::fork()
+{
+    local id="${1:?Gist id required}"
+    local url="/gists/$id/forks"
+
+    $BASHLETS_NAMESPACE api post "$url" "" .id
 }
 
 # List gist forks.
@@ -206,8 +239,9 @@ function bashlets::core::github::gist::owner()
 function bashlets::core::github::gist::star()
 {
     local id="${1:?Gist id required}"
+    local url="/gists/$id/star"
 
-    $BASHLETS_NAMESPACE api put "/gists/$id/star"
+    $BASHLETS_NAMESPACE api put "$url"
 }
 
 # Unstar a gist.
@@ -217,8 +251,9 @@ function bashlets::core::github::gist::star()
 function bashlets::core::github::gist::unstar()
 {
     local id="${1:?Gist id required}"
+    local url="/gists/$id/star"
 
-    $BASHLETS_NAMESPACE api delete "/gists/$id/star"
+    $BASHLETS_NAMESPACE api delete "$url"
 }
 
 # Local variables:
