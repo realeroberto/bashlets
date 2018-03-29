@@ -1,0 +1,131 @@
+#!/bin/bash
+
+
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# Bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2014-8 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+source bashlets core::github::api
+source bashlets core::github::defs
+source bashlets core::github::page
+
+# Specialized POST method that expects a 200 status code.
+#
+# @cf   https://developer.github.com/v3/#http-verbs
+function __bashlets::core::github::markdown::post()
+{
+    local url="$1" data="$2"
+    local mime="${3:-application/json}"
+
+    [[ -n $url ]] || return
+
+    $BASHLETS_NAMESPACE api request body 200 -X POST           \
+        "-H 'Content-Type: $mime'"                             \
+        --data "$(printf "%q" "$data")"                        \
+        "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
+}
+
+# Render an arbitrary Markdown document from a string (private method).
+# The `gfm` mode is used to render a document in GitHub Flavored Markdown,
+# which creates links for user mentions as well as references to SHA-1 hashes,
+# issues, and pull requests.
+#
+# @cf   https://developer.github.com/v3/markdown/#render-an-arbitrary-markdown-document
+function __bashlets::core::github::markdown::from_string()
+{
+    local text="${1:?Markdown text needed}"
+    local mode="${2:-markdown}"  # markdown/gfm
+    local context="$3"
+    local url="/markdown"
+    local data
+
+    data="{\"text\": \"$text\", \"mode\": \"$mode\"}"
+
+    if [[ $mode == gfm ]]
+    then
+        # Add the `context` parameter when mode is `gfm`
+        data="$(echo "$data" | jq -r --arg context "$context" '. + {context: $context}')"
+    fi
+
+    __bashlets::core::github::markdown::post "$url" "$data"
+}
+
+# Render an arbitrary Markdown document from a file.
+#
+# @cf   https://developer.github.com/v3/markdown/#render-an-arbitrary-markdown-document
+# @public
+function bashlets::core::github::markdown::from_file()
+{
+    local file="${1:?Markdown file needed}"
+    local mode="${2:-markdown}"  # markdown/gfm
+    local context="$3"
+    local text
+
+    [[ -e $file ]] && text="$(<"$file")"
+
+    __bashlets::core::github::markdown::from_string "$text" "$mode" "$context"
+}
+
+# Render an arbitrary Markdown document from stdin.
+#
+# @cf   https://developer.github.com/v3/markdown/#render-an-arbitrary-markdown-document
+# @public
+function bashlets::core::github::markdown::from_stream()
+{
+    local mode="${1:-markdown}"  # markdown/gfm
+    local context="$2"
+    local text="$(cat)"
+
+    __bashlets::core::github::markdown::from_string "$text" "$mode" "$context"
+}
+
+# Render an arbitrary Markdown document from a string.
+#
+# @cf   https://developer.github.com/v3/markdown/#render-an-arbitrary-markdown-document
+# @public
+function bashlets::core::github::markdown::from_string()
+{
+    local text="${1:?Markdown text needed}"
+    local mode="${2:-markdown}"  # markdown/gfm
+    local context="$3"
+
+    __bashlets::core::github::markdown::from_string "$text" "$mode" "$context"
+}
+
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh
