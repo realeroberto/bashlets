@@ -84,7 +84,7 @@ function bashlets::core::github::gist::describe()
         | $BASHLETS_NAMESPACE api filter .description
 }
 
-# List gist forks
+# List gist forks.
 #
 # @cf   https://developer.github.com/v3/gists/#list-gist-forks
 # @public
