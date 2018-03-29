@@ -43,7 +43,7 @@ source bashlets core::github::page
 # @public
 function bashlets::core::github::user::gists()
 {
-    local user="${1:-bashlets}"
+    local user="${1:?User name required}"
     local since="${2:-$BASHLETS_CORE_GITHUB_API_EPOCH}"
     local limit="${3:-100}" callback="${4:-cat}"
     local url="/users/$user/gists?since=$since"
@@ -57,7 +57,7 @@ function bashlets::core::github::user::gists()
 # @public
 function bashlets::core::github::user::keys()
 {
-    local user="${1:-bashlets}"
+    local user="${1:?User name required}"
     local limit="${2:-100}" callback="${3:-cat}"
     local url="/users/$user/keys"
 
@@ -70,7 +70,7 @@ function bashlets::core::github::user::keys()
 # @public
 function bashlets::core::github::user::repos()
 {
-    local user="${1:-bashlets}"
+    local user="${1:?User name required}"
     local limit="${2:-100}" callback="${3:-cat}"
 
     local url="/users/$user/repos"
