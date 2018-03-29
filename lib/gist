@@ -72,6 +72,19 @@ function bashlets::core::github::gist::delete()
     $BASHLETS_NAMESPACE api delete "/gists/$id"
 }
 
+# List gist forks
+#
+# @cf   https://developer.github.com/v3/gists/#list-gist-forks
+# @public
+function bashlets::core::github::gist::forks()
+{
+    local id="${1:?Gist id required}"
+    local limit="${2:-100}" callback="${3:-cat}"
+    local url="/gists/$id/forks"
+
+    $BASHLETS_NAMESPACE page items "$url" id "$limit" "$callback"
+}
+
 # Check if a gist is starred.
 #
 # @cf   https://developer.github.com/v3/gists/#check-if-a-gist-is-starred
