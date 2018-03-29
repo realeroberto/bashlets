@@ -267,6 +267,15 @@ function bashlets::core::github::api::rels()
     done
 }
 
+# Get API root endpoint.
+#
+# @cf   https://developer.github.com/v3/#root-endpoint
+# @public
+function bashlets::core::github::api::endpoint()
+{
+    echo "$BASHLETS_CORE_GITHUB_API_ENDPOINT"
+}
+
 # Get API version.
 #
 # @cf   https://developer.github.com/v3/versions/#versions
