@@ -36,6 +36,17 @@
 
 source bashlets core::github::api
 
+# Create a gist.
+#
+# @cf   https://developer.github.com/v3/gists/#create-a-gist
+# @public
+function bashlets::core::github::gist::create()
+{
+    local id="${1:?Gist id required}"
+
+    $BASHLETS_NAMESPACE api create "/gists/$id"
+}
+
 # Delete a gist.
 #
 # @cf   https://developer.github.com/v3/gists/#delete-a-gist
