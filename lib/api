@@ -177,7 +177,7 @@ function bashlets::core::github::api::header_value()
         | sed -n "s/^$key: \(.*\)/\\1/p"
 }
 
-# Create a resouce.
+# Create a resource.
 #
 # @cf   https://developer.github.com/v3/#http-verbs
 # @public
