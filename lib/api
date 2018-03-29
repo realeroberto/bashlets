@@ -44,11 +44,14 @@ function bashlets_error()
 BASHLETS_ERROR=bashlets_error
 
 
-function __bashlets::core::github::api::request()
+# Make a generic HTTP request.
+#
+# @public
+function bashlets::core::github::api::request()
 {
     local what="${1:-body}" expected="${2:-200}" ; shift 2
 
-    function ____bashlets::core::github::api::request()
+    function __bashlets::core::github::api::request()
     {
         local accept user_agent oauth_token
         local response headers body http_code
@@ -105,7 +108,7 @@ function __bashlets::core::github::api::request()
         eval echo "\"\$$what\""
     }
 
-    ____bashlets::core::github::api::request "$@"
+    __bashlets::core::github::api::request "$@"
 }
 
 # Filter JSON content.
@@ -131,8 +134,8 @@ function bashlets::core::github::api::get()
 
     [[ -n $url ]] || return
 
-    __bashlets::core::github::api::request body 200            \
-        "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"           \
+    bashlets::core::github::api::request body 200            \
+        "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"         \
         | bashlets::core::github::api::filter "$@"
 }
 
@@ -145,7 +148,7 @@ function bashlets::core::github::api::status()
 
     [[ -n $url ]] || return
 
-    __bashlets::core::github::api::request http_code 000       \
+    bashlets::core::github::api::request http_code 000       \
         "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
 }
 
@@ -158,8 +161,8 @@ function bashlets::core::github::api::header()
 
     [[ -n $url ]] || return
 
-    __bashlets::core::github::api::request headers 200         \
-        "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"           \
+    bashlets::core::github::api::request headers 200         \
+        "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"         \
         | grep "^$key: "
 }
 
@@ -172,8 +175,8 @@ function bashlets::core::github::api::header_value()
 
     [[ -n $url ]] || return
 
-    __bashlets::core::github::api::request headers 200         \
-        "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"           \
+    bashlets::core::github::api::request headers 200         \
+        "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"         \
         | sed -n "s/^$key: \(.*\)/\\1/p"
 }
 
@@ -187,10 +190,10 @@ function bashlets::core::github::api::post()
 
     [[ -n $url || -n $BASHLETS_CORE_GITHUB_API_OAUTH_TOKEN ]] || return
 
-    __bashlets::core::github::api::request body 201 -X POST    \
-        "-H 'Content-Type: application/json'"                  \
-        --data "$(printf "%q" $data)"                          \
-        "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"           \
+    bashlets::core::github::api::request body 201 -X POST    \
+        "-H 'Content-Type: application/json'"                \
+        --data "$(printf "%q" $data)"                        \
+        "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"         \
         | bashlets::core::github::api::filter "$@"
 }
 
@@ -204,10 +207,10 @@ function bashlets::core::github::api::patch()
 
     [[ -n $url || -n $BASHLETS_CORE_GITHUB_API_OAUTH_TOKEN ]] || return
 
-    __bashlets::core::github::api::request body 200 -X PATCH   \
-        "-H 'Content-Type: application/json'"                  \
-        --data "$(printf "%q" $data)"                          \
-        "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"           \
+    bashlets::core::github::api::request body 200 -X PATCH   \
+        "-H 'Content-Type: application/json'"                \
+        --data "$(printf "%q" $data)"                        \
+        "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"         \
         | bashlets::core::github::api::filter "$@"
 }
 
@@ -223,11 +226,11 @@ function bashlets::core::github::api::put()
 
     if [[ -n $data ]]
     then
-        __bashlets::core::github::api::request body 204 -X PUT  \
+        bashlets::core::github::api::request body 204 -X PUT  \
             "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
     else
-        __bashlets::core::github::api::request body 204 -X PUT  \
-            -H "'Content-Length: 0'"                            \
+        bashlets::core::github::api::request body 204 -X PUT  \
+            -H "'Content-Length: 0'"                          \
             "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
     fi
 }
@@ -242,7 +245,7 @@ function bashlets::core::github::api::delete()
 
     [[ -n $url || -n $BASHLETS_CORE_GITHUB_API_OAUTH_TOKEN ]] || return
 
-    __bashlets::core::github::api::request empty 204 -X DELETE  \
+    bashlets::core::github::api::request empty 204 -X DELETE  \
         "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
 }
 
