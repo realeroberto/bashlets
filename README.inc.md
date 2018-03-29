@@ -16,10 +16,14 @@ bashlets install core.github
 
 ## Implemented Parts
 
-* Gists
+* [Gists](https://developer.github.com/v3/gists/)
     - [Comments](https://developer.github.com/v3/gists/comments/)
 * [Miscellaneous](https://developer.github.com/v3/misc/)
+    - [Codes of Conduct](https://developer.github.com/v3/codes_of_conduct/)
     - [Emojis](https://developer.github.com/v3/emojis/)
     - [Gitignore](https://developer.github.com/v3/gitignore/)
+    - Licenses
+    - [Markdown](https://developer.github.com/v3/markdown/)
     - [Meta](https://developer.github.com/v3/meta/)
+    - Rate Limit
 

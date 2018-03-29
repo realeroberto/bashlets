@@ -16,18 +16,23 @@ bashlets install core.github
 
 ## Implemented Parts
 
-* Gists
+* [Gists](https://developer.github.com/v3/gists/)
     - [Comments](https://developer.github.com/v3/gists/comments/)
 * [Miscellaneous](https://developer.github.com/v3/misc/)
+    - [Codes of Conduct](https://developer.github.com/v3/codes_of_conduct/)
     - [Emojis](https://developer.github.com/v3/emojis/)
     - [Gitignore](https://developer.github.com/v3/gitignore/)
+    - Licenses
+    - [Markdown](https://developer.github.com/v3/markdown/)
     - [Meta](https://developer.github.com/v3/meta/)
+    - Rate Limit
 
 ## API Reference
 
 ### `api`
 
 * [`api::delete`](#apidelete)
+* [`api::endpoint`](#apiendpoint)
 * [`api::filter`](#apifilter)
 * [`api::get`](#apiget)
 * [`api::header`](#apiheader)
@@ -36,6 +41,7 @@ bashlets install core.github
 * [`api::post`](#apipost)
 * [`api::put`](#apiput)
 * [`api::rels`](#apirels)
+* [`api::request`](#apirequest)
 * [`api::status`](#apistatus)
 * [`api::version`](#apiversion)
 
@@ -56,14 +62,15 @@ bashlets install core.github
 ### `gist`
 
 * [`gist::clone`](#gistclone)
-* [`gist::comment`](#gistcomment)
 * [`gist::comments`](#gistcomments)
 * [`gist::commits`](#gistcommits)
 * [`gist::create`](#gistcreate)
 * [`gist::delete`](#gistdelete)
 * [`gist::describe`](#gistdescribe)
 * [`gist::download`](#gistdownload)
+* [`gist::edit`](#gistedit)
 * [`gist::files`](#gistfiles)
+* [`gist::fork`](#gistfork)
 * [`gist::forks`](#gistforks)
 * [`gist::get`](#gistget)
 * [`gist::is_starred`](#gistis_starred)
@@ -106,6 +113,12 @@ bashlets install core.github
 * [`license::name`](#licensename)
 * [`license::text`](#licensetext)
 
+### `markdown`
+
+* [`markdown::from_file`](#markdownfrom_file)
+* [`markdown::from_stream`](#markdownfrom_stream)
+* [`markdown::from_string`](#markdownfrom_string)
+
 ### `my`
 
 * [`my::orgs`](#myorgs)
@@ -141,10 +154,6 @@ bashlets install core.github
 
 * [`starred::gists`](#starredgists)
 
-### `t.json`
-
-
-
 ### `user`
 
 * [`user::gists`](#usergists)
@@ -156,6 +165,10 @@ bashlets install core.github
 ### `api::delete`
 
 Delete a resouce.
+
+### `api::endpoint`
+
+Get API root endpoint.
 
 ### `api::filter`
 
@@ -190,6 +203,10 @@ Replace a resource or a collection.
 
 Get the Link header values.
 
+### `api::request`
+
+Make a generic HTTP request.
+
 ### `api::status`
 
 Get the HTTP status code.
@@ -218,11 +235,6 @@ Get an emoji's url.
 
 Download gist files.
 
-### `gist::comment`
-
-Get a single comment on a gist.
-List comments on a gist.
-
 ### `gist::comments`
 
 List comments on a gist.
@@ -241,15 +253,24 @@ Delete a gist.
 
 ### `gist::describe`
 
-Describe a single gist.
+Describe a gist.
 
 ### `gist::download`
 
 Download gist files.
 
+### `gist::edit`
+
+Edit a gist.
+
 ### `gist::files`
 
 List gist files.
+
+### `gist::fork`
+
+Fork a gist.
+List gist forks.
 
 ### `gist::forks`
 
@@ -366,6 +387,19 @@ Get the name of an individual license.
 ### `license::text`
 
 Get the text of an individual license.
+
+### `markdown::from_file`
+
+Render an arbitrary Markdown document from a file.
+
+### `markdown::from_stream`
+
+Render an arbitrary Markdown document from stdin.
+
+### `markdown::from_string`
+
+Render an arbitrary Markdown document from a string (private method).
+Render an arbitrary Markdown document from a string.
 
 ### `my::orgs`
 
