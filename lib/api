@@ -51,7 +51,7 @@ function __bashlets::core::github::api::request()
     function ____bashlets::core::github::api::request()
     {
         local accept user_agent oauth_token
-        local response headers body http_code
+        local response headers body http_code empty
         local error_message
 
         # @cf https://developer.github.com/v3/media/#request-specific-version
@@ -88,6 +88,7 @@ function __bashlets::core::github::api::request()
           headers="$(sed -n '1,/^\r*$/p'     <<<"$response")"
              body="$(sed    '1,/^\r*$/d; $d' <<<"$response")"
         http_code="$(sed -n '$p'             <<<"$response")"
+            empty=
 
         # Check HTTP code
         if [[ $http_code == 000 ]]
@@ -225,7 +226,7 @@ function bashlets::core::github::api::delete()
 
     [[ -n $url || -n $BASHLETS_CORE_GITHUB_API_OAUTH_TOKEN ]] || return
 
-    __bashlets::core::github::api::request body 204 -X DELETE   \
+    __bashlets::core::github::api::request empty 204 -X DELETE  \
         "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
 }
 
