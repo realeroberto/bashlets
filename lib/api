@@ -51,7 +51,7 @@ function __bashlets::core::github::api::request()
     function ____bashlets::core::github::api::request()
     {
         local accept user_agent oauth_token
-        local response headers body http_code empty
+        local response headers body http_code
         local error_message
 
         # @cf https://developer.github.com/v3/media/#request-specific-version
@@ -88,7 +88,6 @@ function __bashlets::core::github::api::request()
           headers="$(sed -n '1,/^\r*$/p'     <<<"$response")"
              body="$(sed    '1,/^\r*$/d; $d' <<<"$response")"
         http_code="$(sed -n '$p'             <<<"$response")"
-            empty=
 
         # Check HTTP code
         if [[ $http_code == 000 ]]
@@ -102,7 +101,7 @@ function __bashlets::core::github::api::request()
             return $BASHLETS_CORE_GITHUB_API_ERROR
         fi
 
-        # Echo headers/body
+        # Echo headers/body/http_code
         eval echo "\"\$$what\""
     }
 
@@ -189,6 +188,23 @@ function bashlets::core::github::api::post()
     [[ -n $url || -n $BASHLETS_CORE_GITHUB_API_OAUTH_TOKEN ]] || return
 
     __bashlets::core::github::api::request body 201 -X POST    \
+        "-H 'Content-Type: application/json'"                  \
+        --data "$(printf "%q" $data)"                          \
+        "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"           \
+        | bashlets::core::github::api::filter "$@"
+}
+
+# Update a resource with partial JSON data.
+#
+# @cf   https://developer.github.com/v3/#http-verbs
+# @public
+function bashlets::core::github::api::patch()
+{
+    local url="$1" data="$2" ; shift 2
+
+    [[ -n $url || -n $BASHLETS_CORE_GITHUB_API_OAUTH_TOKEN ]] || return
+
+    __bashlets::core::github::api::request body 200 -X PATCH   \
         "-H 'Content-Type: application/json'"                  \
         --data "$(printf "%q" $data)"                          \
         "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"           \
