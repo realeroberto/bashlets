@@ -37,6 +37,28 @@
 source bashlets core::github::api
 source bashlets core::github::page
 
+# Download gist files.
+#
+# @cf   https://developer.github.com/v3/gists/#get-a-single-gist
+# @cf   https://developer.github.com/v3/gists/#truncation
+# @public
+function bashlets::core::github::gist::clone()
+{
+    local id="${1:?Gist id required}"
+    local where="${2:-.}"
+    local url="/gists/$id"
+    local pull_url
+
+    pull_url="$($BASHLETS_NAMESPACE api get "$url" '.git_pull_url')"
+
+    mkdir -p "$where"
+
+    (
+        cd "$where"
+        git clone "$pull_url"
+    )
+}
+
 # List gist commits.
 #
 # @cf   https://developer.github.com/v3/gists/#list-gist-commits
@@ -79,9 +101,44 @@ function bashlets::core::github::gist::delete()
 function bashlets::core::github::gist::describe()
 {
     local id="${1:?Gist id required}"
+    local url="/gists/$id"
 
-    bashlets::core::github::gist::get "$id" \
-        | $BASHLETS_NAMESPACE api filter .description
+    $BASHLETS_NAMESPACE api get "$url" .description
+}
+
+# Download gist files.
+#
+# @cf   https://developer.github.com/v3/gists/#get-a-single-gist
+# @cf   https://developer.github.com/v3/gists/#truncation
+# @public
+function bashlets::core::github::gist::download()
+{
+    local id="${1:?Gist id required}"
+    local where="${2:-.}"
+    local url="/gists/$id"
+
+    mkdir -p "$where/$id"
+
+    (
+        local file
+        cd "$where/$id"
+        for file in $($BASHLETS_NAMESPACE api get "$url" '.files[].raw_url')
+        do
+            curl -s "$file" -o "$(basename "$file")"
+        done
+    )
+}
+
+# List gist files.
+#
+# @cf   https://developer.github.com/v3/gists/#get-a-single-gist
+# @public
+function bashlets::core::github::gist::files()
+{
+    local id="${1:?Gist id required}"
+    local url="/gists/$id"
+
+    $BASHLETS_NAMESPACE api get "$url" '.files | keys[]'
 }
 
 # List gist forks.
@@ -122,6 +179,18 @@ function bashlets::core::github::gist::is_starred()
     status="$($BASHLETS_NAMESPACE api status "$url")"
 
     [[ $status == 204 ]]
+}
+
+# Get the a gist's owner.
+#
+# @cf   https://developer.github.com/v3/gists/#get-a-single-gist
+# @public
+function bashlets::core::github::gist::owner()
+{
+    local id="${1:?Gist id required}"
+
+    bashlets::core::github::gist::get "$id" \
+        | $BASHLETS_NAMESPACE api filter .owner.login
 }
 
 # Star a gist.
