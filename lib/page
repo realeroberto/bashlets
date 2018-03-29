@@ -99,7 +99,7 @@ function bashlets::core::github::page::items()
 
     while true
     do
-        declare -a items=($($BASHLETS_NAMESPACE api get "$url" ".[].\"$key\""))
+        declare -a items=("$($BASHLETS_NAMESPACE api get "$url" ".[].\"$key\"")")
         local item
 
         for item in "${items[@]}"
