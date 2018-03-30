@@ -141,6 +141,18 @@ function bashlets::core::github::github::licenses()
     $BASHLETS_NAMESPACE api get "$url" .[].key
 }
 
+# List all organizations.
+#
+# @cf   https://developer.github.com/v3/orgs/#list-all-organizations
+# @public
+function bashlets::core::github::github::orgs()
+{
+    local since="${1:-0}" limit="${2:-100}" callback="${3:-cat}"
+    local url="/organizations?since=$since"
+    
+    $BASHLETS_NAMESPACE page items "$url" login "$limit" "$callback"
+}
+
 # List all IP addresses (in CIDR format) specifying the A records for GitHub
 # Pages.
 #
