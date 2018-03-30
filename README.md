@@ -112,7 +112,7 @@ The active links represent implemented parts of the full API.
 * SCIM
 * Users
     - Blocking Users
-    - Emails
+    - [Emails](https://developer.github.com/v3/users/emails/)
     - Followers
     - Git SSH Keys
     - GPG Keys
@@ -210,13 +210,13 @@ The active links represent implemented parts of the full API.
 * [`github::sha`](#githubsha)
 * [`github::users`](#githubusers)
 
-### `.github.swp`
-
-
-
 ### `gitignore`
 
 * [`gitignore::content`](#gitignorecontent)
+
+### `json`
+
+* [`json::build_array`](#jsonbuild_array)
 
 ### `license`
 
@@ -232,8 +232,13 @@ The active links represent implemented parts of the full API.
 
 ### `my`
 
+* [`my::add_emails`](#myadd_emails)
+* [`my::delete_emails`](#mydelete_emails)
+* [`my::emails`](#myemails)
 * [`my::orgs`](#myorgs)
+* [`my::public_emails`](#mypublic_emails)
 * [`my::repos`](#myrepos)
+* [`my::toggle_primary_email_visibility`](#mytoggle_primary_email_visibility)
 
 ### `org`
 
@@ -276,6 +281,10 @@ The active links represent implemented parts of the full API.
 ### `starred`
 
 * [`starred::gists`](#starredgists)
+
+### `test`
+
+
 
 ### `user`
 
@@ -556,6 +565,10 @@ List all users, in the order that they signed up on GitHub.
 
 Fetch a .gitignore template by name.
 
+### `json::build_array`
+
+Build a JSON array from argv.
+
 ### `license::describe`
 
 Describe an individual license.
@@ -581,13 +594,33 @@ Render an arbitrary Markdown document from stdin.
 Render an arbitrary Markdown document from a string (private method).
 Render an arbitrary Markdown document from a string.
 
+### `my::add_emails`
+
+Add email address(es).
+
+### `my::delete_emails`
+
+Delete email address(es).
+
+### `my::emails`
+
+List email addresses for the authenticated user.
+
 ### `my::orgs`
 
 List all the organizations for the authenticated user.
 
+### `my::public_emails`
+
+List public email addresses for the authenticated user.
+
 ### `my::repos`
 
 List all the repositories for the authenticated user.
+
+### `my::toggle_primary_email_visibility`
+
+Toggle primary email visibility.
 
 ### `org::block`
 
