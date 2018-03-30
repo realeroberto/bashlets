@@ -37,6 +37,51 @@
 source bashlets core::github::api
 source bashlets core::github::page
 
+# Block a user.
+#
+# @cf   https://developer.github.com/v3/orgs/blocking/#block-a-user
+# @public
+function bashlets::core::github::org::block()
+{
+    local org="${1:?Organization login needed}"
+    local username="${2:?User login needed}"
+
+    local url="/orgs/$org/blocks/$username"
+
+    (
+        # The User Blocking API on GitHub is currently available for developers
+        # to preview. To access the API, we must provide a custom media type in
+        # the Accept header.
+        #
+        # @cf https://developer.github.com/v3/orgs/blocking/#blocking-organizations-users
+
+        BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS="$BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS -H 'Accept: application/vnd.github.giant-sentry-fist-preview+json'"
+        $BASHLETS_NAMESPACE api put "$url"
+    )
+}
+
+# List the users blocked by an organization.
+#
+# @cf   https://developer.github.com/v3/orgs/blocking/#list-blocked-users
+# @public
+function bashlets::core::github::org::blocked_users()
+{
+    local org="${1:?Organization login needed}"
+
+    local url="/orgs/$org/blocks"
+
+    (
+        # The User Blocking API on GitHub is currently available for developers
+        # to preview. To access the API, we must provide a custom media type in
+        # the Accept header.
+        #
+        # @cf https://developer.github.com/v3/orgs/blocking/#blocking-organizations-users
+
+        BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS="$BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS -H 'Accept: application/vnd.github.giant-sentry-fist-preview+json'"
+        $BASHLETS_NAMESPACE api get "$url" .[].login
+    )
+}
+
 # Get an organization company.
 #
 # @cf   https://developer.github.com/v3/orgs/#get-an-organization
@@ -104,6 +149,31 @@ function bashlets::core::github::org::get()
     $BASHLETS_NAMESPACE api get "$url" .
 }
 
+# Check whether a user is blocked from an organization.
+#
+# @cf   https://developer.github.com/v3/orgs/blocking/#check-whether-a-user-is-blocked-from-an-organization
+# @public
+function bashlets::core::github::org::is_blocked()
+{
+    local org="${1:?Organization login needed}"
+    local username="${2:?User login needed}"
+    local url="/orgs/$org/blocks/$username"
+    local status
+
+    (
+        # The User Blocking API on GitHub is currently available for developers
+        # to preview. To access the API, we must provide a custom media type in
+        # the Accept header.
+        #
+        # @cf https://developer.github.com/v3/orgs/blocking/#blocking-organizations-users
+
+        BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS="$BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS -H 'Accept: application/vnd.github.giant-sentry-fist-preview+json'"
+        status="$($BASHLETS_NAMESPACE api status "$url")"
+
+        [[ $status == 204 ]]
+    )
+}
+
 # Get an organization location.
 #
 # @cf   https://developer.github.com/v3/orgs/#get-an-organization
@@ -145,30 +215,27 @@ function bashlets::core::github::org::repos()
     $BASHLETS_NAMESPACE page items "$url" name "$limit" "$callback"
 }
 
-# Get an organization url.
+# Unblock a user.
 #
-# @cf   https://developer.github.com/v3/orgs/#get-an-organization
+# @cf   https://developer.github.com/v3/orgs/blocking/#unblock-a-user
 # @public
-function bashlets::core::github::org::url()
+function bashlets::core::github::org::unblock()
 {
     local org="${1:?Organization login needed}"
+    local username="${2:?User login needed}"
 
-    local url="/orgs/$org"
+    local url="/orgs/$org/blocks/$username"
 
-    $BASHLETS_NAMESPACE api get "$url" .url
-}
+    (
+        # The User Blocking API on GitHub is currently available for developers
+        # to preview. To access the API, we must provide a custom media type in
+        # the Accept header.
+        #
+        # @cf https://developer.github.com/v3/orgs/blocking/#blocking-organizations-users
 
-# Get an organization url.
-#
-# @cf   https://developer.github.com/v3/orgs/#get-an-organization
-# @public
-function bashlets::core::github::org::url()
-{
-    local org="${1:?Organization login needed}"
-
-    local url="/orgs/$org"
-
-    $BASHLETS_NAMESPACE api get "$url" .url
+        BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS="$BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS -H 'Accept: application/vnd.github.giant-sentry-fist-preview+json'"
+        $BASHLETS_NAMESPACE api delete "$url"
+    )
 }
 
 # Get an organization url.
