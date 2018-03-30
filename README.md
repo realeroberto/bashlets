@@ -26,6 +26,11 @@ bashlets install core.github
     - [Markdown](https://developer.github.com/v3/markdown/)
     - [Meta](https://developer.github.com/v3/meta/)
     - Rate Limit
+* [Organizations](https://developer.github.com/v3/orgs/)
+    - [Blocking Users](https://developer.github.com/v3/orgs/blocking/)
+    - Members
+    - Outside Collaborators
+    - Webhooks
 
 ## API Reference
 
@@ -44,6 +49,22 @@ bashlets install core.github
 * [`api::request`](#apirequest)
 * [`api::status`](#apistatus)
 * [`api::version`](#apiversion)
+
+### `cache`
+
+* [`cache::delete`](#cachedelete)
+* [`cache::endpoint`](#cacheendpoint)
+* [`cache::filter`](#cachefilter)
+* [`cache::get`](#cacheget)
+* [`cache::header`](#cacheheader)
+* [`cache::header_value`](#cacheheader_value)
+* [`cache::patch`](#cachepatch)
+* [`cache::post`](#cachepost)
+* [`cache::put`](#cacheput)
+* [`cache::rels`](#cacherels)
+* [`cache::request`](#cacherequest)
+* [`cache::status`](#cachestatus)
+* [`cache::version`](#cacheversion)
 
 ### `conduct`
 
@@ -97,11 +118,16 @@ bashlets install core.github
 * [`github::hooks`](#githubhooks)
 * [`github::importers`](#githubimporters)
 * [`github::licenses`](#githublicenses)
+* [`github::orgs`](#githuborgs)
 * [`github::pages`](#githubpages)
 * [`github::password_auth`](#githubpassword_auth)
 * [`github::repos`](#githubrepos)
 * [`github::sha`](#githubsha)
 * [`github::users`](#githubusers)
+
+### `.github.swp`
+
+
 
 ### `gitignore`
 
@@ -126,7 +152,23 @@ bashlets install core.github
 
 ### `org`
 
+* [`org::block`](#orgblock)
+* [`org::blocked_users`](#orgblocked_users)
+* [`org::company`](#orgcompany)
+* [`org::describe`](#orgdescribe)
+* [`org::edit`](#orgedit)
+* [`org::email`](#orgemail)
+* [`org::get`](#orgget)
+* [`org::is_blocked`](#orgis_blocked)
+* [`org::location`](#orglocation)
+* [`org::name`](#orgname)
 * [`org::repos`](#orgrepos)
+* [`org::unblock`](#orgunblock)
+* [`org::url`](#orgurl)
+
+### `.org.swp`
+
+
 
 ### `page`
 
@@ -212,6 +254,59 @@ Make a generic HTTP request.
 Get the HTTP status code.
 
 ### `api::version`
+
+Get API version.
+
+### `cache::delete`
+
+Delete a resouce.
+
+### `cache::endpoint`
+
+Get API root endpoint.
+
+### `cache::filter`
+
+Filter JSON content.
+
+### `cache::get`
+
+Retrieve a resource.
+
+### `cache::header`
+
+Get the HTTP headers.
+Extract a given value from the HTTP headers.
+
+### `cache::header_value`
+
+Extract a given value from the HTTP headers.
+
+### `cache::patch`
+
+Update a resource with partial JSON data.
+
+### `cache::post`
+
+Create a resource.
+
+### `cache::put`
+
+Replace a resource or a collection.
+
+### `cache::rels`
+
+Get the Link header values.
+
+### `cache::request`
+
+Make a generic HTTP request.
+
+### `cache::status`
+
+Get the HTTP status code.
+
+### `cache::version`
 
 Get API version.
 
@@ -352,6 +447,10 @@ Get a list of IP addresses in CIDR format specifying the addresses that
 
 List all licenses.
 
+### `github::orgs`
+
+List all organizations.
+
 ### `github::pages`
 
 List all IP addresses (in CIDR format) specifying the A records for GitHub
@@ -409,9 +508,58 @@ List all the organizations for the authenticated user.
 
 List all the repositories for the authenticated user.
 
+### `org::block`
+
+Block a user.
+List the users blocked by an organization.
+
+### `org::blocked_users`
+
+List the users blocked by an organization.
+
+### `org::company`
+
+Get an organization company.
+
+### `org::describe`
+
+Get an organization description.
+
+### `org::edit`
+
+Edit an organization.
+
+### `org::email`
+
+Get an organization email.
+
+### `org::get`
+
+Get an organization.
+
+### `org::is_blocked`
+
+Check whether a user is blocked from an organization.
+
+### `org::location`
+
+Get an organization location.
+
+### `org::name`
+
+Get an organization name.
+
 ### `org::repos`
 
-List public repositories for the specified user.
+List organization repositories.
+
+### `org::unblock`
+
+Unblock a user.
+
+### `org::url`
+
+Get an organization url.
 
 ### `page::count`
 
