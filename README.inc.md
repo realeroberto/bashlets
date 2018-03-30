@@ -2,6 +2,7 @@
 
 A client for the [GitHub REST API v3](https://developer.github.com/v3/), written in Bash and part of the [Bashlets](https://github.com/bashlets) project.
 
+
 ## Installation
 
 Install the [`bashlets`](https://github.com/bashlets/bashlets) base package. Then issue
@@ -10,9 +11,22 @@ Install the [`bashlets`](https://github.com/bashlets/bashlets) base package. The
 bashlets install core.github
 ```
 
+
+## Configuration
+
+### Authentication
+
+The library supports [OAuth authentication](https://developer.github.com/apps/building-oauth-apps/) through the environment variable `BASHLETS_CORE_GITHUB_API_OAUTH_TOKEN`.
+
+### User agent
+
+All API requests [MUST](https://developer.github.com/v3/#user-agent-required) include a valid `User-Agent` header. The library supports a custom header through the environment variables `BASHLETS_USER_AGENT` and `BASHLETS_CORE_GITHUB_API_USER_AGENT`.
+
+
 ## Similar Projects
 
 * [ok.sh](https://github.com/whiteinge/ok.sh)
+
 
 ## Implemented Parts
 
@@ -116,4 +130,5 @@ The active links represent implemented parts of the full API.
     - [Followers](https://developer.github.com/v3/users/followers/)
     - Git SSH Keys
     - GPG Keys
+
 
