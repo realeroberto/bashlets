@@ -111,7 +111,7 @@ The active links represent implemented parts of the full API.
     - Members
 * SCIM
 * Users
-    - Blocking Users
+    - [Blocking Users](https://developer.github.com/v3/users/blocking/)
     - [Emails](https://developer.github.com/v3/users/emails/)
     - [Followers](https://developer.github.com/v3/users/followers/)
     - Git SSH Keys

@@ -111,7 +111,7 @@ The active links represent implemented parts of the full API.
     - Members
 * SCIM
 * Users
-    - Blocking Users
+    - [Blocking Users](https://developer.github.com/v3/users/blocking/)
     - [Emails](https://developer.github.com/v3/users/emails/)
     - [Followers](https://developer.github.com/v3/users/followers/)
     - Git SSH Keys
@@ -234,14 +234,18 @@ The active links represent implemented parts of the full API.
 
 * [`my::add_emails`](#myadd_emails)
 * [`my::am_following`](#myam_following)
+* [`my::block`](#myblock)
+* [`my::blocked_users`](#myblocked_users)
 * [`my::delete_emails`](#mydelete_emails)
 * [`my::emails`](#myemails)
 * [`my::followers`](#myfollowers)
 * [`my::following`](#myfollowing)
+* [`my::have_blocked`](#myhave_blocked)
 * [`my::orgs`](#myorgs)
 * [`my::public_emails`](#mypublic_emails)
 * [`my::repos`](#myrepos)
 * [`my::toggle_primary_email_visibility`](#mytoggle_primary_email_visibility)
+* [`my::unblock`](#myunblock)
 
 ### `org`
 
@@ -612,6 +616,15 @@ Add email address(es).
 
 Check if the authorized user follows another.
 
+### `my::block`
+
+Block a user.
+List the users the authenticated user has blocked on her personal account.
+
+### `my::blocked_users`
+
+List the users the authenticated user has blocked on her personal account.
+
 ### `my::delete_emails`
 
 Delete email address(es).
@@ -628,6 +641,10 @@ List followers of the authenticated user.
 
 List who the authenticated user is following.
 
+### `my::have_blocked`
+
+Check whether the authorized user has blocked another user.
+
 ### `my::orgs`
 
 List all the organizations for the authenticated user.
@@ -643,6 +660,10 @@ List all the repositories for the authenticated user.
 ### `my::toggle_primary_email_visibility`
 
 Toggle primary email visibility.
+
+### `my::unblock`
+
+Unblock a user.
 
 ### `org::block`
 
