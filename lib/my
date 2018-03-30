@@ -34,6 +34,7 @@
 ################################################################################
 
 
+source bashlets core::github::api
 source bashlets core::github::page
 
 # List all the organizations for the authenticated user.
@@ -58,6 +59,17 @@ function bashlets::core::github::my::repos()
     local url="/user/repos"
 
     $BASHLETS_NAMESPACE page items "$url" name "$limit" "$callback"
+}
+
+# Toggle primary email visibility.
+#
+# @cf   https://developer.github.com/v3/users/emails/#toggle-primary-email-visibility
+# @public
+function bashlets::core::github::my::toggle_primary_email_visibility()
+{
+    local url="/user/email/visibility"
+
+    $BASHLETS_NAMESPACE api patch "$url" "" .[].visibility
 }
 
 
