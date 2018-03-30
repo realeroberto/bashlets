@@ -54,6 +54,63 @@ function bashlets::core::github::my::add_emails()
     $BASHLETS_NAMESPACE api post "$url" "$data" length
 }
 
+# Check if the authorized user follows another.
+#
+# @cf   https://developer.github.com/v3/users/followers/#check-if-you-are-following-a-user
+# @public
+function bashlets::core::github::my::am_following()
+{
+    local target_user="${1:?Target user name required}"
+    local url="/user/following/$target_user"
+    local status
+
+    status="$($BASHLETS_NAMESPACE api status "$url")"
+
+    [[ $status == 204 ]]
+}
+
+# Block a user.
+#
+# @cf   https://developer.github.com/v3/users/blocking/#block-a-user
+# @public
+function bashlets::core::github::my::block()
+{
+    local username="${1:?User login needed}"
+
+    local url="/user/blocks/$username"
+
+    (
+        # The User Blocking API on GitHub is currently available for developers
+        # to preview. To access the API, we must provide a custom media type in
+        # the Accept header.
+        #
+        # @cf https://developer.github.com/v3/users/blocking/#block-another-user
+
+        BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS="$BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS -H 'Accept: application/vnd.github.giant-sentry-fist-preview+json'"
+        $BASHLETS_NAMESPACE api put "$url"
+    )
+}
+
+# List the users the authenticated user has blocked on her personal account.
+#
+# @cf   https://developer.github.com/v3/users/blocking/#list-blocked-users
+# @public
+function bashlets::core::github::my::blocked_users()
+{
+    local url="/user/blocks"
+
+    (
+        # The User Blocking API on GitHub is currently available for developers
+        # to preview. To access the API, we must provide a custom media type in
+        # the Accept header.
+        #
+        # @cf https://developer.github.com/v3/users/blocking/#block-another-user
+
+        BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS="$BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS -H 'Accept: application/vnd.github.giant-sentry-fist-preview+json'"
+        $BASHLETS_NAMESPACE api get "$url" .[].login
+    )
+}
+
 # Delete email address(es).
 #
 # @cf   https://developer.github.com/v3/users/emails/#delete-email-addresses
@@ -108,19 +165,28 @@ function bashlets::core::github::my::following()
     $BASHLETS_NAMESPACE page items "$url" login "$limit" "$callback"
 }
 
-# Check if the authorized user follows another.
+# Check whether the authorized user has blocked another user.
 #
-# @cf   https://developer.github.com/v3/users/followers/#check-if-you-are-following-a-user
+# @cf   https://developer.github.com/v3/users/blocking/#check-whether-youve-blocked-a-user
 # @public
-function bashlets::core::github::my::am_following()
+function bashlets::core::github::my::have_blocked()
 {
-    local target_user="${1:?Target user name required}"
-    local url="/user/following/$target_user"
+    local username="${1:?User login needed}"
+    local url="/user/blocks/$username"
     local status
 
-    status="$($BASHLETS_NAMESPACE api status "$url")"
+    (
+        # The User Blocking API on GitHub is currently available for developers
+        # to preview. To access the API, we must provide a custom media type in
+        # the Accept header.
+        #
+        # @cf https://developer.github.com/v3/users/blocking/#block-another-user
 
-    [[ $status == 204 ]]
+        BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS="$BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS -H 'Accept: application/vnd.github.giant-sentry-fist-preview+json'"
+        status="$($BASHLETS_NAMESPACE api status "$url")"
+
+        [[ $status == 204 ]]
+    )
 }
 
 # List all the organizations for the authenticated user.
@@ -168,6 +234,28 @@ function bashlets::core::github::my::toggle_primary_email_visibility()
     local url="/user/email/visibility"
 
     $BASHLETS_NAMESPACE api patch "$url" "" .[].visibility
+}
+
+# Unblock a user.
+#
+# @cf   https://developer.github.com/v3/users/blocking/#unblock-a-user
+# @public
+function bashlets::core::github::my::unblock()
+{
+    local username="${1:?User login needed}"
+
+    local url="/user/blocks/$username"
+
+    (
+        # The User Blocking API on GitHub is currently available for developers
+        # to preview. To access the API, we must provide a custom media type in
+        # the Accept header.
+        #
+        # @cf https://developer.github.com/v3/users/blocking/#block-another-user
+
+        BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS="$BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS -H 'Accept: application/vnd.github.giant-sentry-fist-preview+json'"
+        $BASHLETS_NAMESPACE api delete "$url"
+    )
 }
 
 
