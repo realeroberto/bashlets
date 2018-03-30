@@ -63,6 +63,21 @@ function bashlets::core::github::org::describe()
     $BASHLETS_NAMESPACE api get "$url" .description
 }
 
+# Edit an organization.
+#
+# @cf   https://developer.github.com/v3/orgs/#edit-an-organization
+# @public
+function bashlets::core::github::org::edit()
+{
+    local org="${1:?Organization login needed}"
+    local key="${2:?Key needed}"
+    local value="${3:?Value needed}"
+
+    local url="/orgs/$org"
+
+    $BASHLETS_NAMESPACE api patch "$url" "{\"$key\": \"$value\"}" .updated_at
+}
+
 # Get an organization email.
 #
 # @cf   https://developer.github.com/v3/orgs/#get-an-organization
