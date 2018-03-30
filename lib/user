@@ -37,6 +37,20 @@
 source bashlets core::github::defs
 source bashlets core::github::page
 
+# List followers of the specified user.
+#
+# @cf   https://developer.github.com/v3/users/followers/#list-followers-of-a-user
+# @public
+function bashlets::core::github::user::followers()
+{
+    local user="${1:?User name required}"
+    local since="${2:-0}"
+    local limit="${3:-100}" callback="${4:-cat}"
+    local url="/users/$user/followers?since=$since"
+
+    $BASHLETS_NAMESPACE page items "$url" login "$limit" "$callback"
+}
+
 # List public gists for the specified user.
 #
 # @cf   https://developer.github.com/v3/gists/#list-a-users-gists

@@ -82,6 +82,19 @@ function bashlets::core::github::my::emails()
     $BASHLETS_NAMESPACE page items "$url" email "$limit" "$callback"
 }
 
+# List followers of the authenticated user.
+#
+# @cf   https://developer.github.com/v3/users/followers/#list-followers-of-a-user
+# @public
+function bashlets::core::github::my::followers()
+{
+    local since="${1:-0}"
+    local limit="${3:-100}" callback="${4:-cat}"
+    local url="/user/followers?since=$since"
+
+    $BASHLETS_NAMESPACE page items "$url" login "$limit" "$callback"
+}
+
 # List all the organizations for the authenticated user.
 #
 # @cf   https://developer.github.com/v3/orgs/#list-your-organizations
