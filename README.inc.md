@@ -47,16 +47,16 @@ The active links represent implemented parts of the full API.
     - Milestones
     - Timeline
 * Migration
-     - Migrations
-     - Source Imports
+    - Migrations
+    - Source Imports
 * [Miscellaneous](https://developer.github.com/v3/misc/)
     - [Codes of Conduct](https://developer.github.com/v3/codes_of_conduct/)
     - [Emojis](https://developer.github.com/v3/emojis/)
     - [Gitignore](https://developer.github.com/v3/gitignore/)
-    - Licenses
+    - [Licenses](https://developer.github.com/v3/licenses/)
     - [Markdown](https://developer.github.com/v3/markdown/)
     - [Meta](https://developer.github.com/v3/meta/)
-    - Rate Limit
+    - [Rate Limit](https://developer.github.com/v3/rate_limit/)
 * [Organizations](https://developer.github.com/v3/orgs/)
     - [Blocking Users](https://developer.github.com/v3/orgs/blocking/)
     - Members

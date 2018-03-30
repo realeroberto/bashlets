@@ -47,16 +47,16 @@ The active links represent implemented parts of the full API.
     - Milestones
     - Timeline
 * Migration
-     - Migrations
-     - Source Imports
+    - Migrations
+    - Source Imports
 * [Miscellaneous](https://developer.github.com/v3/misc/)
     - [Codes of Conduct](https://developer.github.com/v3/codes_of_conduct/)
     - [Emojis](https://developer.github.com/v3/emojis/)
     - [Gitignore](https://developer.github.com/v3/gitignore/)
-    - Licenses
+    - [Licenses](https://developer.github.com/v3/licenses/)
     - [Markdown](https://developer.github.com/v3/markdown/)
     - [Meta](https://developer.github.com/v3/meta/)
-    - Rate Limit
+    - [Rate Limit](https://developer.github.com/v3/rate_limit/)
 * [Organizations](https://developer.github.com/v3/orgs/)
     - [Blocking Users](https://developer.github.com/v3/orgs/blocking/)
     - Members
@@ -271,6 +271,12 @@ The active links represent implemented parts of the full API.
 * [`path::content`](#pathcontent)
 * [`path::ls`](#pathls)
 * [`path::type`](#pathtype)
+
+### `rate_limit`
+
+* [`rate_limit::limit`](#rate_limitlimit)
+* [`rate_limit::remaining`](#rate_limitremaining)
+* [`rate_limit::reset`](#rate_limitreset)
 
 ### `repo`
 
@@ -718,6 +724,18 @@ List contents of a directory or the name of file (similar to the ls command).
 ### `path::type`
 
 Return the type of a path.
+
+### `rate_limit::limit`
+
+Get the current rate limit status.
+
+### `rate_limit::remaining`
+
+Get the current rate limit status.
+
+### `rate_limit::reset`
+
+Get the current rate limit status.
 
 ### `repo::commits`
 
