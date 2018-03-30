@@ -113,7 +113,7 @@ The active links represent implemented parts of the full API.
 * Users
     - Blocking Users
     - [Emails](https://developer.github.com/v3/users/emails/)
-    - Followers
+    - [Followers](https://developer.github.com/v3/users/followers/)
     - Git SSH Keys
     - GPG Keys
 
@@ -233,8 +233,11 @@ The active links represent implemented parts of the full API.
 ### `my`
 
 * [`my::add_emails`](#myadd_emails)
+* [`my::am_following`](#myam_following)
 * [`my::delete_emails`](#mydelete_emails)
 * [`my::emails`](#myemails)
+* [`my::followers`](#myfollowers)
+* [`my::following`](#myfollowing)
 * [`my::orgs`](#myorgs)
 * [`my::public_emails`](#mypublic_emails)
 * [`my::repos`](#myrepos)
@@ -282,15 +285,16 @@ The active links represent implemented parts of the full API.
 
 * [`starred::gists`](#starredgists)
 
-### `test`
-
-
-
 ### `user`
 
+* [`user::follow`](#userfollow)
+* [`user::followers`](#userfollowers)
+* [`user::following`](#userfollowing)
 * [`user::gists`](#usergists)
+* [`user::is_following`](#useris_following)
 * [`user::keys`](#userkeys)
 * [`user::repos`](#userrepos)
+* [`user::unfollow`](#userunfollow)
 
 ## Methods Description
 
@@ -598,6 +602,10 @@ Render an arbitrary Markdown document from a string.
 
 Add email address(es).
 
+### `my::am_following`
+
+Check if the authorized user follows another.
+
 ### `my::delete_emails`
 
 Delete email address(es).
@@ -605,6 +613,14 @@ Delete email address(es).
 ### `my::emails`
 
 List email addresses for the authenticated user.
+
+### `my::followers`
+
+List followers of the authenticated user.
+
+### `my::following`
+
+List who the authenticated user is following.
 
 ### `my::orgs`
 
@@ -731,9 +747,27 @@ List tags for a repository.
 
 List all the starred gists for the authenticated user.
 
+### `user::follow`
+
+Follow a user.
+List followers of the specified user.
+List who the specified user is following.
+
+### `user::followers`
+
+List followers of the specified user.
+
+### `user::following`
+
+List who the specified user is following.
+
 ### `user::gists`
 
 List public gists for the specified user.
+
+### `user::is_following`
+
+Check if the specified user follows another.
 
 ### `user::keys`
 
@@ -742,4 +776,8 @@ List the verified public keys for the specified user.
 ### `user::repos`
 
 List public repositories for the specified user.
+
+### `user::unfollow`
+
+Unfollow a user.
 

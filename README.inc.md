@@ -113,7 +113,7 @@ The active links represent implemented parts of the full API.
 * Users
     - Blocking Users
     - [Emails](https://developer.github.com/v3/users/emails/)
-    - Followers
+    - [Followers](https://developer.github.com/v3/users/followers/)
     - Git SSH Keys
     - GPG Keys
 
