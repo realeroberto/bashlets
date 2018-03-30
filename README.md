@@ -135,22 +135,6 @@ The active links represent implemented parts of the full API.
 * [`api::status`](#apistatus)
 * [`api::version`](#apiversion)
 
-### `cache`
-
-* [`cache::delete`](#cachedelete)
-* [`cache::endpoint`](#cacheendpoint)
-* [`cache::filter`](#cachefilter)
-* [`cache::get`](#cacheget)
-* [`cache::header`](#cacheheader)
-* [`cache::header_value`](#cacheheader_value)
-* [`cache::patch`](#cachepatch)
-* [`cache::post`](#cachepost)
-* [`cache::put`](#cacheput)
-* [`cache::rels`](#cacherels)
-* [`cache::request`](#cacherequest)
-* [`cache::status`](#cachestatus)
-* [`cache::version`](#cacheversion)
-
 ### `conduct`
 
 * [`conduct::name`](#conductname)
@@ -358,59 +342,6 @@ Make a generic HTTP request.
 Get the HTTP status code.
 
 ### `api::version`
-
-Get API version.
-
-### `cache::delete`
-
-Delete a resouce.
-
-### `cache::endpoint`
-
-Get API root endpoint.
-
-### `cache::filter`
-
-Filter JSON content.
-
-### `cache::get`
-
-Retrieve a resource.
-
-### `cache::header`
-
-Get the HTTP headers.
-Extract a given value from the HTTP headers.
-
-### `cache::header_value`
-
-Extract a given value from the HTTP headers.
-
-### `cache::patch`
-
-Update a resource with partial JSON data.
-
-### `cache::post`
-
-Create a resource.
-
-### `cache::put`
-
-Replace a resource or a collection.
-
-### `cache::rels`
-
-Get the Link header values.
-
-### `cache::request`
-
-Make a generic HTTP request.
-
-### `cache::status`
-
-Get the HTTP status code.
-
-### `cache::version`
 
 Get API version.
 
