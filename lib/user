@@ -34,8 +34,21 @@
 ################################################################################
 
 
+source bashlets core::github::api
 source bashlets core::github::defs
 source bashlets core::github::page
+
+# Follow a user.
+#
+# @cf   https://developer.github.com/v3/users/followers/#follow-a-user
+# @public
+function bashlets::core::github::user::follow()
+{
+    local username="${1:?User login needed}"
+    local url="/user/following/$username"
+
+    $BASHLETS_NAMESPACE api put "$url"
+}
 
 # List followers of the specified user.
 #
@@ -116,6 +129,18 @@ function bashlets::core::github::user::repos()
     local url="/users/$user/repos"
 
     $BASHLETS_NAMESPACE page items "$url" name "$limit" "$callback"
+}
+
+# Unfollow a user.
+#
+# @cf   https://developer.github.com/v3/users/followers/#unfollow-a-user
+# @public
+function bashlets::core::github::user::unfollow()
+{
+    local username="${1:?User login needed}"
+    local url="/user/following/$username"
+
+    $BASHLETS_NAMESPACE api delete "$url"
 }
 
 
