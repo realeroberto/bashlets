@@ -66,8 +66,7 @@ function bashlets::core::github::user::keys()
 
 # List public organization memberships for the specified user.
 #
-# @cf   https://developer.github.com/v3/users/keys/#list-public-keys-for-a-user
-# @public
+# @cf   https://developer.github.com/v3/orgs/#list-user-organizations
 function bashlets::core::github::user::orgs()
 {
     local user="${1:?User name required}"
