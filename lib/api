@@ -227,6 +227,8 @@ function bashlets::core::github::api::put()
     if [[ -n $data ]]
     then
         bashlets::core::github::api::request none 204 -X PUT \
+            "-H 'Content-Type: application/json'"            \
+            --data "$(printf "%q" "$data")"                  \
             "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
     else
         bashlets::core::github::api::request none 204 -X PUT \
@@ -241,12 +243,20 @@ function bashlets::core::github::api::put()
 # @public
 function bashlets::core::github::api::delete()
 {
-    local url="$1"
+    local url="$1" data="$2"
 
     [[ -n $url || -n $BASHLETS_CORE_GITHUB_API_OAUTH_TOKEN ]] || return
 
-    bashlets::core::github::api::request none 204 -X DELETE  \
-        "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
+    if [[ -n $data ]]
+    then
+        bashlets::core::github::api::request none 204 -X DELETE  \
+            "-H 'Content-Type: application/json'"                \
+            --data "$(printf "%q" "$data")"                      \
+            "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
+    else
+        bashlets::core::github::api::request none 204 -X DELETE  \
+            "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
+    fi
 }
 
 # Get the Link header values.
