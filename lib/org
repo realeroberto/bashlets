@@ -34,7 +34,86 @@
 ################################################################################
 
 
+source bashlets core::github::api
 source bashlets core::github::page
+
+# Get an organization company.
+#
+# @cf   https://developer.github.com/v3/orgs/#get-an-organization
+# @public
+function bashlets::core::github::org::company()
+{
+    local org="${1:?Organization login needed}"
+
+    local url="/orgs/$org"
+
+    $BASHLETS_NAMESPACE api get "$url" .company
+}
+
+# Get an organization description.
+#
+# @cf   https://developer.github.com/v3/orgs/#get-an-organization
+# @public
+function bashlets::core::github::org::describe()
+{
+    local org="${1:?Organization login needed}"
+
+    local url="/orgs/$org"
+
+    $BASHLETS_NAMESPACE api get "$url" .description
+}
+
+# Get an organization email.
+#
+# @cf   https://developer.github.com/v3/orgs/#get-an-organization
+# @public
+function bashlets::core::github::org::email()
+{
+    local org="${1:?Organization login needed}"
+
+    local url="/orgs/$org"
+
+    $BASHLETS_NAMESPACE api get "$url" .email
+}
+
+# Get an organization.
+#
+# @cf   https://developer.github.com/v3/orgs/#get-an-organization
+# @public
+function bashlets::core::github::org::get()
+{
+    local org="${1:?Organization login needed}"
+
+    local url="/orgs/$org"
+
+    $BASHLETS_NAMESPACE api get "$url" .
+}
+
+# Get an organization location.
+#
+# @cf   https://developer.github.com/v3/orgs/#get-an-organization
+# @public
+function bashlets::core::github::org::location()
+{
+    local org="${1:?Organization login needed}"
+
+    local url="/orgs/$org"
+
+    $BASHLETS_NAMESPACE api get "$url" .location
+}
+
+# Get an organization name.
+#
+# @cf   https://developer.github.com/v3/orgs/#get-an-organization
+# @public
+function bashlets::core::github::org::name()
+{
+    local org="${1:?Organization login needed}"
+
+    local url="/orgs/$org"
+
+    $BASHLETS_NAMESPACE api get "$url" .name
+}
 
 # List public repositories for the specified user.
 #
@@ -51,6 +130,44 @@ function bashlets::core::github::org::repos()
     $BASHLETS_NAMESPACE page items "$url" name "$limit" "$callback"
 }
 
+# Get an organization url.
+#
+# @cf   https://developer.github.com/v3/orgs/#get-an-organization
+# @public
+function bashlets::core::github::org::url()
+{
+    local org="${1:?Organization login needed}"
+
+    local url="/orgs/$org"
+
+    $BASHLETS_NAMESPACE api get "$url" .url
+}
+
+# Get an organization url.
+#
+# @cf   https://developer.github.com/v3/orgs/#get-an-organization
+# @public
+function bashlets::core::github::org::url()
+{
+    local org="${1:?Organization login needed}"
+
+    local url="/orgs/$org"
+
+    $BASHLETS_NAMESPACE api get "$url" .url
+}
+
+# Get an organization url.
+#
+# @cf   https://developer.github.com/v3/orgs/#get-an-organization
+# @public
+function bashlets::core::github::org::url()
+{
+    local org="${1:?Organization login needed}"
+
+    local url="/orgs/$org"
+
+    $BASHLETS_NAMESPACE api get "$url" .url
+}
 
 # Local variables:
 # mode: shell-script
