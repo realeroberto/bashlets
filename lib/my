@@ -108,6 +108,21 @@ function bashlets::core::github::my::following()
     $BASHLETS_NAMESPACE page items "$url" login "$limit" "$callback"
 }
 
+# Check if the authorized user follows another.
+#
+# @cf   https://developer.github.com/v3/users/followers/#check-if-you-are-following-a-user
+# @public
+function bashlets::core::github::my::am_following()
+{
+    local target_user="${1:?Target user name required}"
+    local url="/user/following/$target_user"
+    local status
+
+    status="$($BASHLETS_NAMESPACE api status "$url")"
+
+    [[ $status == 204 ]]
+}
+
 # List all the organizations for the authenticated user.
 #
 # @cf   https://developer.github.com/v3/orgs/#list-your-organizations
