@@ -115,13 +115,13 @@ function bashlets::core::github::org::name()
     $BASHLETS_NAMESPACE api get "$url" .name
 }
 
-# List public repositories for the specified user.
+# List organization repositories.
 #
 # @cf   https://developer.github.com/v3/repos/#list-organization-repositories
 # @public
 function bashlets::core::github::org::repos()
 {
-    local org="${1:-bashlets}"
+    local org="${1:?Organization login needed}"
     local type="${2:-all}"  # all/public/private/forks/sources/member
     local limit="${3:-100}" callback="${4:-cat}"
 
