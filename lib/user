@@ -92,6 +92,22 @@ function bashlets::core::github::user::gists()
     $BASHLETS_NAMESPACE page items "$url" id "$limit" "$callback"
 }
 
+# Check if the specified user follows another.
+#
+# @cf   https://developer.github.com/v3/users/followers/#check-if-one-user-follows-another
+# @public
+function bashlets::core::github::user::is_following()
+{
+    local user="${1:?User name required}"
+    local target_user="${2:?Target user name required}"
+    local url="/users/$user/following/$target_user"
+    local status
+
+    status="$($BASHLETS_NAMESPACE api status "$url")"
+
+    [[ $status == 204 ]]
+}
+
 # List the verified public keys for the specified user.
 #
 # @cf   https://developer.github.com/v3/users/keys/#list-public-keys-for-a-user
