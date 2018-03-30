@@ -95,6 +95,19 @@ function bashlets::core::github::my::followers()
     $BASHLETS_NAMESPACE page items "$url" login "$limit" "$callback"
 }
 
+# List who the authenticated user is following.
+#
+# @cf   https://developer.github.com/v3/users/followers/#list-users-followed-by-another-user
+# @public
+function bashlets::core::github::my::following()
+{
+    local since="${1:-0}"
+    local limit="${3:-100}" callback="${4:-cat}"
+    local url="/user/following?since=$since"
+
+    $BASHLETS_NAMESPACE page items "$url" login "$limit" "$callback"
+}
+
 # List all the organizations for the authenticated user.
 #
 # @cf   https://developer.github.com/v3/orgs/#list-your-organizations
