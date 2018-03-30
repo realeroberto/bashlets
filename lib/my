@@ -35,7 +35,52 @@
 
 
 source bashlets core::github::api
+source bashlets core::github::json
 source bashlets core::github::page
+
+# Add email address(es).
+#
+# @cf   https://developer.github.com/v3/users/emails/#add-email-addresses
+# @public
+function bashlets::core::github::my::add_emails()
+{
+    local url="/user/emails"
+    local data
+
+    [[ $# -gt 0 ]] || return
+
+    data="$($BASHLETS_NAMESPACE json build_array "$@")"
+
+    $BASHLETS_NAMESPACE api post "$url" "$data" length
+}
+
+# Delete email address(es).
+#
+# @cf   https://developer.github.com/v3/users/emails/#delete-email-addresses
+# @public
+function bashlets::core::github::my::delete_emails()
+{
+    local url="/user/emails"
+    local data
+
+    [[ $# -gt 0 ]] || return
+
+    data="$($BASHLETS_NAMESPACE json build_array "$@")"
+
+    $BASHLETS_NAMESPACE api delete "$url" "$data"
+}
+
+# List email addresses for the authenticated user.
+#
+# @cf   https://developer.github.com/v3/users/emails/#list-email-addresses-for-a-user
+# @public
+function bashlets::core::github::my::emails()
+{
+    local limit="${1:-100}" callback="${2:-cat}"
+    local url="/user/emails"
+
+    $BASHLETS_NAMESPACE page items "$url" email "$limit" "$callback"
+}
 
 # List all the organizations for the authenticated user.
 #
@@ -47,6 +92,18 @@ function bashlets::core::github::my::orgs()
     local url="/user/orgs"
 
     $BASHLETS_NAMESPACE page items "$url" login "$limit" "$callback"
+}
+
+# List public email addresses for the authenticated user.
+#
+# @cf   https://developer.github.com/v3/users/emails/#list-public-email-addresses-for-a-user
+# @public
+function bashlets::core::github::my::public_emails()
+{
+    local limit="${1:-100}" callback="${2:-cat}"
+    local url="/user/public_emails"
+
+    $BASHLETS_NAMESPACE page items "$url" email "$limit" "$callback"
 }
 
 # List all the repositories for the authenticated user.
