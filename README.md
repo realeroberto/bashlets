@@ -16,8 +16,39 @@ bashlets install core.github
 
 ## Implemented Parts
 
+The active links represent implemented parts of the full API.
+
+
+* Activity
+    - Events
+    - Event Types & Payloads
+    - Feeds
+    - Notifications
+    - Starring
+    - Watching
 * [Gists](https://developer.github.com/v3/gists/)
     - [Comments](https://developer.github.com/v3/gists/comments/)
+* Git Data
+    - Blobs
+    - Commits
+    - References
+    - Tags
+    - Trees
+* GitHub Apps
+    - Installations
+    - GitHub Marketplace
+    - Permissions
+    - Available Endpoints
+* Issues
+    - Assignees
+    - Comments
+    - Events
+    - Labels
+    - Milestones
+    - Timeline
+* Migration
+     - Migrations
+     - Source Imports
 * [Miscellaneous](https://developer.github.com/v3/misc/)
     - [Codes of Conduct](https://developer.github.com/v3/codes_of_conduct/)
     - [Emojis](https://developer.github.com/v3/emojis/)
@@ -31,6 +62,60 @@ bashlets install core.github
     - Members
     - Outside Collaborators
     - Webhooks
+* Projects
+    - Cards
+    - Collaborators
+    - Columns
+* Pull Requests
+    - Reviews
+    - Review Comments
+    - Review Requests
+* Reactions
+    - Commit Comment
+    - Issue
+    - Issue Comment
+    - Pull Request Review Comment
+    - Team Discussion
+    - Team Discussion Comment
+* Repositories
+    - Branches
+    - Collaborators
+    - Comments
+    - Commits
+    - Community
+    - Contents
+    - Deploy Keys
+    - Deployments
+    - Downloads
+    - Forks
+    - Invitations
+    - Merging
+    - Pages
+    - Releases
+    - Statistics
+    - Statuses
+    - Traffic
+    - Webhooks
+* Search
+    - Repositories
+    - Code
+    - Commits
+    - Issues
+    - Users
+    - Topics
+    - Text match metadata
+    - Legacy search
+* Teams
+    - Discussions
+    - Discussion comments
+    - Members
+* SCIM
+* Users
+    - Blocking Users
+    - Emails
+    - Followers
+    - Git SSH Keys
+    - GPG Keys
 
 ## API Reference
 
@@ -165,10 +250,6 @@ bashlets install core.github
 * [`org::repos`](#orgrepos)
 * [`org::unblock`](#orgunblock)
 * [`org::url`](#orgurl)
-
-### `.org.swp`
-
-
 
 ### `page`
 
