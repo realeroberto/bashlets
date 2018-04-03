@@ -334,6 +334,23 @@ function bashlets::core::github::api::post()
         | bashlets::core::github::api::filter "$@"
 }
 
+# Create a resource in an asynchronous fashion.
+#
+# @cf   https://developer.github.com/v3/#http-verbs
+# @public
+function bashlets::core::github::api::post202()
+{
+    local url="$1" data="$2" ; shift 2
+
+    [[ -n $url || -n $BASHLETS_CORE_GITHUB_API_OAUTH_TOKEN ]] || return
+
+    bashlets::core::github::api::request body 202 -X POST    \
+        "-H 'Content-Type: application/json'"                \
+        --data "$(printf "%q" "$data")"                      \
+        "$(printf "%q" "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}")" \
+        | bashlets::core::github::api::filter "$@"
+}
+
 # Update a resource with partial JSON data.
 #
 # @cf   https://developer.github.com/v3/#http-verbs
