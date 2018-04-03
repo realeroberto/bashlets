@@ -139,10 +139,17 @@ function bashlets::core::github::user::orgs()
 function bashlets::core::github::user::repos()
 {
     local user="${1:?User name required}"
-    local type="${2:-owner}"  # all/owner/member
-    local limit="${2:-100}" callback="${3:-cat}"
+    local type="${2:-owner}"      # all, owner, member
+    local sort="${3:-full_name}"  # created, updated, pushed, full_name
+    local direction="${4:-auto}"  # auto, asc, desc
+    local limit="${5:-100}" callback="${6:-cat}"
 
-    local url="/users/$user/repos"
+    if [[ $direction == auto ]]
+    then
+        [[ $sort == full_name ]] && direction=asc || direction=desc
+    fi
+
+    local url="/users/$user/repos?type=$type&sort=$sort&direction=$direction"
 
     $BASHLETS_NAMESPACE api paginate "$url" name "$limit" "$callback"
 }
