@@ -50,7 +50,7 @@ function __bashlets::core::github::markdown::post()
     $BASHLETS_NAMESPACE api request body 200 -X POST           \
         "-H 'Content-Type: $mime'"                             \
         --data "$(printf "%q" "$data")"                        \
-        "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
+        "$(printf "%q" "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}")"
 }
 
 # Render an arbitrary Markdown document from a string (private method).

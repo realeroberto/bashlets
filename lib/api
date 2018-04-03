@@ -150,7 +150,7 @@ function bashlets::core::github::api::get()
     [[ -n $url ]] || return
 
     bashlets::core::github::api::request body 200            \
-        "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"         \
+        "$(printf "%q" "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}")" \
         | bashlets::core::github::api::filter "$@"
 }
 
@@ -254,7 +254,7 @@ function bashlets::core::github::api::paginate()
 
         response="$(
             bashlets::core::github::api::request response 200        \
-                "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
+                "$(printf "%q" "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}")"
         )"
 
         headers="$( __bashlets::core::github::api::extract_headers "$response")"
@@ -286,7 +286,7 @@ function bashlets::core::github::api::status()
     [[ -n $url ]] || return
 
     bashlets::core::github::api::request http_code 000       \
-        "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
+        "$(printf "%q" "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}")"
 }
 
 # Get the HTTP headers.
@@ -299,7 +299,7 @@ function bashlets::core::github::api::header()
     [[ -n $url ]] || return
 
     bashlets::core::github::api::request headers 200         \
-        "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"         \
+        "$(printf "%q" "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}")" \
         | grep "^$key: "
 }
 
@@ -313,7 +313,7 @@ function bashlets::core::github::api::header_value()
     [[ -n $url ]] || return
 
     bashlets::core::github::api::request headers 200         \
-        "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"         \
+        "$(printf "%q" "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}")" \
         | sed -n "s/^$key: \(.*\)/\\1/p"
 }
 
@@ -330,7 +330,7 @@ function bashlets::core::github::api::post()
     bashlets::core::github::api::request body 201 -X POST    \
         "-H 'Content-Type: application/json'"                \
         --data "$(printf "%q" "$data")"                      \
-        "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"         \
+        "$(printf "%q" "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}")" \
         | bashlets::core::github::api::filter "$@"
 }
 
@@ -346,8 +346,8 @@ function bashlets::core::github::api::patch()
 
     bashlets::core::github::api::request body 200 -X PATCH   \
         "-H 'Content-Type: application/json'"                \
-        --data "$(printf "%q" $data)"                        \
-        "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"         \
+        --data "$(printf "%q" "$data")"                      \
+        "$(printf "%q" "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}")" \
         | bashlets::core::github::api::filter "$@"
 }
 
@@ -366,11 +366,11 @@ function bashlets::core::github::api::put()
         bashlets::core::github::api::request none 204 -X PUT \
             "-H 'Content-Type: application/json'"            \
             --data "$(printf "%q" "$data")"                  \
-            "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
+            "$(printf "%q" "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}")"
     else
         bashlets::core::github::api::request none 204 -X PUT \
             -H "'Content-Length: 0'"                         \
-            "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
+            "$(printf "%q" "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}")"
     fi
 }
 
@@ -389,10 +389,10 @@ function bashlets::core::github::api::delete()
         bashlets::core::github::api::request none 204 -X DELETE  \
             "-H 'Content-Type: application/json'"                \
             --data "$(printf "%q" "$data")"                      \
-            "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
+            "$(printf "%q" "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}")"
     else
         bashlets::core::github::api::request none 204 -X DELETE  \
-            "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
+            "$(printf "%q" "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}")"
     fi
 }
 
