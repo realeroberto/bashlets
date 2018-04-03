@@ -93,7 +93,7 @@ function bashlets::core::github::repo::forks()
 {
     local user="${1:?User name needed}"
     local repo="${2:?Repository name needed}"
-    local sort="${3:-newest}"  # newest/oldest/stargazers
+    local sort="${3:-newest}"  # newest, oldest, stargazers
     local limit="${4:-100}" callback="${5:-cat}"
     local url="/repos/$user/$repo/forks?sort=$sort"
     
