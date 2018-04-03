@@ -226,7 +226,7 @@ function bashlets::core::github::api::last()
 #
 # @cf   https://developer.github.com/v3/#pagination
 # @public
-function bashlets::core::github::page::count()
+function bashlets::core::github::api::count()
 {
     local headers="${1:?Headers needed}"
     local regex="page=([0-9]+)" last

@@ -35,7 +35,6 @@
 
 
 source bashlets core::github::api
-source bashlets core::github::page
 
 # Block a user.
 #
@@ -212,7 +211,7 @@ function bashlets::core::github::org::repos()
 
     local url="/orgs/$org/repos?type=$type"
 
-    $BASHLETS_NAMESPACE page items "$url" name "$limit" "$callback"
+    $BASHLETS_NAMESPACE api paginate "$url" name "$limit" "$callback"
 }
 
 # Unblock a user.

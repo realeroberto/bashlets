@@ -36,7 +36,6 @@
 
 source bashlets core::github::api
 source bashlets core::github::defs
-source bashlets core::github::page
 
 # Follow a user.
 #
@@ -61,7 +60,7 @@ function bashlets::core::github::user::followers()
     local limit="${3:-100}" callback="${4:-cat}"
     local url="/users/$user/followers?since=$since"
 
-    $BASHLETS_NAMESPACE page items "$url" login "$limit" "$callback"
+    $BASHLETS_NAMESPACE api paginate "$url" login "$limit" "$callback"
 }
 
 # List who the specified user is following.
@@ -75,7 +74,7 @@ function bashlets::core::github::user::following()
     local limit="${3:-100}" callback="${4:-cat}"
     local url="/users/$user/following?since=$since"
 
-    $BASHLETS_NAMESPACE page items "$url" login "$limit" "$callback"
+    $BASHLETS_NAMESPACE api paginate "$url" login "$limit" "$callback"
 }
 
 # List public gists for the specified user.
@@ -89,7 +88,7 @@ function bashlets::core::github::user::gists()
     local limit="${3:-100}" callback="${4:-cat}"
     local url="/users/$user/gists?since=$since"
 
-    $BASHLETS_NAMESPACE page items "$url" id "$limit" "$callback"
+    $BASHLETS_NAMESPACE api paginate "$url" id "$limit" "$callback"
 }
 
 # Check if the specified user follows another.
@@ -118,7 +117,7 @@ function bashlets::core::github::user::keys()
     local limit="${2:-100}" callback="${3:-cat}"
     local url="/users/$user/keys"
 
-    $BASHLETS_NAMESPACE page items "$url" key "$limit" "$callback"
+    $BASHLETS_NAMESPACE api paginate "$url" key "$limit" "$callback"
 }
 
 # List public organization memberships for the specified user.
@@ -130,7 +129,7 @@ function bashlets::core::github::user::orgs()
     local limit="${2:-100}" callback="${3:-cat}"
     local url="/users/$user/orgs"
 
-    $BASHLETS_NAMESPACE page items "$url" login "$limit" "$callback"
+    $BASHLETS_NAMESPACE api paginate "$url" login "$limit" "$callback"
 }
 
 # List public repositories for the specified user.
@@ -140,11 +139,12 @@ function bashlets::core::github::user::orgs()
 function bashlets::core::github::user::repos()
 {
     local user="${1:?User name required}"
+    local type="${2:-owner}"  # all/owner/member
     local limit="${2:-100}" callback="${3:-cat}"
 
     local url="/users/$user/repos"
 
-    $BASHLETS_NAMESPACE page items "$url" name "$limit" "$callback"
+    $BASHLETS_NAMESPACE api paginate "$url" name "$limit" "$callback"
 }
 
 # Unfollow a user.

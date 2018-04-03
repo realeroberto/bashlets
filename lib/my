@@ -36,7 +36,6 @@
 
 source bashlets core::github::api
 source bashlets core::github::json
-source bashlets core::github::page
 
 # Add email address(es).
 #
@@ -136,7 +135,7 @@ function bashlets::core::github::my::emails()
     local limit="${1:-100}" callback="${2:-cat}"
     local url="/user/emails"
 
-    $BASHLETS_NAMESPACE page items "$url" email "$limit" "$callback"
+    $BASHLETS_NAMESPACE api paginate "$url" email "$limit" "$callback"
 }
 
 # List followers of the authenticated user.
@@ -149,7 +148,7 @@ function bashlets::core::github::my::followers()
     local limit="${3:-100}" callback="${4:-cat}"
     local url="/user/followers?since=$since"
 
-    $BASHLETS_NAMESPACE page items "$url" login "$limit" "$callback"
+    $BASHLETS_NAMESPACE api paginate "$url" login "$limit" "$callback"
 }
 
 # List who the authenticated user is following.
@@ -162,7 +161,7 @@ function bashlets::core::github::my::following()
     local limit="${3:-100}" callback="${4:-cat}"
     local url="/user/following?since=$since"
 
-    $BASHLETS_NAMESPACE page items "$url" login "$limit" "$callback"
+    $BASHLETS_NAMESPACE api paginate "$url" login "$limit" "$callback"
 }
 
 # Check whether the authorized user has blocked another user.
@@ -198,7 +197,7 @@ function bashlets::core::github::my::orgs()
     local limit="${1:-100}" callback="${2:-cat}"
     local url="/user/orgs"
 
-    $BASHLETS_NAMESPACE page items "$url" login "$limit" "$callback"
+    $BASHLETS_NAMESPACE api paginate "$url" login "$limit" "$callback"
 }
 
 # List public email addresses for the authenticated user.
@@ -210,7 +209,7 @@ function bashlets::core::github::my::public_emails()
     local limit="${1:-100}" callback="${2:-cat}"
     local url="/user/public_emails"
 
-    $BASHLETS_NAMESPACE page items "$url" email "$limit" "$callback"
+    $BASHLETS_NAMESPACE api paginate "$url" email "$limit" "$callback"
 }
 
 # List all the repositories for the authenticated user.
@@ -222,7 +221,7 @@ function bashlets::core::github::my::repos()
     local limit="${1:-100}" callback="${2:-cat}"
     local url="/user/repos"
 
-    $BASHLETS_NAMESPACE page items "$url" name "$limit" "$callback"
+    $BASHLETS_NAMESPACE api paginate "$url" name "$limit" "$callback"
 }
 
 # Toggle primary email visibility.

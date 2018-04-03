@@ -34,7 +34,6 @@
 ################################################################################
 
 
-source bashlets core::github::page
 
 # List all the starred gists for the authenticated user.
 #
@@ -46,7 +45,7 @@ function bashlets::core::github::starred::gists()
     local limit="${2:-100}" callback="${3:-cat}"
     local url="/gists/starred"
 
-    $BASHLETS_NAMESPACE page items "$url" id "$limit" "$callback"
+    $BASHLETS_NAMESPACE api paginate "$url" id "$limit" "$callback"
 }
 
 

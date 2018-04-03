@@ -36,7 +36,6 @@
 
 source bashlets core::github::api
 source bashlets core::github::defs
-source bashlets core::github::page
 
 # List all Codes of Conduct.
 #
@@ -79,7 +78,7 @@ function bashlets::core::github::github::gists()
     limit="${2:-100}" callback="${3:-cat}"
     local url="/gists/public?since=$since"
     
-    $BASHLETS_NAMESPACE page items "$url" id "$limit" "$callback"
+    $BASHLETS_NAMESPACE api paginate "$url" id "$limit" "$callback"
 }
 
 # List all .gitignore templates available to pass as an option when creating a
@@ -150,7 +149,7 @@ function bashlets::core::github::github::orgs()
     local since="${1:-0}" limit="${2:-100}" callback="${3:-cat}"
     local url="/organizations?since=$since"
     
-    $BASHLETS_NAMESPACE page items "$url" login "$limit" "$callback"
+    $BASHLETS_NAMESPACE api paginate "$url" login "$limit" "$callback"
 }
 
 # List all IP addresses (in CIDR format) specifying the A records for GitHub
@@ -185,7 +184,7 @@ function bashlets::core::github::github::repos()
     local since="${1:-0}" limit="${2:-100}" callback="${3:-cat}"
     local url="/repositories?since=$since"
     
-    $BASHLETS_NAMESPACE page items "$url" full_name "$limit" "$callback"
+    $BASHLETS_NAMESPACE api paginate "$url" full_name "$limit" "$callback"
 }
 
 # Get the currently-deployed SHA of github-services.
@@ -209,7 +208,7 @@ function bashlets::core::github::github::users()
     local since="${1:-0}" limit="${2:-100}" callback="${3:-cat}"
     local url="/users?since=$since"
     
-    $BASHLETS_NAMESPACE page items "$url" login "$limit" "$callback"
+    $BASHLETS_NAMESPACE api paginate "$url" login "$limit" "$callback"
 }
 
 

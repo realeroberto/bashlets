@@ -35,7 +35,6 @@
 
 
 source bashlets core::github::api
-source bashlets core::github::page
 
 # Download gist files.
 #
@@ -69,7 +68,7 @@ function bashlets::core::github::gist::comments()
     local limit="${2:-100}" callback="${3:-cat}"
     local url="/gists/$id/comments"
 
-    $BASHLETS_NAMESPACE page items "$url" id "$limit" "$callback"
+    $BASHLETS_NAMESPACE api paginate "$url" id "$limit" "$callback"
 }
 
 # List gist commits.
@@ -82,7 +81,7 @@ function bashlets::core::github::gist::commits()
     local limit="${2:-100}" callback="${3:-cat}"
     local url="/gists/$id/commits"
 
-    $BASHLETS_NAMESPACE page items "$url" version "$limit" "$callback"
+    $BASHLETS_NAMESPACE api paginate "$url" version "$limit" "$callback"
 }
 
 # Create a gist.
@@ -188,7 +187,7 @@ function bashlets::core::github::gist::forks()
     local limit="${2:-100}" callback="${3:-cat}"
     local url="/gists/$id/forks"
 
-    $BASHLETS_NAMESPACE page items "$url" id "$limit" "$callback"
+    $BASHLETS_NAMESPACE api paginate "$url" id "$limit" "$callback"
 }
 
 # Get a single gist.

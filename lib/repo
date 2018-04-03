@@ -34,7 +34,6 @@
 ################################################################################
 
 
-source bashlets core::github::page
 
 # List commits on a repository.
 #
@@ -47,7 +46,7 @@ function bashlets::core::github::repo::commits()
     local limit="${3:-100}" callback="${4:-cat}"
     local url="/repos/$user/$repo/commits"
 
-    $BASHLETS_NAMESPACE page items "$url" sha "$limit" "$callback"
+    $BASHLETS_NAMESPACE api paginate "$url" sha "$limit" "$callback"
 }
 
 # Get a repository's code of conduct.
@@ -98,7 +97,7 @@ function bashlets::core::github::repo::forks()
     local limit="${4:-100}" callback="${5:-cat}"
     local url="/repos/$user/$repo/forks?sort=$sort"
     
-    $BASHLETS_NAMESPACE page items "$url" id "$limit" "$callback"
+    $BASHLETS_NAMESPACE api paginate "$url" id "$limit" "$callback"
 }
 
 # Get the contents of a repository's license.
@@ -141,7 +140,7 @@ function bashlets::core::github::repo::tags()
     local limit="${3:-100}" callback="${4:-cat}"
     local url="/repos/$user/$repo/tags"
     
-    $BASHLETS_NAMESPACE page items "$url" sha "$limit" "$callback"
+    $BASHLETS_NAMESPACE api paginate "$url" sha "$limit" "$callback"
 }
 
 # List all topics for a repository.
