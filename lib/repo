@@ -34,6 +34,7 @@
 ################################################################################
 
 
+source bashlets core::github::api
 
 # List commits on a repository.
 #
@@ -83,6 +84,26 @@ function bashlets::core::github::repo::create()
 
     json="{ \"name\": \"$repo\" }"
     $BASHLETS_NAMESPACE api post "$url" "$json"
+}
+
+# Fork a repository.
+# Note: Forking a Repository happens asynchronously. Therefore, we may have to
+# wait a short period before accessing the new git objects. 
+#
+# @cf   https://developer.github.com/v3/repos/forks/#create-a-fork
+# @public
+function bashlets::core::github::repo::fork()
+{
+    local user="${1:?User name needed}"
+    local repo="${2:?Repository name needed}"
+    local org="$3"  # Optional parameter to specify the organization name if
+                    # forking into an organization.
+
+    local url="/repos/$user/$repo/forks"
+
+    [[ -n $org ]] && url="$url&organization=$org"
+    
+    $BASHLETS_NAMESPACE api post202 "$url" "" .id
 }
 
 # List forks for a repository.
