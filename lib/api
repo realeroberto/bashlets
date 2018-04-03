@@ -334,6 +334,23 @@ function bashlets::core::github::api::post()
         | bashlets::core::github::api::filter "$@"
 }
 
+# Specialized POST method that expects a 200 status code.
+#
+# @cf   https://developer.github.com/v3/#http-verbs
+# @public
+function bashlets::core::github::api::post200()
+{
+    local url="$1" data="$2"
+    local mime="${3:-application/json}"
+
+    [[ -n $url ]] || return
+
+    $BASHLETS_NAMESPACE api request body 200 -X POST           \
+        "-H 'Content-Type: $mime'"                             \
+        --data "$(printf "%q" "$data")"                        \
+        "$(printf "%q" "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}")"
+}
+
 # Create a resource in an asynchronous fashion.
 #
 # @cf   https://developer.github.com/v3/#http-verbs

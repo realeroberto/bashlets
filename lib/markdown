@@ -37,22 +37,6 @@
 source bashlets core::github::api
 source bashlets core::github::defs
 
-# Specialized POST method that expects a 200 status code.
-#
-# @cf   https://developer.github.com/v3/#http-verbs
-function __bashlets::core::github::markdown::post()
-{
-    local url="$1" data="$2"
-    local mime="${3:-application/json}"
-
-    [[ -n $url ]] || return
-
-    $BASHLETS_NAMESPACE api request body 200 -X POST           \
-        "-H 'Content-Type: $mime'"                             \
-        --data "$(printf "%q" "$data")"                        \
-        "$(printf "%q" "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}")"
-}
-
 # Render an arbitrary Markdown document from a string (private method).
 # The `gfm` mode is used to render a document in GitHub Flavored Markdown,
 # which creates links for user mentions as well as references to SHA-1 hashes,
@@ -75,7 +59,7 @@ function __bashlets::core::github::markdown::from_string()
         data="$(echo "$data" | jq -r --arg context "$context" '. + {context: $context}')"
     fi
 
-    __bashlets::core::github::markdown::post "$url" "$data"
+    $BASHLETS_NAMESPACE api post200 "$url" "$data"
 }
 
 # Render an arbitrary Markdown document from a file.
