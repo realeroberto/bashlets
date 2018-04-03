@@ -257,8 +257,8 @@ function bashlets::core::github::api::paginate()
                 "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
         )"
 
-        headers="$( __bashlets::core::github::api::get_headers   "$response")"
-           body="$( __bashlets::core::github::api::get_body      "$response")"
+        headers="$( __bashlets::core::github::api::extract_headers "$response")"
+           body="$( __bashlets::core::github::api::extract_body    "$response")"
 
         items=("$(echo "$body" | bashlets::core::github::api::filter ".[].\"$key\"")")
 
