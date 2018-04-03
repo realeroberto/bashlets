@@ -101,7 +101,7 @@ The active links represent implemented parts of the full API.
     - Deploy Keys
     - Deployments
     - Downloads
-    - Forks
+    - [Forks](https://developer.github.com/v3/repos/forks/)
     - Invitations
     - Merging
     - Pages

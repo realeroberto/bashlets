@@ -101,7 +101,7 @@ The active links represent implemented parts of the full API.
     - Deploy Keys
     - Deployments
     - Downloads
-    - Forks
+    - [Forks](https://developer.github.com/v3/repos/forks/)
     - Invitations
     - Merging
     - Pages
@@ -136,16 +136,24 @@ The active links represent implemented parts of the full API.
 
 ### `api`
 
+* [`api::count`](#apicount)
 * [`api::delete`](#apidelete)
 * [`api::endpoint`](#apiendpoint)
+* [`api::extract_header_value`](#apiextract_header_value)
+* [`api::extract_rel`](#apiextract_rel)
+* [`api::extract_rels`](#apiextract_rels)
 * [`api::filter`](#apifilter)
 * [`api::get`](#apiget)
 * [`api::header`](#apiheader)
 * [`api::header_value`](#apiheader_value)
+* [`api::last`](#apilast)
+* [`api::next`](#apinext)
+* [`api::paginate`](#apipaginate)
 * [`api::patch`](#apipatch)
 * [`api::post`](#apipost)
+* [`api::post200`](#apipost200)
+* [`api::post202`](#apipost202)
 * [`api::put`](#apiput)
-* [`api::rels`](#apirels)
 * [`api::request`](#apirequest)
 * [`api::status`](#apistatus)
 * [`api::version`](#apiversion)
@@ -262,13 +270,6 @@ The active links represent implemented parts of the full API.
 * [`org::unblock`](#orgunblock)
 * [`org::url`](#orgurl)
 
-### `page`
-
-* [`page::count`](#pagecount)
-* [`page::items`](#pageitems)
-* [`page::last`](#pagelast)
-* [`page::next`](#pagenext)
-
 ### `path`
 
 * [`path::content`](#pathcontent)
@@ -286,9 +287,12 @@ The active links represent implemented parts of the full API.
 * [`repo::commits`](#repocommits)
 * [`repo::conduct`](#repoconduct)
 * [`repo::create`](#repocreate)
+* [`repo::fork`](#repofork)
+* [`repo::forks`](#repoforks)
 * [`repo::license`](#repolicense)
 * [`repo::readme`](#reporeadme)
 * [`repo::tags`](#repotags)
+* [`repo::topics`](#repotopics)
 
 ### `starred`
 
@@ -307,6 +311,10 @@ The active links represent implemented parts of the full API.
 
 ## Methods Description
 
+### `api::count`
+
+Get the number of result pages.
+
 ### `api::delete`
 
 Delete a resouce.
@@ -314,6 +322,19 @@ Delete a resouce.
 ### `api::endpoint`
 
 Get API root endpoint.
+
+### `api::extract_header_value`
+
+Extract a given value from the HTTP headers.
+
+### `api::extract_rel`
+
+Get the Link header values.
+Get the link relation for the given page of results.
+
+### `api::extract_rels`
+
+Get the Link header values.
 
 ### `api::filter`
 
@@ -332,6 +353,18 @@ Extract a given value from the HTTP headers.
 
 Extract a given value from the HTTP headers.
 
+### `api::last`
+
+Get the link relation for the last page of results.
+
+### `api::next`
+
+Get the link relation for the next page of results.
+
+### `api::paginate`
+
+Get paginated items.
+
 ### `api::patch`
 
 Update a resource with partial JSON data.
@@ -339,14 +372,20 @@ Update a resource with partial JSON data.
 ### `api::post`
 
 Create a resource.
+Specialized POST method that expects a 200 status code.
+Create a resource in an asynchronous fashion.
+
+### `api::post200`
+
+Specialized POST method that expects a 200 status code.
+
+### `api::post202`
+
+Create a resource in an asynchronous fashion.
 
 ### `api::put`
 
 Replace a resource or a collection.
-
-### `api::rels`
-
-Get the Link header values.
 
 ### `api::request`
 
@@ -664,22 +703,6 @@ Unblock a user.
 
 Get an organization url.
 
-### `page::count`
-
-Get the number of result pages.
-
-### `page::items`
-
-Get paginated items.
-
-### `page::last`
-
-Get the link relation for the last page of results.
-
-### `page::next`
-
-Get the link relation for the next page of results.
-
 ### `path::content`
 
 Get the content of a file.
@@ -716,6 +739,15 @@ Get a repository's code of conduct.
 
 Create a new repository for the authenticated user.
 
+### `repo::fork`
+
+Fork a repository.
+List forks for a repository.
+
+### `repo::forks`
+
+List forks for a repository.
+
 ### `repo::license`
 
 Get the contents of a repository's license.
@@ -727,6 +759,10 @@ Return the preferred README for a repository.
 ### `repo::tags`
 
 List tags for a repository.
+
+### `repo::topics`
+
+List all topics for a repository.
 
 ### `starred::gists`
 
