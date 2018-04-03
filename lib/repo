@@ -86,6 +86,21 @@ function bashlets::core::github::repo::create()
     $BASHLETS_NAMESPACE api post "$url" "$json"
 }
 
+# List forks for a repository.
+#
+# @cf   https://developer.github.com/v3/repos/forks/#list-forks
+# @public
+function bashlets::core::github::repo::forks()
+{
+    local user="${1:?User name needed}"
+    local repo="${2:?Repository name needed}"
+    local sort="${3:-newest}"  # newest/oldest/stargazers
+    local limit="${4:-100}" callback="${5:-cat}"
+    local url="/repos/$user/$repo/forks?sort=$sort"
+    
+    $BASHLETS_NAMESPACE page items "$url" id "$limit" "$callback"
+}
+
 # Get the contents of a repository's license.
 #
 # @cf   https://developer.github.com/v3/licenses/#get-the-contents-of-a-repositorys-license
@@ -127,6 +142,27 @@ function bashlets::core::github::repo::tags()
     local url="/repos/$user/$repo/tags"
     
     $BASHLETS_NAMESPACE page items "$url" sha "$limit" "$callback"
+}
+
+# List all topics for a repository.
+#
+# @cf   https://developer.github.com/v3/repos/#list-all-topics-for-a-repository
+# @public
+function bashlets::core::github::repo::topics()
+{
+    local user="${1:?User name needed}"
+    local repo="${2:?Repository name needed}"
+    local url="/repos/$user/$repo/topics"
+    
+    (
+        # The topics property for repositories on GitHub is currently available
+        # for developers to preview. To view the topics property in calls that
+        # return repository results, we must provide a custom media type in the
+        # Accept header.
+
+        BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS="$BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS -H 'Accept: application/vnd.github.mercy-preview+json'"
+        $BASHLETS_NAMESPACE api get "$url" .names[]
+    )
 }
 
 # Local variables:
