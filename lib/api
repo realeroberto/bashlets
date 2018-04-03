@@ -44,6 +44,21 @@ function bashlets_error()
 BASHLETS_ERROR=bashlets_error
 
 
+function __bashlets::core::github::api::get_headers()
+{
+    sed -n '1,/^\r*$/p' <<<"$1"
+}
+
+function __bashlets::core::github::api::get_body()
+{
+    sed '1,/^\r*$/d; $d' <<<"$1"
+}
+
+function __bashlets::core::github::api::get_http_code()
+{
+    sed -n '$p' <<<"$1"
+}
+
 # Make a generic HTTP request.
 #
 # @public
@@ -88,9 +103,9 @@ function bashlets::core::github::api::request()
         fi
 
         # Extract headers, body, HTTP code
-          headers="$(sed -n '1,/^\r*$/p'     <<<"$response")"
-             body="$(sed    '1,/^\r*$/d; $d' <<<"$response")"
-        http_code="$(sed -n '$p'             <<<"$response")"
+          headers="$( __bashlets::core::github::api::get_headers   "$response")"
+             body="$( __bashlets::core::github::api::get_body      "$response")"
+        http_code="$( __bashlets::core::github::api::get_http_code "$response")"
 
         # Check HTTP code
         if [[ $http_code == 000 ]]
