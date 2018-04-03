@@ -209,7 +209,7 @@ function bashlets::core::github::api::extract_rel()
 function bashlets::core::github::api::next()
 {
     local headers="${1:?Headers needed}"
-    bashlets::core::github::api::rel "$headers" next
+    bashlets::core::github::api::extract_rel "$headers" next
 }
 
 # Get the link relation for the last page of results.
@@ -219,7 +219,7 @@ function bashlets::core::github::api::next()
 function bashlets::core::github::api::last()
 {
     local headers="${1:?Headers needed}"
-    bashlets::core::github::api::rel "$headers" last
+    bashlets::core::github::api::extract_rel "$headers" last
 }
 
 # Get the number of result pages.
