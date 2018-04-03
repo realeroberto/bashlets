@@ -44,17 +44,17 @@ function bashlets_error()
 BASHLETS_ERROR=bashlets_error
 
 
-function __bashlets::core::github::api::get_headers()
+function __bashlets::core::github::api::extract_headers()
 {
     sed -n '1,/^\r*$/p' <<<"$1"
 }
 
-function __bashlets::core::github::api::get_body()
+function __bashlets::core::github::api::extract_body()
 {
     sed '1,/^\r*$/d; $d' <<<"$1"
 }
 
-function __bashlets::core::github::api::get_http_code()
+function __bashlets::core::github::api::extract_http_code()
 {
     sed -n '$p' <<<"$1"
 }
@@ -103,9 +103,9 @@ function bashlets::core::github::api::request()
         fi
 
         # Extract headers, body, HTTP code
-          headers="$( __bashlets::core::github::api::get_headers   "$response")"
-             body="$( __bashlets::core::github::api::get_body      "$response")"
-        http_code="$( __bashlets::core::github::api::get_http_code "$response")"
+          headers="$( __bashlets::core::github::api::extract_headers   "$response")"
+             body="$( __bashlets::core::github::api::extract_body      "$response")"
+        http_code="$( __bashlets::core::github::api::extract_http_code "$response")"
 
         # Check HTTP code
         if [[ $http_code == 000 ]]
@@ -152,6 +152,127 @@ function bashlets::core::github::api::get()
     bashlets::core::github::api::request body 200            \
         "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"         \
         | bashlets::core::github::api::filter "$@"
+}
+
+# Extract a given value from the HTTP headers.
+#
+# @public
+function bashlets::core::github::api::extract_header_value()
+{
+    local headers="${1:?Headers needed}" key="${2:-[^:]\+}"
+
+    echo "$headers" | sed -n "s/^$key: \(.*\)/\\1/p"
+}
+
+# Get the Link header values.
+#
+# @cf   https://developer.github.com/v3/#pagination
+# @public
+function bashlets::core::github::api::extract_rels()
+{
+    local headers="${1:?Headers needed}" filter="${2:-.+}"
+    local regex="<(.+)>\;[[:space:]]rel=\"($filter)\""
+
+    IFS=, read -a rels <<<$(
+        bashlets::core::github::api::extract_header_value "$headers" Link
+    )
+
+    for rel in "${rels[@]}"
+    do
+        if [[ $rel =~ $regex ]]
+        then
+            printf "%s:%s\n" "${BASH_REMATCH[2]}" "${BASH_REMATCH[1]}"
+        fi
+    done
+}
+
+# Get the link relation for the given page of results.
+#
+# @cf   https://developer.github.com/v3/#pagination
+# @public
+function bashlets::core::github::api::extract_rel()
+{
+    local headers="${1:?Headers needed}" key="${2:-next}"
+    local regex="${key}:(.*)" rel
+
+    rel="$(bashlets::core::github::api::extract_rels "$headers" "$key")"
+    if [[ $rel =~ $regex ]]
+    then
+        echo "${BASH_REMATCH[1]#${BASHLETS_CORE_GITHUB_API_ENDPOINT}}"
+    fi
+}
+
+# Get the link relation for the next page of results.
+#
+# @cf   https://developer.github.com/v3/#pagination
+# @public
+function bashlets::core::github::api::next()
+{
+    local headers="${1:?Headers needed}"
+    bashlets::core::github::api::rel "$headers" next
+}
+
+# Get the link relation for the last page of results.
+#
+# @cf   https://developer.github.com/v3/#pagination
+# @public
+function bashlets::core::github::api::last()
+{
+    local headers="${1:?Headers needed}"
+    bashlets::core::github::api::rel "$headers" last
+}
+
+# Get the number of result pages.
+#
+# @cf   https://developer.github.com/v3/#pagination
+# @public
+function bashlets::core::github::page::count()
+{
+    local headers="${1:?Headers needed}"
+    local regex="page=([0-9]+)" last
+    last="$(bashlets::core::github::api::last "$headers")"
+    [[ $last =~ $regex ]] && echo "${BASH_REMATCH[1]}"
+}
+
+# Get paginated items.
+#
+# @cf   https://developer.github.com/v3/#pagination
+# @public
+function bashlets::core::github::api::paginate()
+{
+    local url="$1" key="$2"
+    local limit="${3:-100}" callback="${4:-cat}"
+    local count=0
+    
+    [[ -n $url || -n $key ]] || return
+
+    while true
+    do
+        local response headers body
+        local item
+        declare -a items
+
+        response="$(
+            bashlets::core::github::api::request response 200        \
+                "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
+        )"
+
+        headers="$( __bashlets::core::github::api::get_headers   "$response")"
+           body="$( __bashlets::core::github::api::get_body      "$response")"
+
+        items=("$(echo "$body" | bashlets::core::github::api::filter ".[].\"$key\"")")
+
+        for item in "${items[@]}"
+        do
+            (( count < limit )) || break 2
+            ((count++))
+            [[ -n $item ]] && echo "$item"
+        done
+
+        url="$(bashlets::core::github::api::next "$headers")"
+        [[ -n $url ]] || break
+
+    done | $callback
 }
 
 # Get the HTTP status code.
@@ -272,27 +393,6 @@ function bashlets::core::github::api::delete()
         bashlets::core::github::api::request none 204 -X DELETE  \
             "${BASHLETS_CORE_GITHUB_API_ENDPOINT}${url}"
     fi
-}
-
-# Get the Link header values.
-#
-# @cf   https://developer.github.com/v3/#pagination
-# @public
-function bashlets::core::github::api::rels()
-{
-    local url="$1" filter="${2:-.+}"
-    local regex="<(.+)>\;[[:space:]]rel=\"($filter)\""
-    [[ -n $url ]] || return
-    IFS=, read -a rels <<<$(
-        bashlets::core::github::api::header_value "$url" Link
-    )
-    for rel in "${rels[@]}"
-    do
-        if [[ $rel =~ $regex ]]
-        then
-            printf "%s:%s\n" ${BASH_REMATCH[2]} ${BASH_REMATCH[1]}
-        fi
-    done
 }
 
 # Get API root endpoint.
