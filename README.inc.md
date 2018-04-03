@@ -94,7 +94,7 @@ The active links represent implemented parts of the full API.
 * Repositories
     - Branches
     - Collaborators
-    - Comments
+    - [Comments](https://developer.github.com/v3/repos/comments/)
     - Commits
     - Community
     - Contents

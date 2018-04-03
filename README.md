@@ -94,7 +94,7 @@ The active links represent implemented parts of the full API.
 * Repositories
     - Branches
     - Collaborators
-    - Comments
+    - [Comments](https://developer.github.com/v3/repos/comments/)
     - Commits
     - Community
     - Contents
@@ -157,6 +157,21 @@ The active links represent implemented parts of the full API.
 * [`api::request`](#apirequest)
 * [`api::status`](#apistatus)
 * [`api::version`](#apiversion)
+
+### `commit`
+
+* [`commit::comments`](#commitcomments)
+
+### `commit_comment`
+
+* [`commit_comment::create`](#commit_commentcreate)
+* [`commit_comment::delete`](#commit_commentdelete)
+* [`commit_comment::edit`](#commit_commentedit)
+* [`commit_comment::get`](#commit_commentget)
+* [`commit_comment::path`](#commit_commentpath)
+* [`commit_comment::position`](#commit_commentposition)
+* [`commit_comment::ref`](#commit_commentref)
+* [`commit_comment::text`](#commit_commenttext)
 
 ### `conduct`
 
@@ -284,6 +299,7 @@ The active links represent implemented parts of the full API.
 
 ### `repo`
 
+* [`repo::comments`](#repocomments)
 * [`repo::commits`](#repocommits)
 * [`repo::conduct`](#repoconduct)
 * [`repo::create`](#repocreate)
@@ -398,6 +414,42 @@ Get the HTTP status code.
 ### `api::version`
 
 Get API version.
+
+### `commit::comments`
+
+List comments for a commit.
+
+### `commit_comment::create`
+
+Create a commit comment.
+
+### `commit_comment::delete`
+
+Delete a commit comment.
+
+### `commit_comment::edit`
+
+Update a commit comment.
+
+### `commit_comment::get`
+
+Get a single commit comment.
+
+### `commit_comment::path`
+
+Get the path of a single commit comment.
+
+### `commit_comment::position`
+
+Get the position of a single commit comment.
+
+### `commit_comment::ref`
+
+Get the commit ID of a single commit comment.
+
+### `commit_comment::text`
+
+Get the text of a single commit comment.
 
 ### `conduct::name`
 
@@ -726,6 +778,10 @@ Get the current rate limit status.
 ### `rate_limit::reset`
 
 Get the current rate limit status.
+
+### `repo::comments`
+
+List commit comments for a repository.
 
 ### `repo::commits`
 
