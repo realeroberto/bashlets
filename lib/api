@@ -249,7 +249,7 @@ function bashlets::core::github::api::paginate()
     while true
     do
         local response headers body
-        local item
+        local item next
         declare -a items
 
         response="$(
@@ -269,8 +269,9 @@ function bashlets::core::github::api::paginate()
             [[ -n $item ]] && echo "$item"
         done
 
-        url="$(bashlets::core::github::api::next "$headers")"
-        [[ -n $url ]] || break
+        next="$(bashlets::core::github::api::next "$headers")"
+        [[ -z $next || $next == $url ]] && break
+        url="$next"
 
     done | $callback
 }
