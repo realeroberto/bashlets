@@ -42,7 +42,8 @@ source bashlets core::github::page
 # @public
 function bashlets::core::github::repo::commits()
 {
-    local user="${1:-bashlets}" repo="${2:-bashlets}"
+    local user="${1:?User name needed}"
+    local repo="${2:?Repository name needed}"
     local limit="${3:-100}" callback="${4:-cat}"
     local url="/repos/$user/$repo/commits"
 
@@ -55,7 +56,8 @@ function bashlets::core::github::repo::commits()
 # @public
 function bashlets::core::github::repo::conduct()
 {
-    local user="${1:-bashlets}" repo="${2:-bashlets}"
+    local user="${1:?User name needed}"
+    local repo="${2:?Repository name needed}"
     local url="/repos/$user/$repo/community/code_of_conduct"
 
     (
@@ -76,10 +78,11 @@ function bashlets::core::github::repo::conduct()
 # @public
 function bashlets::core::github::repo::create()
 {
-    local name="$1" json
+    local repo="${1:?Repository name needed}"
     local url="/user/repos"
+    local json
 
-    json="{ \"name\": \"$name\" }"
+    json="{ \"name\": \"$repo\" }"
     $BASHLETS_NAMESPACE api post "$url" "$json"
 }
 
@@ -89,7 +92,8 @@ function bashlets::core::github::repo::create()
 # @public
 function bashlets::core::github::repo::license()
 {
-    local user="${1:-bashlets}" repo="${2:-bashlets}"
+    local user="${1:?User name needed}"
+    local repo="${2:?Repository name needed}"
     local url="/repos/$user/$repo/license"
 
     download_url="$($BASHLETS_NAMESPACE api get "$url" | jq -r .download_url?)"
@@ -102,7 +106,8 @@ function bashlets::core::github::repo::license()
 # @public
 function bashlets::core::github::repo::readme()
 {
-    local user="${1:-bashlets}" repo="${2:-bashlets}"
+    local user="${1:?User name needed}"
+    local repo="${2:?Repository name needed}"
     local url="/repos/$user/$repo/readme"
     local download_url
 
@@ -116,7 +121,8 @@ function bashlets::core::github::repo::readme()
 # @public
 function bashlets::core::github::repo::tags()
 {
-    local user="${1:-bashlets}" repo="${2:-bashlets}"
+    local user="${1:?User name needed}"
+    local repo="${2:?Repository name needed}"
     local limit="${3:-100}" callback="${4:-cat}"
     local url="/repos/$user/$repo/tags"
     
