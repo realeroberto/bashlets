@@ -206,7 +206,7 @@ function bashlets::core::github::org::name()
 function bashlets::core::github::org::repos()
 {
     local org="${1:?Organization login needed}"
-    local type="${2:-all}"  # all/public/private/forks/sources/member
+    local type="${2:-all}"  # all, public, private, forks, sources, member
     local limit="${3:-100}" callback="${4:-cat}"
 
     local url="/orgs/$org/repos?type=$type"
