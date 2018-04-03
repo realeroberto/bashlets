@@ -50,6 +50,20 @@ function bashlets::core::github::repo::commits()
     $BASHLETS_NAMESPACE api paginate "$url" sha "$limit" "$callback"
 }
 
+# List commit comments for a repository.
+#
+# @cf   https://developer.github.com/v3/repos/comments/#list-commit-comments-for-a-repository
+# @public
+function bashlets::core::github::repo::comments()
+{
+    local user="${1:?User name needed}"
+    local repo="${2:?Repository name needed}"
+    local limit="${3:-100}" callback="${4:-cat}"
+    local url="/repos/$user/$repo/comments"
+
+    $BASHLETS_NAMESPACE api paginate "$url" id "$limit" "$callback"
+}
+
 # Get a repository's code of conduct.
 #
 # @cf   https://developer.github.com/v3/codes_of_conduct/#get-the-contents-of-a-repositorys-code-of-conduct
