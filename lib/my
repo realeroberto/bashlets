@@ -219,6 +219,48 @@ function bashlets::core::github::my::starred_repos()
     $BASHLETS_NAMESPACE api paginate "$url" name "$limit" "$callback"
 }
 
+# Get the private timeline for the authenticated user, in Atom format.
+# Note: Private feeds are only returned when authenticating via Basic Auth
+# since current feed URIs use the older, non revocable auth tokens.
+#
+# @cf   https://developer.github.com/v3/activity/feeds/#list-feeds
+# @private
+function bashlets::core::github::my::private_timeline()
+{
+    local type="${1:-default}"  # default, actor
+
+    # `orgs` is not allowed
+    [[ $type == default || $type == actor ]] || return
+
+    curl -s "$(bashlets::core::github::my::private_timeline_url "$type")"
+}
+
+# Get the private timeline URI for the authenticated user.
+# Note: Private feeds are only returned when authenticating via Basic Auth
+# since current feed URIs use the older, non revocable auth tokens.
+#
+# @cf   https://developer.github.com/v3/activity/feeds/#list-feeds
+# @private
+function bashlets::core::github::my::private_timeline_url()
+{
+    local type="${1:-default}"  # default, actor, orgs
+    local url="/feeds"
+    local key
+
+    case "$type" in
+        default)
+            key=current_user_url ;;
+        actor)
+            key=current_user_actor_url ;;
+        orgs)
+            key=current_user_organization_urls[] ;;
+        *)
+            return
+    esac
+
+    $BASHLETS_NAMESPACE api get "$url" ".$key"
+}
+
 # Get the public timeline for the authenticated user, in Atom format.
 #
 # @cf   https://developer.github.com/v3/activity/feeds/#list-feeds
