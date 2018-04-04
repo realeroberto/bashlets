@@ -135,6 +135,22 @@ function bashlets::core::github::repo::forks()
     $BASHLETS_NAMESPACE api paginate "$url" id "$limit" "$callback"
 }
 
+# Check if a gist is starred.
+#
+# @cf   https://developer.github.com/v3/activity/starring/#check-if-you-are-starring-a-repository
+# @public
+function bashlets::core::github::repo::is_starred()
+{
+    local owner="${1:?User name needed}"
+    local repo="${2:?Repository name needed}"
+    local url="/user/starred/$owner/$repo"
+    local status
+
+    status="$($BASHLETS_NAMESPACE api status "$url")"
+
+    [[ $status == 204 ]]
+}
+
 # Get the contents of a repository's license.
 #
 # @cf   https://developer.github.com/v3/licenses/#get-the-contents-of-a-repositorys-license
@@ -162,6 +178,19 @@ function bashlets::core::github::repo::readme()
 
     download_url="$($BASHLETS_NAMESPACE api get "$url" | jq -r .download_url?)"
     [[ -n $download_url ]] && curl -s "$download_url"
+}
+
+# Star a repository.
+#
+# @cf   https://developer.github.com/v3/activity/starring/#star-a-repository
+# @public
+function bashlets::core::github::repo::star()
+{
+    local owner="${1:?User name needed}"
+    local repo="${2:?Repository name needed}"
+    local url="/user/starred/$owner/$repo"
+
+    $BASHLETS_NAMESPACE api put "$url"
 }
 
 # List tags for a repository.
@@ -197,6 +226,19 @@ function bashlets::core::github::repo::topics()
         BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS="$BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS -H 'Accept: application/vnd.github.mercy-preview+json'"
         $BASHLETS_NAMESPACE api get "$url" .names[]
     )
+}
+
+# Unstar a repository.
+#
+# @cf   https://developer.github.com/v3/activity/starring/#unstar-a-repository
+# @public
+function bashlets::core::github::repo::unstar()
+{
+    local owner="${1:?User name needed}"
+    local repo="${2:?Repository name needed}"
+    local url="/user/starred/$owner/$repo"
+
+    $BASHLETS_NAMESPACE api delete "$url"
 }
 
 # Local variables:
