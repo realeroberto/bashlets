@@ -38,7 +38,7 @@ The active links represent implemented parts of the full API.
     - Event Types & Payloads
     - Feeds
     - Notifications
-    - Starring
+    - [Starring](https://developer.github.com/v3/activity/starring/)
     - Watching
 * [Gists](https://developer.github.com/v3/gists/)
     - [Comments](https://developer.github.com/v3/gists/comments/)
@@ -183,6 +183,12 @@ The active links represent implemented parts of the full API.
 
 
 
+### `emails`
+
+* [`emails::add`](#emailsadd)
+* [`emails::delete`](#emailsdelete)
+* [`emails::toggle_primary_visibility`](#emailstoggle_primary_visibility)
+
 ### `emoji`
 
 * [`emoji::url`](#emojiurl)
@@ -254,11 +260,9 @@ The active links represent implemented parts of the full API.
 
 ### `my`
 
-* [`my::add_emails`](#myadd_emails)
 * [`my::am_following`](#myam_following)
 * [`my::block`](#myblock)
 * [`my::blocked_users`](#myblocked_users)
-* [`my::delete_emails`](#mydelete_emails)
 * [`my::emails`](#myemails)
 * [`my::followers`](#myfollowers)
 * [`my::following`](#myfollowing)
@@ -266,7 +270,8 @@ The active links represent implemented parts of the full API.
 * [`my::orgs`](#myorgs)
 * [`my::public_emails`](#mypublic_emails)
 * [`my::repos`](#myrepos)
-* [`my::toggle_primary_email_visibility`](#mytoggle_primary_email_visibility)
+* [`my::starred_gists`](#mystarred_gists)
+* [`my::starred_repos`](#mystarred_repos)
 * [`my::unblock`](#myunblock)
 
 ### `org`
@@ -305,14 +310,14 @@ The active links represent implemented parts of the full API.
 * [`repo::create`](#repocreate)
 * [`repo::fork`](#repofork)
 * [`repo::forks`](#repoforks)
+* [`repo::is_starred`](#repois_starred)
 * [`repo::license`](#repolicense)
 * [`repo::readme`](#reporeadme)
+* [`repo::star`](#repostar)
+* [`repo::stargazers`](#repostargazers)
 * [`repo::tags`](#repotags)
 * [`repo::topics`](#repotopics)
-
-### `starred`
-
-* [`starred::gists`](#starredgists)
+* [`repo::unstar`](#repounstar)
 
 ### `user`
 
@@ -323,6 +328,7 @@ The active links represent implemented parts of the full API.
 * [`user::is_following`](#useris_following)
 * [`user::keys`](#userkeys)
 * [`user::repos`](#userrepos)
+* [`user::starred_repos`](#userstarred_repos)
 * [`user::unfollow`](#userunfollow)
 
 ## Methods Description
@@ -462,6 +468,18 @@ Get the text of an individual code of conduct.
 ### `conduct::url`
 
 Get the url of an individual code of conduct.
+
+### `emails::add`
+
+Add email address(es).
+
+### `emails::delete`
+
+Delete email address(es).
+
+### `emails::toggle_primary_visibility`
+
+Toggle primary email visibility.
 
 ### `emoji::url`
 
@@ -645,10 +663,6 @@ Render an arbitrary Markdown document from stdin.
 Render an arbitrary Markdown document from a string (private method).
 Render an arbitrary Markdown document from a string.
 
-### `my::add_emails`
-
-Add email address(es).
-
 ### `my::am_following`
 
 Check if the authorized user follows another.
@@ -661,10 +675,6 @@ List the users the authenticated user has blocked on her personal account.
 ### `my::blocked_users`
 
 List the users the authenticated user has blocked on her personal account.
-
-### `my::delete_emails`
-
-Delete email address(es).
 
 ### `my::emails`
 
@@ -694,9 +704,13 @@ List public email addresses for the authenticated user.
 
 List all the repositories for the authenticated user.
 
-### `my::toggle_primary_email_visibility`
+### `my::starred_gists`
 
-Toggle primary email visibility.
+List all the starred gists for the authenticated user.
+
+### `my::starred_repos`
+
+List repositories being starred by the specified user.
 
 ### `my::unblock`
 
@@ -804,6 +818,10 @@ List forks for a repository.
 
 List forks for a repository.
 
+### `repo::is_starred`
+
+Check if a gist is starred.
+
 ### `repo::license`
 
 Get the contents of a repository's license.
@@ -811,6 +829,15 @@ Get the contents of a repository's license.
 ### `repo::readme`
 
 Return the preferred README for a repository.
+
+### `repo::star`
+
+Star a repository.
+List Stargazers for a repository.
+
+### `repo::stargazers`
+
+List Stargazers for a repository.
 
 ### `repo::tags`
 
@@ -820,9 +847,9 @@ List tags for a repository.
 
 List all topics for a repository.
 
-### `starred::gists`
+### `repo::unstar`
 
-List all the starred gists for the authenticated user.
+Unstar a repository.
 
 ### `user::follow`
 
@@ -853,6 +880,10 @@ List the verified public keys for the specified user.
 ### `user::repos`
 
 List public repositories for the specified user.
+
+### `user::starred_repos`
+
+List repositories being starred by the specified user.
 
 ### `user::unfollow`
 

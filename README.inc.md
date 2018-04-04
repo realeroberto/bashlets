@@ -38,7 +38,7 @@ The active links represent implemented parts of the full API.
     - Event Types & Payloads
     - Feeds
     - Notifications
-    - Starring
+    - [Starring](https://developer.github.com/v3/activity/starring/)
     - Watching
 * [Gists](https://developer.github.com/v3/gists/)
     - [Comments](https://developer.github.com/v3/gists/comments/)
