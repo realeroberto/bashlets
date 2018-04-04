@@ -40,7 +40,7 @@ The active links represent implemented parts of the full API.
 * Activity
     - Events
     - Event Types & Payloads
-    - Feeds
+    - [Feeds](https://developer.github.com/v3/activity/feeds/)
     - Notifications
     - [Starring](https://developer.github.com/v3/activity/starring/)
     - Watching
@@ -240,6 +240,8 @@ The active links represent implemented parts of the full API.
 * [`github::password_auth`](#githubpassword_auth)
 * [`github::repos`](#githubrepos)
 * [`github::sha`](#githubsha)
+* [`github::timeline`](#githubtimeline)
+* [`github::timeline_url`](#githubtimeline_url)
 * [`github::users`](#githubusers)
 
 ### `gitignore`
@@ -273,6 +275,8 @@ The active links represent implemented parts of the full API.
 * [`my::have_blocked`](#myhave_blocked)
 * [`my::orgs`](#myorgs)
 * [`my::public_emails`](#mypublic_emails)
+* [`my::public_timeline`](#mypublic_timeline)
+* [`my::public_timeline_url`](#mypublic_timeline_url)
 * [`my::repos`](#myrepos)
 * [`my::starred_gists`](#mystarred_gists)
 * [`my::starred_repos`](#mystarred_repos)
@@ -333,6 +337,8 @@ The active links represent implemented parts of the full API.
 * [`user::keys`](#userkeys)
 * [`user::repos`](#userrepos)
 * [`user::starred_repos`](#userstarred_repos)
+* [`user::timeline`](#usertimeline)
+* [`user::timeline_url`](#usertimeline_url)
 * [`user::unfollow`](#userunfollow)
 
 ## Methods Description
@@ -630,6 +636,15 @@ List all public repositories.
 
 Get the currently-deployed SHA of github-services.
 
+### `github::timeline`
+
+Get the GitHub global public timeline, in Atom format.
+Get the GitHub global public timeline URI.
+
+### `github::timeline_url`
+
+Get the GitHub global public timeline URI.
+
 ### `github::users`
 
 List all users, in the order that they signed up on GitHub.
@@ -703,6 +718,15 @@ List all the organizations for the authenticated user.
 ### `my::public_emails`
 
 List public email addresses for the authenticated user.
+
+### `my::public_timeline`
+
+Get the public timeline for the authenticated user, in Atom format.
+Get the public timeline URI for the authenticated user.
+
+### `my::public_timeline_url`
+
+Get the public timeline URI for the authenticated user.
 
 ### `my::repos`
 
@@ -888,6 +912,15 @@ List public repositories for the specified user.
 ### `user::starred_repos`
 
 List repositories being starred by the specified user.
+
+### `user::timeline`
+
+Get the public timeline for the specified user, in Atom format.
+Get the public timeline URI for the specified user.
+
+### `user::timeline_url`
+
+Get the public timeline URI for the specified user.
 
 ### `user::unfollow`
 

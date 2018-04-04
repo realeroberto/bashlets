@@ -40,7 +40,7 @@ The active links represent implemented parts of the full API.
 * Activity
     - Events
     - Event Types & Payloads
-    - Feeds
+    - [Feeds](https://developer.github.com/v3/activity/feeds/)
     - Notifications
     - [Starring](https://developer.github.com/v3/activity/starring/)
     - Watching
