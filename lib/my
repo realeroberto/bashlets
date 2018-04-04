@@ -219,6 +219,36 @@ function bashlets::core::github::my::starred_repos()
     $BASHLETS_NAMESPACE api paginate "$url" name "$limit" "$callback"
 }
 
+# Get the public timeline for the authenticated user, in Atom format.
+# Note: Private feeds are only returned when authenticating via Basic Auth
+# since current feed URIs use the older, non revocable auth tokens.
+#
+# @cf   https://developer.github.com/v3/activity/feeds/#list-feeds
+# @public
+function bashlets::core::github::my::timeline()
+{
+    curl -s "$(bashlets::core::github::my::timeline_url)"
+}
+
+# Get the public timeline URI for the authenticated user.
+# Note: Private feeds are only returned when authenticating via Basic Auth
+# since current feed URIs use the older, non revocable auth tokens.
+#
+# @cf   https://developer.github.com/v3/activity/feeds/#list-feeds
+# @public
+function bashlets::core::github::my::timeline_url()
+{
+    local url="/feeds"
+    local timeline_url
+
+    timeline_url="$($BASHLETS_NAMESPACE api get "$url" .current_user_url)"
+
+    # TODO implement generic URI template parsing
+    timeline_url="${timeline_url//\{user\}/$user}"
+
+    echo "$timeline_url"
+}
+
 # Unblock a user.
 #
 # @cf   https://developer.github.com/v3/users/blocking/#unblock-a-user
