@@ -199,6 +199,26 @@ function bashlets::core::github::github::sha()
     $BASHLETS_NAMESPACE api get "$url" .github_services_sha
 }
 
+# Get the GitHub global public timeline, in Atom format.
+#
+# @cf   https://developer.github.com/v3/activity/feeds/#list-feeds
+# @public
+function bashlets::core::github::github::timeline()
+{
+    curl -s "$(bashlets::core::github::github::timeline_url)"
+}
+
+# Get the GitHub global public timeline URI.
+#
+# @cf   https://developer.github.com/v3/activity/feeds/#list-feeds
+# @public
+function bashlets::core::github::github::timeline_url()
+{
+    local url="/feeds"
+
+    $BASHLETS_NAMESPACE api get "$url" .timeline_url
+}
+
 # List all users, in the order that they signed up on GitHub.
 #
 # @cf   https://developer.github.com/v3/users/#get-all-users
