@@ -35,23 +35,6 @@
 
 
 source bashlets core::github::api
-source bashlets core::github::json
-
-# Add email address(es).
-#
-# @cf   https://developer.github.com/v3/users/emails/#add-email-addresses
-# @public
-function bashlets::core::github::my::add_emails()
-{
-    local url="/user/emails"
-    local data
-
-    [[ $# -gt 0 ]] || return
-
-    data="$($BASHLETS_NAMESPACE json build_array "$@")"
-
-    $BASHLETS_NAMESPACE api post "$url" "$data" length
-}
 
 # Check if the authorized user follows another.
 #
@@ -108,22 +91,6 @@ function bashlets::core::github::my::blocked_users()
         BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS="$BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS -H 'Accept: application/vnd.github.giant-sentry-fist-preview+json'"
         $BASHLETS_NAMESPACE api get "$url" .[].login
     )
-}
-
-# Delete email address(es).
-#
-# @cf   https://developer.github.com/v3/users/emails/#delete-email-addresses
-# @public
-function bashlets::core::github::my::delete_emails()
-{
-    local url="/user/emails"
-    local data
-
-    [[ $# -gt 0 ]] || return
-
-    data="$($BASHLETS_NAMESPACE json build_array "$@")"
-
-    $BASHLETS_NAMESPACE api delete "$url" "$data"
 }
 
 # List email addresses for the authenticated user.
@@ -235,17 +202,6 @@ function bashlets::core::github::my::starred_gists()
     local url="/gists/starred"
 
     $BASHLETS_NAMESPACE api paginate "$url" id "$limit" "$callback"
-}
-
-# Toggle primary email visibility.
-#
-# @cf   https://developer.github.com/v3/users/emails/#toggle-primary-email-visibility
-# @public
-function bashlets::core::github::my::toggle_primary_email_visibility()
-{
-    local url="/user/email/visibility"
-
-    $BASHLETS_NAMESPACE api patch "$url" "" .[].visibility
 }
 
 # Unblock a user.
