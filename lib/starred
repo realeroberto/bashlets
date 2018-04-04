@@ -34,6 +34,7 @@
 ################################################################################
 
 
+source bashlets core::github::api
 
 # List all the starred gists for the authenticated user.
 #
