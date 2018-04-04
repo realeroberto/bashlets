@@ -204,6 +204,21 @@ function bashlets::core::github::my::starred_gists()
     $BASHLETS_NAMESPACE api paginate "$url" id "$limit" "$callback"
 }
 
+# List repositories being starred by the specified user.
+#
+# @cf   https://developer.github.com/v3/activity/starring/#list-repositories-being-starred
+# @public
+function bashlets::core::github::my::starred_repos()
+{
+    local sort="${1:-created}"    # created, updated
+    local direction="${2:-desc}"  # asc, desc
+    local limit="${3:-100}" callback="${4:-cat}"
+
+    local url="/user/starred?sort=$sort&direction=$direction"
+
+    $BASHLETS_NAMESPACE api paginate "$url" name "$limit" "$callback"
+}
+
 # Unblock a user.
 #
 # @cf   https://developer.github.com/v3/users/blocking/#unblock-a-user
