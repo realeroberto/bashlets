@@ -193,6 +193,20 @@ function bashlets::core::github::repo::star()
     $BASHLETS_NAMESPACE api put "$url"
 }
 
+# List Stargazers for a repository.
+#
+# @cf   https://developer.github.com/v3/activity/starring/#list-stargazers
+# @public
+function bashlets::core::github::repo::stargazers()
+{
+    local owner="${1:?User name needed}"
+    local repo="${2:?Repository name needed}"
+    local limit="${3:-100}" callback="${4:-cat}"
+    local url="/repos/$owner/$repo/stargazers"
+
+    $BASHLETS_NAMESPACE api paginate "$url" login "$limit" "$callback"
+}
+
 # List tags for a repository.
 #
 # @cf   https://developer.github.com/v3/repos/#list-tags
