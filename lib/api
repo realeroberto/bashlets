@@ -81,7 +81,10 @@ function bashlets::core::github::api::request()
             user_agent="-H 'User-Agent: $BASHLETS_CORE_GITHUB_API_USER_AGENT'"
         fi
 
-        if [[ -n $BASHLETS_CORE_GITHUB_API_OAUTH_TOKEN ]]
+        if [[ -n $BASHLETS_CORE_GITHUB_API_BASIC_AUTH ]]
+        then
+            basic_auth="-u $BASHLETS_CORE_GITHUB_API_BASIC_AUTH'"
+        elif [[ -n $BASHLETS_CORE_GITHUB_API_OAUTH_TOKEN ]]
         then
             oauth_token="-H 'Authorization: token $BASHLETS_CORE_GITHUB_API_OAUTH_TOKEN'"
         fi
@@ -91,6 +94,7 @@ function bashlets::core::github::api::request()
             eval curl -is                                                  \
                 "$accept"                                                  \
                 "$user_agent"                                              \
+                "$basic_auth"                                              \
                 "$oauth_token"                                             \
                 "$BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS"                 \
                 --write-out '\\n%{http_code}\\n'                           \
