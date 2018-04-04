@@ -35,6 +35,7 @@
 
 
 source bashlets core::github::api
+source bashlets core::github::defs
 
 # List all the starred gists for the authenticated user.
 #
