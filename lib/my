@@ -224,6 +224,19 @@ function bashlets::core::github::my::repos()
     $BASHLETS_NAMESPACE api paginate "$url" name "$limit" "$callback"
 }
 
+# List all the starred gists for the authenticated user.
+#
+# @cf   https://developer.github.com/v3/gists/#list-starred-gists
+# @public
+function bashlets::core::github::my::starred_gists()
+{
+    local since="${1:-$BASHLETS_CORE_GITHUB_API_EPOCH}"
+    local limit="${2:-100}" callback="${3:-cat}"
+    local url="/gists/starred"
+
+    $BASHLETS_NAMESPACE api paginate "$url" id "$limit" "$callback"
+}
+
 # Toggle primary email visibility.
 #
 # @cf   https://developer.github.com/v3/users/emails/#toggle-primary-email-visibility
