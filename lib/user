@@ -170,6 +170,35 @@ function bashlets::core::github::user::starred_repos()
     $BASHLETS_NAMESPACE api paginate "$url" name "$limit" "$callback"
 }
 
+# Get the public timeline for the specified user, in Atom format.
+#
+# @cf   https://developer.github.com/v3/activity/feeds/#list-feeds
+# @public
+function bashlets::core::github::user::timeline()
+{
+    local user="${1:?User name required}"
+
+    curl -s "$(bashlets::core::github::user::timeline_url "$user")"
+}
+
+# Get the public timeline URI for the specified user.
+#
+# @cf   https://developer.github.com/v3/activity/feeds/#list-feeds
+# @public
+function bashlets::core::github::user::timeline_url()
+{
+    local user="${1:?User name required}"
+    local url="/feeds"
+    local timeline_url
+
+    timeline_url="$($BASHLETS_NAMESPACE api get "$url" .user_url)"
+
+    # TODO implement generic URI template parsing
+    timeline_url="${timeline_url//\{user\}/$user}"
+
+    echo "$timeline_url"
+}
+
 # Unfollow a user.
 #
 # @cf   https://developer.github.com/v3/users/followers/#unfollow-a-user
