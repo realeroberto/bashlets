@@ -16,7 +16,11 @@ bashlets install core.github
 
 ### Authentication
 
-The library supports [OAuth authentication](https://developer.github.com/apps/building-oauth-apps/) through the environment variable `BASHLETS_CORE_GITHUB_API_OAUTH_TOKEN`.
+The library supports both basic and OAuth authentication.
+
+Basic authentication is supported through the environment variable `BASHLETS_CORE_GITHUB_API_BASIC_AUTH`, which must contain the username.
+
+[OAuth authentication](https://developer.github.com/apps/building-oauth-apps/), on the other hand, is supported through the environment variable `BASHLETS_CORE_GITHUB_API_OAUTH_TOKEN`.
 
 ### User agent
 
