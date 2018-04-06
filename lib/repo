@@ -97,7 +97,7 @@ function bashlets::core::github::repo::create()
     local json
 
     json="{ \"name\": \"$repo\" }"
-    $BASHLETS_NAMESPACE api post "$url" "$json" .id
+    $BASHLETS_NAMESPACE api post "$url" "$json" .name
 }
 
 # Delete a repository.
