@@ -100,7 +100,7 @@ function bashlets::core::github::repo::create()
     $BASHLETS_NAMESPACE api post "$url" "$json" .id
 }
 
-# Create a repository.
+# Delete a repository.
 # Deleting a repository requires admin access. If OAuth is used, the
 # `delete_repo` scope is required.
 #
