@@ -104,7 +104,7 @@ The active links represent implemented parts of the full API.
     - Contents
     - Deploy Keys
     - Deployments
-    - ~~Downloads~~: [deprecated](https://developer.github.com/v3/repos/downloads/)
+    - ~~Downloads~~ ([deprecated](https://developer.github.com/v3/repos/downloads/))
     - [Forks](https://developer.github.com/v3/repos/forks/)
     - Invitations
     - Merging
