@@ -1,6 +1,0 @@
-[submodule "test/lib/bats-support"]
-	path = test/lib/bats-support
-	url = https://github.com/ztombol/bats-support
-[submodule "test/lib/bats-assert"]
-	path = test/lib/bats-assert
-	url = https://github.com/ztombol/bats-assert
