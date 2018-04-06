@@ -12,7 +12,7 @@ doc: README.inc.md mk-doc lib/*
 	$(SHELL) mk-doc lib >> README.md
 
 tests:
-	bats $$(find tests -type f -name '*.bats')
+	bats $$(find test -type f -name '*.bats')
 
 lint:
 	shellcheck $$(grep -rl '^#![[:blank:]]*/bin/bash')
