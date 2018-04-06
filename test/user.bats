@@ -32,11 +32,16 @@
 #
 ################################################################################
 
+load 'lib/bats-support/load'
+load 'lib/bats-assert/load'
+
 source bashlets core::github::user
 
-@test "github/user: list GitHub repositories for a given user" {
-    (bash$$ user repos | grep ^bashlets$)
-    [[ $status -eq 0 ]]
+[[ -n $BASHLETS_CORE_GITHUB_API_USERNAME ]] || fail "BASHLETS_CORE_GITHUB_API_USERNAME undefined"
+
+@test "core::github::user::repos: list GitHub repositories for the given user" {
+    $BASHLETS_NAMESPACE user repos $BASHLETS_CORE_GITHUB_API_USERNAME
+    assert_success
 }
 
 # Local variables:

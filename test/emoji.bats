@@ -32,6 +32,9 @@
 #
 ################################################################################
 
+load 'lib/bats-support/load'
+load 'lib/bats-assert/load'
+
 source bashlets core::github::emoji
 
 @test "core::github::emoji::url: get an emoji's URL" {
