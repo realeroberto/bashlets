@@ -100,6 +100,21 @@ function bashlets::core::github::repo::create()
     $BASHLETS_NAMESPACE api post "$url" "$json" .id
 }
 
+# Create a repository.
+# Deleting a repository requires admin access. If OAuth is used, the
+# `delete_repo` scope is required.
+#
+# @cf   https://developer.github.com/v3/repos/#delete-a-repository
+# @public
+function bashlets::core::github::repo::delete()
+{
+    local user="${1:?User name needed}"
+    local repo="${2:?Repository name needed}"
+    local url="/repos/$user/$repo"
+
+    $BASHLETS_NAMESPACE api delete "$url"
+}
+
 # Fork a repository.
 # Note: Forking a Repository happens asynchronously. Therefore, we may have to
 # wait a short period before accessing the new git objects. 
