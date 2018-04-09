@@ -1,0 +1,15 @@
+{
+        "name": "core.cache",
+        "description": "core.cache",
+        "version": "0.2",
+        "author": {
+                "name": "Roberto Reale",
+                "email": "rober.reale@gmail.com"
+        },
+        "license": "MIT",
+        "deps": [
+                "core.marshal",
+                "core.os",
+                "core.shell"
+        ]
+}
