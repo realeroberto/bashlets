@@ -1,0 +1,371 @@
+#!/bin/bash
+
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# bashlets -- A modular extensible toolbox for Bash
+#
+# Installation script
+#
+# Copyright (c) 2014-8 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+#
+# global variables
+################################################################################
+
+BASHLETS_BASE=~/.bashlets
+BASHLETS_REMOTE_CORE=https://github.com/bashlets
+BASHLETS_REMOTE_PACKAGES=https://github.com/bashlets
+BASHLETS_REMOTE_CDN=https://raw.githubusercontent.com/bashlets
+BASHLETS_BIN_TARGETS=~/.local/bin:/usr/local/bin
+BASHLETS_PACKAGE_MANIFEST=package.json
+
+# which Git branch are we interested in?
+branch=master
+
+# set the current installation as the default one
+unset set_as_default
+
+unset install_from_local_repo
+unset dont_install_deps
+
+# verbose output
+verbose=:
+
+
+#
+# utilities
+################################################################################
+
+function usage()
+{
+    cat <<-EOF
+		Usage:
+
+		    bashlets-install [ -D ] [ -B <branch> ] [ -L ] [ -S ] [ <module> ... ]
+
+		Options:
+
+           -D      set the current installation as the default one
+           -B      switch to another Git branch
+           -L      install from a local Git repository
+           -S      do not install dependencies
+           -v      verbose output
+           -?      display this help and exit
+           -V      output version information and exit
+
+	EOF
+} 
+
+function version()
+{
+    cat <<-EOF
+		bashlets-install 0.1
+	EOF
+} 
+
+function verbose()
+{
+    $verbose "$@"
+}
+
+function make_tempdir()
+{
+    BASHLETS_TEMPDIR=$(mktemp -d)
+}
+
+function erase_tempdir()
+{
+    [[ -n $BASHLETS_TEMPDIR ]] && rm -fr $BASHLETS_TEMPDIR
+}
+
+function cd_tempdir()
+{
+    cd $BASHLETS_TEMPDIR
+}
+
+function cleanup()
+{
+    [[ -n $current_branch ]] && git checkout -q $current_branch
+    erase_tempdir
+}
+
+trap cleanup EXIT
+
+
+#
+# core logic
+################################################################################
+
+function package_get_name()
+{
+    jq -r .name $BASHLETS_PACKAGE_MANIFEST
+}
+
+function package_get_deps()
+{
+    jq -r .deps[]? $BASHLETS_PACKAGE_MANIFEST
+}
+
+function remote_get_deps()
+{
+    local package="$1" rev="${2:-master}"
+    
+    curl -s $BASHLETS_REMOTE_CDN/bashlets.$package/$rev/$BASHLETS_PACKAGE_MANIFEST | jq -r .deps[]?
+}
+
+declare -A VISITED=()
+
+function remote_get_deps_recursive()
+{
+    # start with remote manifest
+
+    local package="$1" rev="${2:-master}"
+    
+    # already visited
+    if [[ -z "${VISITED[$package]}" ]]
+    then
+        VISITED[$package]=1
+        for dep in $(remote_get_deps $package $rev)
+        do
+            echo $package $dep  # output graph node
+            remote_get_deps_recursive $dep $rev
+        done
+    fi
+}
+
+function package_get_deps_recursive()
+{
+    # start with local manifest
+
+    local package="$1" rev="${2:-master}"
+    
+    # already visited
+    if [[ -z "${VISITED[$package]}" ]]
+    then
+        VISITED[$package]=1
+        for dep in $(package_get_deps)
+        do
+            echo $package $dep  # output graph node
+            remote_get_deps_recursive $dep $rev
+        done
+    fi
+}
+
+function package_get_deps_sorted()
+{
+    local package="$1" rev="${2:-master}"
+    # perform a topological sort on the dependency graph
+    # the last sed removes the package itself
+    package_get_deps_recursive $package $rev | tsort 2> /dev/null | tac | sed '$d'
+}
+
+function install_deps()
+{
+    # install dependencies
+    ################################################################################
+    local dep dep_options package="$1"
+    [[ -n set_as_default ]] && dep_options="$dep_options -D"
+    [[ -f $BASHLETS_PACKAGE_MANIFEST ]]  \
+        && for dep in $(package_get_deps_sorted $package)
+    do
+        $0 -S $dep_options $dep
+    done
+}
+
+function install_local()
+{
+    local module
+    local path
+    local rev
+    local destinations
+
+
+    ## install deps
+    [[ -n $dont_install_deps ]] || install_deps $module
+
+    #
+    # some sanity checks
+    ################################################################################
+
+    # check if we are at the repository's apex
+    [[ $(pwd) == $(git rev-parse --show-toplevel) ]] || {
+        echo "ERROR: must be executed from the root of this Git repository!" >&2
+        exit 1
+    }
+
+    # extract the module name from the repository name
+    module=$(package_get_name)
+    [[ $module == bashlets ]] && module=core
+
+    # calculate install base folder
+    install_base="$BASHLETS_BASE/$(tr . / <<<$module)"
+
+    # save the current branch, in case we need to switch branch
+    current_branch=$(git rev-parse --abbrev-ref HEAD)
+
+    #
+    # determine (and create it if needed) the installation folder
+    ################################################################################
+
+    # revision can be given (optionally) on command line
+    rev="${rev:-$(git rev-parse $branch)}"
+
+    # installation folder
+    install_path="$install_base/$rev"
+
+    # check if the installation folder does exist or create it
+    [[ -d $install_path ]] || mkdir -p "$install_path"
+
+    #
+    # install the codebase
+    ################################################################################
+
+    # switch to the given branch
+    git checkout -q $branch || {
+        echo "ERROR: could not switch to $branch branch!" >&2
+        exit 1
+    }
+
+    # export the codebase into the installation folder
+    for path in lib bin
+    do
+        (git archive $rev $path | tar -x -C "$install_path") 2> /dev/null
+    done
+
+    # if required set the current installation as the default one
+    # ($install_base can contain multiple installations)
+    [[ ! -e $install_base/DEFAULT || -n $set_as_default ]] && {
+        rm -f "$install_base/DEFAULT" && ln -s $rev "$install_base/DEFAULT"
+    }
+
+    #
+    # install the executable scripts if needed
+    ################################################################################
+
+    local d f
+
+    # cycle possible destinations to install into
+    IFS=: read -r -a destinations <<< "$BASHLETS_BIN_TARGETS"
+    for d in ${destinations[@]}
+    do
+        [[ -d $install_path/bin ]] || continue
+        for f in $(ls $install_path/bin)
+        do 
+            {
+                # try and create the directory
+                mkdir -p "$d"
+
+                ln -fs $(readlink -m $install_path/bin/$f) $d
+                
+            } 2> /dev/null || continue
+        done
+
+    done
+
+}
+
+function install_module()
+{
+    local module="${1:-core.base}"
+    local remote
+    
+    if [[ $module == core.base ]]
+    then
+        remote="$BASHLETS_REMOTE_CORE/bashlets.git"
+    else
+        remote="$BASHLETS_REMOTE_PACKAGES/bashlets.${module}.git"
+    fi
+
+    make_tempdir && (
+        cd_tempdir
+        git clone $remote
+        if [[ $module == core.base ]]
+        then
+            cd bashlets
+        else
+            cd bashlets.$module
+        fi
+        install_local $module
+    ) && erase_tempdir
+}
+
+
+#
+# parse command line options
+################################################################################
+
+while getopts "DB:LSv?V" OPTION
+do
+    case $OPTION in
+		D)
+			set_as_default=1
+			;;
+		B)
+			branch=$OPTARG
+			;;
+		L)
+			install_from_local_repo=1
+			;;
+		S)
+            dont_install_deps=1
+			;;
+		v)
+			verbose=echo
+			;;
+		?)
+			echo ; version
+			echo ; usage
+			exit 0
+			;;
+		V)
+			version
+			exit 0
+			;;
+    esac
+done
+
+shift $((OPTIND-1))
+
+[[ -n $install_from_local_repo ]] && install_local "$1"
+
+while [[ $# -gt 0 ]]
+do
+    install_module "$1"
+    shift
+done
+
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh

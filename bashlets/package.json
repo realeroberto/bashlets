@@ -1,0 +1,27 @@
+{
+        "name": "core.base",
+        "description": "Core package",
+        "version": "0.2",
+        "author": {
+                "name": "Roberto Reale",
+                "email": "rober.reale@gmail.com"
+        },
+        "license": "MIT",
+        "deps": [
+                "core.cache",
+                "core.datatype",
+                "core.github",
+                "core.glue",
+                "core.ipc",
+                "core.library",
+                "core.local",
+                "core.marshal",
+                "core.math",
+                "core.os",
+                "core.remote",
+                "core.shell",
+                "core.stream",
+                "core.time",
+                "core.ux"
+        ]
+}

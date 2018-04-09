@@ -1,0 +1,196 @@
+#!/bin/bash
+
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# bashlets -- A modular extensible toolbox for Bash
+#
+# List objects
+#
+# Copyright (c) 2014-8 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+
+#
+# global variables
+################################################################################
+
+BASHLETS_BASE=~/.bashlets
+
+list_mode=local
+what_to_list=packages
+
+# verbose output
+verbose=:
+
+
+#
+# utilities
+################################################################################
+
+function usage()
+{
+    cat <<-EOF
+		Usage:
+
+           bashlets-list [ -L | -R ] [ domains | packages | revs | modules | methods ] [ root ]
+
+		Options:
+
+           -L      list installed packages (default)
+           -R      list available packages on remote repository
+           -?      display this help and exit
+           -V      output version information and exit
+
+	EOF
+} 
+
+function version()
+{
+    cat <<-EOF
+        bashlets-list 0.1
+	EOF
+} 
+
+function verbose()
+{
+    $verbose "$@"
+}
+
+function normalize_path()
+{
+    # TODO maybe remove?
+    echo "${1//.//}"
+}
+
+
+
+#
+# parse command line options
+################################################################################
+
+while getopts "LR?V" OPTION
+do
+    case $OPTION in
+		L)
+			list_mode=local
+			;;
+		R)
+			list_mode=remote
+			;;
+		?)
+			echo ; version
+			echo ; usage
+			exit 0
+			;;
+		V)
+			version
+			exit 0
+			;;
+    esac
+done
+
+shift $((OPTIND-1))
+
+if [[ $# -gt 0 ]]
+then
+    what_to_list=$1
+    shift
+fi
+
+if [[ $# -gt 0 ]]
+then
+    root=$1
+    shift
+fi
+
+#
+# core logic
+################################################################################
+
+case $what_to_list in
+    domains)
+        source bashlets core::$list_mode::library
+        $BASHLETS_NAMESPACE library domains
+        ;;
+    packages)
+        if [[ -n $root ]]
+        then
+            source bashlets core::$list_mode::domain
+            $BASHLETS_NAMESPACE domain packages "$root"
+        else
+            source bashlets core::$list_mode::library
+            $BASHLETS_NAMESPACE library packages
+        fi
+        ;;
+    revs)
+        if [[ -n $root ]]
+        then
+            source bashlets core::$list_mode::package
+            $BASHLETS_NAMESPACE package revs "$root"
+        else
+            echo "Please specify a package!" >&2
+            exit 1
+        fi
+        ;;
+    modules)
+        if [[ -n $root ]]
+        then
+            source bashlets core::$list_mode::package
+            $BASHLETS_NAMESPACE package modules "$root"
+        else
+            echo "Please specify a package!" >&2
+            exit 1
+        fi
+        ;;
+    methods)
+        if [[ -n $root ]]
+        then
+            echo "Unimplemented feature!" >&2
+            exit 2
+        else
+            echo "Please specify a module!" >&2
+            exit 1
+        fi
+        ;;
+    *)
+        echo "Please specify what to list!" >&2
+        exit 1
+        ;;
+esac
+
+exit
+
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh
