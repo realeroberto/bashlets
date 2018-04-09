@@ -1,0 +1,80 @@
+#!/bin/bash
+
+
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# Bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2014-8 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+#@public
+function bashlets::core::stream::convert::dos2unix()
+{
+    local input="$1"
+    local output="$2"
+
+    type dos2unix > /dev/null 2>&1 && {
+        function dos2unix() { command dos2unix ; }
+    } || {
+        function dos2unix() { tr -d "\r" ; }
+    }
+    
+    (test -n "$input" && cat "$input" || cat) |  \
+        dos2unix | (test -n "$output" && cat > "$output" || cat)
+
+    unset dos2unix
+}
+
+#@public
+function bashlets::core::stream::convert::unix2dos()
+{
+    local input="$1"
+    local output="$2"
+
+    type unix2dos > /dev/null 2>&1 && {
+        function unix2dos() { command unix2dos ; }
+    } || {
+        function unix2dos() { sed "s/$/\r/" ; }
+    }
+    
+    (test -n "$input" && cat "$input" || cat) |  \
+        unix2dos | (test -n "$output" && cat > "$output" || cat)
+
+    unset unix2dos
+}
+
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh

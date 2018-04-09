@@ -1,0 +1,257 @@
+#!/bin/bash
+
+
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# Bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2014-8 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+source bashlets core::os::tempfile
+source bashlets core::marshal::uneval
+
+
+function __bashlets::core::stream::interpolate::callback_plain()
+{
+    local input="$1"
+    local context_handler  # ignored
+    local sedexp
+    local key key2 value
+
+    [[ -e $input ]] || return 1
+
+    sedexp=$(while read key
+        do
+            key2="$(echo "$key" | tr @ $)"
+            # get a value for VAR from the environment
+            value="$(eval echo "$key2")"
+            # escape path for sed
+            value="${value//\//\\/}"
+            # construct a list of sed substitutions
+            [[ -n $key && -n $value ]] && echo "-e s/$key/$value/g"
+        done < "$input" | sed 'N; s/\n/ /')
+
+    echo "$sedexp"
+}
+
+function __bashlets::core::stream::interpolate::callback_uneval()
+{
+    local input="$1"
+    local context_handler="$2"
+    local sedexp
+    local key key2 value
+
+    [[ -e $input && -n $context_handler ]] || return 1
+
+    sedexp=$(while read key
+        do
+            key2="$(echo "$key" | tr -d @)"
+            # get a value for VAR from the context
+            value="$(
+                $BASHLETS_NAMESPACE uneval get_by_key "$context_handler" "$key2"
+            )"
+            # escape path for sed
+            value="${value//\//\\/}"
+            # construct a list of sed substitutions
+            [[ -n $key && -n $value ]] && echo "-e s/$key/$value/g"
+        done < "$input"| sed 'N; s/\n/ /')
+
+    echo "$sedexp"
+}
+
+
+# safely substitute @var tokens with values from shell variables of the same
+# name (or from a marshal context, if assigned)
+
+#@public
+function bashlets::core::stream::interpolate::eval()
+{
+    local context="$1"
+    local context_handler="$2"
+    local input="$3"
+    local output="$4"
+
+    [[ -n $context ]] || return
+
+    local note1 note2
+    local callback sedexp regexp='@[A-Za-z0-9_]\+'
+    local stage1="$($BASHLETS_NAMESPACE tempfile create)"
+    local stage2="$($BASHLETS_NAMESPACE tempfile create)"
+
+    # build a list of @var's
+
+    (test -e "$input" && cat "$input" || cat)             \
+        | tee -a "$stage1"                      "$note1"  \
+        | sed "s/$regexp/&\n/g"                 "$note2"  \
+        | sed -n "s/.*\($regexp\).*/\1/p"                 \
+            > "$stage2"
+
+    # $note1  copy the input stream
+
+    # $note2  this is tricky since there might be many occurrences
+    #         of the same @var all in a row
+
+    case "$context"
+    in
+        plain)
+            callback=__bashlets::core::stream::interpolate::callback_plain
+            ;;
+        uneval)
+            callback=__bashlets::core::stream::interpolate::callback_uneval
+            ;;
+        *)
+            echo "Wrong context!"
+            return 1
+            ;;
+    esac
+
+    # read and parse the list constructed above
+    sedexp="$("$callback" "$stage2" "$context_handler")" || return 1
+
+    # apply substitutions (no quotes around $sedexp!)
+    [[ -n $sedexp ]] && sed "$sedexp" < "$stage1"         \
+        | (test -n "$output" && cat > "$output" || cat)
+
+    # cleanup
+    $BASHLETS_NAMESPACE tempfile destroy "$stage1"
+    $BASHLETS_NAMESPACE tempfile destroy "$stage2"
+}
+
+
+# evaluates expressions inside a @,@ pair of delimiters
+
+#@public
+function bashlets::core::stream::interpolate::eval2()
+{
+    # these hold the constant buffer and the buffer to be eval'ed, respect.
+    local textbuffer codebuffer
+
+    function __bashlets::core::stream::interpolate::textbuffer_create()
+    {
+        textbuffer="$($BASHLETS_NAMESPACE tempfile create)"
+    }
+
+    function __bashlets::core::stream::interpolate::textbuffer_append()
+    {
+        [[ -n "$1" ]] && printf "%c" "$1" >> "$textbuffer"
+    }
+
+    function __bashlets::core::stream::interpolate::textbuffer_dump()
+    {
+        cat "$textbuffer"
+        echo
+    }
+
+    function __bashlets::core::stream::interpolate::textbuffer_destroy()
+    {
+        $BASHLETS_NAMESPACE tempfile destroy "$textbuffer"
+    }
+
+    function __bashlets::core::stream::interpolate::codebuffer_create()
+    {
+                         $BASHLETS_NAMESPACE tempfile exists "$codebuffer"  \
+        || codebuffer="$($BASHLETS_NAMESPACE tempfile create)"
+    }
+
+    function __bashlets::core::stream::interpolate::codebuffer_append()
+    {
+        printf "%c" "$1" >> "$codebuffer"
+    }
+
+    function __bashlets::core::stream::interpolate::codebuffer_eval()
+    {
+        eval "$(cat "$codebuffer")" >> "$textbuffer"
+    }
+
+    function __bashlets::core::stream::interpolate::codebuffer_destroy()
+    {
+        $BASHLETS_NAMESPACE tempfile destroy "$codebuffer"
+    }
+
+
+    local status=text
+
+    while IFS= read -r line
+    do
+
+        __bashlets::core::stream::interpolate::textbuffer_create
+
+        echo "$line" | while IFS= read -r -n 1 c
+        do
+            case $status in
+                text)
+                    if [[ $c == @ ]]
+                    then
+                        status=code
+                        continue
+                    else
+                        __bashlets::core::stream::interpolate::textbuffer_append "$c"
+                    fi
+                    ;;
+                code)
+                    if [[ $c == @ ]]
+                    then
+                        status=text
+                        __bashlets::core::stream::interpolate::codebuffer_eval
+                        __bashlets::core::stream::interpolate::codebuffer_destroy
+                        continue
+                    else
+                        __bashlets::core::stream::interpolate::codebuffer_create
+                        __bashlets::core::stream::interpolate::codebuffer_append "$c"
+                    fi
+                    ;;
+                *)
+                    return 1  # TODO error (and cleanup)
+                    ;;
+            esac
+        done
+
+        __bashlets::core::stream::interpolate::textbuffer_dump
+        __bashlets::core::stream::interpolate::textbuffer_destroy
+
+    done
+
+    unset __bashlets::core::stream::interpolate::textbuffer_create
+    unset __bashlets::core::stream::interpolate::textbuffer_append
+    unset __bashlets::core::stream::interpolate::textbuffer_dump
+    unset __bashlets::core::stream::interpolate::textbuffer_destroy
+    unset __bashlets::core::stream::interpolate::codebuffer_create
+    unset __bashlets::core::stream::interpolate::codebuffer_append
+    unset __bashlets::core::stream::interpolate::codebuffer_eval
+    unset __bashlets::core::stream::interpolate::codebuffer_destroy
+}
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh
