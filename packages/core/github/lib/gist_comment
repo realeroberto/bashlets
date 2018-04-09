@@ -1,0 +1,124 @@
+#!/bin/bash
+
+
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# Bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2014-8 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+source bashlets core::github::api
+
+# Create a comment on a gist.
+#
+# @cf   https://developer.github.com/v3/gists/comments/#create-a-comment
+# @public
+function bashlets::core::github::gist_comment::create()
+{
+    local id="${1:?Gist id required}"
+    local comment="${2:?Comment text required}"
+    local url="/gists/$id/comments"
+
+    $BASHLETS_NAMESPACE api post "$url" "{\"body\": \"$comment\"}" .id
+}
+
+# Delete a comment on a gist.
+#
+# @cf   https://developer.github.com/v3/gists/comments/#delete-a-comment
+# @public
+function bashlets::core::github::gist_comment::delete()
+{
+    local id="${1:?Gist id required}"
+    local comment_id="${2:?Comment id required}"
+    local url="/gists/$id/comments/$comment_id"
+
+    $BASHLETS_NAMESPACE api delete "$url"
+}
+
+# Edit a comment on a gist.
+#
+# @cf   https://developer.github.com/v3/gists/comments/#create-a-comment
+# @public
+function bashlets::core::github::gist_comment::edit()
+{
+    local id="${1:?Gist id required}"
+    local comment_id="${2:?Comment id required}"
+    local comment="${3:?Comment text required}"
+    local url="/gists/$id/comments/$comment_id"
+
+    $BASHLETS_NAMESPACE api patch "$url" "{\"body\": \"$comment\"}" .updated_at
+}
+
+# Get a single comment on a gist.
+#
+# @cf   https://developer.github.com/v3/gists/comments/#get-a-single-comment
+# @public
+function bashlets::core::github::gist_comment::get()
+{
+    local id="${1:?Gist id required}"
+    local comment_id="${2:?Comment id required}"
+    local url="/gists/$id/comments/$comment_id"
+
+    $BASHLETS_NAMESPACE api get "$url" .
+}
+
+# Get the text of a single comment on a gist.
+#
+# @cf   https://developer.github.com/v3/gists/comments/#get-a-single-comment
+# @public
+function bashlets::core::github::gist_comment::text()
+{
+    local id="${1:?Gist id required}"
+    local comment_id="${2:?Comment id required}"
+    local url="/gists/$id/comments/$comment_id"
+
+    $BASHLETS_NAMESPACE api get "$url" .body
+}
+
+# Get the user of a single comment on a gist.
+#
+# @cf   https://developer.github.com/v3/gists/comments/#get-a-single-comment
+# @public
+function bashlets::core::github::gist_comment::user()
+{
+    local id="${1:?Gist id required}"
+    local comment_id="${2:?Comment id required}"
+    local url="/gists/$id/comments/$comment_id"
+
+    $BASHLETS_NAMESPACE api get "$url" .user.login
+}
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh

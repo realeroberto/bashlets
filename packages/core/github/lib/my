@@ -1,0 +1,313 @@
+#!/bin/bash
+
+
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# Bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2014-8 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+source bashlets core::github::api
+
+# Check if the authorized user follows another.
+#
+# @cf   https://developer.github.com/v3/users/followers/#check-if-you-are-following-a-user
+# @public
+function bashlets::core::github::my::am_following()
+{
+    local target_user="${1:?Target user name required}"
+    local url="/user/following/$target_user"
+    local status
+
+    status="$($BASHLETS_NAMESPACE api status "$url")"
+
+    [[ $status == 204 ]]
+}
+
+# Block a user.
+#
+# @cf   https://developer.github.com/v3/users/blocking/#block-a-user
+# @public
+function bashlets::core::github::my::block()
+{
+    local username="${1:?User login needed}"
+
+    local url="/user/blocks/$username"
+
+    (
+        # The User Blocking API on GitHub is currently available for developers
+        # to preview. To access the API, we must provide a custom media type in
+        # the Accept header.
+        #
+        # @cf https://developer.github.com/v3/users/blocking/#block-another-user
+
+        BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS="$BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS -H 'Accept: application/vnd.github.giant-sentry-fist-preview+json'"
+        $BASHLETS_NAMESPACE api put "$url"
+    )
+}
+
+# List the users the authenticated user has blocked on her personal account.
+#
+# @cf   https://developer.github.com/v3/users/blocking/#list-blocked-users
+# @public
+function bashlets::core::github::my::blocked_users()
+{
+    local url="/user/blocks"
+
+    (
+        # The User Blocking API on GitHub is currently available for developers
+        # to preview. To access the API, we must provide a custom media type in
+        # the Accept header.
+        #
+        # @cf https://developer.github.com/v3/users/blocking/#block-another-user
+
+        BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS="$BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS -H 'Accept: application/vnd.github.giant-sentry-fist-preview+json'"
+        $BASHLETS_NAMESPACE api get "$url" .[].login
+    )
+}
+
+# List email addresses for the authenticated user.
+#
+# @cf   https://developer.github.com/v3/users/emails/#list-email-addresses-for-a-user
+# @public
+function bashlets::core::github::my::emails()
+{
+    local limit="${1:-100}" callback="${2:-cat}"
+    local url="/user/emails"
+
+    $BASHLETS_NAMESPACE api paginate "$url" email "$limit" "$callback"
+}
+
+# List followers of the authenticated user.
+#
+# @cf   https://developer.github.com/v3/users/followers/#list-followers-of-a-user
+# @public
+function bashlets::core::github::my::followers()
+{
+    local since="${1:-0}"
+    local limit="${3:-100}" callback="${4:-cat}"
+    local url="/user/followers?since=$since"
+
+    $BASHLETS_NAMESPACE api paginate "$url" login "$limit" "$callback"
+}
+
+# List who the authenticated user is following.
+#
+# @cf   https://developer.github.com/v3/users/followers/#list-users-followed-by-another-user
+# @public
+function bashlets::core::github::my::following()
+{
+    local since="${1:-0}"
+    local limit="${3:-100}" callback="${4:-cat}"
+    local url="/user/following?since=$since"
+
+    $BASHLETS_NAMESPACE api paginate "$url" login "$limit" "$callback"
+}
+
+# Check whether the authorized user has blocked another user.
+#
+# @cf   https://developer.github.com/v3/users/blocking/#check-whether-youve-blocked-a-user
+# @public
+function bashlets::core::github::my::have_blocked()
+{
+    local username="${1:?User login needed}"
+    local url="/user/blocks/$username"
+    local status
+
+    (
+        # The User Blocking API on GitHub is currently available for developers
+        # to preview. To access the API, we must provide a custom media type in
+        # the Accept header.
+        #
+        # @cf https://developer.github.com/v3/users/blocking/#block-another-user
+
+        BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS="$BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS -H 'Accept: application/vnd.github.giant-sentry-fist-preview+json'"
+        status="$($BASHLETS_NAMESPACE api status "$url")"
+
+        [[ $status == 204 ]]
+    )
+}
+
+# List all the organizations for the authenticated user.
+#
+# @cf   https://developer.github.com/v3/orgs/#list-your-organizations
+# @public
+function bashlets::core::github::my::orgs()
+{
+    local limit="${1:-100}" callback="${2:-cat}"
+    local url="/user/orgs"
+
+    $BASHLETS_NAMESPACE api paginate "$url" login "$limit" "$callback"
+}
+
+# List public email addresses for the authenticated user.
+#
+# @cf   https://developer.github.com/v3/users/emails/#list-public-email-addresses-for-a-user
+# @public
+function bashlets::core::github::my::public_emails()
+{
+    local limit="${1:-100}" callback="${2:-cat}"
+    local url="/user/public_emails"
+
+    $BASHLETS_NAMESPACE api paginate "$url" email "$limit" "$callback"
+}
+
+# List all the repositories for the authenticated user.
+#
+# @cf   https://developer.github.com/v3/repos/#list-your-repositories
+# @public
+function bashlets::core::github::my::repos()
+{
+    local limit="${1:-100}" callback="${2:-cat}"
+    local url="/user/repos"
+
+    $BASHLETS_NAMESPACE api paginate "$url" name "$limit" "$callback"
+}
+
+# List all the starred gists for the authenticated user.
+#
+# @cf   https://developer.github.com/v3/gists/#list-starred-gists
+# @public
+function bashlets::core::github::my::starred_gists()
+{
+    local since="${1:-$BASHLETS_CORE_GITHUB_API_EPOCH}"
+    local limit="${2:-100}" callback="${3:-cat}"
+    local url="/gists/starred"
+
+    $BASHLETS_NAMESPACE api paginate "$url" id "$limit" "$callback"
+}
+
+# List repositories being starred by the specified user.
+#
+# @cf   https://developer.github.com/v3/activity/starring/#list-repositories-being-starred
+# @public
+function bashlets::core::github::my::starred_repos()
+{
+    local sort="${1:-created}"    # created, updated
+    local direction="${2:-desc}"  # asc, desc
+    local limit="${3:-100}" callback="${4:-cat}"
+
+    local url="/user/starred?sort=$sort&direction=$direction"
+
+    $BASHLETS_NAMESPACE api paginate "$url" name "$limit" "$callback"
+}
+
+# Get the private timeline for the authenticated user, in Atom format.
+# Note: Private feeds are only returned when authenticating via Basic Auth
+# since current feed URIs use the older, non revocable auth tokens.
+#
+# @cf   https://developer.github.com/v3/activity/feeds/#list-feeds
+# @private
+function bashlets::core::github::my::private_timeline()
+{
+    local type="${1:-default}"  # default, actor
+
+    # `orgs` is not allowed
+    [[ $type == default || $type == actor ]] || return
+
+    curl -s "$(bashlets::core::github::my::private_timeline_url "$type")"
+}
+
+# Get the private timeline URI for the authenticated user.
+# Note: Private feeds are only returned when authenticating via Basic Auth
+# since current feed URIs use the older, non revocable auth tokens.
+#
+# @cf   https://developer.github.com/v3/activity/feeds/#list-feeds
+# @private
+function bashlets::core::github::my::private_timeline_url()
+{
+    local type="${1:-default}"  # default, actor, orgs
+    local url="/feeds"
+    local key
+
+    case "$type" in
+        default)
+            key=current_user_url ;;
+        actor)
+            key=current_user_actor_url ;;
+        orgs)
+            key=current_user_organization_urls[] ;;
+        *)
+            return
+    esac
+
+    $BASHLETS_NAMESPACE api get "$url" ".$key"
+}
+
+# Get the public timeline for the authenticated user, in Atom format.
+#
+# @cf   https://developer.github.com/v3/activity/feeds/#list-feeds
+# @public
+function bashlets::core::github::my::public_timeline()
+{
+    curl -s "$(bashlets::core::github::my::public_timeline_url)"
+}
+
+# Get the public timeline URI for the authenticated user.
+#
+# @cf   https://developer.github.com/v3/activity/feeds/#list-feeds
+# @public
+function bashlets::core::github::my::public_timeline_url()
+{
+    local url="/feeds"
+
+    $BASHLETS_NAMESPACE api get "$url" .current_user_public_url
+}
+
+# Unblock a user.
+#
+# @cf   https://developer.github.com/v3/users/blocking/#unblock-a-user
+# @public
+function bashlets::core::github::my::unblock()
+{
+    local username="${1:?User login needed}"
+
+    local url="/user/blocks/$username"
+
+    (
+        # The User Blocking API on GitHub is currently available for developers
+        # to preview. To access the API, we must provide a custom media type in
+        # the Accept header.
+        #
+        # @cf https://developer.github.com/v3/users/blocking/#block-another-user
+
+        BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS="$BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS -H 'Accept: application/vnd.github.giant-sentry-fist-preview+json'"
+        $BASHLETS_NAMESPACE api delete "$url"
+    )
+}
+
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh

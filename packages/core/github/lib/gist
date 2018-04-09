@@ -1,0 +1,264 @@
+#!/bin/bash
+
+
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# Bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2014-8 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+source bashlets core::github::api
+
+# Download gist files.
+#
+# @cf   https://developer.github.com/v3/gists/#get-a-single-gist
+# @cf   https://developer.github.com/v3/gists/#truncation
+# @public
+function bashlets::core::github::gist::clone()
+{
+    local id="${1:?Gist id required}"
+    local where="${2:-.}"
+    local url="/gists/$id"
+    local pull_url
+
+    pull_url="$($BASHLETS_NAMESPACE api get "$url" '.git_pull_url')"
+
+    mkdir -p "$where"
+
+    (
+        cd "$where"
+        git clone "$pull_url"
+    )
+}
+
+# List comments on a gist.
+#
+# @cf   https://developer.github.com/v3/gists/comments/#list-comments-on-a-gist
+# @public
+function bashlets::core::github::gist::comments()
+{
+    local id="${1:?Gist id required}"
+    local limit="${2:-100}" callback="${3:-cat}"
+    local url="/gists/$id/comments"
+
+    $BASHLETS_NAMESPACE api paginate "$url" id "$limit" "$callback"
+}
+
+# List gist commits.
+#
+# @cf   https://developer.github.com/v3/gists/#list-gist-commits
+# @public
+function bashlets::core::github::gist::commits()
+{
+    local id="${1:?Gist id required}"
+    local limit="${2:-100}" callback="${3:-cat}"
+    local url="/gists/$id/commits"
+
+    $BASHLETS_NAMESPACE api paginate "$url" version "$limit" "$callback"
+}
+
+# Create a gist.
+#
+# @cf   https://developer.github.com/v3/gists/#create-a-gist
+# @public
+function bashlets::core::github::gist::create()
+{
+    echo Unimplemented >&2
+}
+
+# Delete a gist.
+#
+# @cf   https://developer.github.com/v3/gists/#delete-a-gist
+# @public
+function bashlets::core::github::gist::delete()
+{
+    local id="${1:?Gist id required}"
+    local url="/gists/$id"
+
+    $BASHLETS_NAMESPACE api delete "$url"
+}
+
+# Describe a gist.
+#
+# @cf   https://developer.github.com/v3/gists/#get-a-single-gist
+# @public
+function bashlets::core::github::gist::describe()
+{
+    local id="${1:?Gist id required}"
+    local url="/gists/$id"
+
+    $BASHLETS_NAMESPACE api get "$url" .description
+}
+
+# Download gist files.
+#
+# @cf   https://developer.github.com/v3/gists/#get-a-single-gist
+# @cf   https://developer.github.com/v3/gists/#truncation
+# @public
+function bashlets::core::github::gist::download()
+{
+    local id="${1:?Gist id required}" rev="$2"
+    local where="${3:-.}"
+    local url="/gists/$id"
+
+    [[ -n $rev ]] && url="$url/$rev"
+
+    mkdir -p "$where/$id"
+
+    (
+        local file
+        cd "$where/$id"
+        for file in $($BASHLETS_NAMESPACE api get "$url" '.files[].raw_url')
+        do
+            curl -s "$file" -o "$(basename "$file")"
+        done
+    )
+}
+
+# Edit a gist.
+#
+# @cf   https://developer.github.com/v3/gists/#edit-a-gist
+# @public
+function bashlets::core::github::gist::edit()
+{
+    echo Unimplemented >&2
+}
+
+# List gist files.
+#
+# @cf   https://developer.github.com/v3/gists/#get-a-single-gist
+# @public
+function bashlets::core::github::gist::files()
+{
+    local id="${1:?Gist id required}" rev="$2"
+    local url="/gists/$id"
+
+    [[ -n $rev ]] && url="$url/$rev"
+
+    $BASHLETS_NAMESPACE api get "$url" '.files | keys[]'
+}
+
+# Fork a gist.
+#
+# @cf   https://developer.github.com/v3/gists/#fork-a-gist
+# @public
+function bashlets::core::github::gist::fork()
+{
+    local id="${1:?Gist id required}"
+    local url="/gists/$id/forks"
+
+    $BASHLETS_NAMESPACE api post "$url" "" .id
+}
+
+# List gist forks.
+#
+# @cf   https://developer.github.com/v3/gists/#list-gist-forks
+# @public
+function bashlets::core::github::gist::forks()
+{
+    local id="${1:?Gist id required}"
+    local limit="${2:-100}" callback="${3:-cat}"
+    local url="/gists/$id/forks"
+
+    $BASHLETS_NAMESPACE api paginate "$url" id "$limit" "$callback"
+}
+
+# Get a single gist.
+#
+# @cf   https://developer.github.com/v3/gists/#get-a-single-gist
+# @public
+function bashlets::core::github::gist::get()
+{
+    local id="${1:?Gist id required}" rev="$2"
+    local url="/gists/$id"
+
+    [[ -n $rev ]] && url="$url/$rev"
+
+    $BASHLETS_NAMESPACE api get "$url" .
+}
+
+# Check if a gist is starred.
+#
+# @cf   https://developer.github.com/v3/gists/#check-if-a-gist-is-starred
+# @public
+function bashlets::core::github::gist::is_starred()
+{
+    local id="${1:?Gist id required}"
+    local url="/gists/$id/star"
+    local status
+
+    status="$($BASHLETS_NAMESPACE api status "$url")"
+
+    [[ $status == 204 ]]
+}
+
+# Get the a gist's owner.
+#
+# @cf   https://developer.github.com/v3/gists/#get-a-single-gist
+# @public
+function bashlets::core::github::gist::owner()
+{
+    local id="${1:?Gist id required}"
+
+    bashlets::core::github::gist::get "$id" \
+        | $BASHLETS_NAMESPACE api filter .owner.login
+}
+
+# Star a gist.
+#
+# @cf   https://developer.github.com/v3/gists/#star-a-gist
+# @public
+function bashlets::core::github::gist::star()
+{
+    local id="${1:?Gist id required}"
+    local url="/gists/$id/star"
+
+    $BASHLETS_NAMESPACE api put "$url"
+}
+
+# Unstar a gist.
+#
+# @cf   https://developer.github.com/v3/gists/#unstar-a-gist
+# @public
+function bashlets::core::github::gist::unstar()
+{
+    local id="${1:?Gist id required}"
+    local url="/gists/$id/star"
+
+    $BASHLETS_NAMESPACE api delete "$url"
+}
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh

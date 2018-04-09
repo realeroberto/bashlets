@@ -1,0 +1,180 @@
+#!/bin/bash
+
+
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# Bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2014-8 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+source bashlets core::github::api
+
+# Create a project.
+#
+# @cf   https://developer.github.com/v3/projects/#create-a-repository-project
+# @cf   https://developer.github.com/v3/projects/#create-an-organization-project
+# @public
+function bashlets::core::github::project::create()
+{
+    local name="${1:?Project name required}"
+    local text="$2"
+    local type="${3:-repo}" # repo, org
+    local owner_or_org="$4" repo="$5"
+    local url json
+
+    case "$type" in 
+        repo)
+            [[ -n $owner_or_org ]] || { echo "Project owner required" ; return 1 ; }
+            [[ -n $repo         ]] || { echo "Project repo required" ;  return 1 ; }
+            url="/repos/$owner_or_org/$repo/projects"
+            ;;
+        org)
+            [[ -n $owner_or_org ]] || { echo "Project org required" ; return 1 ; }
+            url="/orgs/$owner_or_org/projects"
+            ;;
+        *)
+            return 1
+    esac
+
+    json="{\"name\": \"$name\"}"
+
+    if [[ -n $text ]]
+    then
+        json="$(echo "$json" | jq -r --arg body "$text" '. + {body: $body}')"
+    fi
+
+    (
+        # The Projects API is currently available for developers to preview. To
+        # access the API during the preview period, we must provide a custom
+        # media type in the Accept header.
+        #
+        # @cf https://developer.github.com/v3/projects/
+
+        BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS="$BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS -H 'Accept: application/vnd.github.inertia-preview+json'"
+        $BASHLETS_NAMESPACE api post "$url" "$json" .id
+    )
+}
+
+# Get a project creator.
+#
+# @cf   https://developer.github.com/v3/projects/#get-a-project
+# @public
+function bashlets::core::github::project::creator()
+{
+    local id="${1:?Project id required}"
+    local url="/projects/$id"
+
+    bashlets::core::github::project::get "$id" .creator.login
+}
+
+# Delete a project.
+#
+# @cf   https://developer.github.com/v3/projects/#delete-a-project
+# @public
+function bashlets::core::github::project::delete()
+{
+    local id="${1:?Project id required}"
+    local url="/projects/$id"
+
+    $BASHLETS_NAMESPACE api delete "$url"
+}
+
+# Edit a project.
+#
+# @cf   https://developer.github.com/v3/projects/#update-a-project
+# @public
+function bashlets::core::github::project::edit()
+{
+    echo Unimplemented >&2
+}
+
+# Get a project.
+#
+# @cf   https://developer.github.com/v3/projects/#get-a-project
+# @public
+function bashlets::core::github::project::get()
+{
+    local id="${1:?Project id required}"
+    local key="${2:-.}"
+    local url="/projects/$id"
+
+    (
+        # The Projects API is currently available for developers to preview. To
+        # access the API during the preview period, we must provide a custom
+        # media type in the Accept header.
+        #
+        # @cf https://developer.github.com/v3/projects/
+
+        BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS="$BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS -H 'Accept: application/vnd.github.inertia-preview+json'"
+        $BASHLETS_NAMESPACE api get "$url" "$key"
+    )
+}
+
+# Get a project name.
+#
+# @cf   https://developer.github.com/v3/projects/#get-a-project
+# @public
+function bashlets::core::github::project::name()
+{
+    local id="${1:?Project id required}"
+
+    bashlets::core::github::project::get "$id" .name
+}
+
+# Get a project state.
+#
+# @cf   https://developer.github.com/v3/projects/#get-a-project
+# @public
+function bashlets::core::github::project::state()
+{
+    local id="${1:?Project id required}"
+
+    bashlets::core::github::project::get "$id" .state
+}
+
+# Get a project text.
+#
+# @cf   https://developer.github.com/v3/projects/#get-a-project
+# @public
+function bashlets::core::github::project::text()
+{
+    local id="${1:?Project id required}"
+
+    bashlets::core::github::project::get "$id" .body
+}
+
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh

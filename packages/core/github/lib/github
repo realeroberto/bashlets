@@ -1,0 +1,241 @@
+#!/bin/bash
+
+
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# Bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2014-8 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+source bashlets core::github::api
+source bashlets core::github::defs
+
+# List all Codes of Conduct.
+#
+# @cf   https://developer.github.com/v3/codes_of_conduct/#list-all-codes-of-conduct
+# @public
+function bashlets::core::github::github::conducts()
+{
+    local url="/codes_of_conduct"
+
+    (
+        # The Codes of Conduct API is currently available for developers to
+        # preview. To access the API during the preview period, we must provide
+        # a custom media type in the Accept header.
+        #
+        # @cf https://developer.github.com/v3/codes_of_conduct/#codes-of-conduct
+
+        BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS="$BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS -H 'Accept: application/vnd.github.scarlet-witch-preview+json'"
+        $BASHLETS_NAMESPACE api get "$url" .[].key
+    )
+}
+
+# List all the emojis available to use on GitHub.
+#
+# @cf   https://developer.github.com/v3/emojis/#emojis
+# @public
+function bashlets::core::github::github::emojis()
+{
+    local url="/emojis"
+    
+    $BASHLETS_NAMESPACE api get "$url" keys[]
+}
+
+# List all public gists.
+#
+# @cf   https://developer.github.com/v3/gists/#list-all-public-gists
+# @public
+function bashlets::core::github::github::gists()
+{
+    local since="${1:-$BASHLETS_CORE_GITHUB_API_EPOCH}"
+    limit="${2:-100}" callback="${3:-cat}"
+    local url="/gists/public?since=$since"
+    
+    $BASHLETS_NAMESPACE api paginate "$url" id "$limit" "$callback"
+}
+
+# List all .gitignore templates available to pass as an option when creating a
+# repository.
+#
+# @cf   https://developer.github.com/v3/gitignore/#listing-available-templates
+# @public
+function bashlets::core::github::github::gitignores()
+{
+    local url="/gitignore/templates"
+    
+    $BASHLETS_NAMESPACE api get "$url" .[]
+}
+
+# List all IP addresses (in CIDR format) specifying the Git servers for
+# GitHub.com.
+#
+# @cf   https://developer.github.com/v3/meta/#meta
+# @public
+function bashlets::core::github::github::git_servers()
+{
+    local url="/meta"
+    
+    $BASHLETS_NAMESPACE api get "$url" .git[]
+}
+
+# Get a list of IP addresses in CIDR format specifying the addresses that
+# incoming service hooks will originate from on GitHub.com.
+#
+# @cf   https://developer.github.com/v3/meta/#meta
+# @public
+function bashlets::core::github::github::hooks()
+{
+    local url="/meta"
+    
+    $BASHLETS_NAMESPACE api get "$url" .hooks[]
+}
+
+# Get a list of IP addresses in CIDR format specifying the addresses that
+# source imports will originate from on GitHub.com.
+#
+# @cf   https://developer.github.com/v3/meta/#meta
+# @public
+function bashlets::core::github::github::importers()
+{
+    local url="/meta"
+    
+    $BASHLETS_NAMESPACE api get "$url" .importers[]
+}
+
+# List all licenses.
+#
+# @cf   https://developer.github.com/v3/licenses/#list-all-licenses
+# @public
+function bashlets::core::github::github::licenses()
+{
+    local url="/licenses"
+    
+    $BASHLETS_NAMESPACE api get "$url" .[].key
+}
+
+# List all organizations.
+#
+# @cf   https://developer.github.com/v3/orgs/#list-all-organizations
+# @public
+function bashlets::core::github::github::orgs()
+{
+    local since="${1:-0}" limit="${2:-100}" callback="${3:-cat}"
+    local url="/organizations?since=$since"
+    
+    $BASHLETS_NAMESPACE api paginate "$url" login "$limit" "$callback"
+}
+
+# List all IP addresses (in CIDR format) specifying the A records for GitHub
+# Pages.
+#
+# @cf   https://developer.github.com/v3/meta/#meta
+# @public
+function bashlets::core::github::github::pages()
+{
+    local url="/meta"
+    
+    $BASHLETS_NAMESPACE api get "$url" .pages[]
+}
+
+# Tell whether authentication with username and password is supported.
+#
+# @cf   https://developer.github.com/v3/meta/#meta
+# @public
+function bashlets::core::github::github::password_auth()
+{
+    local url="/meta" value
+    
+    $BASHLETS_NAMESPACE api get "$url" '.github_services_sha == true' > /dev/null
+}
+
+# List all public repositories.
+#
+# @cf   https://developer.github.com/v3/repos/#list-all-public-repositories
+# @public
+function bashlets::core::github::github::repos()
+{
+    local since="${1:-0}" limit="${2:-100}" callback="${3:-cat}"
+    local url="/repositories?since=$since"
+    
+    $BASHLETS_NAMESPACE api paginate "$url" full_name "$limit" "$callback"
+}
+
+# Get the currently-deployed SHA of github-services.
+#
+# @cf   https://developer.github.com/v3/meta/#meta
+# @cf   https://github.com/github/github-services
+# @public
+function bashlets::core::github::github::sha()
+{
+    local url="/meta"
+    
+    $BASHLETS_NAMESPACE api get "$url" .github_services_sha
+}
+
+# Get the GitHub global public timeline, in Atom format.
+#
+# @cf   https://developer.github.com/v3/activity/feeds/#list-feeds
+# @public
+function bashlets::core::github::github::timeline()
+{
+    curl -s "$(bashlets::core::github::github::timeline_url)"
+}
+
+# Get the GitHub global public timeline URI.
+#
+# @cf   https://developer.github.com/v3/activity/feeds/#list-feeds
+# @public
+function bashlets::core::github::github::timeline_url()
+{
+    local url="/feeds"
+
+    $BASHLETS_NAMESPACE api get "$url" .timeline_url
+}
+
+# List all users, in the order that they signed up on GitHub.
+#
+# @cf   https://developer.github.com/v3/users/#get-all-users
+# @public
+function bashlets::core::github::github::users()
+{
+    local since="${1:-0}" limit="${2:-100}" callback="${3:-cat}"
+    local url="/users?since=$since"
+    
+    $BASHLETS_NAMESPACE api paginate "$url" login "$limit" "$callback"
+}
+
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh
