@@ -1,0 +1,102 @@
+#!/bin/bash
+
+
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2014-8 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+
+BASHLETS_BASE=~/.bashlets
+BASHLETS_PACKAGE_MANIFEST=package.json
+
+#@public
+function bashlets::core::library::package::name()
+{
+    local base="$1"
+    local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
+    test -e "$path" && jq -r .name? "$path"
+}
+
+#@public
+function bashlets::core::library::package::description()
+{
+    local base="$1"
+    local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
+    test -e "$path" && jq -r .description? "$path"
+}
+
+#@public
+function bashlets::core::library::package::version()
+{
+    local base="$1"
+    local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
+    test -e "$path" && jq -r .version? "$path"
+}
+
+#@public
+function bashlets::core::library::package::author_name()
+{
+    local base="$1"
+    local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
+    test -e "$path" && jq -r .author.name? "$path"
+}
+
+#@public
+function bashlets::core::library::package::author_email()
+{
+    local base="$1"
+    local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
+    test -e "$path" && jq -r .author.email? "$path"
+}
+
+#@public
+function bashlets::core::library::package::license()
+{
+    local base="$1"
+    local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
+    test -e "$path" && jq -r .license? "$path"
+}
+
+#@public
+function bashlets::core::library::package::deps()
+{
+    local base="$1"
+    local path="${base}${BASHLETS_PACKAGE_MANIFEST}"
+    test -e "$path" && jq -r .deps[]? "$path"
+}
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh
