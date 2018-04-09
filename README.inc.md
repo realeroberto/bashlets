@@ -80,7 +80,7 @@ The active links represent implemented parts of the full API.
     - Members
     - Outside Collaborators
     - Webhooks
-* Projects
+* [Projects](https://developer.github.com/v3/projects/)
     - Cards
     - Collaborators
     - Columns

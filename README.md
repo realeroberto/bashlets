@@ -80,7 +80,7 @@ The active links represent implemented parts of the full API.
     - Members
     - Outside Collaborators
     - Webhooks
-* Projects
+* [Projects](https://developer.github.com/v3/projects/)
     - Cards
     - Collaborators
     - Columns
@@ -294,6 +294,7 @@ The active links represent implemented parts of the full API.
 * [`org::is_blocked`](#orgis_blocked)
 * [`org::location`](#orglocation)
 * [`org::name`](#orgname)
+* [`org::projects`](#orgprojects)
 * [`org::repos`](#orgrepos)
 * [`org::unblock`](#orgunblock)
 * [`org::url`](#orgurl)
@@ -303,6 +304,21 @@ The active links represent implemented parts of the full API.
 * [`path::content`](#pathcontent)
 * [`path::ls`](#pathls)
 * [`path::type`](#pathtype)
+
+### `project`
+
+* [`project::create`](#projectcreate)
+* [`project::creator`](#projectcreator)
+* [`project::delete`](#projectdelete)
+* [`project::edit`](#projectedit)
+* [`project::get`](#projectget)
+* [`project::name`](#projectname)
+* [`project::state`](#projectstate)
+* [`project::text`](#projecttext)
+
+### `.projects.swp`
+
+
 
 ### `rate_limit`
 
@@ -316,10 +332,12 @@ The active links represent implemented parts of the full API.
 * [`repo::commits`](#repocommits)
 * [`repo::conduct`](#repoconduct)
 * [`repo::create`](#repocreate)
+* [`repo::delete`](#repodelete)
 * [`repo::fork`](#repofork)
 * [`repo::forks`](#repoforks)
 * [`repo::is_starred`](#repois_starred)
 * [`repo::license`](#repolicense)
+* [`repo::projects`](#repoprojects)
 * [`repo::readme`](#reporeadme)
 * [`repo::star`](#repostar)
 * [`repo::stargazers`](#repostargazers)
@@ -785,6 +803,10 @@ Get an organization location.
 
 Get an organization name.
 
+### `org::projects`
+
+List organization projects.
+
 ### `org::repos`
 
 List organization repositories.
@@ -808,6 +830,38 @@ List contents of a directory or the name of file (similar to the ls command).
 ### `path::type`
 
 Return the type of a path.
+
+### `project::create`
+
+Create a project.
+
+### `project::creator`
+
+Get a project creator.
+
+### `project::delete`
+
+Delete a project.
+
+### `project::edit`
+
+Edit a project.
+
+### `project::get`
+
+Get a project.
+
+### `project::name`
+
+Get a project name.
+
+### `project::state`
+
+Get a project state.
+
+### `project::text`
+
+Get a project text.
 
 ### `rate_limit::limit`
 
@@ -837,6 +891,10 @@ Get a repository's code of conduct.
 
 Create a new repository for the authenticated user.
 
+### `repo::delete`
+
+Delete a repository.
+
 ### `repo::fork`
 
 Fork a repository.
@@ -853,6 +911,10 @@ Check if a gist is starred.
 ### `repo::license`
 
 Get the contents of a repository's license.
+
+### `repo::projects`
+
+List repository projects.
 
 ### `repo::readme`
 
