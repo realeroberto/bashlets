@@ -1,1 +1,0 @@
-# bashlets.core.stream
