@@ -70,7 +70,16 @@ function bashlets::core::github::project::create()
         json="$(echo "$json" | jq -r --arg body "$text" '. + {body: $body}')"
     fi
 
-    $BASHLETS_NAMESPACE api post "$url" "$json" .id
+    (
+        # The Projects API is currently available for developers to preview. To
+        # access the API during the preview period, we must provide a custom
+        # media type in the Accept header.
+        #
+        # @cf https://developer.github.com/v3/projects/
+
+        BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS="$BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS -H 'Accept: application/vnd.github.inertia-preview+json'"
+        $BASHLETS_NAMESPACE api post "$url" "$json" .id
+    )
 }
 
 # Get a project creator.
