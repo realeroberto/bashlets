@@ -1,0 +1,112 @@
+#!/bin/bash
+
+
+################################################################################
+#                                         
+# |              |    |         |         
+# |---.,---.,---.|---.|    ,---.|--- ,---.
+# |   |,---|`---.|   ||    |---'|    `---.
+# `---'`---^`---'`   '`---'`---'`---'`---'
+#
+#                                        
+# Bashlets -- A modular extensible toolbox for Bash
+#
+# Copyright (c) 2014-8 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+################################################################################
+
+source bashlets core::os::random
+
+# a Unix timestamp can be negative!
+source bashlets core::datatype::integer
+
+#@public
+function bashlets::core::time::timestamp::new()
+{
+    :
+}
+
+#@public
+function bashlets::core::time::timestamp::destroy()
+{
+    :
+}
+
+#@public
+function bashlets::core::time::timestamp::to_string()
+{
+    echo "$@"
+}
+
+#@public
+function bashlets::core::time::timestamp::random()
+{
+    $BASHLETS_NAMESPACE integer random 11
+}
+
+#@public
+function bashlets::core::time::timestamp::validate()
+{
+    $BASHLETS_NAMESPACE integer validate "$@"
+}
+
+#@public
+function bashlets::core::time::timestamp::to_path()
+{
+    local timestamp="${1:-$(date +%s)}" depth="${2:-day}"
+    local fmt
+
+    case "$depth" in
+        year)
+            fmt="%Y"
+            ;;
+        month)
+            fmt="%Y/%m"
+            ;;
+        day)
+            fmt="%Y/%m/%d"
+            ;;
+        hour)
+            fmt="%Y/%m/%d/%H"
+            ;;
+        minute)
+            fmt="%Y/%m/%d/%H/%M"
+            ;;
+        second)
+            fmt="%Y/%m/%d/%H/%M/%S"
+            ;;
+        *)
+            echo "Invalid depth specified!"
+            return 1
+            ;;
+    esac
+
+    date -d@"$timestamp" +"$fmt"
+}
+
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh
