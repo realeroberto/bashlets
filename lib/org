@@ -199,6 +199,29 @@ function bashlets::core::github::org::name()
     $BASHLETS_NAMESPACE api get "$url" .name
 }
 
+# List organization projects.
+#
+# @cf   https://developer.github.com/v3/projects/#list-organization-projects
+# @public
+function bashlets::core::github::org::projects()
+{
+    local org="${1:?Organization login needed}"
+    local state="${2:-all}"  # open, closed, all
+    local limit="${3:-100}" callback="${4:-cat}"
+    local url="/orgs/$org/projects?state=$state"
+    
+    (
+        # The Projects API is currently available for developers to preview. To
+        # access the API during the preview period, we must provide a custom
+        # media type in the Accept header.
+        #
+        # @cf https://developer.github.com/v3/projects/
+
+        BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS="$BASHLETS_CORE_GITHUB_API_CUSTOM_HEADERS -H 'Accept: application/vnd.github.inertia-preview+json'"
+        $BASHLETS_NAMESPACE api paginate "$url" id "$limit" "$callback"
+    )
+}
+
 # List organization repositories.
 #
 # @cf   https://developer.github.com/v3/repos/#list-organization-repositories
