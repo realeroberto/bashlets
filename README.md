@@ -316,10 +316,6 @@ The active links represent implemented parts of the full API.
 * [`project::state`](#projectstate)
 * [`project::text`](#projecttext)
 
-### `.projects.swp`
-
-
-
 ### `rate_limit`
 
 * [`rate_limit::limit`](#rate_limitlimit)
