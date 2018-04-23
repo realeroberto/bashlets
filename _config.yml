@@ -1,7 +1,7 @@
 theme: jekyll-theme-cayman
 
-title: Extending the Bash shell
-description: ''
+title: bashlets
+description: 'An experiment in extending the command-line interface'
 
 show_downloads: true
 google_analytics:
