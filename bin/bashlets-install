@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 
 ################################################################################
 #                                         
@@ -201,11 +202,14 @@ function install_deps()
 
 function install_local()
 {
+    local prefix="$1"
     local module
     local path
     local rev
     local destinations
 
+    # if there is a `packages` folder, then use a recursive approach XXX
+    [[ -e packages ]] && { find packages -name package.json ; exit ; }
 
     ## install deps
     [[ -n $dont_install_deps ]] || install_deps $module
