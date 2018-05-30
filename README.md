@@ -94,7 +94,6 @@ TODO
 
 * Twitter channel: https://twitter.com/bashlets
 * Facebook page: https://www.facebook.com/bashlets
-* Telegram bot: bashlets
 
 
 ## Bibliography
