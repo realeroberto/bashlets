@@ -53,7 +53,7 @@ Extension packages may have additional requirements.
 
 ## Installing
 
-	$ git clone https://github.com/bashlets/bashlets.git
+	$ git clone https://github.com/reale/bashlets.git
 	$ cd bashlets
 	$ make install
 
