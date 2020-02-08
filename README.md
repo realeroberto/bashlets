@@ -1,6 +1,6 @@
 # bashlets
 
-[![Build Status](https://travis-ci.org/bashlets/bashlets.svg?branch=master)](https://travis-ci.org/bashlets/bashlets)
+[![Build Status](https://travis-ci.com/bashlets/bashlets.svg?branch=master)](https://travis-ci.com/bashlets/bashlets)
 [![Read the Docs](https://readthedocs.org/projects/bashlets/badge/?version=latest)](http://bashlets.readthedocs.io/en/latest/?badge=latest)
 
 > /'baʃlɪt/
