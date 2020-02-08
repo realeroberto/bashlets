@@ -1,5 +1,5 @@
 language: bash
 
 before_script:
-        - git clone https://github.com/bashlets/bashlets.git
+        - git clone https://github.com/reale/bashlets.git
         - cd bashlets && make install
