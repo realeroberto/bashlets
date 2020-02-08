@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 
 ################################################################################
 #                                         
@@ -53,7 +54,6 @@ branch=master
 unset set_as_default
 
 unset install_from_local_repo
-unset dont_install_deps
 
 # verbose output
 verbose=:
@@ -128,77 +128,6 @@ function package_get_name()
     jq -r .name $BASHLETS_PACKAGE_MANIFEST
 }
 
-function package_get_deps()
-{
-    jq -r .deps[]? $BASHLETS_PACKAGE_MANIFEST
-}
-
-function remote_get_deps()
-{
-    local package="$1" rev="${2:-master}"
-    
-    curl -s $BASHLETS_REMOTE_CDN/bashlets.$package/$rev/$BASHLETS_PACKAGE_MANIFEST | jq -r .deps[]?
-}
-
-declare -A VISITED=()
-
-function remote_get_deps_recursive()
-{
-    # start with remote manifest
-
-    local package="$1" rev="${2:-master}"
-    
-    # already visited
-    if [[ -z "${VISITED[$package]}" ]]
-    then
-        VISITED[$package]=1
-        for dep in $(remote_get_deps $package $rev)
-        do
-            echo $package $dep  # output graph node
-            remote_get_deps_recursive $dep $rev
-        done
-    fi
-}
-
-function package_get_deps_recursive()
-{
-    # start with local manifest
-
-    local package="$1" rev="${2:-master}"
-    
-    # already visited
-    if [[ -z "${VISITED[$package]}" ]]
-    then
-        VISITED[$package]=1
-        for dep in $(package_get_deps)
-        do
-            echo $package $dep  # output graph node
-            remote_get_deps_recursive $dep $rev
-        done
-    fi
-}
-
-function package_get_deps_sorted()
-{
-    local package="$1" rev="${2:-master}"
-    # perform a topological sort on the dependency graph
-    # the last sed removes the package itself
-    package_get_deps_recursive $package $rev | tsort 2> /dev/null | tac | sed '$d'
-}
-
-function install_deps()
-{
-    # install dependencies
-    ################################################################################
-    local dep dep_options package="$1"
-    [[ -n set_as_default ]] && dep_options="$dep_options -D"
-    [[ -f $BASHLETS_PACKAGE_MANIFEST ]]  \
-        && for dep in $(package_get_deps_sorted $package)
-    do
-        $0 -S $dep_options $dep
-    done
-}
-
 function install_local()
 {
     local prefix="$1"
@@ -206,12 +135,6 @@ function install_local()
     local path
     local rev
     local destinations
-
-    # if there is a `packages` folder, then use a recursive approach XXX
-    [[ -e packages ]] && { find packages -name package.json ; exit ; }
-
-    ## install deps
-    [[ -n $dont_install_deps ]] || install_deps $module
 
     #
     # some sanity checks
@@ -324,7 +247,7 @@ function install_module()
 # parse command line options
 ################################################################################
 
-while getopts "DB:LSv?V" OPTION
+while getopts "DB:Lv?V" OPTION
 do
     case $OPTION in
 		D)
@@ -335,9 +258,6 @@ do
 			;;
 		L)
 			install_from_local_repo=1
-			;;
-		S)
-            dont_install_deps=1
 			;;
 		v)
 			verbose=echo
