@@ -145,4 +145,5 @@ TODO
 ### Special-purpose libraries
 
 - [bash automated testing system](https://github.com/sstephenson/bats)
+- [lib_MTA](https://github.com/reale/lib_MTA)
 - [log4sh](https://sites.google.com/a/forestent.com/projects/log4sh)
