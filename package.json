@@ -1,5 +1,5 @@
 {
-        "name": "core.base",
+        "name": "core",
         "description": "Bashlets core distribution",
         "version": "0.2",
         "author": {

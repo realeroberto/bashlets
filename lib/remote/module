@@ -40,12 +40,12 @@ source bashlets core::library::module
 #@public
 function bashlets::core::remote::module::methods()
 {
-    local module="$1" package="${2:-core.base}"
+    local module="$1" package="${2:-core}"
     local full_name
 
     [[ -n $module ]] || return
 
-    if [[ $package == core.base ]]
+    if [[ $package == core ]]
     then
         full_name=bashlets
     else

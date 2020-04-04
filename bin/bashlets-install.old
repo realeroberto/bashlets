@@ -296,10 +296,10 @@ function install_local()
 
 function install_module()
 {
-    local module="${1:-core.base}"
+    local module="${1:-core}"
     local remote
     
-    if [[ $module == core.base ]]
+    if [[ $module == core ]]
     then
         remote="$BASHLETS_REMOTE_CORE/bashlets.git"
     else
@@ -309,7 +309,7 @@ function install_module()
     make_tempdir && (
         cd_tempdir
         git clone $remote
-        if [[ $module == core.base ]]
+        if [[ $module == core ]]
         then
             cd bashlets
         else

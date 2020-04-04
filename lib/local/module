@@ -39,7 +39,7 @@ source bashlets core::library::module
 #@public
 function bashlets::core::local::module::methods()
 {
-    local module="$1" package="${2:-core.base}" rev="${3:-DEFAULT}"
+    local module="$1" package="${2:-core}" rev="${3:-DEFAULT}"
     local path="${package//.//}"
 
     [[ -n $module ]] || return

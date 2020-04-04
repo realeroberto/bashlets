@@ -40,10 +40,10 @@ source bashlets core::github::repo
 #@public
 function bashlets::core::remote::package::revs()
 {
-    local package="${1:-core.base}" limit="${2:-100}"
+    local package="${1:-core}" limit="${2:-100}"
     local full_name
 
-    if [[ $package == core.base ]]
+    if [[ $package == core ]]
     then
         full_name=bashlets
     else
@@ -56,10 +56,10 @@ function bashlets::core::remote::package::revs()
 #@public
 function bashlets::core::remote::package::modules()
 {
-    local package="${1:-core.base}"
+    local package="${1:-core}"
     local full_name
 
-    if [[ $package == core.base ]]
+    if [[ $package == core ]]
     then
         full_name=bashlets
     else
