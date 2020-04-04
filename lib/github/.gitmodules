@@ -1,9 +1,0 @@
-[submodule "test/lib/bats-support"]
-	path = test/lib/bats-support
-	url = https://github.com/bashlets/bats-support
-[submodule "test/lib/bats-assert"]
-	path = test/lib/bats-assert
-	url = https://github.com/bashlets/bats-assert
-[submodule "test/lib/bats-file"]
-	path = test/lib/bats-file
-	url = https://github.com/bashlets/bats-file
