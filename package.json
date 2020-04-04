@@ -1,10 +1,10 @@
 {
         "name": "core.base",
-        "description": "Core package",
+        "description": "Bashlets core distribution",
         "version": "0.2",
         "author": {
                 "name": "Roberto Reale",
-                "email": "rober.reale@gmail.com"
+                "email": "roberto@reale.me"
         },
-        "license": "MIT",
+        "license": "MIT"
 }
