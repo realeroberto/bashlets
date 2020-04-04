@@ -1,5 +1,0 @@
-language: bash
-
-before_script:
-        - git clone https://github.com/bashlets/bashlets.git
-        - cd bashlets && make install
