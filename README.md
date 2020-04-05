@@ -77,7 +77,85 @@ There is a growing corpus of additional packages available at [Bashlet Packages]
 
 ## Examples
 
-See the [Wiki](https://github.com/bashlets/bashlets/wiki/Examples).
+### Basic interaction
+
+	$ source bashlets core::library::interact
+	$ bash$$ interact say_hello
+
+	Hello, this is bashlets 1.0 speaking!
+
+
+### Data types: generating a random printable string of arbitrary length
+
+	$ source bashlets core::datatype::string
+
+	$ bash$$ string random 32
+	6J-%.v(M)`N_de&2fvdVd;yy R;FRt=[
+
+### Data types: generating and validating UUIDs
+
+	$ source bashlets core::datatype::uuid
+
+	$ bash$$ uuid random
+	2fc83419-df73-4cfd-bf9d-85634c8370fd
+
+	$ bash$$ uuid validate 2fc83419-df73-4cfd-bf9d-85634c8370fd || echo INVALID
+	$ bash$$ uuid validate 2fc83419-df73-4cfd-_f9d-85634c8370fd || echo INVALID
+	INVALID
+
+### Data types: comparing version strings
+
+	$ source bashlets core::datatype::semver
+
+	$ bash$$ semver sort 1.44 1.4 1.4.4 1.4.4a 1.4-1234
+	1.4
+	1.4-1234
+	1.4.4
+	1.4.4a
+	1.44
+
+### Cache: passing data around
+
+	$ source bashlets core::cache::fs
+
+	$ cache=$(bash$$ fs create)
+
+	$ # set key/value in a subshell...
+	$ ( bash$$ fs set $cache question 'To be, or not to be...' )
+
+	$ # read value in the parent shell
+	$ bash$$ fs get $cache question
+	To be, or not to be...
+
+	$ bash$$ fs destroy $cache
+
+### Character streams: converting formats without external tools
+
+	$ source bashlets core::stream::convert
+
+	$ cat << ??? | bash$$ convert unix2dos | file -
+	> Shall I compare thee to a summer's day?
+	> Thou art more lovely and more temperate.
+	> Rough winds do shake the darling buds of May,
+	> And summer's lease hath all too short a date...
+	> ???
+	/dev/stdin: ASCII text, with CRLF line terminators
+
+### Math: manipulating complex numbers
+
+	$ source bashlets core::math::icomplex
+
+	$ i=$(bash$$ icomplex create 0 1)
+	$ bash$$ icomplex to_real $(bash$$ icomplex square $i)
+	-1
+
+### User eXperience: enjoying a basic REPL cycle
+
+	$ source bashlets core::ux::repl
+
+	$ bash$$ repl start
+	> quit
+	$
 
 
 ## Design Notes
