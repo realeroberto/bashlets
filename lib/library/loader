@@ -36,26 +36,26 @@
 
 BASHLETS_NAMESPACE=bash$$
 
-function __bashlets::core::library::loader::module_to_name()
+function __bashlets::core::library::loader::module_to_package()
 {
-    [[ $1 =~ (.+)::*([^:]+) ]] && echo ${BASH_REMATCH[2]}
+    [[ $1 =~ ([^:]+)::(.+)* ]] && echo ${BASH_REMATCH[1]}
 }
 
 function __bashlets::core::library::loader::module_to_path()
 {
-    [[ $1 =~ (.+)*::([^:]+) ]] && echo ${BASH_REMATCH[1]}
+    [[ $1 =~ ([^:]+)::(.+)* ]] && echo ${BASH_REMATCH[2]}
 }
 
 function __bashlets::core::library::loader::module_to_file()
 {
-    local module="$1" name path file
+    local module="$1" package path file
 
-    name="$(__bashlets::core::library::loader::module_to_name "$module")"
+    package="$(__bashlets::core::library::loader::module_to_package "$module")"
     path="$(__bashlets::core::library::loader::module_to_path "$module")"
 
     path="${path//:://}"
 
-    file="$BASHLETS_BASE/$path/${BASHLETS_REV:-DEFAULT}/lib/$name"
+    file="$BASHLETS_BASE/$package/${BASHLETS_REV:-DEFAULT}/lib/$path"
     [[ -e $file ]] && echo $file && return
 }
 
@@ -83,7 +83,7 @@ function bashlets::core::library::loader::list_methods()
 function bashlets::core::library::loader::search_methods()
 {
     local module_name="$1"
-    local method_fullname method_name pattern module_path
+    local method_fullname method_name pattern module_package
 
     for method_fullname in $(__bashlets::core::library::loader::list_all_methods)
     do
@@ -91,10 +91,10 @@ function bashlets::core::library::loader::search_methods()
 
         if [[ $method_fullname =~ $pattern ]]
         then
-            module_path=${BASH_REMATCH[1]}
+            module_package=${BASH_REMATCH[1]}
             method_name=${BASH_REMATCH[2]}
 
-            echo "$module_path:$module_name:$method_name"
+            echo "$module_package:$module_name:$method_name"
         fi
     done
 }
@@ -103,20 +103,20 @@ function bashlets::core::library::loader::search_methods()
 function bashlets::core::library::loader::import()
 {
     local module="$1"
-    local module_name module_path file_name
+    local module_package module_path file_name
     local loader_def
     local container_name container_def container_def_0 method_prefix
     local method method_full
     local methods_list methods_list_0
 
-    module_name="$(__bashlets::core::library::loader::module_to_name "$module")"
-    module_path="$(__bashlets::core::library::loader::module_to_path "$module")"
-      file_name="$(__bashlets::core::library::loader::module_to_file "$module")"
+    module_package="$(__bashlets::core::library::loader::module_to_package "$module")"
+       module_path="$(__bashlets::core::library::loader::module_to_path    "$module")"
+         file_name="$(__bashlets::core::library::loader::module_to_file    "$module")"
 
     source "$file_name" || return 1
 
-    container_name="$module_name"
-    method_prefix="bashlets::${module_path}::${module_name}"
+    container_name="$module_package"
+    method_prefix="bashlets::${module_package}::${module_path}"
 
     # loader
 
@@ -141,14 +141,14 @@ function bashlets::core::library::loader::import()
     # inherited methods (to be added afterwards)
 
     for method_full in $(
-        bashlets::core::library::loader::search_methods "$module_name"
+        bashlets::core::library::loader::search_methods "$module_package"
     )
     do
-        local v module_name_0 module_path_0 method_prefix_0
+        local v module_name_0 module_package_0 method_prefix_0
 
-        IFS=: read -r module_path_0 module_name_0 method <<<"$method_full"
+        IFS=: read -r module_package_0 module_name_0 method <<<"$method_full"
 
-        method_prefix_0="bashlets::${module_path_0}::${module_name_0}"
+        method_prefix_0="bashlets::${module_package_0}::${module_name_0}"
 
         container_def_0="$container_def_0
             $method)
