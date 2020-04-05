@@ -70,7 +70,7 @@ If you want to check for proper programming:
 
 ## Extensions
 
-There is a growing corpus of additional packages available at [Bashlet Packages](https://github.com/bashlets). To install package `package` just do
+There is a growing corpus of additional packages available. To install package `package` just do
 
         $ bashlets install -D package
 
