@@ -37,5 +37,5 @@ RUN apt-get update && apt-get install -y git curl make jq
 
 WORKDIR ~/
 
-RUN git clone https://github.com/bashlets/bashlets.git
+RUN git clone https://github.com/reale/bashlets.git
 RUN cd bashlets && make install
