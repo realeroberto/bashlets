@@ -121,7 +121,6 @@ function bashlets::core::library::loader::import()
 
     source "$file_name" || return 1
 
-    container_name="$module_package"
     method_prefix="bashlets::${module_package}::${module_path}"
 
     # loader
