@@ -41,6 +41,11 @@ function __bashlets::core::library::loader::module_to_package()
     [[ $1 =~ ([^:]+)::(.+)* ]] && echo ${BASH_REMATCH[1]}
 }
 
+function __bashlets::core::library::loader::module_to_container()
+{
+    [[ $1 =~ (.+)*::([^:]+) ]] && echo ${BASH_REMATCH[2]}
+}
+
 function __bashlets::core::library::loader::module_to_path()
 {
     [[ $1 =~ ([^:]+)::(.+)* ]] && echo ${BASH_REMATCH[2]}
@@ -109,9 +114,10 @@ function bashlets::core::library::loader::import()
     local method method_full
     local methods_list methods_list_0
 
-    module_package="$(__bashlets::core::library::loader::module_to_package "$module")"
-       module_path="$(__bashlets::core::library::loader::module_to_path    "$module")"
-         file_name="$(__bashlets::core::library::loader::module_to_file    "$module")"
+    module_package="$(__bashlets::core::library::loader::module_to_package   "$module")"
+       module_path="$(__bashlets::core::library::loader::module_to_path      "$module")"
+         file_name="$(__bashlets::core::library::loader::module_to_file      "$module")"
+    container_name="$(__bashlets::core::library::loader::module_to_container "$module")"
 
     source "$file_name" || return 1
 
