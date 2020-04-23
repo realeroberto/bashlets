@@ -67,7 +67,7 @@ function usage()
     cat <<-EOF
 		Usage:
 
-		    bashlets-install [ -D ] [ -B <branch> ] [ -L ] [ -S ] [ <module> ... ]
+		    bashlets-install [ -D ] [ -B <branch> ] [ -L ] [ -S ] [ <package> ... ]
 
 		Options:
 
@@ -130,7 +130,7 @@ function package_get_name()
 function install_local()
 {
     local prefix="$1"
-    local module
+    local package
     local path
     local rev
     local destinations
@@ -145,12 +145,12 @@ function install_local()
         exit 1
     }
 
-    # extract the module name from the repository name
-    module=$(package_get_name)
-    [[ $module == bashlets ]] && module=core
+    # extract the package name from the repository name
+    package=$(package_get_name)
+    [[ $package == bashlets ]] && package=core
 
     # calculate install base folder
-    install_base="$BASHLETS_BASE/$(tr . / <<<$module)"
+    install_base="$BASHLETS_BASE/$(tr . / <<<$package)"
 
     # save the current branch, in case we need to switch branch
     current_branch=$(git rev-parse --abbrev-ref HEAD)
@@ -216,28 +216,28 @@ function install_local()
 
 }
 
-function install_module()
+function install_package()
 {
-    local module="${1:-core}"
+    local package="${1:-core}"
     local remote
     
-    if [[ $module == core ]]
+    if [[ $package == core ]]
     then
         remote="$BASHLETS_REMOTE_CORE/bashlets.git"
     else
-        remote="$BASHLETS_REMOTE_PACKAGES/bashlets.${module}.git"
+        remote="$BASHLETS_REMOTE_PACKAGES/bashlets-${package}.git"
     fi
 
     make_tempdir && (
         cd_tempdir
         git clone $remote
-        if [[ $module == core ]]
+        if [[ $package == core ]]
         then
             cd bashlets
         else
-            cd bashlets.$module
+            cd bashlets-$package
         fi
-        install_local $module
+        install_local $package
     ) && erase_tempdir
 }
 
@@ -279,7 +279,7 @@ shift $((OPTIND-1))
 
 while [[ $# -gt 0 ]]
 do
-    install_module "$1"
+    install_package "$1"
     shift
 done
 
