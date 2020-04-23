@@ -37,7 +37,7 @@
 
 BASHLETS_VERSION=1.0
 
-source bashlets core::datatype::version
+source bashlets core::datatype::semver
 
 
 #@public
@@ -49,19 +49,15 @@ function bashlets::core::library::version::get()
 #@public
 function bashlets::core::library::version::require()
 {
-    local required="$1" actual max
+    local required="$1" actual
 
     actual=$(bashlets::core::library::version::get)
 
-    max="$($BASHLETS_NAMESPACE version max "$required" "$actual")"
+    $BASHLETS_NAMESPACE semver le "$required" "$actual"
+    [[ $? -gt 0 ]] || return
 
-    [[ -n $required ]] || return
-
-    if [[ $max != $actual ]]
-    then
-        echo "[FATAL] BASHLETS_VERSION is $actual (required is at least $required)."
-        return 1
-    fi
+    echo "[FATAL] BASHLETS_VERSION is $actual (required is at least $required)."
+    return 1
 }
 
 
