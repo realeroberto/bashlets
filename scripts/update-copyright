@@ -13,7 +13,7 @@
 #
 # Update copyright notice
 #
-# Copyright (c) 2014-8 Roberto Reale
+# Copyright (c) 2014-20 Roberto Reale
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -35,10 +35,10 @@
 #
 ################################################################################
 
-years=2014-8
+years=2014-20
 author="Roberto Reale"
 
-for file in $(find -type f | grep -v aludel)
+for file in $(find -type f)
 do
     grep '#!/bin/bash' "$file" > /dev/null || continue
     sed -i "s/Copyright (c) \([0-9-]\+\) \([a-zA-Z. ]\+\)/Copyright (c) $years $author/" "$file" > /dev/null
