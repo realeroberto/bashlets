@@ -40,9 +40,9 @@ author="Roberto Reale"
 
 for file in $(find -type f)
 do
-    grep '#!/bin/bash' "$file" > /dev/null || continue
+    #grep '#!/bin/bash' "$file" > /dev/null || continue
     sed -i "s/Copyright (c) \([0-9-]\+\) \([a-zA-Z. ]\+\)/Copyright (c) $years $author/" "$file" > /dev/null
-    echo Updating "$file"...
+    echo Checking "$file" ...
 done
 
 # Local variables:
