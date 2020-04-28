@@ -34,26 +34,23 @@
 ################################################################################
 
 
-source bashlets core::github::user
-source bashlets core::remote::domain
+BASHLETS_GITHUB_USER=reale
 
 #@public
 function bashlets::core::remote::library::domains()
 {
-    $BASHLETS_NAMESPACE user repos                     \
-        | grep -v bashlets.github.io                   \
-        | sed -n "s/^bashlets\.\([^.]\+\)\..\+/\1/p"   \
-        | sort -u
+    gitty user repos "$BASHLETS_GITHUB_USER"   \
+        | sed -n "s/^bashlets-\(.\+\)/\1/p"
 }
 
 #@public
 function bashlets::core::remote::library::packages()
 {
-    local domain
-    for domain in $(bashlets::core::remote::library::domains)
-    do
-        $BASHLETS_NAMESPACE domain packages "$domain"
-    done
+    local domain="${1:-core}"
+    local repo=bashlets
+
+    [[ "$domain" == "core" ]] || repo=bashlets-$domain
+    gitty path ls lib "$BASHLETS_GITHUB_USER" "$repo"
 }
 
 # Local variables:
