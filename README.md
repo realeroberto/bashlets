@@ -62,18 +62,18 @@ That's all!
 
 To run the test suite:
 
-        $ make test
+    $ make test
 
 If you want to check for proper programming:
 
-        $ make lint
+    $ make lint
 
 
 ## Extensions
 
 There is a growing corpus of additional packages available. To install package `package` just do
 
-        $ bashlets install -D package
+    $ bashlets install -D package
 
 
 ## Examples
